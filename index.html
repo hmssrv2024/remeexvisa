@@ -14,79 +14,70 @@
   <meta property="og:image" content="https://cdn.visa.com/v2/assets/images/logos/visa/blue/logo.png" />
 
   <style>
-    body {
+    /* Aseguramos que html y body ocupen toda la ventana */
+    html, body {
       margin: 0;
       padding: 0;
-      min-height: 100vh;
+      width: 100%;
+      height: 100%;
+      font-family: Arial, sans-serif;
+      color: white;
+      background: black; /* color base, pero no se verá gracias a las capas azules */
+    }
+
+    body {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      background: black; /* Lo mantenemos, pero ya no se notará por la rejilla */
-      font-family: Arial, sans-serif;
-      color: white;
-      /* Quitamos overflow: hidden para que, si el contenido crece, pueda scrollear */
-      /* overflow: hidden; */
       position: relative;
     }
 
-    .laser-grid {
+    /* Cada capa de fondo ocupa el 100% de ancho y alto */
+    .laser-grid,
+    .laser-overlay,
+    .connection-lines,
+    .matrix-container,
+    .background-transition {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      z-index: 0;
-      background: 
+      z-index: 0; /* se irán apilando según cada uno tenga su z-index */
+    }
+
+    /* Rejilla láser sin perspectiva ni rotateX */
+    .laser-grid {
+      background:
         linear-gradient(90deg, rgba(0,87,184,0.15) 1px, transparent 1px),
         linear-gradient(0deg, rgba(0,87,184,0.15) 1px, transparent 1px);
       background-size: 30px 30px;
       animation: gridMove 15s linear infinite;
       box-shadow: 0 0 50px rgba(0,87,184,0.3);
+      z-index: 0;
     }
-
-    /* Se quita la perspectiva y el rotateX para evitar bordes negros */
     @keyframes gridMove {
-      0% {
-        transform: translateY(0);
-      }
-      100% {
-        transform: translateY(30px);
-      }
+      0%   { transform: translateY(0); }
+      100% { transform: translateY(30px); }
     }
 
     .laser-overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: 
+      background:
         linear-gradient(90deg, rgba(0,87,184,0.05) 1px, transparent 1px),
         linear-gradient(0deg, rgba(0,87,184,0.05) 1px, transparent 1px);
       background-size: 60px 60px;
       animation: overlayMove 20s linear infinite;
       z-index: 1;
     }
-
     @keyframes overlayMove {
-      0% {
-        transform: translateY(0) scale(1.5);
-      }
-      100% {
-        transform: translateY(60px) scale(1.5);
-      }
+      0%   { transform: translateY(0) scale(1.5); }
+      100% { transform: translateY(60px) scale(1.5); }
     }
 
     .connection-lines {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
       z-index: 1;
     }
-
     .connection-line {
       position: absolute;
       height: 3px;
@@ -101,7 +92,6 @@
       animation: moveLine 3s linear infinite;
       box-shadow: 0 0 20px rgba(0,87,184,0.5);
     }
-
     @keyframes moveLine {
       0% {
         width: 0;
@@ -121,14 +111,8 @@
     }
 
     .matrix-container {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
       z-index: 2;
     }
-
     .matrix-digit {
       position: absolute;
       font-family: monospace;
@@ -137,7 +121,6 @@
       text-shadow: 0 0 8px rgba(0, 255, 200, 0.7);
       animation: digitFall 3s linear;
     }
-
     @keyframes digitFall {
       0% {
         transform: translateY(-100%);
@@ -153,11 +136,6 @@
     }
 
     .background-transition {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
       background: radial-gradient(
         circle at 50% 50%,
         rgba(0,45,114,0.3),
@@ -166,23 +144,17 @@
       animation: bgPulse 4s infinite;
       z-index: 3;
     }
-
     @keyframes bgPulse {
-      0% {
-        opacity: 0.3;
-      }
-      50% {
-        opacity: 0.6;
-      }
-      100% {
-        opacity: 0.3;
-      }
+      0%   { opacity: 0.3; }
+      50%  { opacity: 0.6; }
+      100% { opacity: 0.3; }
     }
 
+    /* Contenedor principal en el que va el contenido */
     .container {
-      text-align: center;
       position: relative;
       z-index: 4;
+      text-align: center;
       padding: 1rem;
       max-width: 800px;
       margin: 0 auto;
@@ -194,14 +166,12 @@
       position: relative;
       margin: 1rem auto;
     }
-
     .logo {
       width: 100%;
       opacity: 0;
       filter: drop-shadow(0 0 20px rgba(255,255,255,0.3));
       animation: logoReveal 6s forwards;
     }
-
     @keyframes logoReveal {
       0% {
         opacity: 0;
@@ -240,7 +210,6 @@
       background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
       animation: orbPulse 4s infinite;
     }
-
     @keyframes orbPulse {
       0% {
         transform: translate(-50%, -50%) scale(0.8);
@@ -263,18 +232,15 @@
       opacity: 0;
       animation: fadeIn 1s 5s forwards;
     }
-
     h1 {
       font-size: 2rem;
       margin-bottom: 0.5rem;
     }
-
     p {
       font-size: 1rem;
       margin-bottom: 1.5rem;
       line-height: 1.5;
     }
-
     @keyframes fadeIn {
       from {
         opacity: 0;
@@ -296,6 +262,9 @@
       cursor: pointer;
       transition: all 0.3s ease;
       box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+    .btn-continue:hover {
+      opacity: 0.9;
     }
 
     .home-link {
@@ -345,12 +314,14 @@
   </style>
 </head>
 <body>
+  <!-- Fondo completo en varias capas -->
   <div class="laser-grid"></div>
   <div class="laser-overlay"></div>
   <div class="connection-lines"></div>
   <div class="matrix-container"></div>
   <div class="background-transition"></div>
 
+  <!-- Contenido principal -->
   <div class="container">
     <div class="logo-container">
       <div class="glow-orb"></div>
@@ -384,9 +355,11 @@
         digit.addEventListener('animationend', () => digit.remove());
       }
 
-      for(let i = 0; i < 100; i++) {
+      // Generar 100 dígitos iniciales con retraso aleatorio
+      for (let i = 0; i < 100; i++) {
         setTimeout(() => createDigit(), Math.random() * 2000);
       }
+      // Seguir creando dígitos cada 100ms, y cortar en 4s
       const interval = setInterval(createDigit, 100);
       setTimeout(() => clearInterval(interval), 4000);
     }
@@ -408,7 +381,7 @@
 
     document.querySelector('.btn-continue').addEventListener('click', () => {
       console.log('Continuando al siguiente paso...');
-      window.location.href = 'https://inicio.remeexvisa.com';
+      window.location.href = 'https://www.google.com';
     });
   </script>
 </body>
