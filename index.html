@@ -1,9 +1,18 @@
-<!DOCTYPE html>
-<html lang="es">
+<html>
 <head>
+  <base href="." />
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Visa Remeex - Envío Instantáneo de Remesas</title>
+
+  <!-- Favicon -->
+  <link rel="icon" href="https://cdn.visa.com/v2/assets/images/logos/visa/blue/logo.png" />
+
+  <!-- Meta para texto predeterminado en compartir URL (Open Graph) -->
+  <meta property="og:title" content="Visa Remeex - Envío Instantáneo de Remesas" />
+  <meta property="og:description" content="La evolución de las transferencias internacionales, respaldada por la solidez global de Visa. Tecnología de vanguardia para envíos instantáneos y seguros." />
+  <meta property="og:image" content="https://cdn.visa.com/v2/assets/images/logos/visa/blue/logo.png" />
+
   <style>
     body {
       margin: 0;
@@ -20,24 +29,6 @@
       position: relative;
     }
 
-    #loading-screen {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: black;
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: Arial, sans-serif;
-      font-size: 1.2rem;
-      z-index: 9999;
-      text-align: center;
-      padding: 0 1rem;
-    }
-
     .laser-grid {
       position: absolute;
       top: 0;
@@ -45,17 +36,130 @@
       width: 100%;
       height: 100%;
       z-index: 0;
-      background: 
-        linear-gradient(90deg, rgba(0,87,184,0.15) 1px, transparent 1px),
-        linear-gradient(0deg, rgba(0,87,184,0.15) 1px, transparent 1px);
+      background: linear-gradient(90deg, rgba(0,87,184,0.15) 1px, transparent 1px), linear-gradient(0deg, rgba(0,87,184,0.15) 1px, transparent 1px);
       background-size: 30px 30px;
       animation: gridMove 15s linear infinite;
       box-shadow: 0 0 50px rgba(0,87,184,0.3);
     }
 
     @keyframes gridMove {
-      0% { transform: perspective(1000px) rotateX(75deg) translateY(0); }
-      100% { transform: perspective(1000px) rotateX(75deg) translateY(30px); }
+      0% {
+        transform: perspective(1000px) rotateX(75deg) translateY(0);
+      }
+      100% {
+        transform: perspective(1000px) rotateX(75deg) translateY(30px);
+      }
+    }
+
+    .laser-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, rgba(0,87,184,0.05) 1px, transparent 1px), linear-gradient(0deg, rgba(0,87,184,0.05) 1px, transparent 1px);
+      background-size: 60px 60px;
+      animation: overlayMove 20s linear infinite;
+      z-index: 1;
+    }
+
+    @keyframes overlayMove {
+      0% {
+        transform: perspective(1000px) rotateX(75deg) translateY(0) scale(1.5);
+      }
+      100% {
+        transform: perspective(1000px) rotateX(75deg) translateY(60px) scale(1.5);
+      }
+    }
+
+    .connection-lines {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+
+    .connection-line {
+      position: absolute;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, rgba(0,87,184,0.2), rgba(0,87,184,0.8), rgba(0,87,184,0.2), transparent );
+      animation: moveLine 3s linear infinite;
+      box-shadow: 0 0 20px rgba(0,87,184,0.5);
+    }
+
+    @keyframes moveLine {
+      0% {
+        width: 0;
+        opacity: 0;
+        transform: translateX(-100%);
+      }
+      50% {
+        width: 100%;
+        opacity: 0.8;
+        transform: translateX(0);
+      }
+      100% {
+        width: 0;
+        opacity: 0;
+        transform: translateX(100%);
+      }
+    }
+
+    .matrix-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 2;
+    }
+
+    .matrix-digit {
+      position: absolute;
+      font-family: monospace;
+      font-size: 14px;
+      color: rgba(0, 255, 200, 0.8);
+      text-shadow: 0 0 8px rgba(0, 255, 200, 0.7);
+      animation: digitFall 3s linear;
+    }
+
+    @keyframes digitFall {
+      0% {
+        transform: translateY(-100%);
+        opacity: 1;
+      }
+      90% {
+        opacity: 0.1;
+      }
+      100% {
+        transform: translateY(100vh);
+        opacity: 0;
+      }
+    }
+
+    .background-transition {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 50% 50%, rgba(0,45,114,0.3), rgba(26,31,113,0.6) );
+      animation: bgPulse 4s infinite;
+      z-index: 3;
+    }
+
+    @keyframes bgPulse {
+      0% {
+        opacity: 0.3;
+      }
+      50% {
+        opacity: 0.6;
+      }
+      100% {
+        opacity: 0.3;
+      }
     }
 
     .container {
@@ -63,13 +167,12 @@
       position: relative;
       z-index: 4;
       padding: 1rem;
-      max-width: 90%;
+      max-width: 800px;
     }
 
     .logo-container {
-      width: 60%;
-      max-width: 200px;
-      height: auto;
+      width: 250px;
+      height: 250px;
       position: relative;
       margin: 1rem auto;
     }
@@ -82,20 +185,69 @@
     }
 
     @keyframes logoReveal {
-      0% { opacity: 0; transform: scale(0.3); filter: blur(30px) brightness(0); }
-      50% { opacity: 0; transform: scale(0.3); filter: blur(30px) brightness(0); }
-      70% { opacity: 0.5; transform: scale(1.2); filter: blur(15px) brightness(2); }
-      85% { opacity: 0.8; transform: scale(0.9); filter: blur(5px) brightness(1.5); }
-      100% { opacity: 1; transform: scale(1); filter: blur(0) brightness(1); }
+      0% {
+        opacity: 0;
+        transform: scale(0.3);
+        filter: blur(30px) brightness(0);
+      }
+      50% {
+        opacity: 0;
+        transform: scale(0.3);
+        filter: blur(30px) brightness(0);
+      }
+      70% {
+        opacity: 0.5;
+        transform: scale(1.2);
+        filter: blur(15px) brightness(2);
+      }
+      85% {
+        opacity: 0.8;
+        transform: scale(0.9);
+        filter: blur(5px) brightness(1.5);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1);
+        filter: blur(0) brightness(1);
+      }
     }
 
-    h1, p, .btn-continue, .home-link {
+    .glow-orb {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+      animation: orbPulse 4s infinite;
+    }
+
+    @keyframes orbPulse {
+      0% {
+        transform: translate(-50%, -50%) scale(0.8);
+        opacity: 0.3;
+      }
+      50% {
+        transform: translate(-50%, -50%) scale(1.2);
+        opacity: 0.6;
+      }
+      100% {
+        transform: translate(-50%, -50%) scale(0.8);
+        opacity: 0.3;
+      }
+    }
+
+    h1,
+    p,
+    .btn-continue,
+    .home-link {
       opacity: 0;
       animation: fadeIn 1s 5s forwards;
     }
 
     h1 {
-      font-size: 1.5rem;
+      font-size: 2rem;
       margin-bottom: 0.5rem;
     }
 
@@ -106,15 +258,21 @@
     }
 
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .btn-continue {
       background: linear-gradient(90deg, #1a1f71 0%, #0057b8 100%);
       color: white;
       border: none;
-      padding: 0.6rem 1.5rem;
+      padding: 0.8rem 2rem;
       font-size: 1rem;
       border-radius: 25px;
       cursor: pointer;
@@ -129,58 +287,76 @@
       margin-top: 1rem;
       display: inline-block;
     }
-
-    @media screen and (max-aspect-ratio: 16/9) {
-      .logo-container {
-        width: 50%;
-        max-width: 150px;
-      }
-
-      h1 {
-        font-size: 1.2rem;
-      }
-
-      p {
-        font-size: 0.9rem;
-      }
-
-      .btn-continue {
-        padding: 0.5rem 1rem;
-        font-size: 0.9rem;
-      }
-    }
   </style>
 </head>
 <body>
-  <!-- Pantalla de carga -->
-  <div id="loading-screen">Verificando desde qué país te conectas...</div>
+  <div class="laser-grid"></div>
+  <div class="laser-overlay"></div>
+  <div class="connection-lines"></div>
+  <div class="matrix-container"></div>
+  <div class="background-transition"></div>
 
-  <!-- Contenido principal -->
-  <div id="main-content" style="display: none;">
-    <div class="laser-grid"></div>
-    <div class="container">
-      <div class="logo-container">
-        <img src="https://cdn.visa.com/v2/assets/images/logos/visa/blue/logo.png" alt="Visa Remeex Logo" class="logo">
-      </div>
-      <h1>Bienvenido a Visa Remeex</h1>
-      <p>La evolución de las transferencias internacionales, respaldada por la solidez global de Visa. Tecnología de vanguardia para envíos instantáneos y seguros.</p>
-      <button class="btn-continue">Continuar</button>
-      <br>
-      <a href="https://visa.com" class="home-link">Ir a Home</a>
+  <div class="container">
+    <div class="logo-container">
+      <div class="glow-orb"></div>
+      <img
+        src="https://cdn.visa.com/v2/assets/images/logos/visa/blue/logo.png"
+        alt="Visa Remeex Logo"
+        class="logo"
+      >
     </div>
+    <h1>Bienvenido a Visa Remeex</h1>
+    <p>
+      La evolución de las transferencias internacionales, respaldada por la solidez global de Visa.
+      Tecnología de vanguardia para envíos instantáneos y seguros.
+    </p>
+    <button class="btn-continue">Continuar</button>
+    <br>
+    <a href="https://www.visa.es/" class="home-link">Ir a Home</a>
   </div>
 
   <script>
-    // Mostrar pantalla de carga durante 3 segundos
-    setTimeout(() => {
-      document.getElementById('loading-screen').style.display = 'none';
-      document.getElementById('main-content').style.display = 'block';
-    }, 3000);
+    function createMatrixEffect() {
+      const container = document.querySelector('.matrix-container');
+      const characters = '01';
+
+      function createDigit() {
+        const digit = document.createElement('div');
+        digit.className = 'matrix-digit';
+        digit.style.left = `${Math.random() * 100}%`;
+        digit.textContent = characters[Math.floor(Math.random() * characters.length)];
+        container.appendChild(digit);
+        digit.addEventListener('animationend', () => digit.remove());
+      }
+
+      for(let i = 0; i < 100; i++) {
+        setTimeout(() => createDigit(), Math.random() * 2000);
+      }
+      const interval = setInterval(createDigit, 100);
+      setTimeout(() => clearInterval(interval), 4000);
+    }
+
+    function createConnectionLines() {
+      const container = document.querySelector('.connection-lines');
+      function createLine() {
+        const line = document.createElement('div');
+        line.className = 'connection-line';
+        line.style.top = `${Math.random() * 100}%`;
+        container.appendChild(line);
+        line.addEventListener('animationend', () => line.remove());
+      }
+      setInterval(createLine, 200);
+    }
+
+    createMatrixEffect();
+    createConnectionLines();
 
     document.querySelector('.btn-continue').addEventListener('click', () => {
       console.log('Continuando al siguiente paso...');
+      window.location.href = 'https://www.google.com';
     });
   </script>
 </body>
 </html>
+
 
