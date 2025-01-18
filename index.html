@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>Visa Remeex - Página Principal</title>
+  <title>VISA Remeex - Página Principal</title>
 
   <!-- Favicon -->
   <link 
@@ -35,6 +35,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      overflow: hidden;
     }
 
     .container {
@@ -42,6 +43,12 @@
       max-width: 600px;
       margin: 40px auto;
       padding: 20px;
+      opacity: 0;
+      animation: fadeIn 1s forwards;
+    }
+
+    @keyframes fadeIn {
+      to { opacity: 1; }
     }
 
     /* =========================
@@ -114,7 +121,7 @@
 
     .btn:hover {
       background-color: #142f6f;
-      transform: translateY(-2px);
+      transform: translateY(-2px) scale(1.02);
     }
 
     /* =========================
@@ -127,11 +134,19 @@
       right: 0;
       bottom: 0;
       background-color: rgba(0, 0, 0, 0.6);
-      display: none;
+      display: flex;
       align-items: center;
       justify-content: center;
       z-index: 1000;
       padding: 1rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease-out;
+    }
+
+    .modal-overlay.show {
+      opacity: 1;
+      pointer-events: auto;
     }
 
     .modal {
@@ -142,6 +157,14 @@
       width: 100%;
       text-align: center;
       box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      transform: scale(0.8);
+      opacity: 0;
+      transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+    }
+
+    .modal-overlay.show .modal {
+      transform: scale(1);
+      opacity: 1;
     }
 
     .modal h2 {
@@ -164,7 +187,7 @@
       border: 1px solid #ccc;
       border-radius: 4px;
       font-size: 1rem;
-      transition: border-color 0.3s ease;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
     }
 
     .modal input:focus {
@@ -188,25 +211,24 @@
 </head>
 <body>
   <div class="container">
-    <!-- Logo con enlace a Visa -->
+    <!-- Logo con enlace a VISA -->
     <a 
       href="https://inicio.remeexvisa.com" 
-      target="_blank" 
       rel="noopener noreferrer" 
       class="logo-container"
     >
       <img 
         src="https://cdn.visa.com/v2/assets/images/logos/visa/blue/logo.png"
-        alt="Logo Visa"
+        alt="Logo VISA"
         class="logo"
       />
     </a>
 
     <!-- Título y descripción -->
-    <h1>Bienvenido a Visa Remeex</h1>
+    <h1>Bienvenido a VISA Remeex</h1>
     <p>
       La evolución de las transferencias internacionales, respaldada por la 
-      solidez global de Visa. Tecnología de vanguardia para envíos instantáneos 
+      solidez global de VISA. Tecnología de vanguardia para envíos instantáneos 
       y seguros.
     </p>
 
@@ -217,8 +239,10 @@
   <!-- Estructura del Modal -->
   <div class="modal-overlay" id="modalOverlay">
     <div class="modal">
-      <h2>Como usuario Visa</h2>
-      <p>Ingresa tu código de referido. Abre tu aplicación Visa y encuéntralo en tu perfil o notificaciones.</p>
+      <h2>¡Hola, Usuario VIP de VISA!</h2>
+      <p>
+        Ingresa tu código de acceso, lo encuentras en tu app VISA en la sección Remeex. Vive la experiencia sin límites!
+      </p>
       <input type="text" id="referralCode" placeholder="Código de Referido" />
       <button class="btn" id="submitCodeBtn">Continuar</button>
       <p class="error" id="errorMsg">Código incorrecto. Inténtalo de nuevo.</p>
@@ -235,9 +259,9 @@
     const correctCode = "UK20639785";
     const redirectURL = "https://inicio.remeexvisa.com";
 
-    // Mostrar el modal al hacer clic en el botón "Continuar"
+    // Mostrar el modal con animación mejorada
     openModalBtn.addEventListener('click', () => {
-      modalOverlay.style.display = 'flex';
+      modalOverlay.classList.add('show');
       referralCodeInput.value = '';
       errorMsg.style.display = 'none';
       referralCodeInput.focus();
@@ -247,6 +271,7 @@
     submitCodeBtn.addEventListener('click', () => {
       const enteredCode = referralCodeInput.value.trim();
       if (enteredCode === correctCode) {
+        // Redirigir en la misma ventana
         window.location.href = redirectURL;
       } else {
         errorMsg.style.display = 'block';
@@ -256,7 +281,7 @@
     // Cerrar modal al hacer clic fuera del contenido (opcional)
     modalOverlay.addEventListener('click', (e) => {
       if (e.target === modalOverlay) {
-        modalOverlay.style.display = 'none';
+        modalOverlay.classList.remove('show');
       }
     });
 
