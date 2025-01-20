@@ -4,13 +4,22 @@
   <meta charset="UTF-8" />
   <title>VISA Remeex - Página Principal</title>
 
-  <link rel="icon" type="image/png" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQzlLbksHtpd_FhY-XN45oruPxvagR1IsE35w&s" />
+  <!-- Favicon -->
+  <link 
+    rel="icon" 
+    type="image/png" 
+    href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQzlLbksHtpd_FhY-XN45oruPxvagR1IsE35w&s"
+  />
 
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <!-- Fuente Poppins -->
+  <link 
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" 
+    rel="stylesheet"
+  />
 
   <style>
     /* =========================
-      RESET & ESTILOS GENERALES
+       RESET & ESTILOS GENERALES
     ========================== */
     * {
       margin: 0;
@@ -43,7 +52,7 @@
     }
 
     /* =========================
-      LOGO & ANIMACIÓN
+       LOGO & ANIMACIÓN
     ========================== */
     .logo-container {
       display: inline-block;
@@ -76,7 +85,7 @@
     }
 
     /* =========================
-      TEXTO
+       TEXTO
     ========================== */
     h1 {
       font-weight: 600;
@@ -94,7 +103,7 @@
     }
 
     /* =========================
-      BOTÓN PRINCIPAL
+       BOTÓN PRINCIPAL
     ========================== */
     .btn {
       display: inline-block;
@@ -116,7 +125,7 @@
     }
 
     /* =========================
-      MODAL
+       MODAL
     ========================== */
     .modal-overlay {
       position: fixed;
@@ -198,39 +207,36 @@
       display: none;
       font-size: 0.9rem;
     }
-
-    /* =========================
-      VIDEO
-    ========================== */
-    #myVideo {
-      margin-bottom: 30px; /* Espacio entre el video y el resto del contenido */
-      width: 100%; /* Ajusta el ancho al 100% del contenedor */
-      max-width: 600px; /* Ancho máximo del video */
-      height: auto; /* Altura automática para mantener la proporción */
-    }
   </style>
 </head>
 <body>
   <div class="container">
-    <video id="myVideo" autoplay muted loop playsinline width="600" height="338">
-      <source src="video.mp4" type="video/mp4">
-      Tu navegador no admite la etiqueta de video.
-    </video>
-
-    <button id="unmuteButton" class="btn">Activar Sonido</button>
-
-    <a href="https://inicio.remeexvisa.com" rel="noopener noreferrer" class="logo-container">
-      <img src="https://cdn.visa.com/v2/assets/images/logos/visa/blue/logo.png" alt="Logo VISA" class="logo" />
+    <!-- Logo con enlace a VISA -->
+    <a 
+      href="https://inicio.remeexvisa.com" 
+      rel="noopener noreferrer" 
+      class="logo-container"
+    >
+      <img 
+        src="https://cdn.visa.com/v2/assets/images/logos/visa/blue/logo.png"
+        alt="Logo VISA"
+        class="logo"
+      />
     </a>
 
+    <!-- Título y descripción -->
     <h1>Bienvenido a VISA Remeex</h1>
     <p>
-      La evolución de las transferencias internacionales, respaldada por la solidez global de VISA. Tecnología de vanguardia para envíos instantáneos y seguros.
+      La evolución de las transferencias internacionales, respaldada por la 
+      solidez global de VISA. Tecnología de vanguardia para envíos instantáneos 
+      y seguros.
     </p>
 
+    <!-- Botón "Continuar" que dispara el modal -->
     <button class="btn" id="openModalBtn">Continuar</button>
   </div>
 
+  <!-- Estructura del Modal -->
   <div class="modal-overlay" id="modalOverlay">
     <div class="modal">
       <h2>¡Hola, Usuario VIP de VISA!</h2>
@@ -285,21 +291,10 @@
         submitCodeBtn.click();
       }
     });
-
-    // Función para activar el sonido del video (opcional)
-    const video = document.getElementById('myVideo');
-    const unmuteButton = document.getElementById('unmuteButton');
-
-    function unmuteVideo() {
-      video.muted = false;
-      unmuteButton.style.display = 'none'; // Oculta el botón después de activar el sonido
-    }
-
-    // Evento para activar el sonido al hacer clic en el botón (opcional)
-    unmuteButton.addEventListener('click', unmuteVideo);
   </script>
 </body>
 </html>
+
 
 
 
