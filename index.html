@@ -27,7 +27,7 @@
       box-sizing: border-box;
     }
 
-    body {
+    body, html {
       font-family: 'Poppins', sans-serif;
       background-color: #ffffff;
       color: #333333;
@@ -36,19 +36,34 @@
       align-items: center;
       justify-content: center;
       overflow: hidden;
+      position: relative;
     }
 
+    /* =========================
+       FONDO ANIMADO
+    ========================== */
     .container {
+      position: relative;
       text-align: center;
       max-width: 600px;
       margin: 40px auto;
       padding: 20px;
       opacity: 0;
       animation: fadeIn 1s forwards;
+      z-index: 2; /* Asegura que el contenido esté por encima del fondo */
     }
 
     @keyframes fadeIn {
       to { opacity: 1; }
+    }
+
+    canvas#wavyCanvas {
+      position: fixed;
+      top: -100px;
+      left: -100px;
+      right: -100px;
+      bottom: -100px;
+      z-index: 1;
     }
 
     /* =========================
@@ -103,25 +118,105 @@
     }
 
     /* =========================
-       BOTÓN PRINCIPAL
+       BOTÓN PRINCIPAL ESTILIZADO
     ========================== */
-    .btn {
+    .visa-btn-container {
+      position: relative;
       display: inline-block;
-      padding: 12px 24px;
-      background-color: #1A1F71;
-      color: #ffffff;
-      text-decoration: none;
-      font-weight: 600;
-      border-radius: 5px;
-      transition: background-color 0.3s ease, transform 0.2s ease;
-      cursor: pointer;
-      border: none;
-      outline: none;
     }
 
-    .btn:hover {
-      background-color: #142f6f;
-      transform: translateY(-2px) scale(1.02);
+    .visa-glow-effect {
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      background: linear-gradient(
+          90deg, 
+          transparent, 
+          #4169E1, 
+          #1A1F71, 
+          transparent
+      );
+      background-size: 200% 100%;
+      border-radius: 32px;
+      animation: border-glow 3s ease infinite;
+      filter: blur(10px);
+      opacity: 0.7;
+      z-index: 1;
+    }
+
+    @keyframes border-glow {
+      0% {
+          background-position: -100% 0;
+      }
+      50% {
+          background-position: 100% 0;
+      }
+      100% {
+          background-position: -100% 0;
+      }
+    }
+
+    .visa-btn {
+      position: relative;
+      width: 250px;
+      height: 60px;
+      background: linear-gradient(135deg, #1A1F71, #2554C7);
+      color: white;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      overflow: hidden;
+      box-shadow: 
+          0 10px 20px rgba(0,0,0,0.2), 
+          inset 0 -3px 6px rgba(255,255,255,0.2);
+      transition: all 0.3s ease;
+      z-index: 2;
+    }
+
+    .visa-btn-content {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+
+    .visa-btn-initial {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .visa-btn:hover .visa-btn-initial {
+      opacity: 0;
+      transform: translateX(100%);
+    }
+
+    .visa-btn-hover {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transform: translateX(-100%);
+    }
+
+    .visa-btn:hover .visa-btn-hover {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .visa-btn-icon {
+      margin-left: 10px;
     }
 
     /* =========================
@@ -160,6 +255,8 @@
       transform: scale(0.8);
       opacity: 0;
       transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+      position: relative;
+      z-index: 1001;
     }
 
     .modal-overlay.show .modal {
@@ -196,12 +293,81 @@
       box-shadow: 0 0 5px rgba(26, 31, 113, 0.3);
     }
 
-    .modal .btn {
+    .modal .btn-container {
+      position: relative;
+      display: inline-block;
       width: 100%;
-      padding: 12px;
     }
 
-    .modal .error {
+    .modal .btn-container .visa-glow-effect {
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+    }
+
+    .modal .btn {
+      position: relative;
+      width: 100%;
+      height: 60px;
+      background: linear-gradient(135deg, #1A1F71, #2554C7);
+      color: white;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      overflow: hidden;
+      box-shadow: 
+          0 10px 20px rgba(0,0,0,0.2), 
+          inset 0 -3px 6px rgba(255,255,255,0.2);
+      transition: all 0.3s ease;
+      z-index: 2;
+    }
+
+    .modal .btn-content {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+
+    .modal .btn-initial {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .modal .btn:hover .btn-initial {
+      opacity: 0;
+      transform: translateX(100%);
+    }
+
+    .modal .btn-hover {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transform: translateX(-100%);
+    }
+
+    .modal .btn:hover .btn-hover {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .modal .btn-icon {
+      margin-left: 10px;
+    }
+
+    .error {
       color: red;
       margin-top: 0.5rem;
       display: none;
@@ -210,6 +376,9 @@
   </style>
 </head>
 <body>
+  <!-- Fondo Animado -->
+  <canvas id="wavyCanvas"></canvas>
+
   <div class="container">
     <!-- Logo con enlace a VISA -->
     <a 
@@ -232,8 +401,25 @@
       y seguros.
     </p>
 
-    <!-- Botón "Continuar" que dispara el modal -->
-    <button class="btn" id="openModalBtn">Continuar</button>
+    <!-- Botón "Continuar" Estilizado con Cambio de Idioma -->
+    <div class="visa-btn-container">
+      <div class="visa-glow-effect"></div>
+      <button class="visa-btn" id="openModalBtn">
+        <div class="visa-btn-content visa-btn-initial">
+          <span class="btn-text">Continuar</span>
+        </div>
+        
+        <div class="visa-btn-content visa-btn-hover">
+          <span class="btn-text">Continuar</span>
+          <svg class="visa-btn-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" 
+               viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" 
+               stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </div>
+      </button>
+    </div>
   </div>
 
   <!-- Estructura del Modal -->
@@ -244,19 +430,42 @@
         Ingresa tu código de acceso, lo encuentras en tu app VISA en la sección Remeex. Vive la experiencia sin límites!
       </p>
       <input type="text" id="referralCode" placeholder="Código de Referido" />
-      <button class="btn" id="submitCodeBtn">Continuar</button>
+      
+      <!-- Botón "Continuar" en el Modal -->
+      <div class="btn-container">
+        <div class="visa-glow-effect"></div>
+        <button class="btn" id="submitCodeBtn">
+          <div class="btn-content btn-initial">
+            <span class="btn-text">Continuar</span>
+          </div>
+          
+          <div class="btn-content btn-hover">
+            <span class="btn-text">Continuar</span>
+            <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" 
+                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" 
+                 stroke-linecap="round" stroke-linejoin="round">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </div>
+        </button>
+      </div>
+      
       <p class="error" id="errorMsg">Código incorrecto. Inténtalo de nuevo.</p>
     </div>
   </div>
 
   <script>
+    // =========================
+    // Funcionalidad del Modal
+    // =========================
     const openModalBtn = document.getElementById('openModalBtn');
     const modalOverlay = document.getElementById('modalOverlay');
     const submitCodeBtn = document.getElementById('submitCodeBtn');
     const referralCodeInput = document.getElementById('referralCode');
     const errorMsg = document.getElementById('errorMsg');
 
-    const correctCode = "UK784000";
+    const correctCode = "UK784512";
     const redirectURL = "recarga.html";  // Redirige a recarga.html
 
     // Mostrar el modal con animación mejorada
@@ -291,9 +500,139 @@
         submitCodeBtn.click();
       }
     });
+
+    // =========================
+    // Funcionalidad de Cambio de Idioma
+    // =========================
+
+    // Lista de traducciones para "Continuar"
+    const translations = [
+      { lang: 'es', text: 'Continuar' },    // Español
+      { lang: 'en', text: 'Continue' },     // Inglés
+      { lang: 'de', text: 'Fortfahren' },   // Alemán
+      { lang: 'fr', text: 'Continuer' },    // Francés
+      { lang: 'zh', text: '继续' },          // Chino
+      { lang: 'pt', text: 'Continuar' }     // Portugués
+    ];
+
+    let currentIndex = 0;
+    const btnTexts = document.querySelectorAll('.btn-text');
+
+    // Función para actualizar el texto del botón
+    function updateButtonText() {
+      // Obtener la traducción actual
+      const currentTranslation = translations[currentIndex].text;
+
+      // Actualizar todos los elementos con la clase .btn-text
+      btnTexts.forEach(span => {
+        span.textContent = currentTranslation;
+      });
+
+      // Incrementar el índice para la próxima traducción
+      currentIndex = (currentIndex + 1) % translations.length;
+    }
+
+    // Inicializar el texto del botón
+    updateButtonText();
+
+    // Cambiar el texto cada 2 segundos (2000 ms)
+    setInterval(updateButtonText, 2000);
+
+    // =========================
+    // Fondo Animado con Waves
+    // =========================
+    class VisaWavyBackground {
+      constructor() {
+        this.canvas = document.getElementById('wavyCanvas');
+        this.ctx = this.canvas.getContext('2d');
+        this.width = window.innerWidth + 200;
+        this.height = window.innerHeight + 200;
+        this.noise = this.createNoise3D();
+        
+        this.config = {
+          colors: ['#1A1F71', '#0046BE', '#2554C7'], // More intense blues
+          waveWidth: 50,
+          speed: 0.002
+        };
+        
+        this.nt = 0;
+        this.init();
+      }
+      
+      init() {
+        this.canvas.width = this.width;
+        this.canvas.height = this.height;
+        
+        window.addEventListener('resize', () => {
+          this.width = this.canvas.width = window.innerWidth + 200;
+          this.height = this.canvas.height = window.innerHeight + 200;
+        });
+        
+        this.render();
+      }
+      
+      createNoise3D() {
+        const p = new Array(512);
+        const permutation = [151,160,137,91,90,15,131,13,201,95,96,53,194,233,7,225,140,36,103,30,69,142,8,99,37,240,21,10,23];
+        for (let i = 0; i < 256 ; i++) p[256+i] = p[i] = permutation[i % permutation.length];
+        
+        function grad(hash, x, y, z) {
+          const h = hash & 15;
+          const u = h < 8 ? x : y;
+          const v = h < 4 ? y : h === 12 || h === 14 ? x : z;
+          return ((h&1) === 0 ? u : -u) + ((h&2) === 0 ? v : -v);
+        }
+        
+        return function(x, y, z) {
+          const X = Math.floor(x), Y = Math.floor(y), Z = Math.floor(z);
+          x = x - X; y = y - Y; z = z - Z;
+          
+          const u = x*x*x*(x*(x*6 - 15) + 10);
+          const v = y*y*y*(y*(y*6 - 15) + 10);
+          const w = z*z*z*(z*(z*6 - 15) + 10);
+          
+          const A = p[X  ]+Y, AA = p[A]+Z, AB = p[A+1]+Z;
+          const B = p[X+1]+Y, BA = p[B]+Z, BB = p[B+1]+Z;
+          
+          return grad(p[BB+1], x-1, y-1, z-1) +
+                 u * (grad(p[AB+1], x, y-1, z-1) - grad(p[BB+1], x-1, y-1, z-1)) +
+                 v * (grad(p[BA+1], x, y, z-1) - grad(p[BB+1], x-1, y, z-1)) +
+                 w * (grad(p[AB+1], x, y-1, z) - grad(p[BB+1], x-1, y-1, z));
+        };
+      }
+      
+      drawWave(n) {
+        this.nt += this.config.speed;
+        this.ctx.clearRect(0, 0, this.width, this.height);
+        
+        for (let i = 0; i < n; i++) {
+          this.ctx.beginPath();
+          this.ctx.lineWidth = this.config.waveWidth;
+          this.ctx.strokeStyle = this.config.colors[i % this.config.colors.length];
+          this.ctx.globalAlpha = 0.4;
+          this.ctx.filter = 'blur(10px)';
+          
+          for (let x = -100; x < this.width; x += 5) {
+            const y = this.noise(x / 300, 0.3 * i, this.nt) * 100;
+            this.ctx.lineTo(x, y + this.height * 0.5);
+          }
+          
+          this.ctx.stroke();
+          this.ctx.closePath();
+        }
+      }
+      
+      render() {
+        this.drawWave(3);
+        requestAnimationFrame(() => this.render());
+      }
+    }
+
+    new VisaWavyBackground();
   </script>
 </body>
 </html>
+
 
 
 
