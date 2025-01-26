@@ -17,6 +17,10 @@
     rel="stylesheet"
   />
 
+  <!-- Manifest -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#1A1F71">
+
   <style>
     /* =========================
        RESET & ESTILOS GENERALES
@@ -36,7 +40,6 @@
       align-items: center;
       justify-content: center;
       overflow: hidden;
-      position: relative; /* Para posicionar correctamente los fondos */
     }
 
     .container {
@@ -46,8 +49,6 @@
       padding: 20px;
       opacity: 0;
       animation: fadeIn 1s forwards;
-      position: relative;
-      z-index: 3; /* Superior a los fondos */
     }
 
     @keyframes fadeIn {
@@ -120,6 +121,7 @@
       cursor: pointer;
       border: none;
       outline: none;
+      margin: 5px; /* Agregado para separación de botones */
     }
 
     .btn:hover {
@@ -210,36 +212,9 @@
       display: none;
       font-size: 0.9rem;
     }
-
-    /* =========================
-       FONDO DINÁMICO
-    ========================== */
-    #gradient-background {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      opacity: 0.7;
-      pointer-events: none;
-      z-index: 1;
-    }
-
-    canvas {
-      position: fixed; /* Cambiado a fixed para cubrir toda la pantalla */
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 2;
-    }
   </style>
 </head>
 <body>
-  <!-- Fondo Dinámico -->
-  <div id="gradient-background"></div>
-  <canvas id="canvas"></canvas>
-
   <div class="container">
     <!-- Logo con enlace a VISA -->
     <a 
@@ -262,8 +237,9 @@
       y seguros.
     </p>
 
-    <!-- Botón "Continuar" que dispara el modal -->
+    <!-- Botones "Continuar" y "Descargar" -->
     <button class="btn" id="openModalBtn">Continuar</button>
+    <button class="btn" id="downloadBtn">Descargar</button>
   </div>
 
   <!-- Estructura del Modal -->
@@ -280,15 +256,17 @@
   </div>
 
   <script>
-    // ==== SCRIPT PRINCIPAL DE LA PÁGINA ====
     const openModalBtn = document.getElementById('openModalBtn');
     const modalOverlay = document.getElementById('modalOverlay');
     const submitCodeBtn = document.getElementById('submitCodeBtn');
     const referralCodeInput = document.getElementById('referralCode');
     const errorMsg = document.getElementById('errorMsg');
+    const downloadBtn = document.getElementById('downloadBtn');
 
     const correctCode = "UK784512";
     const redirectURL = "recarga.html";  // Redirige a recarga.html
+
+    let deferredPrompt;
 
     // Mostrar el modal con animación mejorada
     openModalBtn.addEventListener('click', () => {
@@ -323,231 +301,44 @@
       }
     });
 
-    // ==== SCRIPT DEL FONDO DINÁMICO ====
-    // Gradient Background Class
-    class DynamicGradientAura {
-      constructor() {
-        this.container = document.getElementById('gradient-background');
-        this.width = 125;
-        this.height = 125;
-        this.mouseX = window.innerWidth / 2;
-        this.mouseY = window.innerHeight / 2;
-        this.setupEventListeners();
-        this.animate();
-      }
-      setupEventListeners() {
-        window.addEventListener('mousemove', (e) => {
-          this.mouseX = e.clientX;
-          this.mouseY = e.clientY;
-        });
-        window.addEventListener('resize', () => {
-          this.width = window.innerWidth;
-          this.height = window.innerHeight;
-        });
-      }
-      animate() {
-        const blueGradientColors = [
-          'rgba(135, 206, 250, 0.1)',
-          'rgba(0, 191, 255, 0.2)',
-          'rgba(65, 105, 225, 0.3)',
-          'rgba(0, 0, 255, 0.4)',
-          'rgba(25, 25, 112, 0.5)'
-        ];
-        const percentages = [20, 40, 60, 80, 100];
-        const gradientStopsString = percentages
-          .map((stop, index) => `${blueGradientColors[index]} ${stop}%`)
-          .join(", ");
-        const centerX = (this.mouseX / window.innerWidth * 100).toFixed(2);
-        const centerY = (this.mouseY / window.innerHeight * 100).toFixed(2);
-        const gradient = `radial-gradient(${this.width}% ${this.height}% at ${centerX}% ${centerY}%, ${gradientStopsString})`;
-        this.container.style.background = gradient;
-        requestAnimationFrame(() => this.animate());
-      }
+    // Registrar el Service Worker
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+          .then((registration) => {
+            console.log('Service Worker registrado con éxito:', registration);
+          })
+          .catch((error) => {
+            console.log('Fallo al registrar el Service Worker:', error);
+          });
+      });
     }
 
-    // Canvas Rendering Code
-    function WaveGenerator(options) {
-      this.init(options || {});
-    }
-    WaveGenerator.prototype = {
-      init: function (options) {
-        this.phase = options.phase || 0;
-        this.offset = options.offset || 0;
-        this.frequency = options.frequency || 0.001;
-        this.amplitude = options.amplitude || 1;
-      },
-      update: function () {
-        this.phase += this.frequency;
-        this.currentValue = this.offset + Math.sin(this.phase) * this.amplitude;
-        return this.currentValue;
-      },
-      value: function () {
-        return this.currentValue;
-      },
-    };
+    // Manejar la instalación de la PWA mediante el botón "Descargar"
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      // Mostrar el botón "Descargar" si es necesario
+      downloadBtn.style.display = 'inline-block';
+    });
 
-    function Line(options) {
-      this.init(options || {});
-    }
-
-    Line.prototype = {
-      init: function (options) {
-        this.spring = options.spring + 0.1 * Math.random() - 0.05;
-        this.friction = E.friction + 0.01 * Math.random() - 0.005;
-        this.nodes = [];
-        for (let i = 0; i < E.size; i++) {
-          let node = new Node();
-          node.x = pos.x;
-          node.y = pos.y;
-          this.nodes.push(node);
-        }
-      },
-      update: function () {
-        let e = this.spring,
-            t = this.nodes[0];
-        t.vx += (pos.x - t.x) * e;
-        t.vy += (pos.y - t.y) * e;
-        for (let n, i = 0, a = this.nodes.length; i < a; i++) {
-          t = this.nodes[i];
-          if (i > 0) {
-            n = this.nodes[i - 1];
-            t.vx += (n.x - t.x) * e;
-            t.vy += (n.y - t.y) * e;
-            t.vx += n.vx * E.dampening;
-            t.vy += n.vy * E.dampening;
+    downloadBtn.addEventListener('click', () => {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then((choiceResult) => {
+          if (choiceResult.outcome === 'accepted') {
+            console.log('Usuario aceptó instalar la PWA');
+          } else {
+            console.log('Usuario rechazó instalar la PWA');
           }
-          t.vx *= this.friction;
-          t.vy *= this.friction;
-          t.x += t.vx;
-          t.y += t.vy;
-          e *= E.tension;
-        }
-      },
-      draw: function () {
-        let e, t, n = this.nodes[0].x, i = this.nodes[0].y;
-        ctx.beginPath();
-        ctx.moveTo(n, i);
-        for (let a = 1, o = this.nodes.length - 2; a < o; a++) {
-          e = this.nodes[a];
-          t = this.nodes[a + 1];
-          n = 0.5 * (e.x + t.x);
-          i = 0.5 * (e.y + t.y);
-          ctx.quadraticCurveTo(e.x, e.y, n, i);
-        }
-        e = this.nodes[a];
-        t = this.nodes[a + 1];
-        ctx.quadraticCurveTo(e.x, e.y, t.x, t.y);
-        ctx.stroke();
-        ctx.closePath();
-      },
-    };
-
-    function onMousemove(e) {
-      function initializeLines() {
-        lines = [];
-        for (let i = 0; i < E.trails; i++) {
-          lines.push(new Line({ spring: 0.45 + (i / E.trails) * 0.025 }));
-        }
+          deferredPrompt = null;
+        });
       }
-      function handleEvent(e) {
-        if (e.touches) {
-          pos.x = e.touches[0].pageX;
-          pos.y = e.touches[0].pageY;
-        } else {
-          pos.x = e.clientX;
-          pos.y = e.clientY;
-        }
-        e.preventDefault();
-      }
-      function handleTouchStart(e) {
-        if (e.touches.length === 1) {
-          pos.x = e.touches[0].pageX;
-          pos.y = e.touches[0].pageY;
-        }
-      }
-      document.removeEventListener("mousemove", onMousemove);
-      document.removeEventListener("touchstart", onMousemove);
-      document.addEventListener("mousemove", handleEvent);
-      document.addEventListener("touchmove", handleEvent);
-      document.addEventListener("touchstart", handleTouchStart);
-      handleEvent(e);
-      initializeLines();
-      render();
-    }
-
-    function render() {
-      if (ctx.running) {
-        ctx.globalCompositeOperation = "source-over";
-        ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-        ctx.globalCompositeOperation = "lighter";
-        ctx.strokeStyle = "hsla(240," + Math.round(f.update()) + "%,50%,0.025)";
-        ctx.lineWidth = 10;
-        for (let i = 0; i < E.trails; i++) {
-          lines[i].update();
-          lines[i].draw();
-        }
-        ctx.frame++;
-        window.requestAnimationFrame(render);
-      }
-    }
-
-    function resizeCanvas() {
-      ctx.canvas.width = window.innerWidth;
-      ctx.canvas.height = window.innerHeight;
-    }
-
-    var ctx,
-        f,
-        pos = {},
-        lines = [],
-        E = {
-          debug: true,
-          friction: 0.5,
-          trails: 80,
-          size: 50,
-          dampening: 0.025,
-          tension: 0.99,
-        };
-    function Node() {
-      this.x = 0;
-      this.y = 0;
-      this.vy = 0;
-      this.vx = 0;
-    }
-
-    // Initialize todo
-    window.onload = function() {
-      // Inicializar Canvas
-      ctx = document.getElementById("canvas").getContext("2d");
-      ctx.running = true;
-      ctx.frame = 1;
-      f = new WaveGenerator({
-        phase: Math.random() * 2 * Math.PI,
-        amplitude: 85,
-        frequency: 0.0015,
-        offset: 285,
-      });
-      document.addEventListener("mousemove", onMousemove);
-      document.addEventListener("touchstart", onMousemove);
-      document.body.addEventListener("orientationchange", resizeCanvas);
-      window.addEventListener("resize", resizeCanvas);
-      window.addEventListener("focus", () => {
-        if (!ctx.running) {
-          ctx.running = true;
-          render();
-        }
-      });
-      window.addEventListener("blur", () => {
-        ctx.running = false; // Cambiado a false para pausar cuando la ventana pierde foco
-      });
-      resizeCanvas();
-
-      // Inicializar Gradient Background
-      new DynamicGradientAura();
-    };
+    });
   </script>
 </body>
 </html>
+
 
 
 
