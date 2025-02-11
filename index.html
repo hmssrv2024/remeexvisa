@@ -18,9 +18,9 @@
   />
 
   <style>
-    /* ================================================
+    /* ====================================================
        RESET & ESTILOS GLOBALES
-    ================================================== */
+    ==================================================== */
     * {
       margin: 0;
       padding: 0;
@@ -29,55 +29,237 @@
     html, body {
       width: 100%;
       height: 100%;
-      font-family: 'Poppins', sans-serif;
       overflow: hidden;
+      font-family: 'Poppins', sans-serif;
     }
 
-    /* ================================================
+    /* ====================================================
        CANVAS DE FONDO (EFECTO VORTEX)
-    ================================================== */
+    ==================================================== */
     #canvas {
       position: fixed;
       top: 0;
       left: 0;
-      width: 100%;
-      height: 100%;
       z-index: 1;
       background: #000;
     }
 
-    /* ================================================
-       CONTENEDOR DEL CONTENIDO
-    ================================================== */
+    /* ====================================================
+       CONTENEDOR PRINCIPAL
+    ==================================================== */
     .container {
       position: relative;
-      z-index: 10; /* Se sitúa por encima del canvas */
+      z-index: 10; /* Por encima del canvas */
       text-align: center;
-      color: #fff;
+      max-width: 600px;
+      margin: 40px auto;
       padding: 20px;
+      opacity: 0;
+      animation: fadeIn 1s forwards;
     }
-    .container h1 {
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
+
+    /* ====================================================
+       LOGO & ANIMACIÓN
+    ==================================================== */
+    .logo-container {
+      display: inline-block;
+      margin-bottom: 30px;
+      transition: transform 0.3s ease;
+    }
+    .logo-container:hover {
+      transform: scale(1.05);
+    }
+    .logo {
+      width: 200px;
+      animation: logoAnimation 1.5s ease-in-out;
+    }
+    @keyframes logoAnimation {
+      0% { opacity: 0; transform: scale(0.8); }
+      50% { opacity: 1; transform: scale(1.1); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+
+    /* ====================================================
+       TEXTOS
+    ==================================================== */
+    h1 {
+      font-weight: 600;
       font-size: 2rem;
+      color: #ffffff;
       margin-bottom: 10px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.5);
     }
-    .container p {
+    p {
+      font-weight: 400;
       font-size: 1rem;
+      line-height: 1.6;
+      margin-bottom: 30px;
+      color: #ddd;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+    }
+
+    /* ====================================================
+       BOTONES MODERNOS CON EFECTO RIPPLE
+    ==================================================== */
+    .btn {
+      display: inline-block;
+      padding: 12px 24px;
+      background: linear-gradient(45deg, #1A1F71, #142f6f);
+      color: #ffffff;
+      text-decoration: none;
+      font-weight: 600;
+      border-radius: 8px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+      border: none;
+      outline: none;
+      box-shadow: 0 4px 15px rgba(26, 31, 113, 0.4);
+      position: relative;
+      overflow: hidden;
+    }
+    .btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(26, 31, 113, 0.6);
+    }
+    /* Efecto ripple */
+    .ripple {
+      position: absolute;
+      border-radius: 50%;
+      transform: scale(0);
+      animation: ripple-effect 0.6s linear;
+      background: rgba(255, 255, 255, 0.7);
+    }
+    @keyframes ripple-effect {
+      to {
+        transform: scale(4);
+        opacity: 0;
+      }
+    }
+
+    /* ====================================================
+       MODAL
+    ==================================================== */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 1rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease-out;
+    }
+    .modal-overlay.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .modal {
+      background: #ffffff;
+      padding: 2rem;
+      border-radius: 8px;
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      transform: scale(0.8);
+      opacity: 0;
+      transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+    }
+    .modal-overlay.show .modal {
+      transform: scale(1);
+      opacity: 1;
+    }
+    .modal h2 {
+      margin-bottom: 0.5rem;
+      color: #1A1F71;
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+    .modal p {
+      margin-bottom: 1rem;
+      font-size: 0.95rem;
+      color: #555;
+    }
+    .modal input {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 1rem;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    .modal input:focus {
+      border-color: #1A1F71;
+      outline: none;
+      box-shadow: 0 0 5px rgba(26, 31, 113, 0.3);
+    }
+    .modal .btn {
+      width: 100%;
+      padding: 12px;
+    }
+    .modal .error {
+      color: red;
+      margin-top: 0.5rem;
+      display: none;
+      font-size: 0.9rem;
     }
   </style>
 </head>
 <body>
-  <!-- Canvas con el efecto vortex de fondo -->
+  <!-- Canvas de fondo con efecto vortex -->
   <canvas id="canvas"></canvas>
-
-  <!-- Contenido principal que se muestra sobre el canvas -->
+  
+  <!-- Contenido principal -->
   <div class="container">
+    <!-- Logo con enlace a VISA -->
+    <a 
+      href="https://inicio.remeexvisa.com" 
+      rel="noopener noreferrer" 
+      class="logo-container"
+    >
+      <img 
+        src="https://cdn.visa.com/v2/assets/images/logos/visa/blue/logo.png"
+        alt="Logo VISA"
+        class="logo"
+      />
+    </a>
+
+    <!-- Título y descripción -->
     <h1>Bienvenido a VISA Remeex</h1>
     <p>
-      La evolución de las transferencias internacionales, respaldada por la solidez global de VISA.
+      La evolución de las transferencias internacionales, respaldada por la 
+      solidez global de VISA. Tecnología de vanguardia para envíos instantáneos 
+      y seguros.
     </p>
+
+    <!-- Botón "Continuar" (abre el modal) -->
+    <button class="btn" id="openModalBtn">Continuar</button>
   </div>
 
-  <!-- IFRAME oculto para reproducir el audio del video de YouTube en bucle -->
+  <!-- Estructura del Modal -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+      <h2>¡Hola, Usuario VIP de VISA!</h2>
+      <p>
+        Ingresa tu código de acceso, lo encuentras en tu app VISA en la sección Remeex. ¡Vive la experiencia sin límites!
+      </p>
+      <input type="text" id="referralCode" placeholder="Código de Referido" />
+      <button class="btn" id="submitCodeBtn">Continuar</button>
+      <p class="error" id="errorMsg">Código incorrecto. Inténtalo de nuevo.</p>
+    </div>
+  </div>
+
+  <!-- IFRAME oculto para reproducir solo el audio de YouTube -->
   <iframe 
     id="audioPlayer"
     src="https://www.youtube.com/embed/_bBNh_sB3CU?autoplay=1&loop=1&playlist=_bBNh_sB3CU&controls=0&modestbranding=1"
@@ -85,18 +267,79 @@
     style="position: absolute; width: 1px; height: 1px; border: 0; opacity: 0; pointer-events: none;">
   </iframe>
 
-  <!-- ================================================
-       SCRIPT: EFECTO VORTEX
-  ================================================== -->
+  <!-- ====================================================
+       SCRIPTS: Modal, Ripple y Efecto Vortex
+  ==================================================== -->
   <script>
+    /* --- Efecto Ripple para botones --- */
+    document.querySelectorAll('.btn').forEach(button => {
+      button.addEventListener('click', function(e) {
+        // Elimina cualquier ripple existente
+        const existingRipple = this.querySelector('.ripple');
+        if(existingRipple) {
+          existingRipple.remove();
+        }
+        // Coordenadas del clic relativo al botón
+        const rect = this.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        // Crea el elemento ripple
+        const ripple = document.createElement('span');
+        ripple.classList.add('ripple');
+        ripple.style.left = x + 'px';
+        ripple.style.top = y + 'px';
+        ripple.style.width = ripple.style.height = Math.max(rect.width, rect.height) + 'px';
+        this.appendChild(ripple);
+        // Elimina el ripple al finalizar la animación
+        ripple.addEventListener('animationend', () => {
+          ripple.remove();
+        });
+      });
+    });
+
+    /* --- Funcionalidad del Modal --- */
+    const openModalBtn = document.getElementById('openModalBtn');
+    const modalOverlay = document.getElementById('modalOverlay');
+    const submitCodeBtn = document.getElementById('submitCodeBtn');
+    const referralCodeInput = document.getElementById('referralCode');
+    const errorMsg = document.getElementById('errorMsg');
+
+    const correctCode = "UK784512";
+    const redirectURL = "recarga.html";  // Redirige a recarga.html
+
+    openModalBtn.addEventListener('click', () => {
+      modalOverlay.classList.add('show');
+      referralCodeInput.value = '';
+      errorMsg.style.display = 'none';
+      referralCodeInput.focus();
+    });
+
+    submitCodeBtn.addEventListener('click', () => {
+      const enteredCode = referralCodeInput.value.trim();
+      if (enteredCode === correctCode) {
+        window.location.href = redirectURL;
+      } else {
+        errorMsg.style.display = 'block';
+      }
+    });
+
+    modalOverlay.addEventListener('click', (e) => {
+      if (e.target === modalOverlay) {
+        modalOverlay.classList.remove('show');
+      }
+    });
+
+    referralCodeInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        submitCodeBtn.click();
+      }
+    });
+
+    /* --- Efecto Vortex en el Canvas --- */
     const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
 
-    let width, height, center;
-    let particles = [];
-    let frame = 0;
-
-    // Configuración del efecto vortex
+    // Configuración del efecto
     const config = {
       particleCount: 700,
       baseHue: 220,
@@ -108,6 +351,10 @@
       rangeY: 100,
       backgroundColor: '#000000'
     };
+
+    let width, height, center;
+    let particles = [];
+    let frame = 0;
 
     // Clase Partícula
     class Particle {
@@ -123,6 +370,98 @@
         this.ttl = 50 + Math.random() * 150;
         this.speed = config.baseSpeed + Math.random() * config.rangeSpeed;
         this.radius = config.baseRadius + Math.random() * config.rangeRadius;
+        this.hue = config.baseHue + Math.random() * config.rangeHue;
+      }
+      update() {
+        // Aproximación de ruido simple
+        const angle = (frame + this.x * 0.01 + this.y * 0.01) * 0.02;
+        this.vx = lerp(this.vx, Math.cos(angle), 0.5);
+        this.vy = lerp(this.vy, Math.sin(angle), 0.5);
+        this.x += this.vx * this.speed;
+        this.y += this.vy * this.speed;
+        this.life++;
+        if (this.isOutOfBounds() || this.life > this.ttl) {
+          this.reset();
+        }
+      }
+      draw() {
+        const opacity = this.fadeInOut();
+        ctx.save();
+        ctx.strokeStyle = `hsla(${this.hue},100%,60%,${opacity})`;
+        ctx.lineWidth = this.radius;
+        ctx.lineCap = 'round';
+        ctx.beginPath();
+        ctx.moveTo(this.x, this.y);
+        ctx.lineTo(this.x + this.vx * this.speed, this.y + this.vy * this.speed);
+        ctx.stroke();
+        ctx.restore();
+      }
+      fadeInOut() {
+        const half = this.ttl * 0.5;
+        const pos = Math.abs(this.life - half);
+        return 1 - (pos / half);
+      }
+      isOutOfBounds() {
+        return this.x < 0 || this.x > width || this.y < 0 || this.y > height;
+      }
+    }
+
+    // Función auxiliar de interpolación lineal
+    function lerp(start, end, amt) {
+      return (1 - amt) * start + amt * end;
+    }
+
+    // Ajusta el tamaño del canvas
+    function resize() {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = width;
+      canvas.height = height;
+      center = { x: width * 0.5, y: height * 0.5 };
+    }
+
+    // Inicializa las partículas
+    function initParticles() {
+      particles = Array.from({ length: config.particleCount }, () => new Particle());
+    }
+
+    // Ciclo de renderizado
+    function render() {
+      frame++;
+      ctx.fillStyle = config.backgroundColor;
+      ctx.fillRect(0, 0, width, height);
+      particles.forEach(particle => {
+        particle.update();
+        particle.draw();
+      });
+      // Efectos de resplandor
+      ctx.save();
+      ctx.filter = 'blur(8px) brightness(200%)';
+      ctx.globalCompositeOperation = 'lighter';
+      ctx.drawImage(canvas, 0, 0);
+      ctx.restore();
+
+      ctx.save();
+      ctx.filter = 'blur(4px) brightness(200%)';
+      ctx.globalCompositeOperation = 'lighter';
+      ctx.drawImage(canvas, 0, 0);
+      ctx.restore();
+
+      requestAnimationFrame(render);
+    }
+
+    window.addEventListener('resize', () => {
+      resize();
+      initParticles();
+    });
+
+    // Inicia la animación
+    resize();
+    initParticles();
+    render();
+  </script>
+</body>
+</html>
 
 
 
