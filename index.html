@@ -1,10 +1,11 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
   <title>VISA Remeex - Página Principal</title>
-  
+  <!-- Vista adaptable para móviles -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <!-- Favicon -->
   <link 
     rel="icon" 
@@ -32,6 +33,10 @@
       height: 100%;
       overflow: hidden;
       font-family: 'Poppins', sans-serif;
+      /* Centrado con Flexbox */
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 
     /* ====================================================
@@ -50,10 +55,9 @@
     ==================================================== */
     .container {
       position: relative;
-      z-index: 10; /* Por encima del canvas */
+      z-index: 10; /* Siempre por encima del canvas */
       text-align: center;
       max-width: 600px;
-      margin: 40px auto;
       padding: 20px;
       opacity: 0;
       animation: fadeIn 1s forwards;
@@ -214,6 +218,29 @@
       display: none;
       font-size: 0.9rem;
     }
+
+    /* ====================================================
+       ESTILOS RESPONSIVOS PARA MÓVILES
+    ==================================================== */
+    @media (max-width: 600px) {
+      .container {
+        max-width: 90%;
+        padding: 10px;
+      }
+      h1 {
+        font-size: 1.5rem;
+      }
+      p {
+        font-size: 0.9rem;
+      }
+      .logo {
+        width: 150px;
+      }
+      .btn {
+        padding: 10px 20px;
+        font-size: 0.9rem;
+      }
+    }
   </style>
 </head>
 <body>
@@ -261,7 +288,7 @@
   </div>
 
   <!-- IFRAME oculto para reproducir solo el audio de YouTube -->
-  <!-- Se eliminó el atributo src para cargarlo tras la interacción del usuario -->
+  <!-- Se carga tras la interacción del usuario -->
   <iframe 
     id="audioPlayer"
     allow="autoplay"
@@ -345,13 +372,13 @@
       }
     });
 
-    /* --- Efecto Vortex en el Canvas --- */
+    /* --- Efecto Vortex en el Canvas con destellos, parpadeos y glow --- */
     const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
 
     // Configuración del efecto
     const config = {
-      particleCount: 700,
+      particleCount: 700,  // Se ajusta en función de la pantalla
       baseHue: 220,
       rangeHue: 100,
       baseSpeed: 0.0,
@@ -366,7 +393,7 @@
     let particles = [];
     let frame = 0;
 
-    // Clase Partícula
+    // Clase Partícula con efecto de parpadeo (twinkle)
     class Particle {
       constructor() {
         this.reset();
@@ -381,9 +408,10 @@
         this.speed = config.baseSpeed + Math.random() * config.rangeSpeed;
         this.radius = config.baseRadius + Math.random() * config.rangeRadius;
         this.hue = config.baseHue + Math.random() * config.rangeHue;
+        this.phase = Math.random() * Math.PI * 2;  // Fase para el efecto twinkle
       }
       update() {
-        // Aproximación de ruido simple
+        // Ángulo influenciado por la posición y el frame para simular movimiento turbulento
         const angle = (frame + this.x * 0.01 + this.y * 0.01) * 0.02;
         this.vx = lerp(this.vx, Math.cos(angle), 0.5);
         this.vy = lerp(this.vy, Math.sin(angle), 0.5);
@@ -395,7 +423,11 @@
         }
       }
       draw() {
-        const opacity = this.fadeInOut();
+        // Calcula la opacidad base según la vida y añade un parpadeo individual
+        const baseOpacity = this.fadeInOut();
+        const flicker = 0.8 + 0.2 * Math.sin(frame * 0.1 + this.phase);
+        const opacity = baseOpacity * flicker;
+        
         ctx.save();
         ctx.strokeStyle = `hsla(${this.hue},100%,60%,${opacity})`;
         ctx.lineWidth = this.radius;
@@ -405,6 +437,16 @@
         ctx.lineTo(this.x + this.vx * this.speed, this.y + this.vy * this.speed);
         ctx.stroke();
         ctx.restore();
+
+        // Destello extra ocasional para más efecto de brillo
+        if (Math.random() < 0.01) {
+          ctx.save();
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.radius * 3, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(255,255,255,${opacity})`;
+          ctx.fill();
+          ctx.restore();
+        }
       }
       fadeInOut() {
         const half = this.ttl * 0.5;
@@ -421,13 +463,25 @@
       return (1 - amt) * start + amt * end;
     }
 
-    // Ajusta el tamaño del canvas
+    // Ajusta el tamaño del canvas y considera el devicePixelRatio para mayor nitidez en móviles
     function resize() {
       width = window.innerWidth;
       height = window.innerHeight;
-      canvas.width = width;
-      canvas.height = height;
-      center = { x: width * 0.5, y: height * 0.5 };
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
+      canvas.style.width = width + 'px';
+      canvas.style.height = height + 'px';
+      ctx.scale(dpr, dpr);
+      center = { x: width / 2, y: height / 2 };
+      
+      // Ajusta la cantidad de partículas según el ancho (optimización para móviles)
+      if(width < 600) {
+        config.particleCount = 500;
+      } else {
+        config.particleCount = 700;
+      }
+      initParticles();
     }
 
     // Inicializa las partículas
@@ -438,21 +492,31 @@
     // Ciclo de renderizado
     function render() {
       frame++;
+      // Dibuja el fondo
       ctx.fillStyle = config.backgroundColor;
       ctx.fillRect(0, 0, width, height);
+
+      // Actualiza y dibuja cada partícula
       particles.forEach(particle => {
         particle.update();
         particle.draw();
       });
-      // Efectos de resplandor
+
+      // Aplicar efectos de resplandor (glow) en varias pasadas
       ctx.save();
-      ctx.filter = 'blur(8px) brightness(200%)';
+      ctx.filter = 'blur(8px) brightness(250%)';
       ctx.globalCompositeOperation = 'lighter';
       ctx.drawImage(canvas, 0, 0);
       ctx.restore();
 
       ctx.save();
-      ctx.filter = 'blur(4px) brightness(200%)';
+      ctx.filter = 'blur(4px) brightness(250%)';
+      ctx.globalCompositeOperation = 'lighter';
+      ctx.drawImage(canvas, 0, 0);
+      ctx.restore();
+
+      ctx.save();
+      ctx.filter = 'blur(2px) brightness(300%)';
       ctx.globalCompositeOperation = 'lighter';
       ctx.drawImage(canvas, 0, 0);
       ctx.restore();
@@ -462,7 +526,6 @@
 
     window.addEventListener('resize', () => {
       resize();
-      initParticles();
     });
 
     // Inicia la animación
