@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -242,7 +243,7 @@
       y seguros.
     </p>
 
-    <!-- Botón "Continuar" (abre el modal) -->
+    <!-- Botón "Continuar" (abre el modal y carga el audio) -->
     <button class="btn" id="openModalBtn">Continuar</button>
   </div>
 
@@ -260,9 +261,9 @@
   </div>
 
   <!-- IFRAME oculto para reproducir solo el audio de YouTube -->
+  <!-- Se eliminó el atributo src para cargarlo tras la interacción del usuario -->
   <iframe 
     id="audioPlayer"
-    src="https://www.youtube.com/embed/_bBNh_sB3CU?autoplay=1&loop=1&playlist=_bBNh_sB3CU&controls=0&modestbranding=1"
     allow="autoplay"
     style="position: absolute; width: 1px; height: 1px; border: 0; opacity: 0; pointer-events: none;">
   </iframe>
@@ -297,12 +298,16 @@
       });
     });
 
-    /* --- Funcionalidad del Modal --- */
+    /* --- Funcionalidad del Modal y carga del audio --- */
     const openModalBtn = document.getElementById('openModalBtn');
     const modalOverlay = document.getElementById('modalOverlay');
     const submitCodeBtn = document.getElementById('submitCodeBtn');
     const referralCodeInput = document.getElementById('referralCode');
     const errorMsg = document.getElementById('errorMsg');
+    // Referencia al iframe del audio
+    const audioPlayer = document.getElementById('audioPlayer');
+    // URL del video de YouTube con autoplay y demás parámetros
+    const youtubeURL = "https://www.youtube.com/embed/_bBNh_sB3CU?autoplay=1&loop=1&playlist=_bBNh_sB3CU&controls=0&modestbranding=1";
 
     const correctCode = "UK784512";
     const redirectURL = "recarga.html";  // Redirige a recarga.html
@@ -312,6 +317,11 @@
       referralCodeInput.value = '';
       errorMsg.style.display = 'none';
       referralCodeInput.focus();
+
+      // Carga el iframe con la URL de YouTube para reproducir el audio
+      if (!audioPlayer.src) {
+        audioPlayer.src = youtubeURL;
+      }
     });
 
     submitCodeBtn.addEventListener('click', () => {
@@ -462,7 +472,6 @@
   </script>
 </body>
 </html>
-
 
 
 
