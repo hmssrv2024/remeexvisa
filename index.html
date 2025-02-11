@@ -15,12 +15,12 @@
     :root {
       --visa-blue: #1A1F71;
       --visa-dark: #2C3E50;
-      --visa-gold: #F7B600;
+      --visa-light: #4A70D3; /* Nuevo tono azul claro para degradados */
       --text-primary: #FFFFFF;
       --text-secondary: rgba(255, 255, 255, 0.85);
-      --shadow-sm: 0 2px 4px rgba(0,0,0,0.1);
-      --shadow-md: 0 4px 8px rgba(0,0,0,0.12);
-      --shadow-lg: 0 8px 16px rgba(0,0,0,0.16);
+      --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+      --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.12);
+      --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.16);
       --animation-duration: 0.3s;
       --background-color: #000;
     }
@@ -48,22 +48,25 @@
     }
 
     /* =====================================================
-       CONTENEDOR PRINCIPAL CON GLASSMORPHISM
+       CONTENEDOR PRINCIPAL CON EFECTO GLASSMORPHISM MODIFICADO
+       (Ahora ocupa toda la ventana y la opacidad del azul es menor)
     ====================================================== */
     .main-container {
       position: relative;
       z-index: 10;
-      min-height: 100vh;
+      width: 100vw;
+      height: 100vh;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       padding: 2rem;
       text-align: center;
-      background: rgba(255, 255, 255, 0.05);
-      backdrop-filter: blur(10px);
-      border-radius: 12px;
-      margin: 2rem;
+      /* Fondo azul Visa con menor intensidad (más transparente) */
+      background: rgba(26, 31, 113, 0.3);
+      backdrop-filter: blur(8px);
+      /* Se han quitado margin y border-radius para cubrir toda la ventana */
+      box-shadow: none;
       animation: fadeIn 1s forwards;
     }
     @keyframes fadeIn {
@@ -71,31 +74,28 @@
       to { opacity: 1; transform: scale(1); }
     }
 
-    .logo-container {
-      position: relative;
-      margin-bottom: 2rem;
-      transition: transform var(--animation-duration) ease;
-    }
-    .logo-container:hover {
-      transform: translateY(-5px);
-    }
-    .logo {
-      width: 220px;
-      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2));
+    /* =====================================================
+       ESTILO DEL LOGO VISA
+    ====================================================== */
+    .visa-logo {
+      display: block;
+      width: 300px;
+      max-width: 100%;
+      margin: 0 auto 2rem auto;
     }
 
     /* =====================================================
-       TÍTULO CON GRADIENTE DINÁMICO
+       TÍTULO CON GRADIENTE DINÁMICO (AZUL)
     ====================================================== */
     h1 {
       font-size: 2.5rem;
       font-weight: 700;
       margin-bottom: 1rem;
-      background: linear-gradient(270deg, #ffffff, var(--visa-gold), #ffffff);
+      background: linear-gradient(270deg, #ffffff, var(--visa-blue), #ffffff);
       background-size: 400% 400%;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      text-shadow: var(--shadow-sm);
+      text-shadow: 0 0 10px rgba(26,31,113,0.7);
       animation: gradientAnimation 8s ease infinite;
     }
     @keyframes gradientAnimation {
@@ -113,15 +113,14 @@
     }
 
     /* =====================================================
-       BOTÓN CON EFECTOS MODERNOS Y ANIMACIÓN DE GRADIENTE
+       BOTÓN CON EFECTOS MODERNOS Y GRADIENTE AZUL
     ====================================================== */
     .btn-primary {
       padding: 1rem 2.5rem;
       font-size: 1.1rem;
       font-weight: 600;
       color: #fff;
-      /* Se utiliza un gradiente animado */
-      background: linear-gradient(270deg, var(--visa-blue), var(--visa-dark), var(--visa-gold), var(--visa-blue));
+      background: linear-gradient(270deg, var(--visa-blue), var(--visa-light), var(--visa-blue));
       background-size: 200% 200%;
       border: none;
       border-radius: 50px;
@@ -129,7 +128,7 @@
       transition: transform var(--animation-duration) ease, box-shadow var(--animation-duration) ease;
       position: relative;
       overflow: hidden;
-      box-shadow: var(--shadow-md);
+      box-shadow: 0 0 10px rgba(26,31,113,0.7);
       animation: buttonGradientAnimation 5s ease infinite;
     }
     @keyframes buttonGradientAnimation {
@@ -139,8 +138,7 @@
     }
     .btn-primary:hover {
       transform: translateY(-2px) scale(1.02);
-      box-shadow: var(--shadow-lg);
-      /* Se puede omitir cambiar el background para mantener la animación */
+      box-shadow: 0 0 15px rgba(26,31,113,0.9);
     }
     /* Ripple effect */
     .ripple {
@@ -155,12 +153,12 @@
     }
 
     /* =====================================================
-       MODAL
+       MODAL CON DISEÑO AZUL Y GLOW
     ====================================================== */
     .modal-overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
-      background-color: rgba(0, 0, 0, 0.6);
+      background-color: rgba(0, 0, 0, 0.7);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -175,42 +173,65 @@
       pointer-events: auto;
     }
     .modal {
-      background: rgba(255, 255, 255, 0.95);
+      position: relative;
+      background: rgba(26, 31, 113, 0.95);
       border-radius: 20px;
       padding: 2.5rem;
-      box-shadow: var(--shadow-lg);
+      box-shadow: 0 0 25px rgba(26,31,113,0.8);
       transform: scale(0.95);
       opacity: 0;
       transition: transform 0.3s ease-out, opacity 0.3s ease-out;
       text-align: center;
       max-width: 400px;
       width: 100%;
+      overflow: hidden;
     }
     .modal-overlay.show .modal {
       transform: scale(1);
       opacity: 1;
     }
+    .modal::before {
+      content: "";
+      position: absolute;
+      top: -20px;
+      left: -20px;
+      right: -20px;
+      bottom: -20px;
+      background: linear-gradient(45deg, var(--visa-blue), var(--visa-light), var(--visa-blue));
+      z-index: -1;
+      filter: blur(20px);
+      opacity: 0.8;
+      animation: aura 3s infinite alternate;
+      border-radius: inherit;
+    }
+    @keyframes aura {
+      from { transform: translate(0, 0); }
+      to { transform: translate(10px, 10px); }
+    }
     .modal h2 {
-      color: var(--visa-blue);
+      color: #fff;
       font-size: 1.8rem;
       margin-bottom: 1rem;
+      text-shadow: 0 0 10px rgba(26,31,113,0.7);
     }
     .modal p {
-      color: var(--text-secondary);
+      color: #fff;
       margin-bottom: 1.5rem;
     }
     .modal input {
       width: 100%;
       padding: 1rem;
-      border: 2px solid #E5E7EB;
+      border: 2px solid rgba(255,255,255,0.3);
       border-radius: 12px;
       font-size: 1rem;
       transition: all var(--animation-duration) ease;
       margin-bottom: 1.5rem;
+      background: rgba(255,255,255,0.1);
+      color: #fff;
     }
     .modal input:focus {
-      border-color: var(--visa-blue);
-      box-shadow: 0 0 0 4px rgba(26, 31, 113, 0.1);
+      border-color: var(--visa-light);
+      box-shadow: 0 0 0 4px rgba(74,112,211,0.2);
       outline: none;
     }
     .modal .btn-primary {
@@ -223,16 +244,17 @@
       display: none;
       font-size: 0.9rem;
     }
+    /* Se eliminaron las reglas relacionadas con el logo en el modal */
 
     /* =====================================================
        RESPONSIVIDAD
     ====================================================== */
     @media (max-width: 768px) {
-      .main-container { margin: 1rem; padding: 1.5rem; }
+      .main-container { padding: 1.5rem; }
       h1 { font-size: 2rem; }
       p { font-size: 1rem; }
-      .logo { width: 180px; }
       .btn-primary { padding: 0.8rem 2rem; font-size: 1rem; }
+      .visa-logo { width: 200px; }
     }
   </style>
 </head>
@@ -240,11 +262,11 @@
   <!-- Fondo dinámico con efecto Vortex -->
   <canvas id="canvas"></canvas>
   
-  <!-- Contenido principal con efecto glassmorphism -->
+  <!-- Contenido principal con efecto glassmorphism modificado -->
   <main class="main-container">
-    <div class="logo-container">
-      <img src="https://cdn.visa.com/v2/assets/images/logos/visa/blue/logo.png" alt="Logo VISA" class="logo">
-    </div>
+    <!-- Logo VISA agregado de forma destacada -->
+    <img src="https://cdn.visa.com/v2/assets/images/logos/visa/blue/logo.png" alt="Visa Logo" class="visa-logo">
+    
     <h1>Bienvenido a la Nueva Era de VISA Remeex</h1>
     <p>
       Descubre una forma revolucionaria de realizar transferencias internacionales,
@@ -257,9 +279,10 @@
   <!-- Estructura del Modal -->
   <div class="modal-overlay" id="modalOverlay">
     <div class="modal">
-      <h2>Acceso VIP VISA</h2>
-      <p>Ingresa tu código exclusivo de acceso VISA Remeex para continuar con tu experiencia premium.</p>
-      <input type="text" id="referralCode" placeholder="Introduce tu código VIP" autocomplete="off">
+      <!-- Se eliminó el logo del modal -->
+      <h2>Acceso Exclusivo Remeex</h2>
+      <p>Introduce tu código Remeex, disponible en la aplicación VISA, para acceder a tu experiencia exclusiva.</p>
+      <input type="text" id="referralCode" placeholder="Código Remeex" autocomplete="off">
       <button class="btn-primary" id="submitCodeBtn">Verificar Acceso</button>
       <p class="error" id="errorMsg">Código incorrecto. Por favor, verifica e intenta nuevamente.</p>
     </div>
