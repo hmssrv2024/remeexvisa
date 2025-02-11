@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <title>VISA Remeex - Página Principal</title>
-
+  
   <!-- Favicon -->
   <link 
     rel="icon" 
@@ -17,327 +17,113 @@
     rel="stylesheet"
   />
 
-  <!-- Manifest -->
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#1A1F71">
-
   <style>
-    /* =========================
-       RESET & ESTILOS GENERALES
-    ========================== */
+    /* ================================================
+       RESET & ESTILOS GLOBALES
+    ================================================== */
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
-
-    body {
+    html, body {
+      width: 100%;
+      height: 100%;
       font-family: 'Poppins', sans-serif;
-      background-color: #ffffff;
-      color: #333333;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
       overflow: hidden;
     }
 
-    .container {
-      text-align: center;
-      max-width: 600px;
-      margin: 40px auto;
-      padding: 20px;
-      opacity: 0;
-      animation: fadeIn 1s forwards;
-    }
-
-    @keyframes fadeIn {
-      to { opacity: 1; }
-    }
-
-    /* =========================
-       LOGO & ANIMACIÓN
-    ========================== */
-    .logo-container {
-      display: inline-block;
-      margin-bottom: 30px;
-      transition: transform 0.3s ease;
-    }
-
-    .logo-container:hover {
-      transform: scale(1.05);
-    }
-
-    .logo {
-      width: 200px;
-      animation: logoAnimation 1.5s ease-in-out;
-    }
-
-    @keyframes logoAnimation {
-      0% {
-        opacity: 0;
-        transform: scale(0.8);
-      }
-      50% {
-        opacity: 1;
-        transform: scale(1.1);
-      }
-      100% {
-        opacity: 1;
-        transform: scale(1);
-      }
-    }
-
-    /* =========================
-       TEXTO
-    ========================== */
-    h1 {
-      font-weight: 600;
-      font-size: 2rem;
-      color: #1A1F71;
-      margin-bottom: 10px;
-    }
-
-    p {
-      font-weight: 400;
-      font-size: 1rem;
-      line-height: 1.6;
-      margin-bottom: 30px;
-      color: #444444;
-    }
-
-    /* =========================
-       BOTÓN PRINCIPAL
-    ========================== */
-    .btn {
-      display: inline-block;
-      padding: 12px 24px;
-      background-color: #1A1F71;
-      color: #ffffff;
-      text-decoration: none;
-      font-weight: 600;
-      border-radius: 5px;
-      transition: background-color 0.3s ease, transform 0.2s ease;
-      cursor: pointer;
-      border: none;
-      outline: none;
-      margin: 5px; /* Agregado para separación de botones */
-    }
-
-    .btn:hover {
-      background-color: #142f6f;
-      transform: translateY(-2px) scale(1.02);
-    }
-
-    /* =========================
-       MODAL
-    ========================== */
-    .modal-overlay {
+    /* ================================================
+       CANVAS DE FONDO (EFECTO VORTEX)
+    ================================================== */
+    #canvas {
       position: fixed;
       top: 0;
       left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: rgba(0, 0, 0, 0.6);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-      padding: 1rem;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.3s ease-out;
-    }
-
-    .modal-overlay.show {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    .modal {
-      background: #ffffff;
-      padding: 2rem;
-      border-radius: 8px;
-      max-width: 400px;
       width: 100%;
+      height: 100%;
+      z-index: 1;
+      background: #000;
+    }
+
+    /* ================================================
+       CONTENEDOR DEL CONTENIDO
+    ================================================== */
+    .container {
+      position: relative;
+      z-index: 10; /* Se sitúa por encima del canvas */
       text-align: center;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-      transform: scale(0.8);
-      opacity: 0;
-      transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+      color: #fff;
+      padding: 20px;
     }
-
-    .modal-overlay.show .modal {
-      transform: scale(1);
-      opacity: 1;
+    .container h1 {
+      font-size: 2rem;
+      margin-bottom: 10px;
     }
-
-    .modal h2 {
-      margin-bottom: 0.5rem;
-      color: #1A1F71;
-      font-size: 1.5rem;
-      font-weight: 600;
-    }
-
-    .modal p {
-      margin-bottom: 1rem;
-      font-size: 0.95rem;
-      color: #555;
-    }
-
-    .modal input {
-      width: 100%;
-      padding: 12px;
-      margin-bottom: 1rem;
-      border: 1px solid #ccc;
-      border-radius: 4px;
+    .container p {
       font-size: 1rem;
-      transition: border-color 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .modal input:focus {
-      border-color: #1A1F71;
-      outline: none;
-      box-shadow: 0 0 5px rgba(26, 31, 113, 0.3);
-    }
-
-    .modal .btn {
-      width: 100%;
-      padding: 12px;
-    }
-
-    .modal .error {
-      color: red;
-      margin-top: 0.5rem;
-      display: none;
-      font-size: 0.9rem;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <!-- Logo con enlace a VISA -->
-    <a 
-      href="https://inicio.remeexvisa.com" 
-      rel="noopener noreferrer" 
-      class="logo-container"
-    >
-      <img 
-        src="https://cdn.visa.com/v2/assets/images/logos/visa/blue/logo.png"
-        alt="Logo VISA"
-        class="logo"
-      />
-    </a>
+  <!-- Canvas con el efecto vortex de fondo -->
+  <canvas id="canvas"></canvas>
 
-    <!-- Título y descripción -->
+  <!-- Contenido principal que se muestra sobre el canvas -->
+  <div class="container">
     <h1>Bienvenido a VISA Remeex</h1>
     <p>
-      La evolución de las transferencias internacionales, respaldada por la 
-      solidez global de VISA. Tecnología de vanguardia para envíos instantáneos 
-      y seguros.
+      La evolución de las transferencias internacionales, respaldada por la solidez global de VISA.
     </p>
-
-    <!-- Botones "Continuar" y "Descargar" -->
-    <button class="btn" id="openModalBtn">Continuar</button>
-    <button class="btn" id="downloadBtn">Descargar</button>
   </div>
 
-  <!-- Estructura del Modal -->
-  <div class="modal-overlay" id="modalOverlay">
-    <div class="modal">
-      <h2>¡Hola, Usuario VIP de VISA!</h2>
-      <p>
-        Ingresa tu código de acceso, lo encuentras en tu app VISA en la sección Remeex. Vive la experiencia sin límites!
-      </p>
-      <input type="text" id="referralCode" placeholder="Código de Referido" />
-      <button class="btn" id="submitCodeBtn">Continuar</button>
-      <p class="error" id="errorMsg">Código incorrecto. Inténtalo de nuevo.</p>
-    </div>
-  </div>
+  <!-- IFRAME oculto para reproducir el audio del video de YouTube en bucle -->
+  <iframe 
+    id="audioPlayer"
+    src="https://www.youtube.com/embed/_bBNh_sB3CU?autoplay=1&loop=1&playlist=_bBNh_sB3CU&controls=0&modestbranding=1"
+    allow="autoplay"
+    style="position: absolute; width: 1px; height: 1px; border: 0; opacity: 0; pointer-events: none;">
+  </iframe>
 
+  <!-- ================================================
+       SCRIPT: EFECTO VORTEX
+  ================================================== -->
   <script>
-    const openModalBtn = document.getElementById('openModalBtn');
-    const modalOverlay = document.getElementById('modalOverlay');
-    const submitCodeBtn = document.getElementById('submitCodeBtn');
-    const referralCodeInput = document.getElementById('referralCode');
-    const errorMsg = document.getElementById('errorMsg');
-    const downloadBtn = document.getElementById('downloadBtn');
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
 
-    const correctCode = "UK408026";
-    const redirectURL = "recarga.html";  // Redirige a recarga.html
+    let width, height, center;
+    let particles = [];
+    let frame = 0;
 
-    let deferredPrompt;
+    // Configuración del efecto vortex
+    const config = {
+      particleCount: 700,
+      baseHue: 220,
+      rangeHue: 100,
+      baseSpeed: 0.0,
+      rangeSpeed: 1.5,
+      baseRadius: 1,
+      rangeRadius: 2,
+      rangeY: 100,
+      backgroundColor: '#000000'
+    };
 
-    // Mostrar el modal con animación mejorada
-    openModalBtn.addEventListener('click', () => {
-      modalOverlay.classList.add('show');
-      referralCodeInput.value = '';
-      errorMsg.style.display = 'none';
-      referralCodeInput.focus();
-    });
-
-    // Manejar la validación del código al hacer clic en "Continuar" del modal
-    submitCodeBtn.addEventListener('click', () => {
-      const enteredCode = referralCodeInput.value.trim();
-      if (enteredCode === correctCode) {
-        // Redirigir en la misma ventana
-        window.location.href = redirectURL;
-      } else {
-        errorMsg.style.display = 'block';
+    // Clase Partícula
+    class Particle {
+      constructor() {
+        this.reset();
       }
-    });
+      reset() {
+        this.x = Math.random() * width;
+        this.y = center.y + (Math.random() * config.rangeY * 2 - config.rangeY);
+        this.vx = 0;
+        this.vy = 0;
+        this.life = 0;
+        this.ttl = 50 + Math.random() * 150;
+        this.speed = config.baseSpeed + Math.random() * config.rangeSpeed;
+        this.radius = config.baseRadius + Math.random() * config.rangeRadius;
 
-    // Cerrar modal al hacer clic fuera del contenido (opcional)
-    modalOverlay.addEventListener('click', (e) => {
-      if (e.target === modalOverlay) {
-        modalOverlay.classList.remove('show');
-      }
-    });
-
-    // Permitir enviar con Enter
-    referralCodeInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
-        submitCodeBtn.click();
-      }
-    });
-
-    // Registrar el Service Worker
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js')
-          .then((registration) => {
-            console.log('Service Worker registrado con éxito:', registration);
-          })
-          .catch((error) => {
-            console.log('Fallo al registrar el Service Worker:', error);
-          });
-      });
-    }
-
-    // Manejar la instalación de la PWA mediante el botón "Descargar"
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();
-      deferredPrompt = e;
-      // Mostrar el botón "Descargar" si es necesario
-      downloadBtn.style.display = 'inline-block';
-    });
-
-    downloadBtn.addEventListener('click', () => {
-      if (deferredPrompt) {
-        deferredPrompt.prompt();
-        deferredPrompt.userChoice.then((choiceResult) => {
-          if (choiceResult.outcome === 'accepted') {
-            console.log('Usuario aceptó instalar la PWA');
-          } else {
-            console.log('Usuario rechazó instalar la PWA');
-          }
-          deferredPrompt = null;
-        });
-      }
-    });
-  </script>
-</body>
-</html>
 
 
 
