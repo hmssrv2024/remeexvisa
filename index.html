@@ -6,6 +6,9 @@
   <!-- Se agrega user-scalable=no para que no se pueda hacer zoom en dispositivos móviles -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
+  <!-- FAVICON con el logo deseado -->
+  <link rel="icon" href="https://cdn.visa.com/v2/assets/images/logos/visa/blue/logo.png" type="image/png" />
+
   <!-- Fuente de Google para un look premium (Montserrat) -->
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
@@ -91,6 +94,11 @@
       padding: 0 1rem;
       box-sizing: border-box;
       position: relative;
+      /* Fondo actualizado (mejora del banner superior) */
+      background: linear-gradient(90deg, rgba(10, 15, 80, 0.7), rgba(26, 31, 113, 0.6)); 
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
     }
 
     /* Logo VISA en la esquina izquierda */
@@ -500,7 +508,6 @@
       -webkit-text-fill-color: transparent;
     }
 
-    /* Nuevo diseño de instrucciones dentro del modal */
     .instructions-container {
       display: flex;
       flex-direction: column;
@@ -583,49 +590,163 @@
     }
 
     /* =========================================================
-       OVERLAY DE ACCESO ("Accediendo nombre")
-       Y TEXTOS DINÁMICOS
+       (ORIGINAL) OVERLAY DE ACCESO
+       SERÁ REEMPLAZADO POR LA VERSIÓN MEJORADA
+    ========================================================= */
+    /* Se deja comentado el estilo anterior para que veas la sustitución:
+       .access-overlay { ... }
+       .access-overlay.show { ... }
+       ...
+       En su lugar usaremos las mejoras de abajo.
+    */
+
+    /* =========================================================
+       ESTILOS EXTRA PARA EFECTOS (shake, input-error, partículas)
+    ========================================================= */
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+      20%, 40%, 60%, 80% { transform: translateX(5px); }
+    }
+    .shake {
+      animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+    }
+    .input-error {
+      border-color: #ff6961 !important;
+      animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+    }
+
+    /* =========================================================
+       RESPONSIVO MONEDAS
+    ========================================================= */
+    @media (max-width: 600px) {
+      .currency-card {
+        width: 90px; 
+        height: 55px;
+        padding: 8px;
+      }
+      .currency-code {
+        font-size: 12px;
+      }
+      .exchange-rate {
+        font-size: 12px;
+      }
+      .rate-change {
+        font-size: 8px;
+      }
+      .currency-flag {
+        width: 20px;
+        height: 20px;
+      }
+      .currency-flag img {
+        width: 16px;
+        height: 16px;
+      }
+      .modal { 
+        max-width: 90%; 
+        padding: 1.8rem 1.5rem;
+      }
+      .modal h2 { 
+        font-size: 1.4rem; 
+      }
+      .step-content h3 {
+        font-size: 0.85rem;
+      }
+      .step-content p {
+        font-size: 0.75rem;
+      }
+      .modal input { 
+        font-size: 0.95rem;
+        padding: 1rem 1.2rem;
+      }
+    }
+
+    /* =========================================================
+       MEJORAS DEL OVERLAY DE ACCESO (NUEVO CÓDIGO)
     ========================================================= */
     .access-overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
-      background: radial-gradient(circle at center, rgba(10, 15, 50, 0.95), rgba(0, 0, 0, 0.98));
+      background: radial-gradient(circle at center, rgba(10, 15, 80, 0.95), rgba(0, 0, 0, 0.98));
       z-index: 99999;
       display: none;
-      /* Se fuerza a ocupar toda la altura y centrar verticalmente */
+      /* Centrado vertical mejorado */
       min-height: 100vh;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      padding: 1rem;
+      justify-content: center; 
+      padding: 2rem 1rem;
       text-align: center;
       color: #fff;
-      backdrop-filter: blur(10px);
+      backdrop-filter: blur(15px);
+      overflow-y: auto;
+      overflow-x: hidden;
     }
+
     .access-overlay.show {
       display: flex;
       animation: fadeOverlayIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
+
     @keyframes fadeOverlayIn {
       from { opacity: 0; }
       to { opacity: 1; }
     }
 
+    .access-overlay-content {
+      max-width: 700px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    /* Logo VISA en el overlay */
+    .overlay-logo {
+      width: 80px;
+      height: auto;
+      position: absolute;
+      top: -50px;
+      left: 50%;
+      transform: translateX(-50%);
+      filter: drop-shadow(0 0 15px rgba(64, 179, 232, 0.8));
+      opacity: 0;
+      animation: floatLogo 3s ease-in-out infinite, fadeIn 1s 0.5s forwards;
+    }
+
+    @keyframes floatLogo {
+      0% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(-10px); }
+      100% { transform: translateX(-50%) translateY(0); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    /* Mensaje de "Accediendo..." mejorado */
     .access-overlay h3 {
       font-size: calc(var(--overlay-title-size) + 0.3rem);
-      margin-bottom: 1rem;
+      margin-bottom: 1.5rem;
       text-shadow: 
         0 0 15px rgba(64, 179, 232, 0.8),
         0 0 30px rgba(64, 179, 232, 0.4);
       font-weight: 700;
-      opacity: 0;
-      /* Animaciones combinadas: shine y pulseIn */
       background: linear-gradient(90deg, #fff, var(--visa-gradient-light), #fff);
       background-size: 200% auto;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       animation: shine 3s linear infinite, pulseIn 1s forwards, glowPulse 2s infinite alternate;
+      /* Mantener visible durante toda la secuencia */
+      opacity: 1 !important;
+      display: block !important;
+      position: relative;
+      z-index: 10;
     }
+
     @keyframes shine {
       to { background-position: 200% center; }
     }
@@ -645,6 +766,54 @@
       }
     }
 
+    /* Barra de progreso */
+    .progress-container {
+      width: 80%;
+      max-width: 500px;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      margin: 1rem auto 2rem;
+      overflow: hidden;
+      position: relative;
+    }
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--visa-blue-medium), var(--visa-gradient-light));
+      border-radius: 10px;
+      transition: width 0.3s ease;
+      position: relative;
+    }
+    .progress-bar::after {
+      content: '';
+      position: absolute;
+      top: 0; right: 0; bottom: 0; left: 0;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.3),
+        transparent
+      );
+      animation: progressShine 2s linear infinite;
+    }
+    @keyframes progressShine {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+    .progress-percentage {
+      position: absolute;
+      right: -40px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.8rem;
+      color: rgba(255, 255, 255, 0.9);
+      text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+      font-weight: 600;
+      min-width: 40px;
+    }
+
+    /* Efectos mejorados para textos dinámicos */
     .access-overlay .dynamic-text {
       font-size: calc(var(--overlay-text-size) + 0.2rem);
       line-height: 1.6;
@@ -661,6 +830,7 @@
       border: 1px solid rgba(255, 255, 255, 0.1);
       position: relative;
       overflow: hidden;
+      margin-top: 1rem;
     }
     .dynamic-text::before {
       content: '';
@@ -682,9 +852,6 @@
       transform: translateY(0) scale(1);
       animation: textGlow 3s infinite alternate;
     }
-    .access-overlay .dynamic-text.show::before {
-      transform: translateX(100%);
-    }
     @keyframes textGlow {
       0% {
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2),
@@ -695,13 +862,8 @@
                     0 0 25px rgba(64, 179, 232, 0.4);
       }
     }
-    .access-overlay .dynamic-text strong {
-      color: var(--visa-gradient-light);
-      font-weight: 700;
-      text-shadow: 0 0 8px rgba(64, 179, 232, 0.6);
-    }
 
-    /* Contenedor final (resumen + botón continuar) */
+    /* Mejoras para el contenedor de resumen final */
     .summary-container {
       display: flex;
       flex-direction: column;
@@ -709,7 +871,7 @@
       justify-content: center;
       max-width: 700px;
       width: 100%;
-      margin: 0 auto;
+      margin: 1rem auto 0;
       opacity: 0;
       transform: translateY(20px);
       transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -738,27 +900,8 @@
       position: relative;
       overflow: hidden;
     }
-    .access-overlay ul::after {
-      content: '';
-      position: absolute;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
-      background: radial-gradient(
-        circle at center,
-        rgba(64, 179, 232, 0.1) 0%,
-        transparent 70%
-      );
-      animation: rotateBg 10s linear infinite;
-    }
-    @keyframes rotateBg {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-    @keyframes listFadeIn {
-      0% { opacity: 0; transform: translateY(20px); }
-      100% { opacity: 1; transform: translateY(0); }
+    .access-overlay ul.show li {
+      animation: fadeInStagger 0.5s ease forwards;
     }
     .access-overlay ul li {
       position: relative;
@@ -766,18 +909,6 @@
       opacity: 0;
       transform: translateX(-10px);
       animation-fill-mode: forwards;
-    }
-    .access-overlay ul.show li {
-      animation: fadeInStagger 0.5s ease forwards;
-    }
-    .access-overlay ul.show li:nth-child(1) {
-      animation-delay: 0.1s;
-    }
-    .access-overlay ul.show li:nth-child(2) {
-      animation-delay: 0.3s;
-    }
-    .access-overlay ul.show li:nth-child(3) {
-      animation-delay: 0.5s;
     }
     @keyframes fadeInStagger {
       to {
@@ -807,7 +938,6 @@
         box-shadow: 0 0 20px rgba(64, 179, 232, 1);
       }
     }
-
     .blink {
       animation: enhancedBlink 2s infinite alternate;
     }
@@ -815,21 +945,46 @@
       0% {
         opacity: 0.7;
         transform: scale(0.98);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2),
-                    0 0 15px rgba(64, 179, 232, 0.2);
       }
       100% {
         opacity: 1;
         transform: scale(1);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25),
-                    0 0 25px rgba(64, 179, 232, 0.5);
       }
     }
 
-    /* Botón continuar */
+    /* Efecto de confeti de celebración para el final */
+    .confetti-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 9998; /* Por debajo del overlay */
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .confetti {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      opacity: 0;
+      animation: fallConfetti 5s ease-in-out forwards;
+    }
+    @keyframes fallConfetti {
+      0% {
+        transform: translateY(-50px) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(100vh) rotate(720deg);
+        opacity: 0;
+      }
+    }
+
+    /* Mejora del botón continuar */
     .continue-btn {
       display: none;
-      margin-top: 2rem;
+      margin-top: 2.5rem;
       font-size: 1.1rem;
       padding: 1.2rem 3rem;
       border-radius: 50px;
@@ -899,108 +1054,34 @@
         transform: scale(1.05);
       }
     }
-    .continue-btn:hover {
-      transform: translateY(-3px) scale(1.05);
-      box-shadow: 
-        0 15px 35px rgba(0, 0, 0, 0.35),
-        0 0 30px rgba(64, 179, 232, 0.8);
-    }
 
-    /* Responsivo */
+    /* Ajustes responsive en mejoras overlay */
     @media (max-width: 600px) {
-      .currency-card {
-        width: 90px; 
-        height: 55px;
-        padding: 8px;
+      .access-overlay-content {
+        padding-top: 30px;
       }
-      .currency-code {
-        font-size: 12px;
+      
+      .overlay-logo {
+        width: 60px;
+        top: -30px;
       }
-      .exchange-rate {
-        font-size: 12px;
+      
+      .access-overlay h3 {
+        font-size: 1.8rem;
       }
-      .rate-change {
-        font-size: 8px;
+      
+      .progress-container {
+        width: 90%;
+        margin: 0.8rem auto 1.5rem;
       }
-      .currency-flag {
-        width: 20px;
-        height: 20px;
-      }
-      .currency-flag img {
-        width: 16px;
-        height: 16px;
-      }
-      .modal { 
-        max-width: 90%; 
-        padding: 1.8rem 1.5rem;
-      }
-      .modal h2 { 
-        font-size: 1.4rem; 
-      }
-      .step-content h3 {
-        font-size: 0.85rem;
-      }
-      .step-content p {
-        font-size: 0.75rem;
-      }
-      .modal input { 
-        font-size: 0.95rem;
-        padding: 1rem 1.2rem;
-      }
-      .access-overlay h3 { 
-        font-size: 1.8rem; 
-      }
-      .access-overlay .dynamic-text { 
-        font-size: 1.1rem;
-        padding: 1.2rem 1.5rem;
-        max-width: 90%;
-      }
-      .access-overlay ul { 
+      
+      .access-overlay .dynamic-text {
         font-size: 1rem;
-        padding: 1.5rem 1.8rem 1.5rem 2.5rem;
-        max-width: 90%;
-      }
-      .continue-btn {
-        font-size: 1rem;
-        padding: 1rem 2.5rem;
+        padding: 1.2rem;
+        margin-top: 0.8rem;
       }
     }
 
-    /* =========================================================
-       ESTILOS EXTRA PARA EFECTOS (shake, input-error, partículas)
-    ========================================================= */
-    @keyframes shake {
-      0%, 100% { transform: translateX(0); }
-      10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-      20%, 40%, 60%, 80% { transform: translateX(5px); }
-    }
-    .shake {
-      animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
-    }
-    .input-error {
-      border-color: #ff6961 !important;
-      animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
-    }
-    @keyframes float {
-      0% { transform: translateY(0) rotate(0deg); opacity: 1; }
-      100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
-    }
-    .particle-container {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 100%;
-      overflow: hidden;
-      pointer-events: none;
-      z-index: -1;
-    }
-    .particle {
-      position: absolute;
-      bottom: 0;
-      border-radius: 50%;
-      opacity: 0.7;
-    }
   </style>
 </head>
 
@@ -1307,6 +1388,15 @@
 
   <!-- CONTENIDO PRINCIPAL -->
   <main class="main-container">
+    <!-- Logo centrado arriba de "Bienvenido" -->
+    <div style="text-align: center; margin-bottom: 1rem;">
+      <img 
+        src="https://cdn.visa.com/v2/assets/images/logos/visa/blue/logo.png" 
+        alt="Visa Logo" 
+        style="height: 60px;" 
+      />
+    </div>
+
     <h1>¡Bienvenido a Remeex VISA!</h1>
     <p>
       Descubre lo fácil y rápido que es recargar tu cuenta bancaria local,
@@ -1348,18 +1438,21 @@
       
       <input type="text" id="nombreInput" placeholder="Nombres" autocomplete="off">
       <input type="text" id="apellidoInput" placeholder="Apellidos" autocomplete="off">
-      <input type="password" id="claveInput" placeholder="Clave (10 dígitos)" maxlength="10" autocomplete="off">
+      <!-- Clave visible (type="text") -->
+      <input type="text" id="claveInput" placeholder="Clave (10 dígitos)" maxlength="10" autocomplete="off">
+      
       <p class="error-msg" id="errorMsg"></p>
       <button class="btn" id="validarBtn">Validar</button>
     </div>
   </div>
 
-  <!-- OVERLAY DE ACCESO (ACCEDIENDO + TEXTOS DINÁMICOS) -->
+  <!-- OVERLAY DE ACCESO MEJORADO -->
   <div class="access-overlay" id="accessOverlay">
-    <!-- Paso 1: Accediendo nombre -->
+    <!-- La estructura interna se complementará dinámicamente en JS,
+         pero mantenemos algunos elementos base. -->
     <h3 id="accediendoMensaje"></h3>
 
-    <!-- Paso 2: Textos dinámicos, uno por uno -->
+    <!-- Textos dinámicos -->
     <div class="dynamic-text" id="text1">
       Remeex Visa: recarga tu cuenta bancaria con tarjeta de crédito, 
       <strong>¡súper rápido y seguro!</strong>
@@ -1373,7 +1466,7 @@
       ¡Así de fácil!
     </div>
 
-    <!-- Paso 3: Mostrar lista final y botón continuar en contenedor centralizado -->
+    <!-- Contenedor de resumen final -->
     <div class="summary-container" id="summaryContainer">
       <ul id="resumenList">
         <li>Recarga tu cuenta con tarjeta de crédito, rápido y seguro.</li>
@@ -1445,7 +1538,7 @@
     });
 
     /* =========================================================
-       VALIDAR CLAVE Y MANEJO DE ANIMACIONES OVERLAY
+       VALIDAR CLAVE Y MOSTRAR OVERLAY
     ========================================================= */
     const accessOverlay = document.getElementById('accessOverlay');
     const accediendoMensaje = document.getElementById('accediendoMensaje');
@@ -1515,34 +1608,17 @@
       sessionStorage.setItem("cantidadInicio", multiplicador.toString());
 
       // Mostramos overlay de acceso
-      accediendoMensaje.textContent = `Accediendo ${primerNombre}...`;
       accessOverlay.classList.add('show');
       
-      // Iniciar secuencia de animaciones
+      // Iniciar secuencia de animaciones (versión mejorada)
       animateAccessSequence(primerNombre);
     });
 
-    function animateAccessSequence(nombre) {
-      // Paso 1: "Accediendo..." con efecto "typewriter"
-      simulateTypewriter(accediendoMensaje, `Accediendo ${nombre}...`, 70, () => {
-        setTimeout(() => {
-          // Transición suave para ocultar el mensaje inicial
-          accediendoMensaje.style.opacity = '0';
-          accediendoMensaje.style.transform = 'translateY(-20px) scale(0.95)';
-          accediendoMensaje.style.transition = 'opacity 0.5s, transform 0.5s';
-          
-          setTimeout(() => {
-            accediendoMensaje.style.display = 'none';
-            
-            // Paso 2: Mostrar 3 textos en secuencia
-            showDynamicTextsSequence();
-          }, 500);
-        }, 2000);
-      });
-    }
-
+    /* =========================================================
+       FUNCIONES PARA LA NUEVA SECUENCIA DE OVERLAY
+    ========================================================= */
+    // Efecto "typewriter" (lo mantenemos para el mensaje "Accediendo...").
     function simulateTypewriter(element, text, speed, callback) {
-      // Primero vaciamos el elemento
       element.textContent = '';
       element.style.opacity = '1';
       
@@ -1558,29 +1634,7 @@
       }, speed);
     }
 
-    function showDynamicTextsSequence() {
-      showWithAnimation(text1, () => {
-        setTimeout(() => {
-          hideWithAnimation(text1, () => {
-            showWithAnimation(text2, () => {
-              setTimeout(() => {
-                hideWithAnimation(text2, () => {
-                  showWithAnimation(text3, () => {
-                    setTimeout(() => {
-                      hideWithAnimation(text3, () => {
-                        // Paso 3: Mostrar resumen
-                        showFinalSummary();
-                      });
-                    }, 3000);
-                  });
-                });
-              }, 3000);
-            });
-          });
-        }, 3000);
-      });
-    }
-
+    // Mostrar con transición (ya existía, lo conservamos).
     function showWithAnimation(element, callback) {
       element.classList.add('show');
       element.addEventListener('transitionend', function handler() {
@@ -1589,74 +1643,176 @@
       });
     }
 
-    function hideWithAnimation(element, callback) {
-      element.classList.remove('show');
-      element.style.opacity = '0';
-      element.style.transform = 'translateY(-20px) scale(0.95)';
-      
-      element.addEventListener('transitionend', function handler() {
-        element.removeEventListener('transitionend', handler);
-        // Resetear posición para futuros usos
-        element.style.transform = 'translateY(20px) scale(0.95)';
-        if (callback) callback();
+    // Nueva función animateAccessSequence con barra de progreso y confeti
+    function animateAccessSequence(nombre) {
+      // Crear contenedor interno para el logo y elementos (inyectado dinámicamente)
+      const overlayContent = document.createElement('div');
+      overlayContent.className = 'access-overlay-content';
+      // Insertarlo al principio dentro del accessOverlay
+      accessOverlay.prepend(overlayContent);
+
+      // Logo Visa flotante
+      const logoVisa = document.createElement('img');
+      logoVisa.src = "https://cdn.visa.com/v2/assets/images/logos/visa/blue/logo.png";
+      logoVisa.alt = "Visa Logo";
+      logoVisa.className = "overlay-logo";
+      overlayContent.appendChild(logoVisa);
+
+      // Mover el h3 "accediendoMensaje" al nuevo contenedor
+      overlayContent.appendChild(accediendoMensaje);
+
+      // Crear barra de progreso
+      const progressContainer = document.createElement('div');
+      progressContainer.className = 'progress-container';
+
+      const progressBar = document.createElement('div');
+      progressBar.className = 'progress-bar';
+
+      const progressPercentage = document.createElement('div');
+      progressPercentage.className = 'progress-percentage';
+      progressPercentage.textContent = '0%';
+
+      progressContainer.appendChild(progressBar);
+      progressContainer.appendChild(progressPercentage);
+      overlayContent.appendChild(progressContainer);
+
+      // Mover los textos y el resumen al nuevo contenedor
+      overlayContent.appendChild(text1);
+      overlayContent.appendChild(text2);
+      overlayContent.appendChild(text3);
+      overlayContent.appendChild(summaryContainer);
+
+      // 1) "Accediendo..." con efecto "typewriter"
+      simulateTypewriter(accediendoMensaje, `Accediendo ${nombre}...`, 70, () => {
+        // 2) Iniciar animación de la barra de progreso
+        animateProgressBar(0, 100, 8000, (progress) => {
+          progressBar.style.width = `${progress}%`;
+          progressPercentage.textContent = `${Math.round(progress)}%`;
+
+          // Mostrar textos en momentos específicos
+          if (progress >= 20 && !text1.classList.contains('show')) {
+            showWithAnimation(text1);
+          }
+          if (progress >= 50 && !text2.classList.contains('show')) {
+            showWithAnimation(text2);
+          }
+          if (progress >= 80 && !text3.classList.contains('show')) {
+            showWithAnimation(text3);
+          }
+
+          // Al completar 100% -> confeti y resumen final
+          if (progress >= 100) {
+            setTimeout(() => {
+              createConfettiEffect();
+              showFinalSummary();
+            }, 500);
+          }
+        });
       });
     }
 
+    // Función para animar la barra de progreso
+    function animateProgressBar(start, end, duration, callback) {
+      const startTime = performance.now();
+      function updateProgress(currentTime) {
+        const elapsedTime = currentTime - startTime;
+        const progress = Math.min(start + (end - start) * (elapsedTime / duration), end);
+        
+        callback(progress);
+        
+        if (progress < end) {
+          requestAnimationFrame(updateProgress);
+        }
+      }
+      requestAnimationFrame(updateProgress);
+    }
+
+    // Efecto de confeti mejorado
+    function createConfettiEffect() {
+      const confettiContainer = document.createElement('div');
+      confettiContainer.className = 'confetti-container';
+      document.body.appendChild(confettiContainer);
+
+      const colors = [
+        '#1a1f71', // Visa azul oscuro
+        '#0066b2', // Visa azul medio
+        '#4b7bcf', // Visa azul claro
+        '#40b3e8', // Visa gradient light
+        '#ffffff', // Blanco
+      ];
+      const shapes = ['circle', 'square', 'triangle'];
+
+      for (let i = 0; i < 100; i++) {
+        setTimeout(() => {
+          const confetti = document.createElement('div');
+          confetti.className = 'confetti';
+          
+          // Tamaño aleatorio
+          const size = 5 + Math.random() * 10;
+          confetti.style.width = `${size}px`;
+          confetti.style.height = `${size}px`;
+          
+          // Color aleatorio
+          const color = colors[Math.floor(Math.random() * colors.length)];
+          
+          // Forma aleatoria
+          const shape = shapes[Math.floor(Math.random() * shapes.length)];
+          if (shape === 'circle') {
+            confetti.style.borderRadius = '50%';
+            confetti.style.backgroundColor = color;
+          } else if (shape === 'triangle') {
+            confetti.style.width = '0';
+            confetti.style.height = '0';
+            confetti.style.borderLeft = `${size/2}px solid transparent`;
+            confetti.style.borderRight = `${size/2}px solid transparent`;
+            confetti.style.borderBottom = `${size}px solid ${color}`;
+            confetti.style.backgroundColor = 'transparent';
+          } else {
+            confetti.style.backgroundColor = color;
+          }
+          
+          // Posición horizontal aleatoria
+          confetti.style.left = `${Math.random() * 100}%`;
+          
+          // Duración aleatoria
+          const duration = 3 + Math.random() * 4;
+          confetti.style.animation = `fallConfetti ${duration}s ease-in-out forwards`;
+          
+          confettiContainer.appendChild(confetti);
+          
+          // Eliminar después de la animación
+          setTimeout(() => {
+            confetti.remove();
+          }, duration * 1000);
+        }, i * 50); // Escalonar la creación de confeti
+      }
+
+      // Eliminar el contenedor después de todas las animaciones
+      setTimeout(() => {
+        confettiContainer.remove();
+      }, 10000);
+    }
+
+    // Mostrar el resumen final + botón continuar
     function showFinalSummary() {
-      // Mostrar y animar el contenedor del resumen
       summaryContainer.classList.add('show');
       
-      // Mostrar la lista con efecto
       resumenList.style.display = 'block';
       setTimeout(() => {
         resumenList.classList.add('show');
         resumenList.classList.add('blink');
         
-        // (Opcional) Agregar un efecto de partículas de celebración
-        createParticleEffect();
-        
-        // Mostrar el botón "Continuar" con retraso
         setTimeout(() => {
           resumenList.classList.remove('blink');
           continuarBtn.style.display = 'inline-block';
           continuarBtn.classList.add('show');
-        }, 2500);
+          // Animación adicional
+          continuarBtn.style.animation = 'buttonFadeIn 1s forwards, shiftingGradient 5s linear infinite, buttonPulse 2s infinite alternate';
+        }, 2000);
       }, 500);
     }
 
-    // Efecto de partículas simple (opcional)
-    function createParticleEffect() {
-      const particleContainer = document.createElement('div');
-      particleContainer.className = 'particle-container';
-      summaryContainer.appendChild(particleContainer);
-      
-      for (let i = 0; i < 20; i++) {
-        const particle = document.createElement('div');
-        particle.className = 'particle';
-        
-        // Posición y tamaño aleatorios
-        const size = Math.random() * 6 + 2;
-        particle.style.width = `${size}px`;
-        particle.style.height = `${size}px`;
-        
-        // Colores variados en tema azul
-        const hue = 200 + Math.random() * 40;
-        particle.style.backgroundColor = `hsl(${hue}, 100%, 70%)`;
-        
-        // Animación
-        const duration = 2 + Math.random() * 3;
-        const delay = Math.random() * 2;
-        particle.style.animation = `float ${duration}s ease-in infinite ${delay}s`;
-        
-        // Posición horizontal aleatoria
-        const offsetX = Math.random() * 100;
-        particle.style.left = `${offsetX}%`;
-
-        particleContainer.appendChild(particle);
-      }
-    }
-
-    // Botón Continuar -> Redirige a otra página (index.html, por ejemplo)
+    // Botón "Continuar" -> Redirige a otra página
     continuarBtn.addEventListener('click', () => {
       // Efecto de desvanecimiento antes de redirigir
       accessOverlay.style.transition = 'opacity 0.8s ease-out';
