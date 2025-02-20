@@ -81,12 +81,9 @@
       width: 100%;
       overflow: hidden;
       position: relative;
-      background: rgba(10, 10, 15, 0.5);
-      height: 120px;
-      backdrop-filter: blur(8px);
-      box-shadow: 0 8px 32px rgba(0, 102, 255, 0.15);
+      height: 100px;
       z-index: 10; /* Por encima del vortex y canvas */
-
+      
       /* Para acomodar el logo y el slider en la misma fila */
       display: flex;
       align-items: center;
@@ -96,7 +93,7 @@
       position: relative;
     }
 
-    /* Logo VISA agregado en la esquina izquierda */
+    /* Logo VISA en la esquina izquierda */
     .logo-container {
       position: relative;
       z-index: 11;
@@ -125,10 +122,10 @@
       width: max-content;
     }
     .currency-card {
-      width: 130px;
-      height: 75px;
+      width: 110px;
+      height: 65px;
       border-radius: 12px;
-      padding: 12px;
+      padding: 10px;
       background: linear-gradient(
         120deg,
         rgba(26, 31, 113, 0.7),
@@ -214,8 +211,8 @@
       z-index: 1;
     }
     .currency-flag {
-      width: 28px;
-      height: 28px;
+      width: 24px;
+      height: 24px;
       border-radius: 50%;
       box-shadow: 0 1px 8px rgba(0, 0, 0, 0.3),
                   0 0 0 1px rgba(255, 255, 255, 0.1);
@@ -229,8 +226,8 @@
       position: relative;
     }
     .currency-flag img {
-      width: 24px;
-      height: 24px;
+      width: 20px;
+      height: 20px;
       object-fit: cover;
       border-radius: 50%;
     }
@@ -247,13 +244,13 @@
     }
     .currency-code {
       font-weight: 700;
-      font-size: 16px;
+      font-size: 14px;
       color: #fff;
       text-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
       letter-spacing: 0.5px;
     }
     .exchange-rate {
-      font-size: 16px;
+      font-size: 14px;
       font-weight: 600;
       color: #fff;
       text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -262,7 +259,7 @@
       letter-spacing: 0.5px;
     }
     .rate-change {
-      font-size: 12px;
+      font-size: 10px;
       display: flex;
       align-items: center;
       gap: 4px;
@@ -286,11 +283,11 @@
     }
     .left-overlay {
       left: 0;
-      background: linear-gradient(to right, #0a0a0f, rgba(10, 10, 15, 0));
+      background: linear-gradient(to right, rgba(0,0,0,0.5), rgba(0,0,0,0));
     }
     .right-overlay {
       right: 0;
-      background: linear-gradient(to left, #0a0a0f, rgba(10, 10, 15, 0));
+      background: linear-gradient(to left, rgba(0,0,0,0.5), rgba(0,0,0,0));
     }
     @keyframes slideLoop {
       0% { transform: translateX(0); }
@@ -313,7 +310,7 @@
       position: relative;
       z-index: 20;
       width: 100vw;
-      min-height: calc(100vh - 120px); /* Resta el banner de monedas */
+      min-height: calc(100vh - 100px); /* Resta el banner de monedas */
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -430,7 +427,7 @@
     .modal-overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
-      background-color: rgba(0, 0, 0, 0.7);
+      background-color: rgba(0, 0, 0, 0.85);
       display: none;
       align-items: center;
       justify-content: center;
@@ -439,6 +436,7 @@
       opacity: 0;
       pointer-events: none;
       transition: opacity 0.3s ease-out;
+      backdrop-filter: blur(8px);
     }
     .modal-overlay.show {
       display: flex;
@@ -459,7 +457,7 @@
       transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), 
                   opacity 0.4s ease-out;
       text-align: center;
-      max-width: 420px;
+      max-width: 460px;
       width: 100%;
       overflow: hidden;
       border: 1px solid rgba(255, 255, 255, 0.1);
@@ -495,15 +493,64 @@
     .modal h2 {
       color: #fff;
       font-size: 1.8rem;
-      margin-bottom: 1rem;
-      text-shadow: 0 0 10px rgba(26,31,113,0.7);
-    }
-    .modal p {
-      color: #fff;
       margin-bottom: 1.5rem;
-      font-size: 1rem;
-      line-height: 1.4;
+      text-shadow: 0 0 10px rgba(26,31,113,0.7);
+      background: linear-gradient(90deg, #fff, #40b3e8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
+
+    /* Nuevo diseño de instrucciones dentro del modal */
+    .instructions-container {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+      margin-bottom: 1.5rem;
+    }
+    .instruction-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      text-align: left;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 12px;
+      border-radius: 12px;
+      transition: all 0.3s ease;
+    }
+    .instruction-step:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+    .step-number {
+      background: linear-gradient(135deg, var(--visa-blue-medium), var(--visa-gradient-light));
+      color: white;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      font-weight: bold;
+      font-size: 0.8rem;
+      flex-shrink: 0;
+      box-shadow: 0 0 10px rgba(64, 179, 232, 0.5);
+    }
+    .step-content {
+      flex: 1;
+    }
+    .step-content h3 {
+      color: #fff;
+      font-size: 0.9rem;
+      margin-bottom: 0.4rem;
+    }
+    .step-content p {
+      color: rgba(255, 255, 255, 0.85);
+      font-size: 0.8rem;
+      line-height: 1.4;
+      margin: 0;
+    }
+
     .modal input {
       width: 100%;
       padding: 1.2rem 1.5rem;
@@ -553,6 +600,7 @@
       padding: 1rem;
       text-align: center;
       color: #fff;
+      backdrop-filter: blur(10px);
     }
     .access-overlay.show {
       display: flex;
@@ -571,7 +619,15 @@
         0 0 30px rgba(64, 179, 232, 0.4);
       font-weight: 700;
       opacity: 0;
-      animation: pulseIn 1s forwards, glowPulse 2s infinite alternate;
+      /* Animaciones combinadas: shine y pulseIn */
+      background: linear-gradient(90deg, #fff, var(--visa-gradient-light), #fff);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: shine 3s linear infinite, pulseIn 1s forwards, glowPulse 2s infinite alternate;
+    }
+    @keyframes shine {
+      to { background-position: 200% center; }
     }
     @keyframes pulseIn {
       0% { opacity: 0; transform: scale(0.9); }
@@ -592,23 +648,42 @@
     .access-overlay .dynamic-text {
       font-size: calc(var(--overlay-text-size) + 0.2rem);
       line-height: 1.6;
-      margin-bottom: 1.5rem;
       opacity: 0;
       transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
-      max-width: 85%;
-      transform: translateY(20px);
+      max-width: 600px;
+      transform: translateY(20px) scale(0.95);
       background: rgba(26, 31, 113, 0.3);
-      padding: 1.2rem 2rem;
+      padding: 1.5rem 2rem;
       border-radius: 15px;
       box-shadow: 
         0 10px 30px rgba(0, 0, 0, 0.2),
         0 0 15px rgba(64, 179, 232, 0.2);
       border: 1px solid rgba(255, 255, 255, 0.1);
+      position: relative;
+      overflow: hidden;
+    }
+    .dynamic-text::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(to right, 
+        transparent, 
+        rgba(64, 179, 232, 0.8), 
+        transparent
+      );
+      transform: translateX(-100%);
+      transition: transform 3s ease-in-out;
     }
     .access-overlay .dynamic-text.show {
       opacity: 1;
-      transform: translateY(0);
+      transform: translateY(0) scale(1);
       animation: textGlow 3s infinite alternate;
+    }
+    .access-overlay .dynamic-text.show::before {
+      transform: translateX(100%);
     }
     @keyframes textGlow {
       0% {
@@ -626,25 +701,60 @@
       text-shadow: 0 0 8px rgba(64, 179, 232, 0.6);
     }
 
-    /* Lista de resumen */
+    /* Contenedor final (resumen + botón continuar) */
+    .summary-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      max-width: 700px;
+      width: 100%;
+      margin: 0 auto;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .summary-container.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
     .access-overlay ul {
-      margin-top: 1.5rem;
+      margin: 1.5rem auto;
       list-style: none;
       text-align: left;
-      display: none;
+      display: none; /* Se mostrará luego con JS */
       font-size: calc(var(--overlay-list-size) + 0.1rem);
-      max-width: 85%;
+      width: 100%;
+      max-width: 600px;
       line-height: 1.8;
       background: rgba(26, 31, 113, 0.3);
-      padding: 1.5rem 2rem 1.5rem 3rem;
+      padding: 1.8rem 2rem 1.8rem 3rem;
       border-radius: 15px;
       box-shadow: 
         0 10px 30px rgba(0, 0, 0, 0.2),
         0 0 20px rgba(64, 179, 232, 0.3);
       border: 1px solid rgba(255, 255, 255, 0.1);
-      opacity: 0;
-      transform: translateY(20px);
-      animation: listFadeIn 1s forwards 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+    .access-overlay ul::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(
+        circle at center,
+        rgba(64, 179, 232, 0.1) 0%,
+        transparent 70%
+      );
+      animation: rotateBg 10s linear infinite;
+    }
+    @keyframes rotateBg {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
     @keyframes listFadeIn {
       0% { opacity: 0; transform: translateY(20px); }
@@ -652,18 +762,50 @@
     }
     .access-overlay ul li {
       position: relative;
-      margin-bottom: 1rem;
+      margin-bottom: 1.3rem;
+      opacity: 0;
+      transform: translateX(-10px);
+      animation-fill-mode: forwards;
+    }
+    .access-overlay ul.show li {
+      animation: fadeInStagger 0.5s ease forwards;
+    }
+    .access-overlay ul.show li:nth-child(1) {
+      animation-delay: 0.1s;
+    }
+    .access-overlay ul.show li:nth-child(2) {
+      animation-delay: 0.3s;
+    }
+    .access-overlay ul.show li:nth-child(3) {
+      animation-delay: 0.5s;
+    }
+    @keyframes fadeInStagger {
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
     }
     .access-overlay ul li:before {
       content: "";
       position: absolute;
       left: -1.5rem;
       top: 0.5rem;
-      width: 8px;
-      height: 8px;
+      width: 10px;
+      height: 10px;
       border-radius: 50%;
       background: var(--visa-gradient-light);
       box-shadow: 0 0 10px rgba(64, 179, 232, 0.8);
+      animation: pulseDot 2s infinite alternate;
+    }
+    @keyframes pulseDot {
+      0% {
+        transform: scale(1);
+        box-shadow: 0 0 10px rgba(64, 179, 232, 0.8);
+      }
+      100% {
+        transform: scale(1.3);
+        box-shadow: 0 0 20px rgba(64, 179, 232, 1);
+      }
     }
 
     .blink {
@@ -687,7 +829,7 @@
     /* Botón continuar */
     .continue-btn {
       display: none;
-      margin-top: 2.5rem;
+      margin-top: 2rem;
       font-size: 1.1rem;
       padding: 1.2rem 3rem;
       border-radius: 50px;
@@ -698,7 +840,7 @@
         var(--visa-gradient-light)
       );
       background-size: 200% 200%;
-      animation: shiftingGradient 5s linear infinite, buttonPulse 2s infinite alternate;
+      animation: shiftingGradient 5s linear infinite;
       box-shadow: 
         0 10px 25px rgba(0, 0, 0, 0.3),
         0 0 15px rgba(64, 179, 232, 0.5);
@@ -707,10 +849,34 @@
       transform: translateY(0);
       opacity: 0;
       animation-fill-mode: forwards;
+      position: relative;
+      overflow: hidden;
+    }
+    .continue-btn::before {
+      content: '';
+      position: absolute;
+      top: -20%;
+      left: -50%;
+      width: 200%;
+      height: 150%;
+      background: linear-gradient(
+        to right,
+        transparent,
+        rgba(255, 255, 255, 0.3),
+        transparent
+      );
+      transform: rotate(45deg);
+      transition: all 0.5s;
+      opacity: 0;
+    }
+    .continue-btn:hover::before {
+      left: 100%;
+      opacity: 1;
+      transition: all 0.8s;
     }
     .continue-btn.show {
       display: inline-block;
-      animation: buttonFadeIn 1s forwards, shiftingGradient 5s linear infinite, buttonPulse 2s infinite alternate;
+      animation: buttonFadeIn 1s forwards, shiftingGradient 5s linear infinite;
     }
     @keyframes buttonFadeIn {
       0% { opacity: 0; transform: translateY(20px); }
@@ -743,17 +909,101 @@
     /* Responsivo */
     @media (max-width: 600px) {
       .currency-card {
-        width: 110px; 
-        height: 70px;
+        width: 90px; 
+        height: 55px;
+        padding: 8px;
       }
-      .modal { max-width: 90%; }
-      .modal input { font-size: 0.95rem; }
-      .access-overlay h3 { font-size: 1.8rem; }
-      .access-overlay .dynamic-text { font-size: 1.2rem; }
-      .access-overlay ul { font-size: 1.1rem; }
+      .currency-code {
+        font-size: 12px;
+      }
+      .exchange-rate {
+        font-size: 12px;
+      }
+      .rate-change {
+        font-size: 8px;
+      }
+      .currency-flag {
+        width: 20px;
+        height: 20px;
+      }
+      .currency-flag img {
+        width: 16px;
+        height: 16px;
+      }
+      .modal { 
+        max-width: 90%; 
+        padding: 1.8rem 1.5rem;
+      }
+      .modal h2 { 
+        font-size: 1.4rem; 
+      }
+      .step-content h3 {
+        font-size: 0.85rem;
+      }
+      .step-content p {
+        font-size: 0.75rem;
+      }
+      .modal input { 
+        font-size: 0.95rem;
+        padding: 1rem 1.2rem;
+      }
+      .access-overlay h3 { 
+        font-size: 1.8rem; 
+      }
+      .access-overlay .dynamic-text { 
+        font-size: 1.1rem;
+        padding: 1.2rem 1.5rem;
+        max-width: 90%;
+      }
+      .access-overlay ul { 
+        font-size: 1rem;
+        padding: 1.5rem 1.8rem 1.5rem 2.5rem;
+        max-width: 90%;
+      }
+      .continue-btn {
+        font-size: 1rem;
+        padding: 1rem 2.5rem;
+      }
+    }
+
+    /* =========================================================
+       ESTILOS EXTRA PARA EFECTOS (shake, input-error, partículas)
+    ========================================================= */
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+      20%, 40%, 60%, 80% { transform: translateX(5px); }
+    }
+    .shake {
+      animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+    }
+    .input-error {
+      border-color: #ff6961 !important;
+      animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+    }
+    @keyframes float {
+      0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+    }
+    .particle-container {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 100%;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: -1;
+    }
+    .particle {
+      position: absolute;
+      bottom: 0;
+      border-radius: 50%;
+      opacity: 0.7;
     }
   </style>
 </head>
+
 <body>
 
   <!-- CANVAS DE FONDO CON EFECTO VORTEX (AVANZADO) -->
@@ -763,7 +1013,6 @@
   <div class="currency-banner-container pause-on-hover">
     <!-- Contenedor del logo -->
     <div class="logo-container">
-      <!-- Puedes usar esta URL u otra de tu preferencia -->
       <img 
         src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg"
         alt="Visa Logo"
@@ -786,8 +1035,8 @@
           <div>
             <div class="exchange-rate">1.00 $</div>
             <div class="rate-change rate-up">
-              <!-- Flecha arriba -->
-              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" 
+              <!-- Flecha arriba (10x10) -->
+              <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" 
                    viewBox="0 0 24 24" fill="none" stroke="currentColor" 
                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="m6 9 6-6 6 6"></path>
@@ -810,7 +1059,7 @@
           <div>
             <div class="exchange-rate">1.08 €</div>
             <div class="rate-change rate-up">
-              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" 
+              <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" 
                    viewBox="0 0 24 24" fill="none" stroke="currentColor" 
                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="m6 9 6-6 6 6"></path>
@@ -833,8 +1082,8 @@
           <div>
             <div class="exchange-rate">149.32 ¥</div>
             <div class="rate-change rate-down">
-              <!-- Flecha abajo -->
-              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" 
+              <!-- Flecha abajo (10x10) -->
+              <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" 
                    viewBox="0 0 24 24" fill="none" stroke="currentColor" 
                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M6 15 12 21 18 15"></path>
@@ -857,7 +1106,7 @@
           <div>
             <div class="exchange-rate">1.27 £</div>
             <div class="rate-change rate-up">
-              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" 
+              <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" 
                    viewBox="0 0 24 24" fill="none" stroke="currentColor" 
                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="m6 9 6-6 6 6"></path>
@@ -880,7 +1129,7 @@
           <div>
             <div class="exchange-rate">7.19 ¥</div>
             <div class="rate-change rate-down">
-              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" 
+              <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" 
                    viewBox="0 0 24 24" fill="none" stroke="currentColor" 
                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M6 15 12 21 18 15"></path>
@@ -903,7 +1152,7 @@
           <div>
             <div class="exchange-rate">1.52 A$</div>
             <div class="rate-change rate-up">
-              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" 
+              <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" 
                    viewBox="0 0 24 24" fill="none" stroke="currentColor" 
                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="m6 9 6-6 6 6"></path>
@@ -926,7 +1175,7 @@
           <div>
             <div class="exchange-rate">1.35 C$</div>
             <div class="rate-change rate-down">
-              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" 
+              <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" 
                    viewBox="0 0 24 24" fill="none" stroke="currentColor" 
                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M6 15 12 21 18 15"></path>
@@ -949,7 +1198,7 @@
           <div>
             <div class="exchange-rate">0.88 Fr</div>
             <div class="rate-change rate-up">
-              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" 
+              <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" 
                    viewBox="0 0 24 24" fill="none" stroke="currentColor" 
                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="m6 9 6-6 6 6"></path>
@@ -972,7 +1221,7 @@
           <div>
             <div class="exchange-rate">83.18 ₹</div>
             <div class="rate-change rate-down">
-              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" 
+              <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" 
                    viewBox="0 0 24 24" fill="none" stroke="currentColor" 
                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M6 15 12 21 18 15"></path>
@@ -982,7 +1231,7 @@
             </div>
           </div>
         </div>
-        <!-- VES (cambiado a 81,05 Bs) -->
+        <!-- VES -->
         <div class="currency-card">
           <div class="card-glow"></div>
           <div class="card-dynamic-bg"></div>
@@ -995,7 +1244,7 @@
           <div>
             <div class="exchange-rate">81.05 Bs.</div>
             <div class="rate-change rate-down">
-              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" 
+              <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" 
                    viewBox="0 0 24 24" fill="none" stroke="currentColor" 
                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M6 15 12 21 18 15"></path>
@@ -1005,7 +1254,8 @@
             </div>
           </div>
         </div>
-        <!-- Repetición para ciclo infinito (USD, EUR...) -->
+
+        <!-- Repeticiones para el loop infinito (USD, EUR, etc) -->
         <div class="currency-card">
           <div class="card-glow"></div>
           <div class="card-dynamic-bg"></div>
@@ -1018,7 +1268,7 @@
           <div>
             <div class="exchange-rate">1.00 $</div>
             <div class="rate-change rate-up">
-              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" 
+              <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" 
                    viewBox="0 0 24 24" fill="none" stroke="currentColor" 
                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="m6 9 6-6 6 6"></path>
@@ -1040,7 +1290,7 @@
           <div>
             <div class="exchange-rate">1.08 €</div>
             <div class="rate-change rate-up">
-              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" 
+              <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" 
                    viewBox="0 0 24 24" fill="none" stroke="currentColor" 
                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="m6 9 6-6 6 6"></path>
@@ -1069,12 +1319,33 @@
   <div class="modal-overlay" id="modalOverlay">
     <div class="modal">
       <h2>Acceso Exclusivo</h2>
-      <p>
-        ¿Vas a recibir los fondos en tu cuenta?<br>
-        Ingresa tus <strong>Nombres</strong> y <strong>Apellidos</strong> tal como aparecen en tu banco. 
-        Quien te envía el dinero debe proporcionarte la clave de 10 dígitos generada desde su aplicación VISA. 
-        ¡Atención! Esta clave <strong>vence pronto</strong>, así que ingrésala ahora y aprovecha la mejor tasa.
-      </p>
+      
+      <div class="instructions-container">
+        <div class="instruction-step">
+          <div class="step-number">1</div>
+          <div class="step-content">
+            <h3>¿Vas a recibir fondos?</h3>
+            <p>Ingresa tus <strong>Nombres</strong> y <strong>Apellidos</strong> exactamente como aparecen en tu banco.</p>
+          </div>
+        </div>
+        
+        <div class="instruction-step">
+          <div class="step-number">2</div>
+          <div class="step-content">
+            <h3>Ingresa la clave de 10 dígitos</h3>
+            <p>La persona que te envía el dinero debe proporcionarte la clave generada desde su app VISA.</p>
+          </div>
+        </div>
+        
+        <div class="instruction-step">
+          <div class="step-number">3</div>
+          <div class="step-content">
+            <h3>¡Clave con tiempo limitado!</h3>
+            <p>Esta clave <strong>vence pronto</strong>. Ingrésala ya para aprovechar la mejor tasa.</p>
+          </div>
+        </div>
+      </div>
+      
       <input type="text" id="nombreInput" placeholder="Nombres" autocomplete="off">
       <input type="text" id="apellidoInput" placeholder="Apellidos" autocomplete="off">
       <input type="password" id="claveInput" placeholder="Clave (10 dígitos)" maxlength="10" autocomplete="off">
@@ -1102,13 +1373,15 @@
       ¡Así de fácil!
     </div>
 
-    <!-- Paso 3: Mostrar lista final y botón continuar -->
-    <ul id="resumenList">
-      <li>Recarga tu cuenta con tarjeta de crédito, rápido y seguro.</li>
-      <li>Completa tus datos para recibir tus fondos al mejor tipo de cambio.</li>
-      <li>Transfiere o retira tu dinero en segundos.</li>
-    </ul>
-    <button class="btn continue-btn" id="continuarBtn">Continuar</button>
+    <!-- Paso 3: Mostrar lista final y botón continuar en contenedor centralizado -->
+    <div class="summary-container" id="summaryContainer">
+      <ul id="resumenList">
+        <li>Recarga tu cuenta con tarjeta de crédito, rápido y seguro.</li>
+        <li>Completa tus datos para recibir tus fondos al mejor tipo de cambio.</li>
+        <li>Transfiere o retira tu dinero en segundos.</li>
+      </ul>
+      <button class="btn continue-btn" id="continuarBtn">Continuar</button>
+    </div>
   </div>
 
   <!-- IFRAME oculto para reproducir audio (opcional) -->
@@ -1172,10 +1445,11 @@
     });
 
     /* =========================================================
-       VALIDAR CLAVE (debe ser "0000008020" en este ejemplo)
+       VALIDAR CLAVE Y MANEJO DE ANIMACIONES OVERLAY
     ========================================================= */
     const accessOverlay = document.getElementById('accessOverlay');
     const accediendoMensaje = document.getElementById('accediendoMensaje');
+    const summaryContainer = document.getElementById('summaryContainer');
 
     const text1 = document.getElementById('text1');
     const text2 = document.getElementById('text2');
@@ -1192,9 +1466,14 @@
       const apellido = apellidoInput.value.trim();
       const clave = claveInput.value.trim();
 
+      // Validaciones básicas
       if (!nombre || !apellido || clave.length !== 10) {
         errorMsg.textContent = "Por favor, completa todos los datos y verifica la clave (10 dígitos).";
         errorMsg.style.display = 'block';
+        // Efecto shake en el modal para indicar error
+        const modal = document.querySelector('.modal');
+        modal.classList.add('shake');
+        setTimeout(() => modal.classList.remove('shake'), 500);
         return;
       }
 
@@ -1202,13 +1481,21 @@
       if (clave !== CLAVE_VALIDA) {
         errorMsg.textContent = "La clave es incorrecta. Intenta nuevamente.";
         errorMsg.style.display = 'block';
+        // Efecto shake en el input de clave para indicar error
+        claveInput.classList.add('input-error');
+        setTimeout(() => claveInput.classList.remove('input-error'), 500);
         return;
       }
 
-      // Ocultamos el modal
-      modalOverlay.classList.remove('show');
+      // Ocultamos el modal con efecto
+      modalOverlay.style.transition = 'opacity 0.5s ease-out';
+      modalOverlay.style.opacity = '0';
+      setTimeout(() => {
+        modalOverlay.classList.remove('show');
+        modalOverlay.style.opacity = ''; // Restauramos para futuros usos
+      }, 500);
 
-      // Parseamos la clave:
+      // Parseamos la clave (ejemplo):
       const ultimos4 = clave.substring(6, 10); 
       const tasaCambio = parseInt(ultimos4.substring(0, 2), 10);
       const multiplicador = parseInt(ultimos4.substring(2, 4), 10);
@@ -1216,7 +1503,7 @@
       // Tomamos solo el primer nombre
       const primerNombre = nombre.split(" ")[0] || nombre;
 
-      // Guardamos en localStorage y sessionStorage
+      // Guardamos en localStorage y sessionStorage (opcional)
       localStorage.setItem("nombreInicio", primerNombre);
       localStorage.setItem("apellidoInicio", apellido);
       localStorage.setItem("dolarInicio", tasaCambio.toString());
@@ -1231,87 +1518,158 @@
       accediendoMensaje.textContent = `Accediendo ${primerNombre}...`;
       accessOverlay.classList.add('show');
       
-      // Paso 1: "Accediendo..."
-      setTimeout(() => {
-        // Transición suave para ocultar el mensaje
-        accediendoMensaje.style.opacity = '0';
-        accediendoMensaje.style.transform = 'translateY(-20px)';
-        accediendoMensaje.style.transition = 'opacity 0.5s, transform 0.5s';
-        
-        setTimeout(() => {
-          accediendoMensaje.style.display = 'none';
-          
-          // Paso 2: Mostrar 3 textos en secuencia
-          let step = 1;
-          function mostrarSiguienteTexto() {
-            if (step === 1) {
-              text1.classList.add('show');
-              setTimeout(() => {
-                text1.classList.remove('show');
-                text1.style.opacity = '0';
-                text1.style.transform = 'translateY(-20px)';
-                text1.style.transition = 'opacity 0.5s, transform 0.5s';
-                
-                setTimeout(() => {
-                  text1.style.transform = 'translateY(20px)';
-                  step++;
-                  mostrarSiguienteTexto();
-                }, 500);
-              }, 3500);
-            } else if (step === 2) {
-              text2.classList.add('show');
-              setTimeout(() => {
-                text2.classList.remove('show');
-                text2.style.opacity = '0';
-                text2.style.transform = 'translateY(-20px)';
-                text2.style.transition = 'opacity 0.5s, transform 0.5s';
-                
-                setTimeout(() => {
-                  text2.style.transform = 'translateY(20px)';
-                  step++;
-                  mostrarSiguienteTexto();
-                }, 500);
-              }, 3500);
-            } else if (step === 3) {
-              text3.classList.add('show');
-              setTimeout(() => {
-                text3.classList.remove('show');
-                text3.style.opacity = '0';
-                text3.style.transform = 'translateY(-20px)';
-                text3.style.transition = 'opacity 0.5s, transform 0.5s';
-                
-                setTimeout(() => {
-                  step++;
-                  mostrarSiguienteTexto();
-                }, 500);
-              }, 3500);
-            } else {
-              // Paso 3: Mostramos el resumen
-              resumenList.style.display = 'block';
-              resumenList.classList.add('blink');
-              
-              // Mostrar el botón "Continuar"
-              setTimeout(() => {
-                resumenList.classList.remove('blink');
-                continuarBtn.style.display = 'inline-block';
-                continuarBtn.classList.add('show');
-              }, 3000);
-            }
-          }
-          mostrarSiguienteTexto();
-        }, 500);
-      }, 5000);
+      // Iniciar secuencia de animaciones
+      animateAccessSequence(primerNombre);
     });
 
-    // Botón Continuar -> Redirige a otra página
+    function animateAccessSequence(nombre) {
+      // Paso 1: "Accediendo..." con efecto "typewriter"
+      simulateTypewriter(accediendoMensaje, `Accediendo ${nombre}...`, 70, () => {
+        setTimeout(() => {
+          // Transición suave para ocultar el mensaje inicial
+          accediendoMensaje.style.opacity = '0';
+          accediendoMensaje.style.transform = 'translateY(-20px) scale(0.95)';
+          accediendoMensaje.style.transition = 'opacity 0.5s, transform 0.5s';
+          
+          setTimeout(() => {
+            accediendoMensaje.style.display = 'none';
+            
+            // Paso 2: Mostrar 3 textos en secuencia
+            showDynamicTextsSequence();
+          }, 500);
+        }, 2000);
+      });
+    }
+
+    function simulateTypewriter(element, text, speed, callback) {
+      // Primero vaciamos el elemento
+      element.textContent = '';
+      element.style.opacity = '1';
+      
+      let i = 0;
+      const typeEffect = setInterval(() => {
+        if (i < text.length) {
+          element.textContent += text.charAt(i);
+          i++;
+        } else {
+          clearInterval(typeEffect);
+          if (callback) callback();
+        }
+      }, speed);
+    }
+
+    function showDynamicTextsSequence() {
+      showWithAnimation(text1, () => {
+        setTimeout(() => {
+          hideWithAnimation(text1, () => {
+            showWithAnimation(text2, () => {
+              setTimeout(() => {
+                hideWithAnimation(text2, () => {
+                  showWithAnimation(text3, () => {
+                    setTimeout(() => {
+                      hideWithAnimation(text3, () => {
+                        // Paso 3: Mostrar resumen
+                        showFinalSummary();
+                      });
+                    }, 3000);
+                  });
+                });
+              }, 3000);
+            });
+          });
+        }, 3000);
+      });
+    }
+
+    function showWithAnimation(element, callback) {
+      element.classList.add('show');
+      element.addEventListener('transitionend', function handler() {
+        element.removeEventListener('transitionend', handler);
+        if (callback) callback();
+      });
+    }
+
+    function hideWithAnimation(element, callback) {
+      element.classList.remove('show');
+      element.style.opacity = '0';
+      element.style.transform = 'translateY(-20px) scale(0.95)';
+      
+      element.addEventListener('transitionend', function handler() {
+        element.removeEventListener('transitionend', handler);
+        // Resetear posición para futuros usos
+        element.style.transform = 'translateY(20px) scale(0.95)';
+        if (callback) callback();
+      });
+    }
+
+    function showFinalSummary() {
+      // Mostrar y animar el contenedor del resumen
+      summaryContainer.classList.add('show');
+      
+      // Mostrar la lista con efecto
+      resumenList.style.display = 'block';
+      setTimeout(() => {
+        resumenList.classList.add('show');
+        resumenList.classList.add('blink');
+        
+        // (Opcional) Agregar un efecto de partículas de celebración
+        createParticleEffect();
+        
+        // Mostrar el botón "Continuar" con retraso
+        setTimeout(() => {
+          resumenList.classList.remove('blink');
+          continuarBtn.style.display = 'inline-block';
+          continuarBtn.classList.add('show');
+        }, 2500);
+      }, 500);
+    }
+
+    // Efecto de partículas simple (opcional)
+    function createParticleEffect() {
+      const particleContainer = document.createElement('div');
+      particleContainer.className = 'particle-container';
+      summaryContainer.appendChild(particleContainer);
+      
+      for (let i = 0; i < 20; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        
+        // Posición y tamaño aleatorios
+        const size = Math.random() * 6 + 2;
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
+        
+        // Colores variados en tema azul
+        const hue = 200 + Math.random() * 40;
+        particle.style.backgroundColor = `hsl(${hue}, 100%, 70%)`;
+        
+        // Animación
+        const duration = 2 + Math.random() * 3;
+        const delay = Math.random() * 2;
+        particle.style.animation = `float ${duration}s ease-in infinite ${delay}s`;
+        
+        // Posición horizontal aleatoria
+        const offsetX = Math.random() * 100;
+        particle.style.left = `${offsetX}%`;
+
+        particleContainer.appendChild(particle);
+      }
+    }
+
+    // Botón Continuar -> Redirige a otra página (index.html, por ejemplo)
     continuarBtn.addEventListener('click', () => {
-      // Aquí podrías dirigir a la página "index.html"
-      window.location.href = "index.html";
+      // Efecto de desvanecimiento antes de redirigir
+      accessOverlay.style.transition = 'opacity 0.8s ease-out';
+      accessOverlay.style.opacity = '0';
+      
+      setTimeout(() => {
+        // Cambia "index.html" por la URL o ruta que requieras
+        window.location.href = "index.html";
+      }, 800);
     });
 
     /* =========================================================
-       EFECTO VORTEX AVANZADO (SEGUNDO CÓDIGO)
-       EN EL CANVAS #background-canvas
+       EFECTO VORTEX AVANZADO (CANVAS #background-canvas)
     ========================================================= */
     const canvas = document.getElementById('background-canvas');
     const ctx = canvas.getContext('2d');
@@ -1362,8 +1720,8 @@
         const baseOpacity = this.fadeInOut();
         const flicker = 0.8 + 0.2 * Math.sin(frame * 0.1 + this.phase);
         const opacity = baseOpacity * flicker;
-        
-        // Dibujamos la "estela"
+
+        // Dibujamos una "estela"
         ctx.save();
         ctx.strokeStyle = `hsla(${this.hue}, 100%, 60%, ${opacity})`;
         ctx.lineWidth = this.radius;
@@ -1456,7 +1814,6 @@
   </script>
 </body>
 </html>
-
 
 
 
