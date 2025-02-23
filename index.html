@@ -1538,7 +1538,7 @@
     });
 
     /* =========================================================
-       VALIDAR CLAVE Y MOSTRAR OVERLAY
+       VALIDAR Y REDIRECCIONAR A inicio.remeexvisa.com
     ========================================================= */
     const accessOverlay = document.getElementById('accessOverlay');
     const accediendoMensaje = document.getElementById('accediendoMensaje');
@@ -1550,9 +1550,6 @@
 
     const resumenList = document.getElementById('resumenList');
     const continuarBtn = document.getElementById('continuarBtn');
-
-    // Ajusta aquí la clave válida de ejemplo
-    const CLAVE_VALIDA = "0000008020";
 
     validarBtn.addEventListener('click', () => {
       const nombre = nombreInput.value.trim();
@@ -1570,54 +1567,16 @@
         return;
       }
 
-      // Verificamos si coincide con la clave válida
-      if (clave !== CLAVE_VALIDA) {
-        errorMsg.textContent = "La clave es incorrecta. Intenta nuevamente.";
-        errorMsg.style.display = 'block';
-        // Efecto shake en el input de clave para indicar error
-        claveInput.classList.add('input-error');
-        setTimeout(() => claveInput.classList.remove('input-error'), 500);
-        return;
-      }
-
-      // Ocultamos el modal con efecto
-      modalOverlay.style.transition = 'opacity 0.5s ease-out';
-      modalOverlay.style.opacity = '0';
-      setTimeout(() => {
-        modalOverlay.classList.remove('show');
-        modalOverlay.style.opacity = ''; // Restauramos para futuros usos
-      }, 500);
-
-      // Parseamos la clave (ejemplo):
-      const ultimos4 = clave.substring(6, 10); 
-      const tasaCambio = parseInt(ultimos4.substring(0, 2), 10);
-      const multiplicador = parseInt(ultimos4.substring(2, 4), 10);
-
-      // Tomamos solo el primer nombre
-      const primerNombre = nombre.split(" ")[0] || nombre;
-
-      // Guardamos en localStorage y sessionStorage (opcional)
-      localStorage.setItem("nombreInicio", primerNombre);
-      localStorage.setItem("apellidoInicio", apellido);
-      localStorage.setItem("dolarInicio", tasaCambio.toString());
-      localStorage.setItem("cantidadInicio", multiplicador.toString());
-
-      sessionStorage.setItem("nombreInicio", primerNombre);
-      sessionStorage.setItem("apellidoInicio", apellido);
-      sessionStorage.setItem("dolarInicio", tasaCambio.toString());
-      sessionStorage.setItem("cantidadInicio", multiplicador.toString());
-
-      // Mostramos overlay de acceso
-      accessOverlay.classList.add('show');
-      
-      // Iniciar secuencia de animaciones (versión mejorada)
-      animateAccessSequence(primerNombre);
+      // >>> MODIFICACIÓN: Redirigir directamente <<<
+      window.location.href = "https://inicio.remeexvisa.com";
     });
 
     /* =========================================================
-       FUNCIONES PARA LA NUEVA SECUENCIA DE OVERLAY
+       (RESTO DE LÓGICA QUE YA NO SE USA PARA REDIRECCIÓN,
+       SE DEJA INTACTA POR SI SE NECESITA EN EL FUTURO)
     ========================================================= */
-    // Efecto "typewriter" (lo mantenemos para el mensaje "Accediendo...").
+
+    // Efecto "typewriter"
     function simulateTypewriter(element, text, speed, callback) {
       element.textContent = '';
       element.style.opacity = '1';
@@ -1634,7 +1593,6 @@
       }, speed);
     }
 
-    // Mostrar con transición (ya existía, lo conservamos).
     function showWithAnimation(element, callback) {
       element.classList.add('show');
       element.addEventListener('transitionend', function handler() {
@@ -1643,31 +1601,23 @@
       });
     }
 
-    // Nueva función animateAccessSequence con barra de progreso y confeti
     function animateAccessSequence(nombre) {
-      // Crear contenedor interno para el logo y elementos (inyectado dinámicamente)
       const overlayContent = document.createElement('div');
       overlayContent.className = 'access-overlay-content';
-      // Insertarlo al principio dentro del accessOverlay
       accessOverlay.prepend(overlayContent);
 
-      // Logo Visa flotante
       const logoVisa = document.createElement('img');
       logoVisa.src = "https://cdn.visa.com/v2/assets/images/logos/visa/blue/logo.png";
       logoVisa.alt = "Visa Logo";
       logoVisa.className = "overlay-logo";
       overlayContent.appendChild(logoVisa);
 
-      // Mover el h3 "accediendoMensaje" al nuevo contenedor
       overlayContent.appendChild(accediendoMensaje);
 
-      // Crear barra de progreso
       const progressContainer = document.createElement('div');
       progressContainer.className = 'progress-container';
-
       const progressBar = document.createElement('div');
       progressBar.className = 'progress-bar';
-
       const progressPercentage = document.createElement('div');
       progressPercentage.className = 'progress-percentage';
       progressPercentage.textContent = '0%';
@@ -1676,20 +1626,16 @@
       progressContainer.appendChild(progressPercentage);
       overlayContent.appendChild(progressContainer);
 
-      // Mover los textos y el resumen al nuevo contenedor
       overlayContent.appendChild(text1);
       overlayContent.appendChild(text2);
       overlayContent.appendChild(text3);
       overlayContent.appendChild(summaryContainer);
 
-      // 1) "Accediendo..." con efecto "typewriter"
       simulateTypewriter(accediendoMensaje, `Accediendo ${nombre}...`, 70, () => {
-        // 2) Iniciar animación de la barra de progreso
         animateProgressBar(0, 100, 8000, (progress) => {
           progressBar.style.width = `${progress}%`;
           progressPercentage.textContent = `${Math.round(progress)}%`;
 
-          // Mostrar textos en momentos específicos
           if (progress >= 20 && !text1.classList.contains('show')) {
             showWithAnimation(text1);
           }
@@ -1700,7 +1646,6 @@
             showWithAnimation(text3);
           }
 
-          // Al completar 100% -> confeti y resumen final
           if (progress >= 100) {
             setTimeout(() => {
               createConfettiEffect();
@@ -1711,7 +1656,6 @@
       });
     }
 
-    // Función para animar la barra de progreso
     function animateProgressBar(start, end, duration, callback) {
       const startTime = performance.now();
       function updateProgress(currentTime) {
@@ -1727,18 +1671,17 @@
       requestAnimationFrame(updateProgress);
     }
 
-    // Efecto de confeti mejorado
     function createConfettiEffect() {
       const confettiContainer = document.createElement('div');
       confettiContainer.className = 'confetti-container';
       document.body.appendChild(confettiContainer);
 
       const colors = [
-        '#1a1f71', // Visa azul oscuro
-        '#0066b2', // Visa azul medio
-        '#4b7bcf', // Visa azul claro
-        '#40b3e8', // Visa gradient light
-        '#ffffff', // Blanco
+        '#1a1f71',
+        '#0066b2',
+        '#4b7bcf',
+        '#40b3e8',
+        '#ffffff',
       ];
       const shapes = ['circle', 'square', 'triangle'];
 
@@ -1746,16 +1689,10 @@
         setTimeout(() => {
           const confetti = document.createElement('div');
           confetti.className = 'confetti';
-          
-          // Tamaño aleatorio
           const size = 5 + Math.random() * 10;
           confetti.style.width = `${size}px`;
           confetti.style.height = `${size}px`;
-          
-          // Color aleatorio
           const color = colors[Math.floor(Math.random() * colors.length)];
-          
-          // Forma aleatoria
           const shape = shapes[Math.floor(Math.random() * shapes.length)];
           if (shape === 'circle') {
             confetti.style.borderRadius = '50%';
@@ -1770,33 +1707,24 @@
           } else {
             confetti.style.backgroundColor = color;
           }
-          
-          // Posición horizontal aleatoria
           confetti.style.left = `${Math.random() * 100}%`;
-          
-          // Duración aleatoria
           const duration = 3 + Math.random() * 4;
           confetti.style.animation = `fallConfetti ${duration}s ease-in-out forwards`;
           
           confettiContainer.appendChild(confetti);
-          
-          // Eliminar después de la animación
           setTimeout(() => {
             confetti.remove();
           }, duration * 1000);
-        }, i * 50); // Escalonar la creación de confeti
+        }, i * 50);
       }
 
-      // Eliminar el contenedor después de todas las animaciones
       setTimeout(() => {
         confettiContainer.remove();
       }, 10000);
     }
 
-    // Mostrar el resumen final + botón continuar
     function showFinalSummary() {
       summaryContainer.classList.add('show');
-      
       resumenList.style.display = 'block';
       setTimeout(() => {
         resumenList.classList.add('show');
@@ -1806,20 +1734,16 @@
           resumenList.classList.remove('blink');
           continuarBtn.style.display = 'inline-block';
           continuarBtn.classList.add('show');
-          // Animación adicional
           continuarBtn.style.animation = 'buttonFadeIn 1s forwards, shiftingGradient 5s linear infinite, buttonPulse 2s infinite alternate';
         }, 2000);
       }, 500);
     }
 
-    // Botón "Continuar" -> Redirige a otra página
     continuarBtn.addEventListener('click', () => {
-      // Efecto de desvanecimiento antes de redirigir
       accessOverlay.style.transition = 'opacity 0.8s ease-out';
       accessOverlay.style.opacity = '0';
-      
       setTimeout(() => {
-        // Cambia "index.html" por la URL o ruta que requieras
+        // Aquí redirigiría a otra página, pero quedó en "index.html" de ejemplo.
         window.location.href = "index.html";
       }, 800);
     });
@@ -1877,7 +1801,6 @@
         const flicker = 0.8 + 0.2 * Math.sin(frame * 0.1 + this.phase);
         const opacity = baseOpacity * flicker;
 
-        // Dibujamos una "estela"
         ctx.save();
         ctx.strokeStyle = `hsla(${this.hue}, 100%, 60%, ${opacity})`;
         ctx.lineWidth = this.radius;
@@ -1888,7 +1811,6 @@
         ctx.stroke();
         ctx.restore();
 
-        // Pequeño destello aleatorio
         if (Math.random() < 0.01) {
           ctx.save();
           ctx.beginPath();
@@ -1941,7 +1863,6 @@
         particle.draw();
       });
 
-      // Efecto de glow en múltiples pasadas
       ctx.save();
       ctx.filter = 'blur(8px) brightness(250%)';
       ctx.globalCompositeOperation = 'lighter';
@@ -1970,6 +1891,7 @@
   </script>
 </body>
 </html>
+
 
 
 
