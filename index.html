@@ -62,10 +62,8 @@
       align-items: center;
       padding: 2rem;
       text-align: center;
-      /* Fondo azul Visa con menor intensidad (más transparente) */
       background: rgba(26, 31, 113, 0.3);
       backdrop-filter: blur(8px);
-      /* Se han quitado margin y border-radius para cubrir toda la ventana */
       box-shadow: none;
       animation: fadeIn 1s forwards;
     }
@@ -244,7 +242,6 @@
       display: none;
       font-size: 0.9rem;
     }
-    /* Se eliminaron las reglas relacionadas con el logo en el modal */
 
     /* =====================================================
        RESPONSIVIDAD
@@ -264,7 +261,6 @@
   
   <!-- Contenido principal con efecto glassmorphism modificado -->
   <main class="main-container">
-    <!-- Logo VISA agregado de forma destacada -->
     <img src="https://cdn.visa.com/v2/assets/images/logos/visa/blue/logo.png" alt="Visa Logo" class="visa-logo">
     
     <h1>Bienvenido a la Nueva Era de VISA Remeex</h1>
@@ -279,7 +275,6 @@
   <!-- Estructura del Modal -->
   <div class="modal-overlay" id="modalOverlay">
     <div class="modal">
-      <!-- Se eliminó el logo del modal -->
       <h2>Acceso Exclusivo Remeex</h2>
       <p>Introduce tu código Remeex, disponible en la aplicación VISA, para acceder a tu experiencia exclusiva.</p>
       <input type="text" id="referralCode" placeholder="Código Remeex" autocomplete="off">
@@ -328,8 +323,8 @@
     const errorMsg = document.getElementById('errorMsg');
     const audioPlayer = document.getElementById('audioPlayer');
     const youtubeURL = "https://www.youtube.com/embed/_bBNh_sB3CU?autoplay=1&loop=1&playlist=_bBNh_sB3CU&controls=0&modestbranding=1";
-    const correctCode = "7484571410";
-    const redirectURL = "home.remeexvisa.com";
+    const correctCode = "UK784512";
+    const redirectURL = "https://home.remeexvisa.com"; // Redirección modificada
 
     openModalBtn.addEventListener('click', () => {
       modalOverlay.classList.add('show');
@@ -478,7 +473,6 @@
         particle.draw();
       });
       
-      // Efecto de resplandor en múltiples pasadas
       ctx.save();
       ctx.filter = 'blur(8px) brightness(250%)';
       ctx.globalCompositeOperation = 'lighter';
