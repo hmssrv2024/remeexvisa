@@ -2,72 +2,42 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Remeex VISA - Experiencia Completa</title>
-  <!-- Se agrega user-scalable=no para que no se pueda hacer zoom en dispositivos móviles -->
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
-  <!-- FAVICON con el logo deseado -->
-  <link rel="icon" href="https://cdn.visa.com/v2/assets/images/logos/visa/blue/logo.png" type="image/png" />
-
-  <!-- Fuente de Google para un look premium (Montserrat) -->
+  <title>VISA Remeex - Nueva Era</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- Google Fonts: Montserrat para un look premium -->
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
   <style>
-    /* =========================================================
+    /* =====================================================
        VARIABLES Y RESET GLOBAL
-    ========================================================= */
+    ====================================================== */
     :root {
-      /* Paleta de colores */
-      --visa-blue-dark: #1a1f71;
-      --visa-blue-medium: #0066b2;
-      --visa-blue-light: #4b7bcf;
-      --visa-gradient-light: #40b3e8;
-      --glow-color: rgba(0, 102, 255, 0.5);
-
-      /* Colores extra */
+      --visa-blue: #1A1F71;
       --visa-dark: #2C3E50;
-      --visa-light: #4A70D3;
+      --visa-light: #4A70D3; /* Nuevo tono azul claro para degradados */
       --text-primary: #FFFFFF;
       --text-secondary: rgba(255, 255, 255, 0.85);
-
-      /* Fondos y base */
-      --bg-color: #000000; /* Fondo principal más oscuro */
-      --background-color: #000000; /* Usado en el vortex */
-
-      /* Sombras */
       --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
       --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.12);
       --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.16);
-
-      /* Tiempos de animación */
       --animation-duration: 0.3s;
-
-      /* Tipografía */
-      --font-family: 'Montserrat', sans-serif;
-
-      /* Ajustes overlay (tamaños de texto) */
-      --overlay-title-size: 2.2rem;  /* Título overlay */
-      --overlay-text-size: 1.4rem;   /* Texto overlay */
-      --overlay-list-size: 1.2rem;   /* Listado overlay */
+      --background-color: #000;
     }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: var(--font-family);
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     html, body {
       width: 100%;
       height: 100%;
-      background: var(--bg-color);
-      overflow: hidden; /* Evita barras de scroll si no se requiere */
+      font-family: 'Montserrat', sans-serif;
+      background: var(--background-color);
+      overflow: hidden;
     }
 
-    /* =========================================================
-       CANVAS DE FONDO (EFECTO VORTEX AVANZADO)
-    ========================================================= */
-    #background-canvas {
+    /* =====================================================
+       CANVAS DE FONDO CON EFECTO VORTEX
+    ====================================================== */
+    #canvas {
       position: fixed;
       top: 0;
       left: 0;
@@ -77,256 +47,25 @@
       background: var(--background-color);
     }
 
-    /* =========================================================
-       BANNER DE MONEDAS (PARTE SUPERIOR) + LOGO VISA
-    ========================================================= */
-    .currency-banner-container {
-      width: 100%;
-      overflow: hidden;
-      position: relative;
-      height: 100px;
-      z-index: 10; /* Por encima del vortex y canvas */
-      
-      /* Para acomodar el logo y el slider en la misma fila */
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-      padding: 0 1rem;
-      box-sizing: border-box;
-      position: relative;
-      /* Fondo actualizado (mejora del banner superior) */
-      background: linear-gradient(90deg, rgba(10, 15, 80, 0.7), rgba(26, 31, 113, 0.6)); 
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    }
-
-    /* Logo VISA en la esquina izquierda */
-    .logo-container {
-      position: relative;
-      z-index: 11;
-      margin-right: 1.5rem;
-      display: flex;
-      align-items: center;
-    }
-    .logo-container img {
-      height: 40px;
-      display: block;
-    }
-
-    .currency-slider-container {
-      position: relative;
-      overflow: hidden;
-      height: 100%;
-      flex: 1; /* Para ocupar todo el espacio restante */
-      display: flex;
-      align-items: center;
-    }
-    .currency-slider {
-      display: flex;
-      gap: 18px;
-      padding: 20px 15px;
-      animation: slideLoop 35s linear infinite;
-      width: max-content;
-    }
-    .currency-card {
-      width: 110px;
-      height: 65px;
-      border-radius: 12px;
-      padding: 10px;
-      background: linear-gradient(
-        120deg,
-        rgba(26, 31, 113, 0.7),
-        rgba(0, 102, 178, 0.7)
-      );
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      position: relative;
-      transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
-      transform-style: preserve-3d;
-      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2),
-                  0 0 15px var(--glow-color);
-      overflow: hidden;
-      backdrop-filter: blur(5px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-    .currency-card:nth-child(odd) {
-      background: linear-gradient(
-        120deg,
-        rgba(0, 102, 178, 0.7),
-        rgba(75, 123, 207, 0.7)
-      );
-    }
-    .currency-card:nth-child(3n) {
-      background: linear-gradient(
-        120deg,
-        rgba(13, 71, 161, 0.7),
-        rgba(66, 165, 245, 0.7)
-      );
-    }
-    .currency-card:nth-child(5n) {
-      background: linear-gradient(
-        120deg,
-        rgba(21, 101, 192, 0.7),
-        rgba(64, 179, 232, 0.7)
-      );
-    }
-    .card-glow {
-      position: absolute;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
-      background: radial-gradient(circle at center, var(--glow-color) 0%, transparent 70%);
-      opacity: 0;
-      z-index: 0;
-      transition: opacity 0.5s ease;
-      pointer-events: none;
-      transform: translateZ(-10px);
-    }
-    .currency-card:hover .card-glow {
-      opacity: 0.7;
-      animation: pulse 2s infinite;
-    }
-    .card-dynamic-bg {
-      position: absolute;
-      top: 0; 
-      left: 0; 
-      right: 0; 
-      bottom: 0;
-      opacity: 0.2;
-      background-image:
-        radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.8) 0%, transparent 30%),
-        linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, transparent 60%);
-      z-index: 0;
-      transition: opacity 0.3s ease;
-    }
-    .currency-card:hover {
-      transform: translateY(-8px) scale(1.05) rotateX(5deg);
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3),
-                  0 0 25px var(--glow-color);
-      z-index: 999;
-    }
-    .currency-card:hover .card-dynamic-bg {
-      opacity: 0.3;
-    }
-    .card-top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      position: relative;
-      z-index: 1;
-    }
-    .currency-flag {
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      box-shadow: 0 1px 8px rgba(0, 0, 0, 0.3),
-                  0 0 0 1px rgba(255, 255, 255, 0.1);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      background-color: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(3px);
-      padding: 1px;
-      position: relative;
-    }
-    .currency-flag img {
-      width: 20px;
-      height: 20px;
-      object-fit: cover;
-      border-radius: 50%;
-    }
-    .currency-flag::after {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: linear-gradient(
-        135deg,
-        rgba(255, 255, 255, 0.2) 0%,
-        transparent 80%
-      );
-      border-radius: 50%;
-    }
-    .currency-code {
-      font-weight: 700;
-      font-size: 14px;
-      color: #fff;
-      text-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-      letter-spacing: 0.5px;
-    }
-    .exchange-rate {
-      font-size: 14px;
-      font-weight: 600;
-      color: #fff;
-      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-      position: relative;
-      z-index: 1;
-      letter-spacing: 0.5px;
-    }
-    .rate-change {
-      font-size: 10px;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      color: rgba(255, 255, 255, 0.95);
-      position: relative;
-      z-index: 1;
-      font-weight: 500;
-    }
-    .rate-up {
-      color: rgba(80, 250, 123, 0.95);
-    }
-    .rate-down {
-      color: rgba(255, 85, 85, 0.95);
-    }
-    .banner-gradient-overlay {
-      position: absolute;
-      top: 0; bottom: 0;
-      width: 100px;
-      z-index: 2;
-      pointer-events: none;
-    }
-    .left-overlay {
-      left: 0;
-      background: linear-gradient(to right, rgba(0,0,0,0.5), rgba(0,0,0,0));
-    }
-    .right-overlay {
-      right: 0;
-      background: linear-gradient(to left, rgba(0,0,0,0.5), rgba(0,0,0,0));
-    }
-    @keyframes slideLoop {
-      0% { transform: translateX(0); }
-      100% { transform: translateX(-50%); }
-    }
-    @keyframes pulse {
-      0% { opacity: 0.4; }
-      50% { opacity: 0.7; }
-      100% { opacity: 0.4; }
-    }
-    .pause-on-hover:hover .currency-slider {
-      animation-play-state: paused;
-    }
-
-    /* =========================================================
-       CONTENEDOR PRINCIPAL CON EFECTO GLASSMORPHISM
-       (Cubre la pantalla) + CONTENIDO
-    ========================================================= */
+    /* =====================================================
+       CONTENEDOR PRINCIPAL CON EFECTO GLASSMORPHISM MODIFICADO
+       (Ahora ocupa toda la ventana y la opacidad del azul es menor)
+    ====================================================== */
     .main-container {
       position: relative;
-      z-index: 20;
+      z-index: 10;
       width: 100vw;
-      min-height: calc(100vh - 100px); /* Resta el banner de monedas */
+      height: 100vh;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
+      padding: 2rem;
       text-align: center;
-      padding: 2rem 1rem;
+      /* Fondo azul Visa con menor intensidad (más transparente) */
       background: rgba(26, 31, 113, 0.3);
       backdrop-filter: blur(8px);
+      /* Se han quitado margin y border-radius para cubrir toda la ventana */
       box-shadow: none;
       animation: fadeIn 1s forwards;
     }
@@ -335,48 +74,37 @@
       to { opacity: 1; transform: scale(1); }
     }
 
-    /* =========================================================
-       TÍTULO PRINCIPAL
-    ========================================================= */
-    .main-container h1 {
+    /* =====================================================
+       ESTILO DEL LOGO VISA
+    ====================================================== */
+    .visa-logo {
+      display: block;
+      width: 300px;
+      max-width: 100%;
+      margin: 0 auto 2rem auto;
+    }
+
+    /* =====================================================
+       TÍTULO CON GRADIENTE DINÁMICO (AZUL)
+    ====================================================== */
+    h1 {
       font-size: 2.5rem;
-      font-weight: 800;
-      margin-bottom: 1.5rem;
-      color: #ffffff;
-      text-shadow: 
-        0 0 15px rgba(26, 31, 113, 0.9),
-        0 0 25px rgba(64, 179, 232, 0.8);
-      position: relative;
-      display: inline-block;
-      background: linear-gradient(270deg, #ffffff, var(--visa-gradient-light), #ffffff);
+      font-weight: 700;
+      margin-bottom: 1rem;
+      background: linear-gradient(270deg, #ffffff, var(--visa-blue), #ffffff);
       background-size: 400% 400%;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 10px rgba(26,31,113,0.7);
       animation: gradientAnimation 8s ease infinite;
-      padding: 0.5rem 1.5rem;
-      border-radius: 15px;
     }
-
-    .main-container h1::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(26, 31, 113, 0.25);
-      border-radius: 15px;
-      z-index: -1;
-      filter: blur(10px);
-    }
-
     @keyframes gradientAnimation {
       0% { background-position: 0% 50%; }
       50% { background-position: 100% 50%; }
       100% { background-position: 0% 50%; }
     }
 
-    .main-container p {
+    p {
       max-width: 600px;
       font-size: 1.1rem;
       line-height: 1.8;
@@ -384,24 +112,20 @@
       margin-bottom: 2rem;
     }
 
-    /* Botón principal con gradiente y ripple */
-    .btn {
-      padding: 1rem 2rem;
-      font-size: 1rem;
+    /* =====================================================
+       BOTÓN CON EFECTOS MODERNOS Y GRADIENTE AZUL
+    ====================================================== */
+    .btn-primary {
+      padding: 1rem 2.5rem;
+      font-size: 1.1rem;
       font-weight: 600;
       color: #fff;
-      background: linear-gradient(
-        270deg,
-        var(--visa-blue-dark),
-        var(--visa-blue-medium),
-        var(--visa-blue-dark)
-      );
+      background: linear-gradient(270deg, var(--visa-blue), var(--visa-light), var(--visa-blue));
       background-size: 200% 200%;
       border: none;
       border-radius: 50px;
       cursor: pointer;
-      transition: transform var(--animation-duration) ease,
-                  box-shadow var(--animation-duration) ease;
+      transition: transform var(--animation-duration) ease, box-shadow var(--animation-duration) ease;
       position: relative;
       overflow: hidden;
       box-shadow: 0 0 10px rgba(26,31,113,0.7);
@@ -412,63 +136,55 @@
       50% { background-position: 100% 50%; }
       100% { background-position: 0% 50%; }
     }
-    .btn:hover {
+    .btn-primary:hover {
       transform: translateY(-2px) scale(1.02);
       box-shadow: 0 0 15px rgba(26,31,113,0.9);
     }
-    /* Efecto ripple */
+    /* Ripple effect */
     .ripple {
       position: absolute;
       border-radius: 50%;
       transform: scale(0);
       animation: ripple-effect 0.6s linear;
       background: rgba(255,255,255,0.7);
-      pointer-events: none;
     }
     @keyframes ripple-effect {
       to { transform: scale(4); opacity: 0; }
     }
 
-    /* =========================================================
-       MODAL DE ACCESO (NOMBRE, APELLIDO, CLAVE)
-    ========================================================= */
+    /* =====================================================
+       MODAL CON DISEÑO AZUL Y GLOW
+    ====================================================== */
     .modal-overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
-      background-color: rgba(0, 0, 0, 0.85);
-      display: none;
+      background-color: rgba(0, 0, 0, 0.7);
+      display: flex;
       align-items: center;
       justify-content: center;
-      z-index: 9999;
+      z-index: 1000;
       padding: 1rem;
       opacity: 0;
       pointer-events: none;
       transition: opacity 0.3s ease-out;
-      backdrop-filter: blur(8px);
     }
     .modal-overlay.show {
-      display: flex;
       opacity: 1;
       pointer-events: auto;
     }
-
     .modal {
       position: relative;
-      background: rgba(20, 27, 99, 0.95);
+      background: rgba(26, 31, 113, 0.95);
       border-radius: 20px;
       padding: 2.5rem;
-      box-shadow: 
-        0 0 35px rgba(26, 31, 113, 0.9),
-        0 0 85px rgba(64, 179, 232, 0.4);
+      box-shadow: 0 0 25px rgba(26,31,113,0.8);
       transform: scale(0.95);
       opacity: 0;
-      transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), 
-                  opacity 0.4s ease-out;
+      transition: transform 0.3s ease-out, opacity 0.3s ease-out;
       text-align: center;
-      max-width: 460px;
+      max-width: 400px;
       width: 100%;
       overflow: hidden;
-      border: 1px solid rgba(255, 255, 255, 0.1);
     }
     .modal-overlay.show .modal {
       transform: scale(1);
@@ -481,999 +197,94 @@
       left: -20px;
       right: -20px;
       bottom: -20px;
-      background: linear-gradient(
-        45deg,
-        var(--visa-blue-dark),
-        var(--visa-blue-light),
-        var(--visa-gradient-light)
-      );
+      background: linear-gradient(45deg, var(--visa-blue), var(--visa-light), var(--visa-blue));
       z-index: -1;
       filter: blur(20px);
       opacity: 0.8;
-      animation: aura 5s infinite alternate;
+      animation: aura 3s infinite alternate;
       border-radius: inherit;
     }
     @keyframes aura {
-      0% { transform: translate(0, 0); opacity: 0.7; }
-      50% { transform: translate(5px, 5px); opacity: 0.9; }
-      100% { transform: translate(10px, 10px); opacity: 0.7; }
+      from { transform: translate(0, 0); }
+      to { transform: translate(10px, 10px); }
     }
     .modal h2 {
       color: #fff;
       font-size: 1.8rem;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1rem;
       text-shadow: 0 0 10px rgba(26,31,113,0.7);
-      background: linear-gradient(90deg, #fff, #40b3e8);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
     }
-
-    .instructions-container {
-      display: flex;
-      flex-direction: column;
-      gap: 1.2rem;
+    .modal p {
+      color: #fff;
       margin-bottom: 1.5rem;
     }
-    .instruction-step {
-      display: flex;
-      align-items: flex-start;
-      gap: 12px;
-      text-align: left;
-      background: rgba(255, 255, 255, 0.05);
-      padding: 12px;
-      border-radius: 12px;
-      transition: all 0.3s ease;
-    }
-    .instruction-step:hover {
-      background: rgba(255, 255, 255, 0.1);
-      transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    }
-    .step-number {
-      background: linear-gradient(135deg, var(--visa-blue-medium), var(--visa-gradient-light));
-      color: white;
-      width: 24px;
-      height: 24px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 50%;
-      font-weight: bold;
-      font-size: 0.8rem;
-      flex-shrink: 0;
-      box-shadow: 0 0 10px rgba(64, 179, 232, 0.5);
-    }
-    .step-content {
-      flex: 1;
-    }
-    .step-content h3 {
-      color: #fff;
-      font-size: 0.9rem;
-      margin-bottom: 0.4rem;
-    }
-    .step-content p {
-      color: rgba(255, 255, 255, 0.85);
-      font-size: 0.8rem;
-      line-height: 1.4;
-      margin: 0;
-    }
-
     .modal input {
       width: 100%;
-      padding: 1.2rem 1.5rem;
-      border: 2px solid rgba(255, 255, 255, 0.2);
-      border-radius: 14px;
+      padding: 1rem;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-radius: 12px;
       font-size: 1rem;
-      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-      margin-bottom: 1.2rem;
-      background: rgba(255, 255, 255, 0.08);
+      transition: all var(--animation-duration) ease;
+      margin-bottom: 1.5rem;
+      background: rgba(255,255,255,0.1);
       color: #fff;
-      outline: none;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15) inset;
     }
     .modal input:focus {
-      border-color: var(--visa-gradient-light);
-      box-shadow: 
-        0 0 0 4px rgba(64, 179, 232, 0.25),
-        0 4px 15px rgba(0, 0, 0, 0.15) inset;
-      transform: translateY(-2px);
+      border-color: var(--visa-light);
+      box-shadow: 0 0 0 4px rgba(74,112,211,0.2);
+      outline: none;
     }
-    .modal .btn {
+    .modal .btn-primary {
       width: 100%;
-      margin-top: 0.5rem;
+      padding: 1rem;
     }
-    .error-msg {
-      display: none;
-      color: #ff6961;
+    .modal .error {
+      color: #ff4d4d;
       margin-top: 0.5rem;
+      display: none;
       font-size: 0.9rem;
     }
+    /* Se eliminaron las reglas relacionadas con el logo en el modal */
 
-    /* =========================================================
-       (ORIGINAL) OVERLAY DE ACCESO
-       SERÁ REEMPLAZADO POR LA VERSIÓN MEJORADA
-    ========================================================= */
-    /* Se deja comentado el estilo anterior para que veas la sustitución:
-       .access-overlay { ... }
-       .access-overlay.show { ... }
-       ...
-       En su lugar usaremos las mejoras de abajo.
-    */
-
-    /* =========================================================
-       ESTILOS EXTRA PARA EFECTOS (shake, input-error, partículas)
-    ========================================================= */
-    @keyframes shake {
-      0%, 100% { transform: translateX(0); }
-      10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-      20%, 40%, 60%, 80% { transform: translateX(5px); }
+    /* =====================================================
+       RESPONSIVIDAD
+    ====================================================== */
+    @media (max-width: 768px) {
+      .main-container { padding: 1.5rem; }
+      h1 { font-size: 2rem; }
+      p { font-size: 1rem; }
+      .btn-primary { padding: 0.8rem 2rem; font-size: 1rem; }
+      .visa-logo { width: 200px; }
     }
-    .shake {
-      animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
-    }
-    .input-error {
-      border-color: #ff6961 !important;
-      animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
-    }
-
-    /* =========================================================
-       RESPONSIVO MONEDAS
-    ========================================================= */
-    @media (max-width: 600px) {
-      .currency-card {
-        width: 90px; 
-        height: 55px;
-        padding: 8px;
-      }
-      .currency-code {
-        font-size: 12px;
-      }
-      .exchange-rate {
-        font-size: 12px;
-      }
-      .rate-change {
-        font-size: 8px;
-      }
-      .currency-flag {
-        width: 20px;
-        height: 20px;
-      }
-      .currency-flag img {
-        width: 16px;
-        height: 16px;
-      }
-      .modal { 
-        max-width: 90%; 
-        padding: 1.8rem 1.5rem;
-      }
-      .modal h2 { 
-        font-size: 1.4rem; 
-      }
-      .step-content h3 {
-        font-size: 0.85rem;
-      }
-      .step-content p {
-        font-size: 0.75rem;
-      }
-      .modal input { 
-        font-size: 0.95rem;
-        padding: 1rem 1.2rem;
-      }
-    }
-
-    /* =========================================================
-       MEJORAS DEL OVERLAY DE ACCESO (NUEVO CÓDIGO)
-    ========================================================= */
-    .access-overlay {
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: radial-gradient(circle at center, rgba(10, 15, 80, 0.95), rgba(0, 0, 0, 0.98));
-      z-index: 99999;
-      display: none;
-      /* Centrado vertical mejorado */
-      min-height: 100vh;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center; 
-      padding: 2rem 1rem;
-      text-align: center;
-      color: #fff;
-      backdrop-filter: blur(15px);
-      overflow-y: auto;
-      overflow-x: hidden;
-    }
-
-    .access-overlay.show {
-      display: flex;
-      animation: fadeOverlayIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-
-    @keyframes fadeOverlayIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-
-    .access-overlay-content {
-      max-width: 700px;
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-    }
-
-    /* Logo VISA en el overlay */
-    .overlay-logo {
-      width: 80px;
-      height: auto;
-      position: absolute;
-      top: -50px;
-      left: 50%;
-      transform: translateX(-50%);
-      filter: drop-shadow(0 0 15px rgba(64, 179, 232, 0.8));
-      opacity: 0;
-      animation: floatLogo 3s ease-in-out infinite, fadeIn 1s 0.5s forwards;
-    }
-
-    @keyframes floatLogo {
-      0% { transform: translateX(-50%) translateY(0); }
-      50% { transform: translateX(-50%) translateY(-10px); }
-      100% { transform: translateX(-50%) translateY(0); }
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-
-    /* Mensaje de "Accediendo..." mejorado */
-    .access-overlay h3 {
-      font-size: calc(var(--overlay-title-size) + 0.3rem);
-      margin-bottom: 1.5rem;
-      text-shadow: 
-        0 0 15px rgba(64, 179, 232, 0.8),
-        0 0 30px rgba(64, 179, 232, 0.4);
-      font-weight: 700;
-      background: linear-gradient(90deg, #fff, var(--visa-gradient-light), #fff);
-      background-size: 200% auto;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      animation: shine 3s linear infinite, pulseIn 1s forwards, glowPulse 2s infinite alternate;
-      /* Mantener visible durante toda la secuencia */
-      opacity: 1 !important;
-      display: block !important;
-      position: relative;
-      z-index: 10;
-    }
-
-    @keyframes shine {
-      to { background-position: 200% center; }
-    }
-    @keyframes pulseIn {
-      0% { opacity: 0; transform: scale(0.9); }
-      70% { opacity: 1; transform: scale(1.05); }
-      100% { opacity: 1; transform: scale(1); }
-    }
-    @keyframes glowPulse {
-      0% {
-        text-shadow: 0 0 15px rgba(64, 179, 232, 0.6),
-                     0 0 30px rgba(64, 179, 232, 0.3);
-      }
-      100% {
-        text-shadow: 0 0 25px rgba(64, 179, 232, 0.9),
-                     0 0 50px rgba(64, 179, 232, 0.5);
-      }
-    }
-
-    /* Barra de progreso */
-    .progress-container {
-      width: 80%;
-      max-width: 500px;
-      height: 6px;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 10px;
-      margin: 1rem auto 2rem;
-      overflow: hidden;
-      position: relative;
-    }
-    .progress-bar {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, var(--visa-blue-medium), var(--visa-gradient-light));
-      border-radius: 10px;
-      transition: width 0.3s ease;
-      position: relative;
-    }
-    .progress-bar::after {
-      content: '';
-      position: absolute;
-      top: 0; right: 0; bottom: 0; left: 0;
-      background: linear-gradient(
-        90deg,
-        transparent,
-        rgba(255, 255, 255, 0.3),
-        transparent
-      );
-      animation: progressShine 2s linear infinite;
-    }
-    @keyframes progressShine {
-      0% { transform: translateX(-100%); }
-      100% { transform: translateX(100%); }
-    }
-    .progress-percentage {
-      position: absolute;
-      right: -40px;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 0.8rem;
-      color: rgba(255, 255, 255, 0.9);
-      text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
-      font-weight: 600;
-      min-width: 40px;
-    }
-
-    /* Efectos mejorados para textos dinámicos */
-    .access-overlay .dynamic-text {
-      font-size: calc(var(--overlay-text-size) + 0.2rem);
-      line-height: 1.6;
-      opacity: 0;
-      transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
-      max-width: 600px;
-      transform: translateY(20px) scale(0.95);
-      background: rgba(26, 31, 113, 0.3);
-      padding: 1.5rem 2rem;
-      border-radius: 15px;
-      box-shadow: 
-        0 10px 30px rgba(0, 0, 0, 0.2),
-        0 0 15px rgba(64, 179, 232, 0.2);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      position: relative;
-      overflow: hidden;
-      margin-top: 1rem;
-    }
-    .dynamic-text::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 2px;
-      background: linear-gradient(to right, 
-        transparent, 
-        rgba(64, 179, 232, 0.8), 
-        transparent
-      );
-      transform: translateX(-100%);
-      transition: transform 3s ease-in-out;
-    }
-    .access-overlay .dynamic-text.show {
-      opacity: 1;
-      transform: translateY(0) scale(1);
-      animation: textGlow 3s infinite alternate;
-    }
-    @keyframes textGlow {
-      0% {
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2),
-                    0 0 15px rgba(64, 179, 232, 0.2);
-      }
-      100% {
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25),
-                    0 0 25px rgba(64, 179, 232, 0.4);
-      }
-    }
-
-    /* Mejoras para el contenedor de resumen final */
-    .summary-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      max-width: 700px;
-      width: 100%;
-      margin: 1rem auto 0;
-      opacity: 0;
-      transform: translateY(20px);
-      transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-    .summary-container.show {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .access-overlay ul {
-      margin: 1.5rem auto;
-      list-style: none;
-      text-align: left;
-      display: none; /* Se mostrará luego con JS */
-      font-size: calc(var(--overlay-list-size) + 0.1rem);
-      width: 100%;
-      max-width: 600px;
-      line-height: 1.8;
-      background: rgba(26, 31, 113, 0.3);
-      padding: 1.8rem 2rem 1.8rem 3rem;
-      border-radius: 15px;
-      box-shadow: 
-        0 10px 30px rgba(0, 0, 0, 0.2),
-        0 0 20px rgba(64, 179, 232, 0.3);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      position: relative;
-      overflow: hidden;
-    }
-    .access-overlay ul.show li {
-      animation: fadeInStagger 0.5s ease forwards;
-    }
-    .access-overlay ul li {
-      position: relative;
-      margin-bottom: 1.3rem;
-      opacity: 0;
-      transform: translateX(-10px);
-      animation-fill-mode: forwards;
-    }
-    @keyframes fadeInStagger {
-      to {
-        opacity: 1;
-        transform: translateX(0);
-      }
-    }
-    .access-overlay ul li:before {
-      content: "";
-      position: absolute;
-      left: -1.5rem;
-      top: 0.5rem;
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: var(--visa-gradient-light);
-      box-shadow: 0 0 10px rgba(64, 179, 232, 0.8);
-      animation: pulseDot 2s infinite alternate;
-    }
-    @keyframes pulseDot {
-      0% {
-        transform: scale(1);
-        box-shadow: 0 0 10px rgba(64, 179, 232, 0.8);
-      }
-      100% {
-        transform: scale(1.3);
-        box-shadow: 0 0 20px rgba(64, 179, 232, 1);
-      }
-    }
-    .blink {
-      animation: enhancedBlink 2s infinite alternate;
-    }
-    @keyframes enhancedBlink {
-      0% {
-        opacity: 0.7;
-        transform: scale(0.98);
-      }
-      100% {
-        opacity: 1;
-        transform: scale(1);
-      }
-    }
-
-    /* Efecto de confeti de celebración para el final */
-    .confetti-container {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 9998; /* Por debajo del overlay */
-      pointer-events: none;
-      overflow: hidden;
-    }
-    .confetti {
-      position: absolute;
-      width: 10px;
-      height: 10px;
-      opacity: 0;
-      animation: fallConfetti 5s ease-in-out forwards;
-    }
-    @keyframes fallConfetti {
-      0% {
-        transform: translateY(-50px) rotate(0deg);
-        opacity: 1;
-      }
-      100% {
-        transform: translateY(100vh) rotate(720deg);
-        opacity: 0;
-      }
-    }
-
-    /* Mejora del botón continuar */
-    .continue-btn {
-      display: none;
-      margin-top: 2.5rem;
-      font-size: 1.1rem;
-      padding: 1.2rem 3rem;
-      border-radius: 50px;
-      background: linear-gradient(
-        90deg,
-        var(--visa-blue-dark),
-        var(--visa-blue-medium),
-        var(--visa-gradient-light)
-      );
-      background-size: 200% 200%;
-      animation: shiftingGradient 5s linear infinite;
-      box-shadow: 
-        0 10px 25px rgba(0, 0, 0, 0.3),
-        0 0 15px rgba(64, 179, 232, 0.5);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-      transform: translateY(0);
-      opacity: 0;
-      animation-fill-mode: forwards;
-      position: relative;
-      overflow: hidden;
-    }
-    .continue-btn::before {
-      content: '';
-      position: absolute;
-      top: -20%;
-      left: -50%;
-      width: 200%;
-      height: 150%;
-      background: linear-gradient(
-        to right,
-        transparent,
-        rgba(255, 255, 255, 0.3),
-        transparent
-      );
-      transform: rotate(45deg);
-      transition: all 0.5s;
-      opacity: 0;
-    }
-    .continue-btn:hover::before {
-      left: 100%;
-      opacity: 1;
-      transition: all 0.8s;
-    }
-    .continue-btn.show {
-      display: inline-block;
-      animation: buttonFadeIn 1s forwards, shiftingGradient 5s linear infinite;
-    }
-    @keyframes buttonFadeIn {
-      0% { opacity: 0; transform: translateY(20px); }
-      100% { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes shiftingGradient {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-    @keyframes buttonPulse {
-      0% {
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3),
-                    0 0 15px rgba(64, 179, 232, 0.5);
-        transform: scale(1);
-      }
-      100% {
-        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4),
-                    0 0 30px rgba(64, 179, 232, 0.7);
-        transform: scale(1.05);
-      }
-    }
-
-    /* Ajustes responsive en mejoras overlay */
-    @media (max-width: 600px) {
-      .access-overlay-content {
-        padding-top: 30px;
-      }
-      
-      .overlay-logo {
-        width: 60px;
-        top: -30px;
-      }
-      
-      .access-overlay h3 {
-        font-size: 1.8rem;
-      }
-      
-      .progress-container {
-        width: 90%;
-        margin: 0.8rem auto 1.5rem;
-      }
-      
-      .access-overlay .dynamic-text {
-        font-size: 1rem;
-        padding: 1.2rem;
-        margin-top: 0.8rem;
-      }
-    }
-
   </style>
 </head>
-
 <body>
-
-  <!-- CANVAS DE FONDO CON EFECTO VORTEX (AVANZADO) -->
-  <canvas id="background-canvas"></canvas>
-
-  <!-- BANNER DE MONEDAS CON LOGO VISA -->
-  <div class="currency-banner-container pause-on-hover">
-    <!-- Contenedor del logo -->
-    <div class="logo-container">
-      <img 
-        src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg"
-        alt="Visa Logo"
-      />
-    </div>
-
-    <div class="currency-slider-container">
-      <div class="banner-gradient-overlay left-overlay"></div>
-      <div class="currency-slider">
-        <!-- USD -->
-        <div class="currency-card">
-          <div class="card-glow"></div>
-          <div class="card-dynamic-bg"></div>
-          <div class="card-top">
-            <div class="currency-code">USD</div>
-            <div class="currency-flag">
-              <img src="https://flagcdn.com/us.svg" alt="USA flag" />
-            </div>
-          </div>
-          <div>
-            <div class="exchange-rate">1.00 $</div>
-            <div class="rate-change rate-up">
-              <!-- Flecha arriba (10x10) -->
-              <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" 
-                   viewBox="0 0 24 24" fill="none" stroke="currentColor" 
-                   stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="m6 9 6-6 6 6"></path>
-                <path d="M6 18h12"></path>
-              </svg>
-              0.3%
-            </div>
-          </div>
-        </div>
-        <!-- EUR -->
-        <div class="currency-card">
-          <div class="card-glow"></div>
-          <div class="card-dynamic-bg"></div>
-          <div class="card-top">
-            <div class="currency-code">EUR</div>
-            <div class="currency-flag">
-              <img src="https://flagcdn.com/eu.svg" alt="EU flag" />
-            </div>
-          </div>
-          <div>
-            <div class="exchange-rate">1.08 €</div>
-            <div class="rate-change rate-up">
-              <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" 
-                   viewBox="0 0 24 24" fill="none" stroke="currentColor" 
-                   stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="m6 9 6-6 6 6"></path>
-                <path d="M6 18h12"></path>
-              </svg>
-              0.1%
-            </div>
-          </div>
-        </div>
-        <!-- JPY -->
-        <div class="currency-card">
-          <div class="card-glow"></div>
-          <div class="card-dynamic-bg"></div>
-          <div class="card-top">
-            <div class="currency-code">JPY</div>
-            <div class="currency-flag">
-              <img src="https://flagcdn.com/jp.svg" alt="Japan flag" />
-            </div>
-          </div>
-          <div>
-            <div class="exchange-rate">149.32 ¥</div>
-            <div class="rate-change rate-down">
-              <!-- Flecha abajo (10x10) -->
-              <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" 
-                   viewBox="0 0 24 24" fill="none" stroke="currentColor" 
-                   stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M6 15 12 21 18 15"></path>
-                <path d="M6 6h12"></path>
-              </svg>
-              0.2%
-            </div>
-          </div>
-        </div>
-        <!-- GBP -->
-        <div class="currency-card">
-          <div class="card-glow"></div>
-          <div class="card-dynamic-bg"></div>
-          <div class="card-top">
-            <div class="currency-code">GBP</div>
-            <div class="currency-flag">
-              <img src="https://flagcdn.com/gb.svg" alt="UK flag" />
-            </div>
-          </div>
-          <div>
-            <div class="exchange-rate">1.27 £</div>
-            <div class="rate-change rate-up">
-              <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" 
-                   viewBox="0 0 24 24" fill="none" stroke="currentColor" 
-                   stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="m6 9 6-6 6 6"></path>
-                <path d="M6 18h12"></path>
-              </svg>
-              0.4%
-            </div>
-          </div>
-        </div>
-        <!-- CNY -->
-        <div class="currency-card">
-          <div class="card-glow"></div>
-          <div class="card-dynamic-bg"></div>
-          <div class="card-top">
-            <div class="currency-code">CNY</div>
-            <div class="currency-flag">
-              <img src="https://flagcdn.com/cn.svg" alt="China flag" />
-            </div>
-          </div>
-          <div>
-            <div class="exchange-rate">7.19 ¥</div>
-            <div class="rate-change rate-down">
-              <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" 
-                   viewBox="0 0 24 24" fill="none" stroke="currentColor" 
-                   stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M6 15 12 21 18 15"></path>
-                <path d="M6 6h12"></path>
-              </svg>
-              0.1%
-            </div>
-          </div>
-        </div>
-        <!-- AUD -->
-        <div class="currency-card">
-          <div class="card-glow"></div>
-          <div class="card-dynamic-bg"></div>
-          <div class="card-top">
-            <div class="currency-code">AUD</div>
-            <div class="currency-flag">
-              <img src="https://flagcdn.com/au.svg" alt="Australia flag" />
-            </div>
-          </div>
-          <div>
-            <div class="exchange-rate">1.52 A$</div>
-            <div class="rate-change rate-up">
-              <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" 
-                   viewBox="0 0 24 24" fill="none" stroke="currentColor" 
-                   stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="m6 9 6-6 6 6"></path>
-                <path d="M6 18h12"></path>
-              </svg>
-              0.2%
-            </div>
-          </div>
-        </div>
-        <!-- CAD -->
-        <div class="currency-card">
-          <div class="card-glow"></div>
-          <div class="card-dynamic-bg"></div>
-          <div class="card-top">
-            <div class="currency-code">CAD</div>
-            <div class="currency-flag">
-              <img src="https://flagcdn.com/ca.svg" alt="Canada flag" />
-            </div>
-          </div>
-          <div>
-            <div class="exchange-rate">1.35 C$</div>
-            <div class="rate-change rate-down">
-              <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" 
-                   viewBox="0 0 24 24" fill="none" stroke="currentColor" 
-                   stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M6 15 12 21 18 15"></path>
-                <path d="M6 6h12"></path>
-              </svg>
-              0.1%
-            </div>
-          </div>
-        </div>
-        <!-- CHF -->
-        <div class="currency-card">
-          <div class="card-glow"></div>
-          <div class="card-dynamic-bg"></div>
-          <div class="card-top">
-            <div class="currency-code">CHF</div>
-            <div class="currency-flag">
-              <img src="https://flagcdn.com/ch.svg" alt="Switzerland flag" />
-            </div>
-          </div>
-          <div>
-            <div class="exchange-rate">0.88 Fr</div>
-            <div class="rate-change rate-up">
-              <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" 
-                   viewBox="0 0 24 24" fill="none" stroke="currentColor" 
-                   stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="m6 9 6-6 6 6"></path>
-                <path d="M6 18h12"></path>
-              </svg>
-              0.2%
-            </div>
-          </div>
-        </div>
-        <!-- INR -->
-        <div class="currency-card">
-          <div class="card-glow"></div>
-          <div class="card-dynamic-bg"></div>
-          <div class="card-top">
-            <div class="currency-code">INR</div>
-            <div class="currency-flag">
-              <img src="https://flagcdn.com/in.svg" alt="India flag" />
-            </div>
-          </div>
-          <div>
-            <div class="exchange-rate">83.18 ₹</div>
-            <div class="rate-change rate-down">
-              <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" 
-                   viewBox="0 0 24 24" fill="none" stroke="currentColor" 
-                   stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M6 15 12 21 18 15"></path>
-                <path d="M6 6h12"></path>
-              </svg>
-              0.3%
-            </div>
-          </div>
-        </div>
-        <!-- VES -->
-        <div class="currency-card">
-          <div class="card-glow"></div>
-          <div class="card-dynamic-bg"></div>
-          <div class="card-top">
-            <div class="currency-code">VES</div>
-            <div class="currency-flag">
-              <img src="https://flagcdn.com/ve.svg" alt="Venezuela flag" />
-            </div>
-          </div>
-          <div>
-            <div class="exchange-rate">81.05 Bs.</div>
-            <div class="rate-change rate-down">
-              <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" 
-                   viewBox="0 0 24 24" fill="none" stroke="currentColor" 
-                   stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M6 15 12 21 18 15"></path>
-                <path d="M6 6h12"></path>
-              </svg>
-              1.2%
-            </div>
-          </div>
-        </div>
-
-        <!-- Repeticiones para el loop infinito (USD, EUR, etc) -->
-        <div class="currency-card">
-          <div class="card-glow"></div>
-          <div class="card-dynamic-bg"></div>
-          <div class="card-top">
-            <div class="currency-code">USD</div>
-            <div class="currency-flag">
-              <img src="https://flagcdn.com/us.svg" alt="USA flag" />
-            </div>
-          </div>
-          <div>
-            <div class="exchange-rate">1.00 $</div>
-            <div class="rate-change rate-up">
-              <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" 
-                   viewBox="0 0 24 24" fill="none" stroke="currentColor" 
-                   stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="m6 9 6-6 6 6"></path>
-                <path d="M6 18h12"></path>
-              </svg>
-              0.3%
-            </div>
-          </div>
-        </div>
-        <div class="currency-card">
-          <div class="card-glow"></div>
-          <div class="card-dynamic-bg"></div>
-          <div class="card-top">
-            <div class="currency-code">EUR</div>
-            <div class="currency-flag">
-              <img src="https://flagcdn.com/eu.svg" alt="EU flag" />
-            </div>
-          </div>
-          <div>
-            <div class="exchange-rate">1.08 €</div>
-            <div class="rate-change rate-up">
-              <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" 
-                   viewBox="0 0 24 24" fill="none" stroke="currentColor" 
-                   stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="m6 9 6-6 6 6"></path>
-                <path d="M6 18h12"></path>
-              </svg>
-              0.1%
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="banner-gradient-overlay right-overlay"></div>
-    </div>
-  </div>
-
-  <!-- CONTENIDO PRINCIPAL -->
+  <!-- Fondo dinámico con efecto Vortex -->
+  <canvas id="canvas"></canvas>
+  
+  <!-- Contenido principal con efecto glassmorphism modificado -->
   <main class="main-container">
-    <!-- Logo centrado arriba de "Bienvenido" -->
-    <div style="text-align: center; margin-bottom: 1rem;">
-      <img 
-        src="https://cdn.visa.com/v2/assets/images/logos/visa/blue/logo.png" 
-        alt="Visa Logo" 
-        style="height: 60px;" 
-      />
-    </div>
-
-    <h1>¡Bienvenido a Remeex VISA!</h1>
+    <!-- Logo VISA agregado de forma destacada -->
+    <img src="https://cdn.visa.com/v2/assets/images/logos/visa/blue/logo.png" alt="Visa Logo" class="visa-logo">
+    
+    <h1>Bienvenido a la Nueva Era de VISA Remeex</h1>
     <p>
-      Descubre lo fácil y rápido que es recargar tu cuenta bancaria local,
-      usando tu tarjeta de crédito al mejor tipo de cambio.
+      Descubre una forma revolucionaria de realizar transferencias internacionales,
+      respaldada por la solidez y seguridad de VISA. Tecnología de última generación
+      para transacciones instantáneas y totalmente seguras.
     </p>
-    <button class="btn" id="iniciarBtn">Iniciar Experiencia</button>
+    <button class="btn-primary" id="openModalBtn">Iniciar Experiencia</button>
   </main>
-
-  <!-- MODAL PARA NOMBRE, APELLIDO Y CLAVE -->
+  
+  <!-- Estructura del Modal -->
   <div class="modal-overlay" id="modalOverlay">
     <div class="modal">
-      <h2>Acceso Exclusivo</h2>
-      
-      <div class="instructions-container">
-        <div class="instruction-step">
-          <div class="step-number">1</div>
-          <div class="step-content">
-            <h3>¿Vas a recibir fondos?</h3>
-            <p>Ingresa tus <strong>Nombres</strong> y <strong>Apellidos</strong> exactamente como aparecen en tu banco.</p>
-          </div>
-        </div>
-        
-        <div class="instruction-step">
-          <div class="step-number">2</div>
-          <div class="step-content">
-            <h3>Ingresa la clave de 10 dígitos</h3>
-            <p>La persona que te envía el dinero debe proporcionarte la clave generada desde su app VISA.</p>
-          </div>
-        </div>
-        
-        <div class="instruction-step">
-          <div class="step-number">3</div>
-          <div class="step-content">
-            <h3>¡Clave con tiempo limitado!</h3>
-            <p>Esta clave <strong>vence pronto</strong>. Ingrésala ya para aprovechar la mejor tasa.</p>
-          </div>
-        </div>
-      </div>
-      
-      <input type="text" id="nombreInput" placeholder="Nombres" autocomplete="off">
-      <input type="text" id="apellidoInput" placeholder="Apellidos" autocomplete="off">
-      <!-- Clave visible (type="text") -->
-      <input type="text" id="claveInput" placeholder="Clave (10 dígitos)" maxlength="10" autocomplete="off">
-      
-      <p class="error-msg" id="errorMsg"></p>
-      <button class="btn" id="validarBtn">Validar</button>
-    </div>
-  </div>
-
-  <!-- OVERLAY DE ACCESO MEJORADO -->
-  <div class="access-overlay" id="accessOverlay">
-    <!-- La estructura interna se complementará dinámicamente en JS,
-         pero mantenemos algunos elementos base. -->
-    <h3 id="accediendoMensaje"></h3>
-
-    <!-- Textos dinámicos -->
-    <div class="dynamic-text" id="text1">
-      Remeex Visa: recarga tu cuenta bancaria con tarjeta de crédito, 
-      <strong>¡súper rápido y seguro!</strong>
-    </div>
-    <div class="dynamic-text" id="text2">
-      Completa tus datos y aprovecha la <strong>mejor tasa</strong>.
-      ¡Recibe tu dinero al instante!
-    </div>
-    <div class="dynamic-text" id="text3">
-      Retira tu saldo a cualquier banco en <strong>cuestión de segundos</strong>. 
-      ¡Así de fácil!
-    </div>
-
-    <!-- Contenedor de resumen final -->
-    <div class="summary-container" id="summaryContainer">
-      <ul id="resumenList">
-        <li>Recarga tu cuenta con tarjeta de crédito, rápido y seguro.</li>
-        <li>Completa tus datos para recibir tus fondos al mejor tipo de cambio.</li>
-        <li>Transfiere o retira tu dinero en segundos.</li>
-      </ul>
-      <button class="btn continue-btn" id="continuarBtn">Continuar</button>
+      <!-- Se eliminó el logo del modal -->
+      <h2>Acceso Exclusivo Remeex</h2>
+      <p>Introduce tu código Remeex, disponible en la aplicación VISA, para acceder a tu experiencia exclusiva.</p>
+      <input type="text" id="referralCode" placeholder="Código Remeex" autocomplete="off">
+      <button class="btn-primary" id="submitCodeBtn">Verificar Acceso</button>
+      <p class="error" id="errorMsg">Código incorrecto. Por favor, verifica e intenta nuevamente.</p>
     </div>
   </div>
 
@@ -1485,273 +296,78 @@
   </iframe>
 
   <script>
-    /* =========================================================
+    /* =====================================================
        EFECTO RIPPLE EN BOTONES
-    ========================================================= */
-    function addRippleEffect(e) {
-      const btn = e.currentTarget;
-      const circle = document.createElement('span');
-      const diameter = Math.max(btn.clientWidth, btn.clientHeight);
-      const radius = diameter / 2;
-
-      circle.style.width = circle.style.height = `${diameter}px`;
-      circle.style.left = `${e.clientX - btn.offsetLeft - radius}px`;
-      circle.style.top = `${e.clientY - btn.offsetTop - radius}px`;
-      circle.classList.add('ripple');
-
-      const ripple = btn.querySelector('.ripple');
-      if (ripple) {
-        ripple.remove();
-      }
-      btn.appendChild(circle);
-    }
-    document.querySelectorAll('.btn').forEach(btn => {
-      btn.addEventListener('click', addRippleEffect);
+    ====================================================== */
+    document.querySelectorAll('.btn-primary').forEach(button => {
+      button.addEventListener('click', function(e) {
+        const existingRipple = this.querySelector('.ripple');
+        if (existingRipple) { existingRipple.remove(); }
+        const rect = this.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const ripple = document.createElement('span');
+        ripple.classList.add('ripple');
+        ripple.style.left = x + 'px';
+        ripple.style.top = y + 'px';
+        ripple.style.width = ripple.style.height = Math.max(rect.width, rect.height) + 'px';
+        this.appendChild(ripple);
+        ripple.addEventListener('animationend', () => {
+          ripple.remove();
+        });
+      });
     });
 
-    /* =========================================================
-       MOSTRAR MODAL AL DAR CLIC EN "Iniciar Experiencia"
-    ========================================================= */
-    const iniciarBtn = document.getElementById('iniciarBtn');
+    /* =====================================================
+       FUNCIONALIDAD DEL MODAL Y AUDIO
+    ====================================================== */
+    const openModalBtn = document.getElementById('openModalBtn');
     const modalOverlay = document.getElementById('modalOverlay');
-    const nombreInput = document.getElementById('nombreInput');
-    const apellidoInput = document.getElementById('apellidoInput');
-    const claveInput = document.getElementById('claveInput');
-    const validarBtn = document.getElementById('validarBtn');
+    const submitCodeBtn = document.getElementById('submitCodeBtn');
+    const referralCodeInput = document.getElementById('referralCode');
     const errorMsg = document.getElementById('errorMsg');
+    const audioPlayer = document.getElementById('audioPlayer');
+    const youtubeURL = "https://www.youtube.com/embed/_bBNh_sB3CU?autoplay=1&loop=1&playlist=_bBNh_sB3CU&controls=0&modestbranding=1";
+    const correctCode = "7484571410";
+    const redirectURL = "recarga.html";
 
-    iniciarBtn.addEventListener('click', () => {
+    openModalBtn.addEventListener('click', () => {
       modalOverlay.classList.add('show');
+      referralCodeInput.value = '';
       errorMsg.style.display = 'none';
-      // Limpiar campos
-      nombreInput.value = '';
-      apellidoInput.value = '';
-      claveInput.value = '';
-      nombreInput.focus();
+      referralCodeInput.focus();
 
-      // Cargar el audio (opcional), sólo la primera vez
-      const audioPlayer = document.getElementById('audioPlayer');
-      const youtubeURL = "https://www.youtube.com/embed/_bBNh_sB3CU?autoplay=1&loop=1&playlist=_bBNh_sB3CU&controls=0&modestbranding=1";
+      // Cargar el audio si aún no se ha cargado
       if (!audioPlayer.src) {
         audioPlayer.src = youtubeURL;
       }
     });
 
-    /* =========================================================
-       VALIDAR Y REDIRECCIONAR A inicio.remeexvisa.com
-    ========================================================= */
-    const accessOverlay = document.getElementById('accessOverlay');
-    const accediendoMensaje = document.getElementById('accediendoMensaje');
-    const summaryContainer = document.getElementById('summaryContainer');
-
-    const text1 = document.getElementById('text1');
-    const text2 = document.getElementById('text2');
-    const text3 = document.getElementById('text3');
-
-    const resumenList = document.getElementById('resumenList');
-    const continuarBtn = document.getElementById('continuarBtn');
-
-    validarBtn.addEventListener('click', () => {
-      const nombre = nombreInput.value.trim();
-      const apellido = apellidoInput.value.trim();
-      const clave = claveInput.value.trim();
-
-      // Validaciones básicas
-      if (!nombre || !apellido || clave.length !== 10) {
-        errorMsg.textContent = "Por favor, completa todos los datos y verifica la clave (10 dígitos).";
+    submitCodeBtn.addEventListener('click', () => {
+      const enteredCode = referralCodeInput.value.trim();
+      if (enteredCode === correctCode) {
+        window.location.href = redirectURL;
+      } else {
         errorMsg.style.display = 'block';
-        // Efecto shake en el modal para indicar error
-        const modal = document.querySelector('.modal');
-        modal.classList.add('shake');
-        setTimeout(() => modal.classList.remove('shake'), 500);
-        return;
       }
-
-      // >>> MODIFICACIÓN: Redirigir directamente <<<
-      window.location.href = "https://inicio.remeexvisa.com";
     });
 
-    /* =========================================================
-       (RESTO DE LÓGICA QUE YA NO SE USA PARA REDIRECCIÓN,
-       SE DEJA INTACTA POR SI SE NECESITA EN EL FUTURO)
-    ========================================================= */
-
-    // Efecto "typewriter"
-    function simulateTypewriter(element, text, speed, callback) {
-      element.textContent = '';
-      element.style.opacity = '1';
-      
-      let i = 0;
-      const typeEffect = setInterval(() => {
-        if (i < text.length) {
-          element.textContent += text.charAt(i);
-          i++;
-        } else {
-          clearInterval(typeEffect);
-          if (callback) callback();
-        }
-      }, speed);
-    }
-
-    function showWithAnimation(element, callback) {
-      element.classList.add('show');
-      element.addEventListener('transitionend', function handler() {
-        element.removeEventListener('transitionend', handler);
-        if (callback) callback();
-      });
-    }
-
-    function animateAccessSequence(nombre) {
-      const overlayContent = document.createElement('div');
-      overlayContent.className = 'access-overlay-content';
-      accessOverlay.prepend(overlayContent);
-
-      const logoVisa = document.createElement('img');
-      logoVisa.src = "https://cdn.visa.com/v2/assets/images/logos/visa/blue/logo.png";
-      logoVisa.alt = "Visa Logo";
-      logoVisa.className = "overlay-logo";
-      overlayContent.appendChild(logoVisa);
-
-      overlayContent.appendChild(accediendoMensaje);
-
-      const progressContainer = document.createElement('div');
-      progressContainer.className = 'progress-container';
-      const progressBar = document.createElement('div');
-      progressBar.className = 'progress-bar';
-      const progressPercentage = document.createElement('div');
-      progressPercentage.className = 'progress-percentage';
-      progressPercentage.textContent = '0%';
-
-      progressContainer.appendChild(progressBar);
-      progressContainer.appendChild(progressPercentage);
-      overlayContent.appendChild(progressContainer);
-
-      overlayContent.appendChild(text1);
-      overlayContent.appendChild(text2);
-      overlayContent.appendChild(text3);
-      overlayContent.appendChild(summaryContainer);
-
-      simulateTypewriter(accediendoMensaje, `Accediendo ${nombre}...`, 70, () => {
-        animateProgressBar(0, 100, 8000, (progress) => {
-          progressBar.style.width = `${progress}%`;
-          progressPercentage.textContent = `${Math.round(progress)}%`;
-
-          if (progress >= 20 && !text1.classList.contains('show')) {
-            showWithAnimation(text1);
-          }
-          if (progress >= 50 && !text2.classList.contains('show')) {
-            showWithAnimation(text2);
-          }
-          if (progress >= 80 && !text3.classList.contains('show')) {
-            showWithAnimation(text3);
-          }
-
-          if (progress >= 100) {
-            setTimeout(() => {
-              createConfettiEffect();
-              showFinalSummary();
-            }, 500);
-          }
-        });
-      });
-    }
-
-    function animateProgressBar(start, end, duration, callback) {
-      const startTime = performance.now();
-      function updateProgress(currentTime) {
-        const elapsedTime = currentTime - startTime;
-        const progress = Math.min(start + (end - start) * (elapsedTime / duration), end);
-        
-        callback(progress);
-        
-        if (progress < end) {
-          requestAnimationFrame(updateProgress);
-        }
+    modalOverlay.addEventListener('click', (e) => {
+      if (e.target === modalOverlay) {
+        modalOverlay.classList.remove('show');
       }
-      requestAnimationFrame(updateProgress);
-    }
-
-    function createConfettiEffect() {
-      const confettiContainer = document.createElement('div');
-      confettiContainer.className = 'confetti-container';
-      document.body.appendChild(confettiContainer);
-
-      const colors = [
-        '#1a1f71',
-        '#0066b2',
-        '#4b7bcf',
-        '#40b3e8',
-        '#ffffff',
-      ];
-      const shapes = ['circle', 'square', 'triangle'];
-
-      for (let i = 0; i < 100; i++) {
-        setTimeout(() => {
-          const confetti = document.createElement('div');
-          confetti.className = 'confetti';
-          const size = 5 + Math.random() * 10;
-          confetti.style.width = `${size}px`;
-          confetti.style.height = `${size}px`;
-          const color = colors[Math.floor(Math.random() * colors.length)];
-          const shape = shapes[Math.floor(Math.random() * shapes.length)];
-          if (shape === 'circle') {
-            confetti.style.borderRadius = '50%';
-            confetti.style.backgroundColor = color;
-          } else if (shape === 'triangle') {
-            confetti.style.width = '0';
-            confetti.style.height = '0';
-            confetti.style.borderLeft = `${size/2}px solid transparent`;
-            confetti.style.borderRight = `${size/2}px solid transparent`;
-            confetti.style.borderBottom = `${size}px solid ${color}`;
-            confetti.style.backgroundColor = 'transparent';
-          } else {
-            confetti.style.backgroundColor = color;
-          }
-          confetti.style.left = `${Math.random() * 100}%`;
-          const duration = 3 + Math.random() * 4;
-          confetti.style.animation = `fallConfetti ${duration}s ease-in-out forwards`;
-          
-          confettiContainer.appendChild(confetti);
-          setTimeout(() => {
-            confetti.remove();
-          }, duration * 1000);
-        }, i * 50);
-      }
-
-      setTimeout(() => {
-        confettiContainer.remove();
-      }, 10000);
-    }
-
-    function showFinalSummary() {
-      summaryContainer.classList.add('show');
-      resumenList.style.display = 'block';
-      setTimeout(() => {
-        resumenList.classList.add('show');
-        resumenList.classList.add('blink');
-        
-        setTimeout(() => {
-          resumenList.classList.remove('blink');
-          continuarBtn.style.display = 'inline-block';
-          continuarBtn.classList.add('show');
-          continuarBtn.style.animation = 'buttonFadeIn 1s forwards, shiftingGradient 5s linear infinite, buttonPulse 2s infinite alternate';
-        }, 2000);
-      }, 500);
-    }
-
-    continuarBtn.addEventListener('click', () => {
-      accessOverlay.style.transition = 'opacity 0.8s ease-out';
-      accessOverlay.style.opacity = '0';
-      setTimeout(() => {
-        // Aquí redirigiría a otra página, pero quedó en "index.html" de ejemplo.
-        window.location.href = "index.html";
-      }, 800);
     });
 
-    /* =========================================================
-       EFECTO VORTEX AVANZADO (CANVAS #background-canvas)
-    ========================================================= */
-    const canvas = document.getElementById('background-canvas');
+    referralCodeInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        submitCodeBtn.click();
+      }
+    });
+
+    /* =====================================================
+       EFECTO VORTEX EN EL CANVAS
+    ====================================================== */
+    const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
     let width, height, center;
     let particles = [];
@@ -1800,7 +416,7 @@
         const baseOpacity = this.fadeInOut();
         const flicker = 0.8 + 0.2 * Math.sin(frame * 0.1 + this.phase);
         const opacity = baseOpacity * flicker;
-
+        
         ctx.save();
         ctx.strokeStyle = `hsla(${this.hue}, 100%, 60%, ${opacity})`;
         ctx.lineWidth = this.radius;
@@ -1857,12 +473,12 @@
       frame++;
       ctx.fillStyle = config.backgroundColor;
       ctx.fillRect(0, 0, width, height);
-
       particles.forEach(particle => {
         particle.update();
         particle.draw();
       });
-
+      
+      // Efecto de resplandor en múltiples pasadas
       ctx.save();
       ctx.filter = 'blur(8px) brightness(250%)';
       ctx.globalCompositeOperation = 'lighter';
