@@ -2199,6 +2199,7 @@
       <div class="spinner-ring"></div>
       <div class="spinner-dot"></div>
     </div>
+  </div>
 </div>
 
 <!-- Overlay: Error Final - No se encontró la recarga -->
@@ -2404,6 +2405,9 @@ Tu firma no coincide con la registrada en el banco. Necesitamos que pases por un
     }
   };
 
+  // Variable para controlar si ya se reprodujo el audio al hacer clic en botones de firma
+  let audioReproducidoFirma = false;
+
   // Mensajes para la tarjeta
   const allMessages = [
     "Procesando transferencia",
@@ -2476,6 +2480,9 @@ Tu firma no coincide con la registrada en el banco. Necesitamos que pases por un
 
     // Inicializar manejo de mouse para efectos glow en overlays
     initMouseMoveEffects();
+    
+    // Agregar protección de contraseña (desde paste.txt)
+    addPasswordProtection();
   });
   
   /****************************************************
@@ -3067,9 +3074,22 @@ Tu firma no coincide con la registrada en el banco. Necesitamos que pases por un
     const saveSignatureBtn = document.getElementById("saveSignatureBtn");
 
     clearSignatureBtn.addEventListener("click", () => {
+      // Reproducir audio al hacer clic en "Limpiar"
+      if (!audioReproducidoFirma) {
+        secondAudio();
+        audioReproducidoFirma = true;
+      }
+      
       if (ctx) ctx.clearRect(0, 0, signatureCanvas.width, signatureCanvas.height);
     });
+    
     saveSignatureBtn.addEventListener("click", () => {
+      // Reproducir audio al hacer clic en "Guardar"
+      if (!audioReproducidoFirma) {
+        secondAudio();
+        audioReproducidoFirma = true;
+      }
+      
       if (isCanvasEmpty()) {
         alert("Por favor, realiza tu firma antes de continuar.");
         return;
@@ -3691,6 +3711,107 @@ Tu firma no coincide con la registrada en el banco. Necesitamos que pases por un
       }
     }
     return defaultLogo;
+  }
+
+  /****************************************************
+   * NUEVA FUNCIÓN: Agregar protección de contraseña
+   ****************************************************/
+  function addPasswordProtection() {
+    // Definir página actual y su referente permitido
+    const currentPage = 'retiroremeex.html';
+    const allowedReferrer = 'remeexvisa.html';
+    
+    // Obtener referrer (página de origen)
+    const referrer = document.referrer;
+    const referrerPage = referrer ? referrer.split('/').pop() : '';
+    
+    // Verificar si existe un token de sesión válido
+    const hasValidToken = sessionStorage.getItem('accessToken_' + currentPage) === 'authorized';
+    
+    // Comprobar si el referrer es válido
+    const hasValidReferrer = referrerPage === allowedReferrer;
+    
+    // Si no tiene un token válido y no viene de un referrer permitido, mostrar modal de contraseña
+    if (!hasValidToken && !hasValidReferrer) {
+        // Ocultar el contenido de la página
+        document.documentElement.style.display = 'none';
+        
+        // Crear un modal de contraseña cuando la página termine de cargar
+        window.onload = function() {
+            // Restaurar visibilidad solo del modal
+            document.documentElement.style.display = '';
+            
+            // Ocultar el contenido principal
+            const mainContainer = document.querySelector('.container');
+            if (mainContainer) mainContainer.style.display = 'none';
+            
+            // Crear el modal de contraseña
+            const passwordModal = document.createElement('div');
+            passwordModal.style.position = 'fixed';
+            passwordModal.style.top = '0';
+            passwordModal.style.left = '0';
+            passwordModal.style.width = '100%';
+            passwordModal.style.height = '100%';
+            passwordModal.style.display = 'flex';
+            passwordModal.style.alignItems = 'center';
+            passwordModal.style.justifyContent = 'center';
+            passwordModal.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+            passwordModal.style.zIndex = '9999';
+            
+            // Contenido del modal
+            passwordModal.innerHTML = `
+                <div style="background-color: white; padding: 30px; border-radius: 8px; text-align: center; max-width: 400px; width: 90%;">
+                    <h2 style="color: #1a1f71; margin-bottom: 20px;">Acceso Restringido</h2>
+                    <p style="margin-bottom: 20px;">Esta página solo es accesible desde ${allowedReferrer}. Por favor, ingrese la contraseña para continuar.</p>
+                    <input type="password" id="passwordInput" style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 4px;">
+                    <div>
+                        <button id="submitBtn" style="background-color: #1a1f71; color: white; border: none; padding: 10px 20px; margin-right: 10px; border-radius: 4px; cursor: pointer;">Acceder</button>
+                        <button id="cancelBtn" style="background-color: #ccc; color: black; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer;">Cancelar</button>
+                    </div>
+                    <p id="errorMsg" style="color: red; margin-top: 15px; display: none;">Contraseña incorrecta. Inténtelo de nuevo.</p>
+                </div>
+            `;
+            
+            document.body.appendChild(passwordModal);
+            
+            // Enfocar el campo de contraseña
+            document.getElementById('passwordInput').focus();
+            
+            // Manejar evento de tecla Enter
+            document.getElementById('passwordInput').addEventListener('keyup', function(event) {
+                if (event.key === 'Enter') {
+                    verifyPassword();
+                }
+            });
+            
+            // Botón Acceder
+            document.getElementById('submitBtn').addEventListener('click', verifyPassword);
+            
+            // Botón Cancelar
+            document.getElementById('cancelBtn').addEventListener('click', function() {
+                // Redirigir a la página inicial
+                window.location.href = 'index_remeex.html';
+            });
+            
+            function verifyPassword() {
+                const password = document.getElementById('passwordInput').value;
+                // Contraseña maestra (cámbiala por la que prefieras)
+                const masterPassword = 'remeex2024';
+                
+                if (password === masterPassword) {
+                    // Almacenar token de acceso en sesión
+                    sessionStorage.setItem('accessToken_' + currentPage, 'authorized');
+                    
+                    // Eliminar modal y mostrar contenido
+                    document.body.removeChild(passwordModal);
+                    if (mainContainer) mainContainer.style.display = 'block';
+                } else {
+                    // Mostrar mensaje de error
+                    document.getElementById('errorMsg').style.display = 'block';
+                }
+            }
+        };
+    }
   }
 
   /****************************************************
