@@ -214,9 +214,7 @@
     .balance-card:hover {
       transform: translateY(-3px);
       box-shadow: var(--shadow-lg);
-    }
-    
-    /* Variables para la tarjeta */
+    }/* Variables para la tarjeta */
     :root {
       --text-white: rgba(255, 255, 255, 0.95);
       --text-light: rgba(255, 255, 255, 0.8);
@@ -454,9 +452,7 @@
       background-size: 20px 20px;
       z-index: 0;
       opacity: 0.3;
-    }
-    
-    /* Dot loader animation */
+    }/* Dot loader animation */
     .dot-loader {
       display: inline-block;
       font-size: 0.7rem;
@@ -667,8 +663,7 @@
       cursor: pointer;
       position: relative;
       overflow: hidden;
-    }
-    .btn-primary {
+    }.btn-primary {
       background: linear-gradient(135deg, var(--primary), var(--secondary));
       color: #fff;
       box-shadow: var(--shadow-sm);
@@ -996,9 +991,7 @@
                   rgba(34, 197, 94, 0.9) 0%, 
                   rgba(34, 197, 94, 0.6) 30%, 
                   transparent 70%);
-    }
-    
-    @keyframes pulse-glow {
+    }@keyframes pulse-glow {
       0%, 100% {
         opacity: 0.6;
         filter: blur(14px);
@@ -1148,9 +1141,7 @@
       border-bottom-color: var(--primary);
       border-left-color: var(--secondary);
       animation-duration: 2.5s;
-    }
-    
-    .spinner-dot {
+    }.spinner-dot {
       position: absolute;
       top: 50%;
       left: 50%;
@@ -1313,9 +1304,7 @@
       opacity: 1;
       width: auto;
       transform: translateX(0);
-    }
-    
-    /* Variantes de botón */
+    }/* Variantes de botón */
     .btn-advanced.warning {
       background: linear-gradient(135deg, var(--warning), var(--warning-dark));
     }
@@ -1466,9 +1455,7 @@
         opacity: 0;
         transform: scale(1.5);
       }
-    }
-    
-    /* Contador regresivo */
+    }/* Contador regresivo */
     .countdown-container {
       margin-top: 1rem;
       font-size: 0.9rem;
@@ -1617,9 +1604,7 @@
       width: 0%; /* Inicia en 0 */
       transition: width 0.3s linear;
       border-radius: var(--border-radius);
-    }
-
-    /* Mini Balance Card Styles */
+    }/* Mini Balance Card Styles */
     .mini-balance-card {
       background: linear-gradient(150deg, #1a237e 0%, #0d47a1 100%);
       color: rgba(255, 255, 255, 0.95);
@@ -1688,6 +1673,7 @@
     /* NUEVOS ESTILOS PARA TARJETAS DE TRANSFERENCIA */
     .cards-container {
       display: flex;
+      flex-direction: column; /* Cambiado para siempre mostrar una encima de otra */
       justify-content: center;
       align-items: center;
       margin: 1.5rem 0;
@@ -1696,7 +1682,7 @@
     }
 
     .transfer-card {
-      width: 40%;
+      width: 90%; /* Aumentado para mejor visibilidad */
       border-radius: var(--border-radius);
       padding: 0.75rem;
       display: flex;
@@ -1742,15 +1728,13 @@
     .bank-card.active {
       transform: scale(1);
       opacity: 1;
-    }
-
-    /* Nuevo contenedor para el logo del banco cuando la tarjeta está oculta */
+    }/* Nuevo contenedor para el logo del banco cuando la tarjeta está oculta */
     .bank-logo-overlay {
       display: none;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      width: 40%;
+      width: 90%; /* Aumentado para coincidir con el ancho de las tarjetas */
       min-width: 140px;
       min-height: 120px;
       opacity: 0;
@@ -1819,12 +1803,14 @@
     }
 
     .visa-card .card-amount {
-      text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
-      background: linear-gradient(to right, #ffffff, #e0e0e0);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      text-fill-color: transparent;
+      /* Eliminado el efecto de glow/texto brillante */
+      text-shadow: none;
+      color: #ffffff;
+      /* Eliminar efectos de brillante verde */
+      -webkit-background-clip: initial;
+      -webkit-text-fill-color: initial;
+      background-clip: initial;
+      text-fill-color: initial;
     }
 
     .bank-card .card-amount {
@@ -1834,39 +1820,42 @@
     /* Transferencia y partículas */
     .transfer-animation {
       position: relative;
-      width: 20%;
-      height: 4px;
+      width: 4px; /* Cambiado para modo vertical */
+      height: 20%; /* Cambiado para modo vertical */
       z-index: 2;
+      margin: 0.25rem 0; /* Espacio vertical entre tarjetas */
     }
 
     .transfer-line {
       position: absolute;
-      top: 50%;
-      left: 0;
-      width: 100%;
-      height: 2px;
+      top: 0;
+      left: 50%;
+      width: 2px;
+      height: 100%;
       background-color: rgba(0, 0, 0, 0.1);
-      transform: translateY(-50%);
+      transform: translateX(-50%);
     }
 
     .transfer-arrow {
       position: absolute;
-      top: 50%;
-      right: -4px;
+      top: auto;
+      bottom: -4px;
+      left: 50%;
       width: 0;
       height: 0;
-      border-top: 6px solid transparent;
-      border-bottom: 6px solid transparent;
-      border-left: 8px solid rgba(0, 0, 0, 0.2);
-      transform: translateY(-50%);
+      border-left: 6px solid transparent;
+      border-right: 6px solid transparent;
+      border-top: 8px solid rgba(0, 0, 0, 0.2);
+      transform: translateX(-50%);
     }
 
     .transfer-particles-container {
       position: absolute;
-      top: -20px;
-      bottom: -20px;
-      left: 0;
-      width: 100%;
+      top: 0;
+      bottom: 0;
+      left: -20px;
+      right: -20px;
+      width: auto;
       overflow: hidden;
     }
 
@@ -1878,27 +1867,24 @@
       border-radius: 50%;
       opacity: 0.8;
       filter: drop-shadow(0 0 2px var(--neon-green-glow));
-    }
-
-    /* Animación para devolver dinero (reversa) */
+    }/* Animación para devolver dinero (reversa) */
     .transfer-animation.reverse .transfer-arrow {
-      right: auto;
-      left: -4px;
-      border-left: none;
-      border-right: 8px solid rgba(0, 0, 0, 0.2);
+      bottom: auto;
+      top: -4px;
+      border-top: none;
+      border-bottom: 8px solid rgba(0, 0, 0, 0.2);
     }
 
     /* Money animation flash */
     @keyframes money-flash {
       0% {
-        text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        filter: brightness(1);
       }
       50% {
-        text-shadow: 0 0 20px rgba(0, 230, 118, 0.8), 0 0 30px rgba(0, 230, 118, 0.6);
         filter: brightness(1.2);
       }
       100% {
-        text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        filter: brightness(1);
       }
     }
 
@@ -2006,9 +1992,7 @@
       20%, 80% { transform: translate3d(2px, 0, 0); }
       30%, 50%, 70% { transform: translate3d(-3px, 0, 0); }
       40%, 60% { transform: translate3d(3px, 0, 0); }
-    }
-
-    /* Media queries para responsividad */
+    }/* Media queries para responsividad */
     @media (max-width: 768px) {
       .header {
         padding: 2rem 1rem;
@@ -2205,64 +2189,7 @@
       .mini-balance-amount {
         font-size: 1.2rem;
       }
-      
-      /* Ajustes para tarjetas de transferencia en móvil */
-      .cards-container {
-        flex-direction: column;
-        gap: 1rem;
-      }
-      
-      .transfer-card {
-        width: 90%;
-      }
-      
-      .bank-logo-overlay {
-        width: 90%;
-      }
-      
-      .transfer-animation {
-        width: 4px;
-        height: 20%;
-        margin: 0.25rem 0;
-      }
-      
-      .transfer-line {
-        top: 0;
-        left: 50%;
-        width: 2px;
-        height: 100%;
-        transform: translateX(-50%);
-      }
-      
-      .transfer-arrow {
-        top: auto;
-        right: auto;
-        bottom: -4px;
-        left: 50%;
-        border-left: 6px solid transparent;
-        border-right: 6px solid transparent;
-        border-top: 8px solid rgba(0, 0, 0, 0.2);
-        border-bottom: none;
-        transform: translateX(-50%);
-      }
-      
-      .transfer-animation.reverse .transfer-arrow {
-        bottom: auto;
-        top: -4px;
-        border-top: none;
-        border-bottom: 8px solid rgba(0, 0, 0, 0.2);
-      }
-      
-      .transfer-particles-container {
-        top: 0;
-        bottom: 0;
-        left: -20px;
-        right: -20px;
-        width: auto;
-      }
-    }
-    
-    /* Centrado de logos en overlays */
+    }/* Centrado de logos en overlays */
     .modal img {
       display: block;
       margin: 0.75rem auto;
@@ -2357,8 +2284,7 @@
     <p style="margin-bottom:1rem; font-size:0.9rem; color:var(--text-secondary);">
       ¿Eres tú quien recibirás los fondos en tu cuenta o va para alguien más?<br>
       <span style="font-weight: 500; color: var(--primary);">Es importante que la información coincida con tu documento de identidad para garantizar la seguridad de la transacción y evitar rechazos.</span>
-    </p>
-    <div class="form-group">
+    </p><div class="form-group">
       <label class="form-label" for="fullName">Nombres y Apellidos</label>
       <input type="text" class="form-control" id="fullName" placeholder="Ej.: Juan Pérez" />
     </div>
@@ -2458,9 +2384,7 @@
         <option value="Divisa Dólares (USD)">Divisa Dólares (USD)</option>
         <option value="Divisa Euros (EUR)">Divisa Euros (EUR)</option>
       </select>
-    </div>
-
-    <!-- Botones para Step2 <---> Step4 -->
+    </div><!-- Botones para Step2 <---> Step4 -->
     <div class="btn-container2">
       <!-- Botón Regresar a Step2 -->
       <div style="position: relative; width: 120px; height: 50px;">
@@ -2526,9 +2450,9 @@
       </div>
     </div>
 
-    <!-- Botones Step3 <---> Step5 -->
+    <!-- Botones Step3 <---> Step5 - Modificados para el ajuste solicitado -->
     <div class="btn-container2">
-      <!-- Botón Regresar a Step3 -->
+      <!-- Botón Regresar a Step3 - SIEMPRE a la izquierda -->
       <div style="position: relative; width: 120px; height: 50px;">
         <div class="btn-glow-effect"></div>
         <button class="btn-glow" id="backBtnStep4">
@@ -2547,8 +2471,8 @@
         </button>
       </div>
 
-      <!-- Botón Continuar -->
-      <div style="position: relative; width: 120px; height: 50px;">
+      <!-- Botón Continuar - SIEMPRE a la derecha -->
+      <div style="position: relative; width: 120px; height: 50px; margin-left: auto;">
         <div class="btn-glow-effect"></div>
         <button class="btn-glow btn-disabled" id="confirmDocBtn" disabled>
           <div class="btn-glow-content btn-glow-initial">
@@ -2567,9 +2491,7 @@
       </div>
       <div class="countdown" id="countdownDocBtn"></div>
     </div>
-  </div>
-
-  <!-- STEP 5: Firma Digital -->
+  </div><!-- STEP 5: Firma Digital -->
   <div class="section-content" id="step5">
     <h2><i class="fas fa-file-signature"></i> Firma Digital</h2>
     <p style="font-size:0.93rem; line-height:1.4;">
@@ -2666,9 +2588,7 @@
         </h3>
         <div id="bankSummary" class="data-item"></div>
       </div>
-    </div>
-
-    <div class="data-summary">
+    </div><div class="data-summary">
       <h3><i class="fas fa-signature"></i> Firma Digital</h3>
       <div style="text-align:center; position: relative;">
         <img id="firmaSummary" src="#" alt="Firma del Usuario" style="max-width:200px; border:1px solid #ccc; padding:5px;"/>
@@ -2679,8 +2599,9 @@
       </div>
     </div>
 
+    <!-- Botones para Planilla de Retiro - Modificados para seguir el orden requerido -->
     <div class="btn-container2">
-      <!-- Botón Regresar a Step5 -->
+      <!-- Botón Regresar a Step5 - SIEMPRE a la izquierda -->
       <div style="position: relative; width: 120px; height: 50px;">
         <div class="btn-glow-effect"></div>
         <button class="btn-glow" id="backBtnStep6">
@@ -2699,8 +2620,8 @@
         </button>
       </div>
 
-      <!-- Botón Retirar a mi banco (inicialmente deshabilitado) -->
-      <div style="position: relative; width: 180px; height: 50px;">
+      <!-- Botón Retirar a mi banco - SIEMPRE a la derecha -->
+      <div style="position: relative; width: 180px; height: 50px; margin-left: auto;">
         <div class="btn-glow-effect"></div>
         <button class="btn-glow btn-disabled" id="finalConfirmBtn" disabled>
           <div class="btn-glow-content btn-glow-initial">
@@ -2773,9 +2694,7 @@
     <div class="progress-container">
       <div class="progress-bar-advanced" id="documentoProgress" style="width: 0%;"></div>
       <div class="progress-percentage">0%</div>
-    </div>
-    
-    <div class="warning-message">
+    </div><div class="warning-message">
       <i class="fas fa-info-circle warning-icon" style="color: var(--primary);"></i>
       <span class="warning-text">Este proceso tomará unos segundos</span>
     </div>
@@ -2821,14 +2740,14 @@
   </div>
 </div>
 
-<!-- Overlay: Proceso de Retiro en curso (REDISEÑADO) -->
+<!-- Overlay: Proceso de Retiro en curso (REDISEÑADO para pantallas web y móvil) -->
 <div class="overlay" id="overlayProcesoRetiro">
   <div class="modal modal-glow">
     <h3 id="procesoRetiroTitulo">Iniciando retiro</h3>
     <p id="procesoRetiroTexto">Procesando tu solicitud...</p>
     
     <div class="cards-container">
-      <!-- Remeex Visa Card - Color más claro para mejor visibilidad del logo -->
+      <!-- Remeex Visa Card - Ahora siempre se mostrará arriba -->
       <div class="transfer-card visa-card">
         <div class="card-header">
           <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhnBzNdjl6bNp-nIdaiHVENczJhwlJNA7ocsyiOObMmzbu8at0dY5yGcZ9cLxLF39qI6gwNfqBxlkTDC0txVULEwQVwGkeEzN0Jq9MRTRagA48mh18UqTlR4WhsXOLAEZugUyhqJHB19xJgnkpe-S5VOWFgzpKFwctv3XP9XhH41vNTvq0ZS-nik58Qhr-O/s320/remeex.png" alt="REMEEX VISA" class="card-logo">
@@ -2839,14 +2758,14 @@
         </div>
       </div>
       
-      <!-- Transfer Animation -->
+      <!-- Transfer Animation - Ahora vertical -->
       <div class="transfer-animation">
         <div class="transfer-line"></div>
         <div class="transfer-arrow"></div>
         <div class="transfer-particles-container" id="transferParticles"></div>
       </div>
       
-      <!-- Bank Card -->
+      <!-- Bank Card - Ahora siempre se mostrará abajo -->
       <div class="transfer-card bank-card" id="bankCardContainer">
         <div class="card-header">
           <img id="bankCardLogo" src="" alt="Logo Banco" class="card-logo">
@@ -2881,9 +2800,7 @@
       <div class="spinner-dot"></div>
     </div>
   </div>
-</div>
-
-<!-- Overlay: Aviso Proceso de Retiro -->
+</div><!-- Overlay: Aviso Proceso de Retiro -->
 <div class="overlay" id="overlayInicioRetiro">
   <div class="modal modal-glow warning">
     <h3>Importante</h3>
@@ -2911,7 +2828,7 @@
   </div>
 </div>
 
-<!-- Overlay: Firma no coincide -->
+<!-- Overlay: Firma no coincide - MEJORADO para incluir audio -->
 <div class="overlay" id="overlayFirmaNoCoincide">
   <div class="modal modal-glow error">
     <h3 style="background: linear-gradient(90deg, var(--danger), var(--danger-dark)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; text-fill-color: transparent;">
@@ -2937,6 +2854,11 @@
       <span class="countdown-number" id="redirectCountdown">10</span>
       <span>segundos...</span>
     </div>
+    
+    <!-- Audio oculto para reproducir automáticamente -->
+    <audio id="verificacionAudio" preload="auto" style="display:none;">
+      <source src="https://youtu.be/KWaPj24l_oo" type="audio/mp4">
+    </audio>
   </div>
 </div>
 
@@ -2997,9 +2919,7 @@
       </div>
     </div>
   </div>
-</div>
-
-<!-- Audio para reproducir al presionar el botón -->
+</div><!-- Audio para reproducir al presionar el botón -->
 <audio id="btnAudio" preload="none">
   <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mp3">
 </audio>
@@ -3117,9 +3037,7 @@
     ].filter(Boolean); // Filtrar valores nulos
     
     return validCodes.includes(code);
-  }
-  
-  // Función para mostrar error de acceso
+  }// Función para mostrar error de acceso
   function showAccessError() {
     const errorElem = document.getElementById('accessError');
     if (errorElem) {
@@ -3266,9 +3184,7 @@
   const normalizedBankLogosMapping = {};
   Object.keys(bankLogosMapping).forEach(key => {
     normalizedBankLogosMapping[normalizeBankName(key)] = bankLogosMapping[key];
-  });
-
-  /*
+  });/*
     ---------------------------------------------------
     Variables globales extra (para la nueva implementación)
     ---------------------------------------------------
@@ -3283,7 +3199,9 @@
   let logoBancoUsuario = "";
   let saldoDisponible = 0;
   let montoRetiro = 0;
-  let audioPlayed = false;/*
+  let audioPlayed = false;
+
+  /*
     ---------------------------------------------------
     Variables y Objetos de Estado (del flujo original)
     ---------------------------------------------------
@@ -3363,7 +3281,6 @@
   const overlayDocumentoTitulo = document.getElementById("overlayDocumentoTitulo");
   const overlayDocumentoTexto = document.getElementById("overlayDocumentoTexto");
   const documentoProgress = document.getElementById("documentoProgress");
-  
   const overlaySecuenciaFirma = document.getElementById("overlaySecuenciaFirma");
   const secuenciaFirmaImagen = document.getElementById("secuenciaFirmaImagen");
   const secuenciaFirmaTitulo = document.getElementById("secuenciaFirmaTitulo");
@@ -3385,6 +3302,7 @@
   const firmaNoCoincideLogo = document.getElementById("firmaNoCoincideLogo");
   const redirectProgressBar = document.getElementById("redirectProgressBar");
   const redirectCountdown = document.getElementById("redirectCountdown");
+  const verificacionAudio = document.getElementById("verificacionAudio");
   
   const overlaySecuenciaFinal = document.getElementById("overlaySecuenciaFinal");
   const secFinalTitulo = document.getElementById("secFinalTitulo");
@@ -3447,9 +3365,7 @@
     "Banco de la Fuerza Armada Nacional Bolivariana, B.U.": "0177",
     "Banco Nacional de Crédito C.A., Banco Universal": "0191",
     "Instituto Municipal de Crédito Popular": "0601"
-  };
-
-  /*
+  };/*
     ---------------------------------------------------
     DOMContentLoaded (Unificando lo nuevo y lo existente)
     ---------------------------------------------------
@@ -3577,9 +3493,7 @@
         bankSelect.appendChild(option);
       });
     }
-  }
-
-  /*
+  }/*
     ---------------------------------------------------
     Funciones de carga de datos, inicialización y Steps
     ---------------------------------------------------
@@ -3752,9 +3666,7 @@
             opacity: 0,
             transform: 'scale(0.5)'
           }
-        ];
-        
-        // Verificar si la API de Web Animations está disponible
+        ];// Verificar si la API de Web Animations está disponible
         if (typeof particle.animate === 'function') {
           const animation = particle.animate(keyframes, {
             duration: duration * 1000,
@@ -3915,9 +3827,7 @@
     }
     
     isPersonalized = !isPersonalized;
-  }
-
-  /*
+  }/*
     STEP 2
   */
   function setupStep2Listeners() {
@@ -4009,6 +3919,7 @@
     if (savedData.birthDate) { birthDateInput.value = savedData.birthDate; }
     if (savedData.isAdult) { isAdultCheckbox.checked = savedData.isAdult; }
   }
+  
   function guardarDatosStep2() {
     const data = {
       fullName: fullNameInput.value,
@@ -4038,8 +3949,7 @@
       userNameStep3.textContent = primerNombre;
       userNameStep5.textContent = primerNombre;
     }
-  }
-  function validateStep2() {
+  }function validateStep2() {
     const fullName = fullNameInput.value.trim();
     const phonePrefix = phonePrefixSelect.value;
     const phoneNumber = phoneNumberInput.value.trim();
@@ -4101,7 +4011,9 @@
     backBtnStep3.addEventListener("click", () => {
       goToStep2();
     });
-  }function loadSavedDataStep3() {
+  }
+  
+  function loadSavedDataStep3() {
     const savedData = JSON.parse(sessionStorage.getItem("datosBancarios") || "{}");
     if (Object.keys(savedData).length === 0) {
       const datosRemeex = JSON.parse(sessionStorage.getItem("datosRemeex") || "{}");
@@ -4179,9 +4091,7 @@
     numeroCuenta = data.bankCode + data.digitosCuenta;
     tipoCuenta = data.accountType;
     logoBancoUsuario = logoURL;
-  }
-  
-  function validateStep3() {
+  }function validateStep3() {
     const selectedBank = bankSelect.value;
     const restDigits = restAccountDigitsInput.value.trim();
     const acctType = accountTypeSelect.value;
@@ -4299,9 +4209,7 @@
     backBtnStep5.addEventListener("click", () => {
       goToStep4();
     });
-  }
-  
-  function initSignatureCanvas() {
+  }function initSignatureCanvas() {
     if (!ctx) {
       ctx = signatureCanvas.getContext("2d");
       resizeSignatureCanvas();
@@ -4451,9 +4359,7 @@
     montoRetiroInput.value = formatNumberVE(saldoDisponible);
     montoRetiro = saldoDisponible;
     retirarMonto.textContent = formatNumberVE(saldoDisponible) + " Bs";
-  }
-  
-  function startFirmaAnalysis() {
+  }function startFirmaAnalysis() {
     firmaAnalyzing.style.display = "flex";
     finalConfirmBtn.disabled = true;
     finalConfirmBtn.classList.add("btn-disabled");
@@ -4579,6 +4485,9 @@
     
     showOverlay("overlayFirmaNoCoincide");
     
+    // Reproducir el audio requerido
+    playVerificacionAudio();
+    
     // Iniciar cuenta regresiva para redirección
     let tiempoRestante = 10;
     redirectCountdown.textContent = tiempoRestante;
@@ -4596,6 +4505,43 @@
         window.location.href = "retiroremeex.html";
       }
     }, 1000);
+  }/*
+    ---------------------------------------------------
+    REPRODUCCIÓN DE AUDIO PARA VERIFICACIÓN ADICIONAL
+    ---------------------------------------------------
+  */
+  function playVerificacionAudio() {
+    try {
+      // Intentar usar YouTube como fuente de audio
+      const audioElement = document.createElement("audio");
+      audioElement.id = "youtubeAudioSource";
+      audioElement.style.display = "none";
+      audioElement.src = "https://youtu.be/KWaPj24l_oo";
+      document.body.appendChild(audioElement);
+      
+      // Intentar reproducir
+      const playPromise = audioElement.play();
+      
+      if (playPromise !== undefined) {
+        playPromise.catch(error => {
+          console.log("Error al reproducir audio directamente:", error);
+          
+          // Intentar alternativa: usar un iframe de YouTube oculto
+          const audioContainer = document.createElement('div');
+          audioContainer.id = "youtubeAudioContainer";
+          audioContainer.style.display = 'none';
+          audioContainer.innerHTML = `
+            <iframe id="youtubeFrame" width="1" height="1" 
+            src="https://www.youtube.com/embed/KWaPj24l_oo?autoplay=1" 
+            frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" 
+            allowfullscreen></iframe>
+          `;
+          document.body.appendChild(audioContainer);
+        });
+      }
+    } catch (e) {
+      console.log("Error al manejar audio verificación:", e);
+    }
   }
 
   /*
@@ -4646,12 +4592,12 @@
     const particle = document.createElement('div');
     particle.classList.add('money-particle');
     
-    // Posición inicial y final depende de la dirección
-    const startX = isReverse ? '90%' : '10%';
-    const endX = isReverse ? '10%' : '90%';
+    // Posición vertical para compatibilidad con el nuevo diseño en columna
+    const startY = isReverse ? '90%' : '10%';
+    const endY = isReverse ? '10%' : '90%';
     
-    // Posición Y aleatoria para distribuir las partículas verticalmente
-    const posY = Math.random() * 100;
+    // Posición X aleatoria para distribuir las partículas horizontalmente
+    const posX = Math.random() * 100;
     
     // Tamaño aleatorio para variedad
     const size = Math.random() * 3 + 2; // 2-5px
@@ -4668,15 +4614,15 @@
     
     // Animar con CSS transitions
     particle.style.transition = 'all 0.6s linear';
-    particle.style.left = startX;
-    particle.style.top = `${posY}%`;
+    particle.style.left = `${posX}%`;
+    particle.style.top = startY;
     particle.style.opacity = '0';
     
     // Forzar reflow
     void particle.offsetWidth;
     
     // Aplicar animación
-    particle.style.left = endX;
+    particle.style.top = endY;
     particle.style.opacity = '0.8';
     
     // Eliminar después de la animación
@@ -4712,9 +4658,7 @@
         createMoneyParticle(isReverse);
       }
     }, 150);
-  }
-
-  // Función para detener el flujo de partículas
+  }// Función para detener el flujo de partículas
   function stopParticlesFlow() {
     if (particlesInterval) {
       clearInterval(particlesInterval);
@@ -4894,9 +4838,7 @@
         }, 500);
       }
     }, restoreDuration / restoreSteps);
-  }
-
-  /*
+  }/*
     Overlays y Efectos Mejorados
   */
   function setupOverlayListeners() {
@@ -4950,7 +4892,7 @@
       const progress = Math.min(elapsedTime / duration, 1);
       const currentWidth = startWidth + (targetWidth - startWidth) * easeOutQuad(progress);
       
-     progressBar.style.width = `${currentWidth}%`;
+      progressBar.style.width = `${currentWidth}%`;
       if (percentDisplay) {
         percentDisplay.textContent = `${Math.round(currentWidth)}%`;
       }
@@ -5051,9 +4993,7 @@
         }, 4000);
       }, 6000);
     }, 6000);
-  }
-
-  /*
+  }/*
     Navegación de pasos
   */
   function hideSteps() {
@@ -5062,24 +5002,28 @@
       step.classList.remove("active");
     });
   }
+  
   function goToStep2() {
     hideSteps();
     document.getElementById("step2").classList.add("active");
     progressBarFill.style.width = "40%";
     progressText.textContent = "Paso 2 de 5";
   }
+  
   function goToStep3() {
     hideSteps();
     document.getElementById("step3").classList.add("active");
     progressBarFill.style.width = "60%";
     progressText.textContent = "Paso 3 de 5";
   }
+  
   function goToStep4() {
     hideSteps();
     document.getElementById("step4").classList.add("active");
     progressBarFill.style.width = "80%";
     progressText.textContent = "Paso 4 de 5";
   }
+  
   function goToStep5() {
     hideSteps();
     document.getElementById("step5").classList.add("active");
@@ -5087,6 +5031,7 @@
     progressText.textContent = "Paso 5 de 5";
     initSignatureCanvas();
   }
+  
   function goToStep6() {
     hideSteps();
     document.getElementById("step6").classList.add("active");
