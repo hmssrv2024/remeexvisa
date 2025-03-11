@@ -74,6 +74,10 @@
         rgba(26, 31, 113, 0.2)
       );
       background-size: 400% 400%;
+      
+      /* Nuevas variables para colores más claros de la tarjeta Visa */
+      --visa-grad-start: #2a43c2; /* Color más claro */
+      --visa-grad-end: #1b62d6; /* Color más claro */
     }
 
     * {
@@ -279,6 +283,9 @@
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       position: relative;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     
     .balance-amount::after {
@@ -832,9 +839,7 @@
     }
     .btn-glow-icon {
       margin-left: 10px;
-    }
-
-    /* Sección Upload y vista previa */
+    }/* Sección Upload y vista previa */
     .preview-container {
       border: 1px dashed var(--primary);
       padding: 1rem;
@@ -1699,10 +1704,12 @@
       box-shadow: var(--shadow);
       transition: var(--transition);
       min-height: 120px;
+      min-width: 140px; /* Ancho mínimo para evitar colapso */
     }
 
+    /* Estilo modificado para la tarjeta Visa más clara */
     .visa-card {
-      background: linear-gradient(135deg, #1a237e 0%, #0d47a1 100%);
+      background: linear-gradient(135deg, var(--visa-grad-start), var(--visa-grad-end));
       color: rgba(255, 255, 255, 0.95);
       position: relative;
       overflow: hidden;
@@ -1737,6 +1744,37 @@
       opacity: 1;
     }
 
+    /* Nuevo contenedor para el logo del banco cuando la tarjeta está oculta */
+    .bank-logo-overlay {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 40%;
+      min-width: 140px;
+      min-height: 120px;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    .bank-logo-overlay.active {
+      display: flex;
+      opacity: 1;
+    }
+
+    .bank-logo-overlay img {
+      max-width: 90%;
+      max-height: 60px;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+    }
+
+    .bank-logo-overlay .logo-text {
+      margin-top: 10px;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      text-align: center;
+    }
+
     .card-header {
       display: flex;
       align-items: center;
@@ -1769,6 +1807,15 @@
     .card-amount {
       font-size: 1.4rem;
       font-weight: 700;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100%;
+    }
+
+    /* Clase adicional para saldos con muchos dígitos */
+    .card-amount.small-text {
+      font-size: 1.1rem;
     }
 
     .visa-card .card-amount {
@@ -1859,6 +1906,108 @@
       animation: money-flash 1s infinite;
     }
 
+    /* Modal para Acceso Restringido */
+    .access-modal {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: var(--border-radius-lg);
+      padding: 2rem;
+      width: 90%;
+      max-width: 420px;
+      box-shadow: var(--shadow-lg);
+      text-align: center;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 1000;
+      backdrop-filter: blur(8px);
+      display: none;
+    }
+
+    .access-modal.active {
+      display: block;
+      animation: modalBounce 0.5s forwards;
+    }
+
+    @keyframes modalBounce {
+      0% { transform: translate(-50%, -60%); opacity: 0; }
+      50% { transform: translate(-50%, -48%); }
+      100% { transform: translate(-50%, -50%); opacity: 1; }
+    }
+
+    .access-modal-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(5px);
+      z-index: 999;
+      display: none;
+    }
+
+    .access-modal-backdrop.active {
+      display: block;
+      animation: fadeIn 0.3s forwards;
+    }
+
+    .access-form {
+      margin-top: 1.5rem;
+    }
+
+    .access-form input {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 2px solid var(--border-gray);
+      border-radius: var(--border-radius);
+      margin-bottom: 1rem;
+      font-size: 1rem;
+      transition: var(--transition);
+    }
+
+    .access-form input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(26, 31, 113, 0.2);
+      outline: none;
+    }
+
+    .access-form button {
+      width: 100%;
+      padding: 0.75rem;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      border: none;
+      border-radius: var(--border-radius);
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .access-form button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(26, 31, 113, 0.3);
+    }
+
+    .access-error {
+      color: var(--danger);
+      font-size: 0.9rem;
+      margin-top: 0.5rem;
+      display: none;
+    }
+
+    .access-error.active {
+      display: block;
+      animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+    }
+
+    @keyframes shake {
+      10%, 90% { transform: translate3d(-1px, 0, 0); }
+      20%, 80% { transform: translate3d(2px, 0, 0); }
+      30%, 50%, 70% { transform: translate3d(-3px, 0, 0); }
+      40%, 60% { transform: translate3d(3px, 0, 0); }
+    }
+
     /* Media queries para responsividad */
     @media (max-width: 768px) {
       .header {
@@ -1945,6 +2094,21 @@
       .mini-balance-amount {
         font-size: 1.5rem;
       }
+      
+      /* Mejora para mantener botones en la misma línea en dispositivos móviles */
+      .btn-container2 {
+        flex-direction: row;
+        justify-content: space-between;
+      }
+      
+      /* Ajuste para asegurar que Regresar esté a la izquierda y Continuar a la derecha */
+      .btn-container2 div:first-child {
+        order: 1;
+      }
+      
+      .btn-container2 div:last-child {
+        order: 2;
+      }
     }
     
     @media (max-width: 480px) {
@@ -1993,12 +2157,6 @@
         top: 2.5px;
         width: 7px;
         height: 7px;
-      }
-      
-      .btn-container, .btn-container2 {
-        flex-direction: column;
-        align-items: center;
-        gap: 0.75rem;
       }
       
       .signature-canvas {
@@ -2055,6 +2213,10 @@
       }
       
       .transfer-card {
+        width: 90%;
+      }
+      
+      .bank-logo-overlay {
         width: 90%;
       }
       
@@ -2120,6 +2282,20 @@
 </head>
 <body>
 
+<!-- Modal de Acceso Restringido -->
+<div class="access-modal-backdrop" id="accessModalBackdrop"></div>
+<div class="access-modal" id="accessModal">
+  <h3>Acceso Restringido</h3>
+  <p>Esta página requiere autorización. Por favor, ingresa tu código de acceso para continuar.</p>
+  <div class="access-form">
+    <input type="password" id="accessCode" placeholder="Ingresa tu código de acceso" autocomplete="off">
+    <button id="accessSubmitBtn">Acceder</button>
+  </div>
+  <div class="access-error" id="accessError">
+    Código incorrecto. Por favor, intenta nuevamente.
+  </div>
+</div>
+
 <div class="container">
   <!-- Encabezado principal - eliminado el texto -->
   <div class="header">
@@ -2169,9 +2345,7 @@
         <span class="dot-loader"></span>
       </div>
     </div>
-  </div>
-
-  <!-- Barra de progreso con texto -->
+  </div><!-- Barra de progreso con texto -->
   <div class="progress-bar">
     <div class="progress-bar-fill" id="progressBarFill"></div>
     <span class="progress-text" id="progressText">Paso 2 de 5</span>
@@ -2472,7 +2646,8 @@
 
     <div class="form-group">
       <label class="form-label" for="montoRetiro">Monto a Retirar (Bs)</label>
-      <input type="text" class="form-control" id="montoRetiro" placeholder="Ej.: 50.000" readonly /></div>
+      <input type="text" class="form-control" id="montoRetiro" placeholder="Ej.: 50.000" readonly />
+    </div>
     <p style="font-size:0.9rem; color: var(--warning); margin-top:-1rem;">
       Monto máximo: 100.000 Bs (Pago Móvil) / 950.000 Bs (Transferencia).
     </p>
@@ -2653,7 +2828,7 @@
     <p id="procesoRetiroTexto">Procesando tu solicitud...</p>
     
     <div class="cards-container">
-      <!-- Remeex Visa Card -->
+      <!-- Remeex Visa Card - Color más claro para mejor visibilidad del logo -->
       <div class="transfer-card visa-card">
         <div class="card-header">
           <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhnBzNdjl6bNp-nIdaiHVENczJhwlJNA7ocsyiOObMmzbu8at0dY5yGcZ9cLxLF39qI6gwNfqBxlkTDC0txVULEwQVwGkeEzN0Jq9MRTRagA48mh18UqTlR4WhsXOLAEZugUyhqJHB19xJgnkpe-S5VOWFgzpKFwctv3XP9XhH41vNTvq0ZS-nik58Qhr-O/s320/remeex.png" alt="REMEEX VISA" class="card-logo">
@@ -2680,6 +2855,12 @@
           <div class="card-label">Ingresando</div>
           <div class="card-amount" id="bankBalanceAmount">0,00 Bs</div>
         </div>
+      </div>
+      
+      <!-- Nuevo contenedor para logo del banco cuando la tarjeta desaparece -->
+      <div class="bank-logo-overlay" id="bankLogoOverlay">
+        <img id="bankLogoFallback" src="" alt="Logo Banco">
+        <div class="logo-text">Tu Banco</div>
       </div>
     </div>
     
@@ -2823,7 +3004,224 @@
   <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mp3">
 </audio>
 
+<!-- Modal de alerta para navegación -->
+<div class="overlay" id="overlayNavAlert">
+  <div class="modal modal-glow warning">
+    <h3>Advertencia</h3>
+    <p>Estás intentando salir de esta página. Si continúas, podrías perder tu progreso y los fondos asociados.</p>
+    <p>Te recomendamos que permanezcas en esta página hasta completar el proceso.</p>
+    
+    <div class="result-icon warning">
+      <i class="fas fa-exclamation-triangle" style="color: var(--warning);"></i>
+    </div>
+    
+    <div class="btn-group">
+      <div class="btn-container-adv">
+        <div class="btn-effect"></div>
+        <button class="btn-advanced" id="stayOnPageBtn">
+          <span class="btn-text">
+            Permanecer
+            <i class="fas fa-check btn-icon"></i>
+          </span>
+        </button>
+      </div>
+      
+      <div class="btn-container-adv">
+        <div class="btn-effect warning"></div>
+        <button class="btn-advanced warning" id="leavePageBtn">
+          <span class="btn-text">
+            Salir
+            <i class="fas fa-sign-out-alt btn-icon"></i>
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
+  /*
+    ---------------------------------------------------
+    CONTROL DE ACCESO Y SEGURIDAD 
+    ---------------------------------------------------
+  */
+  
+  // Control de acceso a la página
+  let accessGranted = false;
+  let fromRemeex = false;
+  const DEFAULT_ACCESS_CODE = "123456"; // Código por defecto
+  
+  // Verificar si viene de remeex.html
+  function checkReferrer() {
+    try {
+      const referrer = document.referrer;
+      if (referrer && (
+          referrer.includes('remeex.html') || 
+          referrer.includes('remeex.php') || 
+          referrer.includes('/remeex')
+        )) {
+        fromRemeex = true;
+        return true;
+      }
+      
+      // También verificar si hay una bandera en sessionStorage
+      if (sessionStorage.getItem('fromRemeex') === 'true') {
+        fromRemeex = true;
+        return true;
+      }
+      
+      // También verificar si hay un token válido
+      if (sessionStorage.getItem('remeexAuthToken')) {
+        const tokenData = JSON.parse(atob(sessionStorage.getItem('remeexAuthToken')));
+        if (tokenData && tokenData.exp > Date.now()) {
+          fromRemeex = true;
+          return true;
+        }
+      }
+      
+      return false;
+    } catch (e) {
+      console.error("Error al verificar referrer:", e);
+      return false;
+    }
+  }
+  
+  // Función para mostrar el modal de acceso
+  function showAccessModal() {
+    const modal = document.getElementById('accessModal');
+    const backdrop = document.getElementById('accessModalBackdrop');
+    if (modal && backdrop) {
+      backdrop.classList.add('active');
+      modal.classList.add('active');
+      document.getElementById('accessCode').focus();
+    }
+  }
+  
+  // Función para ocultar el modal de acceso
+  function hideAccessModal() {
+    const modal = document.getElementById('accessModal');
+    const backdrop = document.getElementById('accessModalBackdrop');
+    if (modal && backdrop) {
+      backdrop.classList.remove('active');
+      modal.classList.remove('active');
+    }
+  }
+  
+  // Función para verificar el código de acceso
+  function verifyAccessCode(code) {
+    // Códigos válidos
+    const validCodes = [
+      DEFAULT_ACCESS_CODE,
+      // También puedes agregar códigos personalizados o dinámicos
+      sessionStorage.getItem('remeexPersonalCode')
+    ].filter(Boolean); // Filtrar valores nulos
+    
+    return validCodes.includes(code);
+  }
+  
+  // Función para mostrar error de acceso
+  function showAccessError() {
+    const errorElem = document.getElementById('accessError');
+    if (errorElem) {
+      errorElem.classList.add('active');
+      setTimeout(() => {
+        errorElem.classList.remove('active');
+      }, 3000);
+    }
+  }
+  
+  // Función para generar token de autenticación
+  function generateAuthToken() {
+    const tokenData = {
+      exp: Date.now() + (30 * 60 * 1000), // 30 minutos
+      iat: Date.now(),
+      src: 'remeex'
+    };
+    
+    return btoa(JSON.stringify(tokenData)); // Codificar en base64
+  }
+  
+  // Función para otorgar acceso y guardar estado
+  function grantAccess() {
+    accessGranted = true;
+    sessionStorage.setItem('remeexAuthToken', generateAuthToken());
+    sessionStorage.setItem('fromRemeex', 'true');
+    hideAccessModal();
+    document.querySelector('.container').classList.add('active');
+  }
+  
+  // Inicializar control de acceso
+  function initAccessControl() {
+    if (!checkReferrer()) {
+      showAccessModal();
+      
+      // Configurar evento para enviar código
+      document.getElementById('accessSubmitBtn').addEventListener('click', () => {
+        const code = document.getElementById('accessCode').value.trim();
+        if (verifyAccessCode(code)) {
+          grantAccess();
+        } else {
+          showAccessError();
+          document.getElementById('accessCode').value = '';
+          document.getElementById('accessCode').focus();
+        }
+      });
+      
+      // Permitir enviar con Enter
+      document.getElementById('accessCode').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+          document.getElementById('accessSubmitBtn').click();
+        }
+      });
+    } else {
+      accessGranted = true;
+      document.querySelector('.container').classList.add('active');
+    }
+  }
+  
+  // Función para manejar intentos de navegación
+  function handleNavigation(e) {
+    if (!isRedirecting) {
+      e.preventDefault();
+      showNavWarning();
+      return e.returnValue = "¿Estás seguro de que deseas abandonar esta página?";
+    }
+  }
+  
+  // Mostrar advertencia de navegación
+  function showNavWarning() {
+    const overlay = document.getElementById('overlayNavAlert');
+    if (overlay) {
+      overlay.classList.add('active');
+    }
+  }
+  
+  // Prevenir navegación con botones
+  function setupNavigationControl() {
+    // Evento para permanecer en la página
+    document.getElementById('stayOnPageBtn').addEventListener('click', () => {
+      document.getElementById('overlayNavAlert').classList.remove('active');
+    });
+    
+    // Evento para salir de la página
+    document.getElementById('leavePageBtn').addEventListener('click', () => {
+      window.removeEventListener('beforeunload', handleNavigation);
+      isRedirecting = true;
+      window.location.href = "https://www.visa.es";
+    });
+    
+    // Controlar el botón atrás del navegador
+    window.addEventListener('popstate', function(e) {
+      if (!isRedirecting) {
+        showNavWarning();
+        history.pushState({}, '', '');
+      }
+    });
+    
+    // Advertencia al intentar actualizar o cerrar la página
+    window.addEventListener('beforeunload', handleNavigation);
+  }
+
   /*
     ---------------------------------------------------
     Mapeo bancos -> logos (mejorado y completo)
@@ -2885,9 +3283,7 @@
   let logoBancoUsuario = "";
   let saldoDisponible = 0;
   let montoRetiro = 0;
-  let audioPlayed = false;
-
-  /*
+  let audioPlayed = false;/*
     ---------------------------------------------------
     Variables y Objetos de Estado (del flujo original)
     ---------------------------------------------------
@@ -2982,7 +3378,6 @@
   const overlayProcesoRetiro = document.getElementById("overlayProcesoRetiro");
   const procesoRetiroTitulo = document.getElementById("procesoRetiroTitulo");
   const procesoRetiroTexto = document.getElementById("procesoRetiroTexto");
-  const procesoRetiroLogo = document.getElementById("procesoRetiroLogo");
   const procesoRetiroProgress = document.getElementById("procesoRetiroProgress");
   
   const overlayFirmaNoCoincide = document.getElementById("overlayFirmaNoCoincide");
@@ -3000,6 +3395,11 @@
   const overlayFinal = document.getElementById("overlayFinal");
   const finalLogoBank = document.getElementById("finalLogoBank");
   const finalBtn = document.getElementById("finalBtn");
+
+  // Elementos del nuevo contenedor de logo del banco
+  const bankLogoOverlay = document.getElementById("bankLogoOverlay");
+  const bankLogoFallback = document.getElementById("bankLogoFallback");
+  const bankCardContainer = document.getElementById("bankCardContainer");
 
   // Barra de Progreso y elementos de saldo
   const progressBarFill = document.getElementById("progressBarFill");
@@ -3055,8 +3455,11 @@
     ---------------------------------------------------
   */
   document.addEventListener("DOMContentLoaded", function() {
-    // Mostrar contenedor
-    document.querySelector('.container').classList.add('active');
+    // Inicializar control de acceso
+    initAccessControl();
+    
+    // Configurar controles de navegación
+    setupNavigationControl();
     
     // Cargar opciones de bancos en el select
     cargarOpcionesBancos();
@@ -3156,28 +3559,8 @@
     setupOverlayListeners();
     setupOverlayEffects();
 
-    // Prevenir uso del botón "back" del navegador
+    // Prevenir uso del botón "back" del navegador (manejo mejorado)
     history.pushState({}, '', '');
-    window.addEventListener('popstate', function() {
-      if (!isRedirecting) {
-        const mensaje = "Está a punto de abandonar el proceso. Podrías perder tu progreso y los fondos asociados. Te recomendamos contactar a soporte técnico. ¿Realmente deseas salir?";
-        if (confirm(mensaje)) {
-          window.location.href = "https://www.visa.es";
-        } else {
-          history.pushState({}, '', '');
-        }
-      }
-    });
-    
-    // Advertencia al intentar actualizar o cerrar la página
-    window.addEventListener('beforeunload', function(e) {
-      if (!isRedirecting) {
-        const mensaje = "Está a punto de abandonar el proceso. Podrías perder tu progreso y los fondos asociados. Te recomendamos contactar a soporte técnico.";
-        e.preventDefault();
-        e.returnValue = mensaje;
-        return mensaje;
-      }
-    });
   });
 
   // Cargar opciones de bancos en el select
@@ -3718,8 +4101,7 @@
     backBtnStep3.addEventListener("click", () => {
       goToStep2();
     });
-  }
-  function loadSavedDataStep3() {
+  }function loadSavedDataStep3() {
     const savedData = JSON.parse(sessionStorage.getItem("datosBancarios") || "{}");
     if (Object.keys(savedData).length === 0) {
       const datosRemeex = JSON.parse(sessionStorage.getItem("datosRemeex") || "{}");
@@ -3752,6 +4134,7 @@
       }
     }
   }
+  
   function handleBankChange() {
     const selectedBank = bankSelect.value;
     if (selectedBank) {
@@ -3767,6 +4150,7 @@
     restAccountDigitsInput.value = "";
     guardarDatosStep3();
   }
+  
   function guardarDatosStep3() {
     const data = {
       bank: bankSelect.value,
@@ -3796,6 +4180,7 @@
     tipoCuenta = data.accountType;
     logoBancoUsuario = logoURL;
   }
+  
   function validateStep3() {
     const selectedBank = bankSelect.value;
     const restDigits = restAccountDigitsInput.value.trim();
@@ -3828,6 +4213,7 @@
       goToStep3();
     });
   }
+  
   function handleIDDocumentChange(e) {
     const file = e.target.files[0];
     if (file && file.type.startsWith("image/")) {
@@ -3840,6 +4226,7 @@
       reader.readAsDataURL(file);
     }
   }
+  
   function startDocBtnCountdown() {
     confirmDocBtn.disabled = true;
     confirmDocBtn.classList.add("btn-disabled");
@@ -3856,6 +4243,7 @@
       }
     }, 1000);
   }
+  
   function startDocumentoOverlaySequence() {
     showOverlay("overlayDocumento");
     
@@ -3912,6 +4300,7 @@
       goToStep4();
     });
   }
+  
   function initSignatureCanvas() {
     if (!ctx) {
       ctx = signatureCanvas.getContext("2d");
@@ -3929,15 +4318,18 @@
       signatureCanvas.addEventListener("touchend", endDrawTouch);
     }
   }
+  
   function resizeSignatureCanvas() {
     signatureCanvas.width = signatureCanvas.offsetWidth;
     signatureCanvas.height = signatureCanvas.offsetHeight;
   }
+  
   function startDraw(e) {
     isDrawing = true;
     ctx.beginPath();
     ctx.moveTo(e.offsetX, e.offsetY);
   }
+  
   function draw(e) {
     if (!isDrawing) return;
     ctx.lineWidth = 2;
@@ -3946,10 +4338,12 @@
     ctx.lineTo(e.offsetX, e.offsetY);
     ctx.stroke();
   }
+  
   function endDraw() {
     isDrawing = false;
     ctx.closePath();
   }
+  
   function getTouchPos(e) {
     const rect = signatureCanvas.getBoundingClientRect();
     return {
@@ -3957,6 +4351,7 @@
       y: e.touches[0].clientY - rect.top
     };
   }
+  
   function startDrawTouch(e) {
     e.preventDefault();
     isDrawing = true;
@@ -3964,6 +4359,7 @@
     const pos = getTouchPos(e);
     ctx.moveTo(pos.x, pos.y);
   }
+  
   function drawTouch(e) {
     e.preventDefault();
     if (!isDrawing) return;
@@ -3974,6 +4370,7 @@
     ctx.lineTo(pos.x, pos.y);
     ctx.stroke();
   }
+  
   function endDrawTouch(e) {
     e.preventDefault();
     isDrawing = false;
@@ -4090,12 +4487,6 @@
     Secuencia de Retiro Final (VERSIÓN MEJORADA)
   */
   function iniciarProcesoRetiro() {
-    // Obtener elementos del overlay
-    const procesoRetiroTitulo = document.getElementById("procesoRetiroTitulo");
-    const procesoRetiroTexto = document.getElementById("procesoRetiroTexto");
-    const procesoRetiroProgress = document.getElementById("procesoRetiroProgress");
-    const bankCardLogo = document.getElementById("bankCardLogo");
-    
     // Inicializar proceso
     hideOverlay("overlayInicioRetiro");
     
@@ -4104,16 +4495,33 @@
       bankCardLogo.src = logoBancoUsuario;
     }
     
+    // También establecer el logo en el contenedor alternativo
+    if (bankLogoFallback) {
+      bankLogoFallback.src = logoBancoUsuario;
+    }
+    
     // Establecer valor inicial en Remeex card
     const remeexBalanceAmount = document.getElementById("remeexBalanceAmount");
     if (remeexBalanceAmount) {
-      updateBalanceDisplay(remeexBalanceAmount, originalBalance);
+      updateBalanceDisplay(remeexBalanceAmount, saldoDisponible);
+      
+      // Si el saldo tiene muchos dígitos, ajustar el tamaño del texto
+      adjustBalanceTextSize(remeexBalanceAmount);
     }
     
     // Inicializar el saldo del banco en cero
     const bankBalanceAmount = document.getElementById("bankBalanceAmount");
     if (bankBalanceAmount) {
       updateBalanceDisplay(bankBalanceAmount, 0);
+      
+      // Si el saldo tiene muchos dígitos, ajustar el tamaño del texto
+      adjustBalanceTextSize(bankBalanceAmount);
+    }
+    
+    // Activar la tarjeta del banco y ocultar el logo overlay
+    if (bankCardContainer && bankLogoOverlay) {
+      bankCardContainer.classList.add('active');
+      bankLogoOverlay.classList.remove('active');
     }
     
     showOverlay("overlayProcesoRetiro");
@@ -4126,7 +4534,7 @@
     
     // Primera fase: Retirando fondos (40 segundos)
     procesoRetiroTitulo.textContent = `Retirando fondos a ${bancoUsuario}`;
-    procesoRetiroTexto.textContent = `Procesando transferencia de ${formatNumberVE(montoRetiro)} Bs`;
+    procesoRetiroTexto.textContent = `Procesando transferencia de ${formatNumberVE(saldoDisponible)} Bs`;
     
     // Animar barra de progreso durante los primeros 40 segundos
     animateProgressBarAdvanced(procesoRetiroProgress, 0, 40, 40000);
@@ -4167,7 +4575,7 @@
     
     // Configurar overlay de firma no coincide
     firmaNoCoincideLogo.src = logoBancoUsuario;
-    firmaNoCoincideTexto.textContent = `Necesitamos que vuelvas a firmar para continuar con el proceso de retiro de ${formatNumberVE(montoRetiro)} Bs a tu cuenta en ${bancoUsuario}. Este paso es necesario para garantizar la seguridad de la transacción.`;
+    firmaNoCoincideTexto.textContent = `Necesitamos que vuelvas a firmar para continuar con el proceso de retiro de ${formatNumberVE(saldoDisponible)} Bs a tu cuenta en ${bancoUsuario}. Este paso es necesario para garantizar la seguridad de la transacción.`;
     
     showOverlay("overlayFirmaNoCoincide");
     
@@ -4195,19 +4603,39 @@
   */
 
   // Variables para la animación del saldo
-  let originalBalance = 1800.00; // Saldo inicial
-  let currentVisaBalance = originalBalance;
+  let originalBalance = 0; // Se actualizará con el saldo real
+  let currentVisaBalance = 0;
   let currentBankBalance = 0.00;
   let animationInterval = null;
   let particlesInterval = null;
   let decrementSteps = 200; // 40 segundos / 0.2 segundos = 200 pasos
-  let decrementAmount = originalBalance / decrementSteps;
+  let decrementAmount = 0; // Se calculará en función del balance
   let isRestoringBalance = false;
   let isTransferringReverse = false;
 
+  // Función para ajustar el tamaño de texto según el saldo
+  function adjustBalanceTextSize(balanceElem) {
+    if (!balanceElem) return;
+    
+    const text = balanceElem.textContent;
+    const digitsCount = text.replace(/[^\d]/g, '').length;
+    
+    // Si el número es muy grande
+    if (digitsCount > 8) {
+      balanceElem.classList.add('small-text');
+    } else {
+      balanceElem.classList.remove('small-text');
+    }
+  }
+
   // Función para actualizar la visualización del saldo con formato
   function updateBalanceDisplay(balanceElem, balance) {
+    if (!balanceElem) return;
+    
     balanceElem.textContent = formatNumberVE(balance) + " Bs";
+    
+    // Ajustar tamaño de texto si es necesario
+    adjustBalanceTextSize(balanceElem);
   }
 
   // Función para crear partículas de dinero
@@ -4294,19 +4722,28 @@
     }
   }
 
-  // Función para mostrar/ocultar la tarjeta del banco
+  // Función para mostrar/ocultar la tarjeta del banco o el logo
   function toggleBankCard(show) {
     const bankCard = document.getElementById('bankCardContainer');
-    if (!bankCard) return;
+    const logoOverlay = document.getElementById('bankLogoOverlay');
+    
+    if (!bankCard || !logoOverlay) return;
     
     if (show) {
       bankCard.classList.add('active');
+      logoOverlay.classList.remove('active');
     } else {
       bankCard.classList.remove('active');
       
+      // Mostrar el logo del banco en su lugar
+      logoOverlay.classList.add('active');
+      
       // Reset del balance bancario
       currentBankBalance = 0;
-      updateBalanceDisplay(document.getElementById('bankBalanceAmount'), currentBankBalance);
+      const bankBalanceAmount = document.getElementById('bankBalanceAmount'); 
+      if (bankBalanceAmount) {
+        updateBalanceDisplay(bankBalanceAmount, currentBankBalance);
+      }
     }
   }
 
@@ -4316,6 +4753,10 @@
     const bankBalanceAmount = document.getElementById("bankBalanceAmount");
     
     if (!remeexBalanceAmount || !bankBalanceAmount) return;
+    
+    // Establecer el saldo original desde el saldo disponible
+    originalBalance = saldoDisponible;
+    decrementAmount = originalBalance / decrementSteps;
     
     // Mostrar tarjeta del banco
     toggleBankCard(true);
@@ -4445,7 +4886,7 @@
           setTimeout(() => {
             stopParticlesFlow();
             
-            // Ocultar tarjeta del banco
+            // Ocultar tarjeta del banco y mostrar el logo
             setTimeout(() => {
               toggleBankCard(false);
             }, 500);
@@ -4659,10 +5100,19 @@
     Utilidades
   */
   function formatNumberVE(num) {
-    return Number(num).toLocaleString("es-VE", {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    });
+    try {
+      // Asegurar que num sea un número
+      const numFloat = parseFloat(num);
+      if (isNaN(numFloat)) return "0,00";
+      
+      return Number(numFloat).toLocaleString("es-VE", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      });
+    } catch (e) {
+      console.error("Error al formatear número:", e);
+      return "0,00";
+    }
   }
 
   // Función para obtener el logo del banco usando mapeo mejorado
