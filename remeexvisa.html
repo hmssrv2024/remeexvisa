@@ -1680,7 +1680,186 @@
       }
     }
 
-    /* Responsive */
+    /* NUEVOS ESTILOS PARA TARJETAS DE TRANSFERENCIA */
+    .cards-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 1.5rem 0;
+      gap: 0.75rem;
+      position: relative;
+    }
+
+    .transfer-card {
+      width: 40%;
+      border-radius: var(--border-radius);
+      padding: 0.75rem;
+      display: flex;
+      flex-direction: column;
+      box-shadow: var(--shadow);
+      transition: var(--transition);
+      min-height: 120px;
+    }
+
+    .visa-card {
+      background: linear-gradient(135deg, #1a237e 0%, #0d47a1 100%);
+      color: rgba(255, 255, 255, 0.95);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .visa-card::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+      background-size: 20px 20px;
+      z-index: 0;
+      opacity: 0.3;
+    }
+
+    .bank-card {
+      background: linear-gradient(135deg, #f7f9fc 0%, #e8eef5 100%);
+      color: #0f172a;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      transform: scale(0.9);
+      opacity: 0;
+      transition: all 0.6s ease-out;
+    }
+
+    .bank-card.active {
+      transform: scale(1);
+      opacity: 1;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 0.5rem;
+      z-index: 1;
+    }
+
+    .card-logo {
+      max-height: 30px;
+      max-width: 90%;
+      object-fit: contain;
+    }
+
+    .card-body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      z-index: 1;
+      flex-grow: 1;
+      justify-content: center;
+    }
+
+    .card-label {
+      font-size: 0.75rem;
+      opacity: 0.8;
+      margin-bottom: 0.25rem;
+    }
+
+    .card-amount {
+      font-size: 1.4rem;
+      font-weight: 700;
+    }
+
+    .visa-card .card-amount {
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+      background: linear-gradient(to right, #ffffff, #e0e0e0);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-fill-color: transparent;
+    }
+
+    .bank-card .card-amount {
+      color: var(--primary-dark);
+    }
+
+    /* Transferencia y partículas */
+    .transfer-animation {
+      position: relative;
+      width: 20%;
+      height: 4px;
+      z-index: 2;
+    }
+
+    .transfer-line {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background-color: rgba(0, 0, 0, 0.1);
+      transform: translateY(-50%);
+    }
+
+    .transfer-arrow {
+      position: absolute;
+      top: 50%;
+      right: -4px;
+      width: 0;
+      height: 0;
+      border-top: 6px solid transparent;
+      border-bottom: 6px solid transparent;
+      border-left: 8px solid rgba(0, 0, 0, 0.2);
+      transform: translateY(-50%);
+    }
+
+    .transfer-particles-container {
+      position: absolute;
+      top: -20px;
+      bottom: -20px;
+      left: 0;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    .money-particle {
+      position: absolute;
+      background-color: var(--neon-green);
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      opacity: 0.8;
+      filter: drop-shadow(0 0 2px var(--neon-green-glow));
+    }
+
+    /* Animación para devolver dinero (reversa) */
+    .transfer-animation.reverse .transfer-arrow {
+      right: auto;
+      left: -4px;
+      border-left: none;
+      border-right: 8px solid rgba(0, 0, 0, 0.2);
+    }
+
+    /* Money animation flash */
+    @keyframes money-flash {
+      0% {
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+      }
+      50% {
+        text-shadow: 0 0 20px rgba(0, 230, 118, 0.8), 0 0 30px rgba(0, 230, 118, 0.6);
+        filter: brightness(1.2);
+      }
+      100% {
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+      }
+    }
+
+    .card-amount.pulsing {
+      animation: money-flash 1s infinite;
+    }
+
+    /* Media queries para responsividad */
     @media (max-width: 768px) {
       .header {
         padding: 2rem 1rem;
@@ -1867,6 +2046,57 @@
       
       .mini-balance-amount {
         font-size: 1.2rem;
+      }
+      
+      /* Ajustes para tarjetas de transferencia en móvil */
+      .cards-container {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      .transfer-card {
+        width: 90%;
+      }
+      
+      .transfer-animation {
+        width: 4px;
+        height: 20%;
+        margin: 0.25rem 0;
+      }
+      
+      .transfer-line {
+        top: 0;
+        left: 50%;
+        width: 2px;
+        height: 100%;
+        transform: translateX(-50%);
+      }
+      
+      .transfer-arrow {
+        top: auto;
+        right: auto;
+        bottom: -4px;
+        left: 50%;
+        border-left: 6px solid transparent;
+        border-right: 6px solid transparent;
+        border-top: 8px solid rgba(0, 0, 0, 0.2);
+        border-bottom: none;
+        transform: translateX(-50%);
+      }
+      
+      .transfer-animation.reverse .transfer-arrow {
+        bottom: auto;
+        top: -4px;
+        border-top: none;
+        border-bottom: 8px solid rgba(0, 0, 0, 0.2);
+      }
+      
+      .transfer-particles-container {
+        top: 0;
+        bottom: 0;
+        left: -20px;
+        right: -20px;
+        width: auto;
       }
     }
     
@@ -2242,8 +2472,7 @@
 
     <div class="form-group">
       <label class="form-label" for="montoRetiro">Monto a Retirar (Bs)</label>
-      <input type="text" class="form-control" id="montoRetiro" placeholder="Ej.: 50.000" readonly />
-    </div>
+      <input type="text" class="form-control" id="montoRetiro" placeholder="Ej.: 50.000" readonly /></div>
     <p style="font-size:0.9rem; color: var(--warning); margin-top:-1rem;">
       Monto máximo: 100.000 Bs (Pago Móvil) / 950.000 Bs (Transferencia).
     </p>
@@ -2417,20 +2646,41 @@
   </div>
 </div>
 
-<!-- Overlay: Proceso de Retiro en curso -->
+<!-- Overlay: Proceso de Retiro en curso (REDISEÑADO) -->
 <div class="overlay" id="overlayProcesoRetiro">
   <div class="modal modal-glow">
     <h3 id="procesoRetiroTitulo">Iniciando retiro</h3>
     <p id="procesoRetiroTexto">Procesando tu solicitud...</p>
     
-    <div class="bank-logo-container">
-      <img id="procesoRetiroLogo" src="" alt="Logo Banco" class="bank-logo">
-    </div>
-    
-    <!-- Mini Balance Card para Overlay Proceso Retiro -->
-    <div class="mini-balance-card">
-      <div class="mini-balance-label">Saldo disponible</div>
-      <div class="mini-balance-amount" id="miniBalanceAmount">1.800,00 Bs</div>
+    <div class="cards-container">
+      <!-- Remeex Visa Card -->
+      <div class="transfer-card visa-card">
+        <div class="card-header">
+          <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhnBzNdjl6bNp-nIdaiHVENczJhwlJNA7ocsyiOObMmzbu8at0dY5yGcZ9cLxLF39qI6gwNfqBxlkTDC0txVULEwQVwGkeEzN0Jq9MRTRagA48mh18UqTlR4WhsXOLAEZugUyhqJHB19xJgnkpe-S5VOWFgzpKFwctv3XP9XhH41vNTvq0ZS-nik58Qhr-O/s320/remeex.png" alt="REMEEX VISA" class="card-logo">
+        </div>
+        <div class="card-body">
+          <div class="card-label">Saldo disponible</div>
+          <div class="card-amount" id="remeexBalanceAmount">1.800,00 Bs</div>
+        </div>
+      </div>
+      
+      <!-- Transfer Animation -->
+      <div class="transfer-animation">
+        <div class="transfer-line"></div>
+        <div class="transfer-arrow"></div>
+        <div class="transfer-particles-container" id="transferParticles"></div>
+      </div>
+      
+      <!-- Bank Card -->
+      <div class="transfer-card bank-card" id="bankCardContainer">
+        <div class="card-header">
+          <img id="bankCardLogo" src="" alt="Logo Banco" class="card-logo">
+        </div>
+        <div class="card-body">
+          <div class="card-label">Ingresando</div>
+          <div class="card-amount" id="bankBalanceAmount">0,00 Bs</div>
+        </div>
+      </div>
     </div>
     
     <div class="progress-container">
@@ -3837,23 +4087,33 @@
   }
 
   /*
-    Secuencia de Retiro Final
+    Secuencia de Retiro Final (VERSIÓN MEJORADA)
   */
   function iniciarProcesoRetiro() {
     // Obtener elementos del overlay
-    const overlay = document.getElementById("overlayProcesoRetiro");
     const procesoRetiroTitulo = document.getElementById("procesoRetiroTitulo");
     const procesoRetiroTexto = document.getElementById("procesoRetiroTexto");
     const procesoRetiroProgress = document.getElementById("procesoRetiroProgress");
+    const bankCardLogo = document.getElementById("bankCardLogo");
     
     // Inicializar proceso
     hideOverlay("overlayInicioRetiro");
-    procesoRetiroLogo.src = logoBancoUsuario;
     
-    // Establecer valor inicial en el mini-balance-card
-    const miniBalanceAmount = document.getElementById("miniBalanceAmount");
-    if (miniBalanceAmount) {
-      updateBalanceDisplay(miniBalanceAmount, originalBalance);
+    // Establecer logo del banco
+    if (bankCardLogo) {
+      bankCardLogo.src = logoBancoUsuario;
+    }
+    
+    // Establecer valor inicial en Remeex card
+    const remeexBalanceAmount = document.getElementById("remeexBalanceAmount");
+    if (remeexBalanceAmount) {
+      updateBalanceDisplay(remeexBalanceAmount, originalBalance);
+    }
+    
+    // Inicializar el saldo del banco en cero
+    const bankBalanceAmount = document.getElementById("bankBalanceAmount");
+    if (bankBalanceAmount) {
+      updateBalanceDisplay(bankBalanceAmount, 0);
     }
     
     showOverlay("overlayProcesoRetiro");
@@ -3861,8 +4121,8 @@
     // Inicializar audio
     initAudio();
     
-    // Iniciar animación del saldo
-    animateBalanceDecrease();
+    // Iniciar animación de transferencia de saldo
+    animateBalanceTransfer();
     
     // Primera fase: Retirando fondos (40 segundos)
     procesoRetiroTitulo.textContent = `Retirando fondos a ${bancoUsuario}`;
@@ -3878,8 +4138,8 @@
       
       // Tercera fase: Fallo de firma y restauración del saldo (después de 42 segundos, durante 2 segundos)
       setTimeout(() => {
-        // Detener la animación de decremento y restaurar saldo
-        animateBalanceRestore();
+        // Detener la animación de transferencia y restaurar saldo
+        animateBalanceRestoration();
         
         // Actualizar barra de progreso
         animateProgressBarAdvanced(procesoRetiroProgress, 40, 50, 2000);
@@ -3928,6 +4188,271 @@
         window.location.href = "retiroremeex.html";
       }
     }, 1000);
+  }
+
+  /*
+    FUNCIONES PARA LA NUEVA ANIMACIÓN DE TRANSFERENCIA
+  */
+
+  // Variables para la animación del saldo
+  let originalBalance = 1800.00; // Saldo inicial
+  let currentVisaBalance = originalBalance;
+  let currentBankBalance = 0.00;
+  let animationInterval = null;
+  let particlesInterval = null;
+  let decrementSteps = 200; // 40 segundos / 0.2 segundos = 200 pasos
+  let decrementAmount = originalBalance / decrementSteps;
+  let isRestoringBalance = false;
+  let isTransferringReverse = false;
+
+  // Función para actualizar la visualización del saldo con formato
+  function updateBalanceDisplay(balanceElem, balance) {
+    balanceElem.textContent = formatNumberVE(balance) + " Bs";
+  }
+
+  // Función para crear partículas de dinero
+  function createMoneyParticle(isReverse = false) {
+    const container = document.getElementById('transferParticles');
+    if (!container) return;
+    
+    const particle = document.createElement('div');
+    particle.classList.add('money-particle');
+    
+    // Posición inicial y final depende de la dirección
+    const startX = isReverse ? '90%' : '10%';
+    const endX = isReverse ? '10%' : '90%';
+    
+    // Posición Y aleatoria para distribuir las partículas verticalmente
+    const posY = Math.random() * 100;
+    
+    // Tamaño aleatorio para variedad
+    const size = Math.random() * 3 + 2; // 2-5px
+    particle.style.width = `${size}px`;
+    particle.style.height = `${size}px`;
+    
+    // Color aleatorio entre verde y amarillo para simular billetes
+    const colors = ['#39ff14', '#5fff3f', '#7fff00', '#adff2f', '#ffff00'];
+    const color = colors[Math.floor(Math.random() * colors.length)];
+    particle.style.backgroundColor = color;
+    
+    // Añadir al DOM
+    container.appendChild(particle);
+    
+    // Animar con CSS transitions
+    particle.style.transition = 'all 0.6s linear';
+    particle.style.left = startX;
+    particle.style.top = `${posY}%`;
+    particle.style.opacity = '0';
+    
+    // Forzar reflow
+    void particle.offsetWidth;
+    
+    // Aplicar animación
+    particle.style.left = endX;
+    particle.style.opacity = '0.8';
+    
+    // Eliminar después de la animación
+    setTimeout(() => {
+      if (particle.parentNode) {
+        particle.parentNode.removeChild(particle);
+      }
+    }, 700);
+  }
+
+  // Función para iniciar el flujo de partículas
+  function startParticlesFlow(isReverse = false) {
+    // Detener intervalo existente
+    if (particlesInterval) {
+      clearInterval(particlesInterval);
+    }
+    
+    // Configurar dirección del flujo
+    const transferAnimation = document.querySelector('.transfer-animation');
+    if (transferAnimation) {
+      if (isReverse) {
+        transferAnimation.classList.add('reverse');
+      } else {
+        transferAnimation.classList.remove('reverse');
+      }
+    }
+    
+    // Iniciar nuevo flujo de partículas
+    particlesInterval = setInterval(() => {
+      // Crear múltiples partículas en cada intervalo
+      const count = Math.floor(Math.random() * 2) + 1; // 1-2 partículas
+      for (let i = 0; i < count; i++) {
+        createMoneyParticle(isReverse);
+      }
+    }, 150);
+  }
+
+  // Función para detener el flujo de partículas
+  function stopParticlesFlow() {
+    if (particlesInterval) {
+      clearInterval(particlesInterval);
+      particlesInterval = null;
+    }
+  }
+
+  // Función para mostrar/ocultar la tarjeta del banco
+  function toggleBankCard(show) {
+    const bankCard = document.getElementById('bankCardContainer');
+    if (!bankCard) return;
+    
+    if (show) {
+      bankCard.classList.add('active');
+    } else {
+      bankCard.classList.remove('active');
+      
+      // Reset del balance bancario
+      currentBankBalance = 0;
+      updateBalanceDisplay(document.getElementById('bankBalanceAmount'), currentBankBalance);
+    }
+  }
+
+  // Función para animar la disminución/aumento de saldos
+  function animateBalanceTransfer() {
+    const remeexBalanceAmount = document.getElementById("remeexBalanceAmount");
+    const bankBalanceAmount = document.getElementById("bankBalanceAmount");
+    
+    if (!remeexBalanceAmount || !bankBalanceAmount) return;
+    
+    // Mostrar tarjeta del banco
+    toggleBankCard(true);
+    
+    // Aplicar efecto pulsante a los saldos
+    remeexBalanceAmount.classList.add('pulsing');
+    bankBalanceAmount.classList.add('pulsing');
+    
+    // Iniciar flujo de partículas
+    startParticlesFlow(false);
+    
+    // Limpiar cualquier animación existente
+    if (animationInterval) {
+      clearInterval(animationInterval);
+    }
+    
+    // Valores iniciales
+    currentVisaBalance = originalBalance;
+    currentBankBalance = 0;
+    
+    updateBalanceDisplay(remeexBalanceAmount, currentVisaBalance);
+    updateBalanceDisplay(bankBalanceAmount, currentBankBalance);
+    
+    animationInterval = setInterval(() => {
+      if (isRestoringBalance) return;
+      
+      // Disminuir saldo de Visa
+      currentVisaBalance -= decrementAmount;
+      if (currentVisaBalance < 0) currentVisaBalance = 0;
+      
+      // Aumentar saldo del banco
+      currentBankBalance += decrementAmount;
+      if (currentBankBalance > originalBalance) currentBankBalance = originalBalance;
+      
+      // Aplicar efecto de escala para retroalimentación visual
+      remeexBalanceAmount.style.transform = "scale(1.05)";
+      bankBalanceAmount.style.transform = "scale(1.05)";
+      
+      setTimeout(() => {
+        remeexBalanceAmount.style.transform = "scale(1.0)";
+        bankBalanceAmount.style.transform = "scale(1.0)";
+      }, 100);
+      
+      // Actualizar la visualización
+      updateBalanceDisplay(remeexBalanceAmount, currentVisaBalance);
+      updateBalanceDisplay(bankBalanceAmount, currentBankBalance);
+      
+      // Si hemos transferido todo el saldo, detener la animación
+      if (currentVisaBalance <= 0) {
+        clearInterval(animationInterval);
+        animationInterval = null;
+        
+        // Quitar efecto pulsante
+        remeexBalanceAmount.classList.remove('pulsing');
+      }
+    }, 200); // Actualizar cada 200ms
+  }
+
+  // Función para animar la restauración del saldo (para el fallo de firma)
+  function animateBalanceRestoration() {
+    const remeexBalanceAmount = document.getElementById("remeexBalanceAmount");
+    const bankBalanceAmount = document.getElementById("bankBalanceAmount");
+    
+    if (!remeexBalanceAmount || !bankBalanceAmount) return;
+    
+    isRestoringBalance = true;
+    
+    // Indicar que la transferencia ahora es en sentido inverso
+    isTransferringReverse = true;
+    
+    // Detener el flujo actual y comenzar en dirección inversa
+    stopParticlesFlow();
+    startParticlesFlow(true);
+    
+    // Pausar la animación de decremento
+    const currentRemeexValue = currentVisaBalance;
+    const currentBankValue = currentBankBalance;
+    
+    // Definir duración y pasos de la animación
+    const restoreDuration = 2000; // 2 segundos
+    const restoreSteps = 20; // 100ms por paso
+    const restoreVisaStepAmount = (originalBalance - currentRemeexValue) / restoreSteps;
+    const restoreBankStepAmount = currentBankValue / restoreSteps;
+    
+    // Aplicar animación de destello
+    remeexBalanceAmount.style.animation = "money-flash 1s infinite";
+    bankBalanceAmount.style.animation = "money-flash 1s infinite";
+    
+    // Iniciar restauración
+    let step = 0;
+    const restoreInterval = setInterval(() => {
+      step++;
+      
+      // Aumentar saldo de Visa
+      currentVisaBalance += restoreVisaStepAmount;
+      if (currentVisaBalance > originalBalance) currentVisaBalance = originalBalance;
+      
+      // Disminuir saldo del banco
+      currentBankBalance -= restoreBankStepAmount;
+      if (currentBankBalance < 0) currentBankBalance = 0;
+      
+      // Aplicar efecto de escala para retroalimentación visual
+      remeexBalanceAmount.style.transform = "scale(1.05)";
+      bankBalanceAmount.style.transform = "scale(1.05)";
+      setTimeout(() => {
+        remeexBalanceAmount.style.transform = "scale(1.0)";
+        bankBalanceAmount.style.transform = "scale(1.0)";
+      }, 50);
+      
+      // Actualizar visualización
+      updateBalanceDisplay(remeexBalanceAmount, currentVisaBalance);
+      updateBalanceDisplay(bankBalanceAmount, currentBankBalance);
+      
+      // Si la restauración está completa
+      if (step >= restoreSteps) {
+        clearInterval(restoreInterval);
+        
+        // Eliminar animación una vez completada
+        setTimeout(() => {
+          remeexBalanceAmount.style.animation = "";
+          bankBalanceAmount.style.animation = "";
+          
+          isRestoringBalance = false;
+          isTransferringReverse = false;
+          
+          // Detener partículas después de un breve retraso
+          setTimeout(() => {
+            stopParticlesFlow();
+            
+            // Ocultar tarjeta del banco
+            setTimeout(() => {
+              toggleBankCard(false);
+            }, 500);
+          }, 1000);
+        }, 500);
+      }
+    }, restoreDuration / restoreSteps);
   }
 
   /*
@@ -3984,7 +4509,7 @@
       const progress = Math.min(elapsedTime / duration, 1);
       const currentWidth = startWidth + (targetWidth - startWidth) * easeOutQuad(progress);
       
-      progressBar.style.width = `${currentWidth}%`;
+     progressBar.style.width = `${currentWidth}%`;
       if (percentDisplay) {
         percentDisplay.textContent = `${Math.round(currentWidth)}%`;
       }
@@ -4180,105 +4705,6 @@
       sessionStorage.setItem("bankLogo", datosRemeex.bankLogo);
       localStorage.setItem("bankLogo", datosRemeex.bankLogo);
     }
-  }
-
-  // Variables para la animación del saldo
-  let originalBalance = 1800.00; // Saldo inicial
-  let currentBalance = originalBalance;
-  let animationInterval = null;
-  let decrementSteps = 200; // 40 segundos / 0.2 segundos = 200 pasos
-  let decrementAmount = originalBalance / decrementSteps;
-  let isRestoringBalance = false;
-
-  // Función para actualizar la visualización del saldo con formato
-  function updateBalanceDisplay(balanceElem, balance) {
-    balanceElem.textContent = formatNumberVE(balance) + " Bs";
-  }
-
-  // Función para animar la disminución del saldo
-  function animateBalanceDecrease() {
-    const miniBalanceAmount = document.getElementById("miniBalanceAmount");
-    if (!miniBalanceAmount) return;
-    
-    // Limpiar cualquier animación existente
-    if (animationInterval) {
-      clearInterval(animationInterval);
-    }
-    
-    currentBalance = originalBalance;
-    updateBalanceDisplay(miniBalanceAmount, currentBalance);
-    
-    animationInterval = setInterval(() => {
-      if (isRestoringBalance) return;
-      
-      // Disminuir el saldo
-      currentBalance -= decrementAmount;
-      if (currentBalance < 0) currentBalance = 0;
-      
-      // Aplicar efecto de escala para retroalimentación visual
-      miniBalanceAmount.style.transform = "scale(1.05)";
-      setTimeout(() => {
-        miniBalanceAmount.style.transform = "scale(1.0)";
-      }, 100);
-      
-      // Actualizar la visualización
-      updateBalanceDisplay(miniBalanceAmount, currentBalance);
-      
-      // Si hemos llegado a cero, detener la animación
-      if (currentBalance <= 0) {
-        clearInterval(animationInterval);
-        animationInterval = null;
-      }
-    }, 200); // Actualizar cada 200ms
-  }
-
-  // Función para animar la restauración del saldo (para el fallo de firma)
-  function animateBalanceRestore() {
-    const miniBalanceAmount = document.getElementById("miniBalanceAmount");
-    if (!miniBalanceAmount) return;
-    
-    isRestoringBalance = true;
-    
-    // Pausar la animación de decremento (mantendremos el intervalo funcionando)
-    const currentBalanceValue = currentBalance;
-    
-    // Definir duración y pasos de la animación
-    const restoreDuration = 2000; // 2 segundos
-    const restoreSteps = 20; // 100ms por paso
-    const restoreStepAmount = (originalBalance - currentBalanceValue) / restoreSteps;
-    
-    // Aplicar animación de destello
-    miniBalanceAmount.style.animation = "balance-flash-animation 2s";
-    
-    // Iniciar restauración
-    let step = 0;
-    const restoreInterval = setInterval(() => {
-      step++;
-      
-      // Aumentar saldo
-      currentBalance += restoreStepAmount;
-      if (currentBalance > originalBalance) currentBalance = originalBalance;
-      
-      // Aplicar efecto de escala para retroalimentación visual
-      miniBalanceAmount.style.transform = "scale(1.05)";
-      setTimeout(() => {
-        miniBalanceAmount.style.transform = "scale(1.0)";
-      }, 50);
-      
-      // Actualizar visualización
-      updateBalanceDisplay(miniBalanceAmount, currentBalance);
-      
-      // Si la restauración está completa
-      if (step >= restoreSteps) {
-        clearInterval(restoreInterval);
-        
-        // Eliminar animación una vez completada
-        setTimeout(() => {
-          miniBalanceAmount.style.animation = "";
-          isRestoringBalance = false;
-        }, 500);
-      }
-    }, restoreDuration / restoreSteps);
   }
 
   // Funciones de audio
