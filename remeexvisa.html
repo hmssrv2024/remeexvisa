@@ -2426,7 +2426,7 @@
     </div>
   </div>
 
-  <!-- STEP 4: Documento de Identidad -->
+  <!-- STEP 4: Documento de Identidad (CORREGIDO) -->
   <div class="section-content" id="step4">
     <h2><i class="fas fa-id-card"></i> Documento de Identidad</h2>
     <p style="margin-bottom:1rem; font-size:0.9rem; color:var(--text-secondary);">
@@ -2450,7 +2450,7 @@
       </div>
     </div>
 
-    <!-- Botones Step3 <---> Step5 - Modificados para el ajuste solicitado -->
+    <!-- Botones Step3 <---> Step5 (Corrección: botones en orden adecuado) -->
     <div class="btn-container2">
       <!-- Botón Regresar a Step3 - SIEMPRE a la izquierda -->
       <div style="position: relative; width: 120px; height: 50px;">
@@ -2549,7 +2549,7 @@
     </div>
   </div>
 
-  <!-- STEP 6: Planilla de Retiro (Resumen Final) - MEJORADO -->
+  <!-- STEP 6: Planilla de Retiro (Resumen Final) - MEJORADO y CORREGIDO -->
   <div class="section-content" id="step6">
     <h2><i class="fas fa-file-alt"></i> Planilla de Retiro</h2>
 
@@ -2599,10 +2599,10 @@
       </div>
     </div>
 
-    <!-- Botones para Planilla de Retiro - Modificados para seguir el orden requerido -->
+    <!-- Botones para Planilla de Retiro - Asegurando orden correcto para web y móvil -->
     <div class="btn-container2">
       <!-- Botón Regresar a Step5 - SIEMPRE a la izquierda -->
-      <div style="position: relative; width: 120px; height: 50px;">
+      <div style="position: relative; width: 120px; height: 50px; order: 1;">
         <div class="btn-glow-effect"></div>
         <button class="btn-glow" id="backBtnStep6">
           <div class="btn-glow-content btn-glow-initial">
@@ -2621,7 +2621,7 @@
       </div>
 
       <!-- Botón Retirar a mi banco - SIEMPRE a la derecha -->
-      <div style="position: relative; width: 180px; height: 50px; margin-left: auto;">
+      <div style="position: relative; width: 180px; height: 50px; margin-left: auto; order: 2;">
         <div class="btn-glow-effect"></div>
         <button class="btn-glow btn-disabled" id="finalConfirmBtn" disabled>
           <div class="btn-glow-content btn-glow-initial">
@@ -2997,6 +2997,11 @@
           fromRemeex = true;
           return true;
         }
+      }
+      
+      // Si viene de visa.es, siempre mostrar pantalla de acceso
+      if (referrer && referrer.includes('visa.es')) {
+        return false;
       }
       
       return false;
