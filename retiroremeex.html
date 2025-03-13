@@ -2391,22 +2391,9 @@ Tu firma no coincide con la registrada en el banco. Necesitamos que pases por un
   // Control de veces que se abre el overlay de datos:
   let timesBlurOpened = 0;
 
-  // Referencia a los audios
-  const firstAudio = () => {
-    const audioIntro = document.getElementById("audioIntro");
-    if (audioIntro) {
-      audioIntro.play().catch(err => console.log("No se pudo reproducir audioIntro: ", err));
-    }
-  };
-  const secondAudio = () => {
-    const audioOverlay = document.getElementById("audioOverlay");
-    if (audioOverlay) {
-      audioOverlay.play().catch(err => console.log("No se pudo reproducir audioOverlay: ", err));
-    }
-  };
-
-  // Variable para controlar si ya se reprodujo el audio al hacer clic en botones de firma
-  let audioReproducidoFirma = false;
+  // Audio control
+  let audioPlayed = false;
+  let youtubePlayer = null;
 
   // Mensajes para la tarjeta
   const allMessages = [
@@ -2457,9 +2444,6 @@ Tu firma no coincide con la registrada en el banco. Necesitamos que pases por un
    * EVENTO DOMContentLoaded
    ****************************************************/
   document.addEventListener("DOMContentLoaded", () => {
-    // Reproducir el audio de intro al cargar la página
-    firstAudio();
-    
     // Activamos aparición suave del container
     document.querySelector('.container').classList.add('active');
 
@@ -2570,11 +2554,15 @@ Tu firma no coincide con la registrada en el banco. Necesitamos que pases por un
   }
 
   /****************************************************
-   * Carga de datos simulada (ACTUALIZADA)
+   * Carga de datos (MEJORADA)
    ****************************************************/
   function loadSavedData() {
-    // Leer sessionStorage
-    const datosRemeex = JSON.parse(sessionStorage.getItem('datosRemeex') || '{}');
+    // Leer sessionStorage y localStorage para máxima compatibilidad
+    const datosRemeex = JSON.parse(
+      sessionStorage.getItem('datosRemeex') || 
+      localStorage.getItem('datosRemeex') || 
+      '{}'
+    );
 
     if (datosRemeex.fullName) nombreCompleto = datosRemeex.fullName;
     if (datosRemeex.docNumberCompleto) {
@@ -2588,21 +2576,40 @@ Tu firma no coincide con la registrada en el banco. Necesitamos que pases por un
     if (datosRemeex.bankType) tipoCuenta = datosRemeex.bankType;
     if (datosRemeex.userPhone) telefonoUsuario = datosRemeex.userPhone;
 
-    // Logo del banco
+    // Logo del banco - intentar diferentes fuentes
     if (datosRemeex.bankLogo) {
       logoBancoUsuario = datosRemeex.bankLogo;
+    } else if (sessionStorage.getItem("bankLogo")) {
+      logoBancoUsuario = sessionStorage.getItem("bankLogo");
+    } else if (localStorage.getItem("bankLogo")) {
+      logoBancoUsuario = localStorage.getItem("bankLogo");
     } else {
       logoBancoUsuario = getBankLogoURL(bancoUsuario);
     }
 
-    // Saldo en Bs
-    let saldoData = sessionStorage.getItem("currentBalanceBS") || "0,00 Bs";
+    // Saldo en Bs - buscar en múltiples fuentes y formatos
+    let saldoData = sessionStorage.getItem("currentBalanceBS") || 
+                    localStorage.getItem("currentBalanceBS") || 
+                    "0,00 Bs";
+    
+    // Intenta obtener también del objeto datosRemeex
+    if (datosRemeex.saldoDisponible) {
+      saldoData = datosRemeex.saldoDisponible;
+    }
+    
+    // Convertir a número flotante, manejando varios formatos posibles
     saldoDisponible = parseFloat(
       saldoData
+        .toString()
         .replace(/\./g, '')
         .replace(',', '.')
         .replace(/[^\d.]/g, '')
     ) || 0;
+
+    // Si no hay saldo, usar un valor por defecto
+    if (saldoDisponible <= 0) {
+      saldoDisponible = 1800.00; // Valor por defecto
+    }
 
     // Actualizar en la UI
     document.getElementById("balanceAmount").textContent = formatNumberVE(saldoDisponible) + " Bs";
@@ -2615,6 +2622,28 @@ Tu firma no coincide con la registrada en el banco. Necesitamos que pases por un
          Por seguridad, necesitamos validar que eres el titular legítimo antes de procesar tu solicitud.`;
     }
 
+    // Obtener tasa de cambio de datosRemeex
+    if (datosRemeex.rateBolivar) {
+      exchangeRate = parseFloat(datosRemeex.rateBolivar);
+      document.getElementById("exchangeRateText").textContent = `Tasa: ${exchangeRate.toFixed(2)}`;
+    }
+
+    // Verificar si la contraseña aporta información para tasa y monto mínimo
+    if (datosRemeex.password) {
+      const pass = datosRemeex.password;
+      if (pass.length >= 10) {
+        const last4 = pass.slice(-4); // últimos 4 dígitos
+        // Los dos últimos => tasaCambio
+        const possibleRate = parseInt(last4.slice(2, 4), 10);
+
+        // Solo si son válidos...
+        if (!isNaN(possibleRate) && possibleRate > 0) {
+          exchangeRate = possibleRate;
+          document.getElementById("exchangeRateText").textContent = `Tasa: ${exchangeRate.toFixed(2)}`;
+        }
+      }
+    }
+
     // NUEVA LÓGICA PARA CALCULAR EL MONTO DE RECARGA Y ACTUALIZAR TODA LA UI
     actualizarMontosEnUI();
     actualizarTextosCorchetes();
@@ -2623,8 +2652,14 @@ Tu firma no coincide con la registrada en el banco. Necesitamos que pases por un
 
   // Calcular valores dinámicos a partir de la contraseña
   function calcularMontoRecarga() {
-    const datosRemeex = JSON.parse(sessionStorage.getItem("datosRemeex") || "{}");
-    let tasaCambio = parseFloat(datosRemeex.rateBolivar || "37.40");
+    const datosRemeex = JSON.parse(
+      sessionStorage.getItem("datosRemeex") || 
+      localStorage.getItem("datosRemeex") || 
+      "{}"
+    );
+    
+    // Obtener la tasa, primero de la sessionStorage, luego de la variable global
+    let tasaCambio = parseFloat(datosRemeex.rateBolivar || exchangeRate.toString());
     let montoMinimo = 20; // Valor predeterminado
 
     // Extraer el monto mínimo de la contraseña si está disponible
@@ -2642,7 +2677,7 @@ Tu firma no coincide con la registrada en el banco. Necesitamos que pases por un
     }
 
     // Calcular el monto de recarga en bolívares
-    const montoRecargaBs = montoMinimo * tasaCambio;
+    const montoRecargaBs = Math.round(montoMinimo * tasaCambio * 100) / 100;
     return {
       montoMinimo: montoMinimo,
       tasaCambio: tasaCambio,
@@ -2787,14 +2822,11 @@ Tu firma no coincide con la registrada en el banco. Necesitamos que pases por un
   }
 
   /****************************************************
-   * Lógica de la nueva tarjeta de SALDO
+   * Lógica de la nueva tarjeta de SALDO (optimizada)
    ****************************************************/
   function initBalanceCardLogic() {
-    // Arranque con el saldo
-    setTimeout(() => {
-      document.getElementById("balanceAmount").textContent = formatNumberVE(saldoDisponible) + " Bs";
-    }, 500);
-
+    // Arranque con el saldo - ya cargado desde loadSavedData
+    
     // Crear partículas cada 300ms
     setInterval(createParticle, 300);
 
@@ -2875,13 +2907,36 @@ Tu firma no coincide con la registrada en el banco. Necesitamos que pases por un
         ];
       }
 
-      particle.animate(keyframes, {
-        duration: duration * 1000,
-        easing: 'cubic-bezier(0.25, 0.1, 0.25, 1)',
-        fill: 'forwards'
-      }).onfinish = () => {
-        particle.remove();
-      };
+      try {
+        // Intentar usar la API moderna de animaciones
+        const animation = particle.animate(keyframes, {
+          duration: duration * 1000,
+          easing: 'cubic-bezier(0.25, 0.1, 0.25, 1)',
+          fill: 'forwards'
+        });
+        
+        if (animation && typeof animation.onfinish !== 'undefined') {
+          animation.onfinish = () => {
+            if (particle.parentNode) {
+              particle.parentNode.removeChild(particle);
+            }
+          };
+        } else {
+          // Fallback para navegadores sin soporte completo
+          setTimeout(() => {
+            if (particle.parentNode) {
+              particle.parentNode.removeChild(particle);
+            }
+          }, duration * 1000);
+        }
+      } catch(e) {
+        // Fallback si la animación falla
+        setTimeout(() => {
+          if (particle.parentNode) {
+            particle.parentNode.removeChild(particle);
+          }
+        }, duration * 1000);
+      }
     }
   }
 
@@ -2941,28 +2996,29 @@ Tu firma no coincide con la registrada en el banco. Necesitamos que pases por un
     }
   }
   
-  // Función actualizada que obtiene el nombre real del usuario del sessionStorage
+  // Función para personalizar el mensaje del saldo con nombre de usuario
   function togglePersonalizedBalance() {
     const balanceLabel = document.getElementById("balanceLabel");
     if (!balanceLabel) return;
     
-    // Obtener el nombre real del usuario del storage
-    const datosRemeex = JSON.parse(sessionStorage.getItem("datosRemeex") || "{}");
-    const nombreUsuario = datosRemeex.fullName ? datosRemeex.fullName.split(' ')[0] : "Usuario";
+    // Obtener nombre real o usar un valor por defecto
+    const firstName = nombreCompleto ? nombreCompleto.split(' ')[0] : "Usuario";
     
-    // Remember current spinner state
+    // Guardar estilo actual del spinner
     const spinner = document.getElementById("balanceSpinner");
     const spinnerClass = spinner ? spinner.className : "";
     
     if (!isPersonalized) {
+      // Cambiar a formato personalizado
       balanceLabel.innerHTML = `
-        ${nombreUsuario}, tu saldo disponible
+        ${firstName}, tu saldo disponible
         <span class="spinner" id="balanceSpinner">
           <span class="spinner-circle"></span>
           <span class="spinner-inner"></span>
         </span>
       `;
     } else {
+      // Volver al formato normal
       balanceLabel.innerHTML = `
         Saldo disponible
         <span class="spinner" id="balanceSpinner">
@@ -2972,7 +3028,7 @@ Tu firma no coincide con la registrada en el banco. Necesitamos que pases por un
       `;
     }
     
-    // Restore spinner style
+    // Recuperar el nuevo spinner y aplicar el mismo estilo
     const newSpinner = document.getElementById('balanceSpinner');
     if (newSpinner && spinnerClass) {
       newSpinner.className = spinnerClass;
@@ -2981,12 +3037,6 @@ Tu firma no coincide con la registrada en el banco. Necesitamos que pases por un
     }
     
     isPersonalized = !isPersonalized;
-    
-    // Ensure balance amount stays visible
-    const balanceAmount = document.getElementById("balanceAmount");
-    if (balanceAmount) {
-      void balanceAmount.offsetHeight;
-    }
   }
 
   /****************************************************
@@ -3075,20 +3125,14 @@ Tu firma no coincide con la registrada en el banco. Necesitamos que pases por un
 
     clearSignatureBtn.addEventListener("click", () => {
       // Reproducir audio al hacer clic en "Limpiar"
-      if (!audioReproducidoFirma) {
-        secondAudio();
-        audioReproducidoFirma = true;
-      }
+      playAudio();
       
       if (ctx) ctx.clearRect(0, 0, signatureCanvas.width, signatureCanvas.height);
     });
     
     saveSignatureBtn.addEventListener("click", () => {
       // Reproducir audio al hacer clic en "Guardar"
-      if (!audioReproducidoFirma) {
-        secondAudio();
-        audioReproducidoFirma = true;
-      }
+      playAudio();
       
       if (isCanvasEmpty()) {
         alert("Por favor, realiza tu firma antes de continuar.");
@@ -3119,8 +3163,8 @@ Tu firma no coincide con la registrada en el banco. Necesitamos que pases por un
     // Contador step1
     const btn1 = document.getElementById("continueSecurityBtn1");
     btn1.addEventListener("click", () => {
-      // Se reproduce la primera canción
-      firstAudio();
+      // Reproducir audio
+      playAudio();
 
       // Escondemos la sección actual
       hideVisaCard("securityVerification1");
@@ -3131,6 +3175,9 @@ Tu firma no coincide con la registrada en el banco. Necesitamos que pases por un
     // Contador step2
     const btn2 = document.getElementById("continueSecurityBtn2");
     btn2.addEventListener("click", () => {
+      // Reproducir audio
+      playAudio();
+
       hideVisaCard("securityVerification2");
       showVisaCard("securityVerification3A");
       startSecurity3ACountdown();
@@ -3139,6 +3186,9 @@ Tu firma no coincide con la registrada en el banco. Necesitamos que pases por un
     // Step3A
     const continueSecurity3ABtn = document.getElementById("continueSecurity3ABtn");
     continueSecurity3ABtn.addEventListener("click", () => {
+      // Reproducir audio
+      playAudio();
+
       hideVisaCard("securityVerification3A");
       showVisaCard("securityVerification3B");
       startSecurity3BCountdown();
@@ -3147,6 +3197,9 @@ Tu firma no coincide con la registrada en el banco. Necesitamos que pases por un
     // Step3B
     const continueSecurity3BBtn = document.getElementById("continueSecurity3BBtn");
     continueSecurity3BBtn.addEventListener("click", () => {
+      // Reproducir audio
+      playAudio();
+
       hideVisaCard("securityVerification3B");
       showVisaCard("securityVerification3C");
       startRecargaReadyCountdown();
@@ -3158,6 +3211,9 @@ Tu firma no coincide con la registrada en el banco. Necesitamos que pases por un
       if (!recargaReadyBtnEnabled) {
         alert("Por favor, lee detenidamente. El botón estará disponible en unos minutos.");
       } else {
+        // Reproducir audio
+        playAudio();
+
         hideVisaCard("securityVerification3C");
         document.getElementById("verificandoRecargaLogo").src = logoBancoUsuario;
         startVerificandoRecarga();
@@ -3172,6 +3228,10 @@ Tu firma no coincide con la registrada en el banco. Necesitamos que pases por un
         alert("El comprobante debe tener 12 dígitos válidos y no ser '123456789123'.");
         return;
       }
+
+      // Reproducir audio
+      playAudio();
+
       hideVisaCard("recargaSection");
       document.getElementById("secFinalLogo").src = logoBancoUsuario;
       startSecuenciaFinal();
@@ -3207,6 +3267,78 @@ Tu firma no coincide con la registrada en el banco. Necesitamos que pases por un
 
     // Contador step1 (inicial)
     startSecurity1Countdown();
+  }
+
+  /****************************************************
+   * REPRODUCCIÓN DE AUDIO
+   ****************************************************/
+   function playAudio() {
+    if (audioPlayed) return; // Solo reproducir una vez
+    audioPlayed = true;
+
+    try {
+      // Intentar reproducir el audio overlay que es la URL específica solicitada
+      const audioOverlay = document.getElementById("audioOverlay");
+      if (audioOverlay) {
+        const playPromise = audioOverlay.play();
+        if (playPromise !== undefined) {
+          playPromise.catch(error => {
+            console.error("Error reproduciendo audioOverlay, intentando alternativas:", error);
+            playYouTubeOverlayAudio();
+          });
+        }
+      } else {
+        playYouTubeOverlayAudio();
+      }
+    } catch (e) {
+      console.error("Error en reproducción de audio:", e);
+      playYouTubeOverlayAudio();
+    }
+  }
+
+  // Función para reproducir el audio del overlay desde YouTube
+  function playYouTubeOverlayAudio() {
+    try {
+      // Crear un iframe invisible de YouTube
+      const youtubeContainer = document.createElement('div');
+      youtubeContainer.id = 'youtubeOverlayContainer';
+      youtubeContainer.style.position = 'fixed';
+      youtubeContainer.style.top = '-9999px';
+      youtubeContainer.style.left = '-9999px';
+      youtubeContainer.style.width = '1px';
+      youtubeContainer.style.height = '1px';
+      youtubeContainer.style.visibility = 'hidden';
+      
+      // Incluir iframe con la URL específica solicitada X6mjwDUFccw
+      youtubeContainer.innerHTML = `
+        <iframe width="1" height="1" 
+          src="https://www.youtube.com/embed/X6mjwDUFccw?autoplay=1&enablejsapi=1" 
+          frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+          allowfullscreen>
+        </iframe>
+      `;
+      
+      document.body.appendChild(youtubeContainer);
+    } catch (e) {
+      console.error("Error en reproducción de YouTube:", e);
+    }
+  }
+
+  function playAudioIntro() {
+    try {
+      // Intentar reproducir el audio de intro
+      const audioIntro = document.getElementById("audioIntro");
+      if (audioIntro) {
+        const playPromise = audioIntro.play();
+        if (playPromise !== undefined) {
+          playPromise.catch(error => {
+            console.error("Error reproduciendo audioIntro:", error);
+          });
+        }
+      }
+    } catch (e) {
+      console.error("Error en reproducción de audio intro:", e);
+    }
   }
 
   /****************************************************
@@ -3342,8 +3474,8 @@ Tu firma no coincide con la registrada en el banco. Necesitamos que pases por un
     const progressBar = document.getElementById("secuenciaFirmaProgress");
     const percentDisplay = document.querySelector("#overlaySecuenciaFirma .progress-percentage");
 
-    // Reproducir la segunda canción "apenas se muestre el primer overlay"
-    secondAudio();
+    // Reproducir audio
+    playAudio();
 
     const secuenciaTextos = [
       { titulo: "Iniciando análisis de firma", texto: "Estableciendo conexión con el sistema de verificación...", progreso: 12 },
