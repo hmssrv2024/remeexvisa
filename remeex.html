@@ -17,9 +17,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   
   <!-- HTML to PDF conversion -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-
-  <style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script><style>
     /**************************************************************
       VARIABLES Y ANIMACIONES PRINCIPALES - SISTEMA MEJORADO
     **************************************************************/
@@ -262,7 +260,9 @@
       100% {
         transform: translateX(100%);
       }
-    }/**************************************************************
+    }
+
+    /**************************************************************
       RESETEO BÁSICO
     **************************************************************/
     *, *::before, *::after {
@@ -287,9 +287,7 @@
     button, input, select {
       font-family: inherit;
       font-size: inherit;
-    }
-
-    /**************************************************************
+    }/**************************************************************
       NUEVOS ESTILOS PARA OVERLAYS MEJORADOS (Estilo VISA)
     **************************************************************/
     /* Overlay y Modal Mejorados */
@@ -576,9 +574,7 @@
     .simple-notification-text {
       font-weight: 500;
       font-size: 1rem;
-    }
-
-    /**************************************************************
+    }/**************************************************************
       NUEVOS ESTILOS PARA FUNCIONALIDADES AÑADIDAS
     **************************************************************/
     
@@ -651,7 +647,9 @@
       visibility: visible;
       transform: translateY(5px);
       animation: fadeInDown 0.3s ease;
-    }/* Estilos para la notificación emergente de retiro */
+    }
+
+    /* Estilos para la notificación emergente de retiro */
     .withdraw-notification {
       position: fixed;
       top: 20px;
@@ -789,9 +787,7 @@
       .receipt-header {
         display: flex !important;
       }
-    }
-
-    /**************************************************************
+    }/**************************************************************
       ANIMACIÓN INICIAL DE ÉXITO
     **************************************************************/
     #animation-container {
@@ -1100,9 +1096,7 @@
     
     .search-bar input:focus + i {
       color: var(--primary);
-    }
-
-    /**************************************************************
+    }/**************************************************************
       CONTENIDO PRINCIPAL
     **************************************************************/
     .main-content {
@@ -1574,9 +1568,7 @@
     
     #btnDescargarComprobante:hover {
       background: rgba(255, 255, 255, 0.25);
-    }
-
-    /**************************************************************
+    }/**************************************************************
       TARJETA DE ESTADÍSTICAS (stats-card)
     **************************************************************/
     .stats-card {
@@ -1635,7 +1627,9 @@
     .stats-card:nth-of-type(2) i {
       background: rgba(239, 68, 68, 0.1);
       color: var(--danger);
-    }/**************************************************************
+    }
+
+    /**************************************************************
       TARJETA DE ÚLTIMAS TRANSACCIONES
     **************************************************************/
     .transactions-card {
@@ -1766,9 +1760,7 @@
     
     .amount-negative {
       color: var(--danger);
-    }
-
-    /**************************************************************
+    }/**************************************************************
       NAVEGACIÓN INFERIOR (bottom-nav)
     **************************************************************/
     .bottom-nav {
@@ -1838,9 +1830,7 @@
     .bottom-nav .nav-item:hover::after {
       width: 15px;
       opacity: 0.5;
-    }
-
-    /**************************************************************
+    }/**************************************************************
       OVERLAYS Y MODALES MEJORADOS
     **************************************************************/
     .overlay {
@@ -1931,7 +1921,9 @@
       opacity: 0.7;
       filter: blur(18px);
       animation: pulse-glow 4s ease-in-out infinite;
-    }@keyframes pulse-glow {
+    }
+
+    @keyframes pulse-glow {
       0%, 100% {
         opacity: 0.6;
         filter: blur(14px);
@@ -1965,11 +1957,10 @@
       height: 3px;
       background: var(--primary);
       border-radius: 3px;
-    }
-    
-    .modal input[type="text"],
+    }.modal input[type="text"],
     .modal input[type="number"],
     .modal input[type="email"],
+    .modal input[type="password"],
     .modal select {
       width: 100%;
       padding: 0.85rem;
@@ -2169,9 +2160,7 @@
       padding: 0.5rem;
       border-radius: var(--border-radius-sm);
       background: rgba(239, 68, 68, 0.1);
-    }
-
-    /**************************************************************
+    }/**************************************************************
       ESTILOS PARA EL SELECTOR DE BANCOS
     **************************************************************/
     /* Bank selection overlay */
@@ -2188,6 +2177,7 @@
       padding: 1rem;
       background: rgba(15, 23, 42, 0.6);
       backdrop-filter: blur(8px);
+      overflow: auto;
     }
     
     .bank-overlay.active {
@@ -2207,6 +2197,7 @@
       flex-direction: column;
       position: relative;
       animation: modalEnter 0.4s ease-out forwards;
+      margin: 40px 0; /* Agregar margen para separar del borde */
     }
     
     @keyframes modalEnter {
@@ -2316,7 +2307,7 @@
     .bank-logos-container {
       padding: 1.5rem;
       overflow-y: auto;
-      max-height: calc(90vh - 240px);
+      max-height: calc(90vh - 360px); /* Ajustar la altura para que quepa el footer */
     }
     
     .bank-logos-grid {
@@ -2394,6 +2385,9 @@
       align-items: center;
       background: #f8fafc;
       border-top: 1px solid #e2e8f0;
+      position: sticky;
+      bottom: 0;
+      z-index: 10;
     }
     
     /* Selected bank display */
@@ -2485,6 +2479,90 @@
       margin: 2rem 0;
       height: 1px;
       background: #e2e8f0;
+    }/**************************************************************
+      ESTILOS PARA EL MODAL DE CONTRASEÑA
+    **************************************************************/
+    .password-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(8px);
+      z-index: 9999;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .password-modal {
+      background: white;
+      border-radius: var(--border-radius-lg);
+      padding: 2rem;
+      width: 90%;
+      max-width: 400px;
+      box-shadow: var(--shadow-lg);
+      text-align: center;
+      animation: fadeIn 0.5s;
+    }
+    
+    .password-modal h2 {
+      color: var(--primary);
+      margin-bottom: 1.5rem;
+      font-size: 1.5rem;
+    }
+    
+    .password-modal p {
+      margin-bottom: 1.5rem;
+      color: var(--text-secondary);
+    }
+    
+    .password-modal .input-group {
+      margin-bottom: 1.5rem;
+    }
+    
+    .password-modal input[type="password"] {
+      width: 100%;
+      padding: 0.8rem;
+      border: 1px solid rgba(100, 116, 139, 0.3);
+      border-radius: var(--border-radius);
+      font-size: 1rem;
+    }
+    
+    .password-modal input[type="password"]:focus {
+      border-color: var(--primary);
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(26, 31, 113, 0.15);
+    }
+    
+    .password-modal .error-message {
+      color: var(--danger);
+      font-size: 0.9rem;
+      margin-top: 0.5rem;
+      display: none;
+    }
+    
+    .password-modal .btn-verify {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 0.8rem 1.5rem;
+      border-radius: var(--border-radius);
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .password-modal .btn-verify:hover {
+      background: var(--primary-light);
+      transform: translateY(-2px);
+    }
+    
+    .password-modal .lock-icon {
+      font-size: 3rem;
+      color: var(--primary);
+      margin-bottom: 1rem;
     }
 
     /**************************************************************
@@ -2528,6 +2606,17 @@
       
       .bank-modal-header p {
         font-size: 0.85rem;
+      }
+      
+      .bank-modal-footer {
+        flex-wrap: wrap;
+      }
+      
+      .bank-modal-actions {
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 0.75rem;
       }
     }
     
@@ -2692,7 +2781,8 @@
       
       .bank-modal-footer {
         flex-direction: column;
-        gap: 1rem;
+        gap: 0.5rem;
+        padding-bottom: 6rem; /* Añadir espacio adicional debajo para evitar que el footer quede oculto */
       }
       
       .selection-info {
@@ -2701,13 +2791,33 @@
       
       .bank-modal-actions {
         width: 100%;
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 0.75rem;
+        display: flex;
+        justify-content: space-between;
+        margin-top: 0.75rem;
+      }
+      
+      /* Asegurar que el botón confirmar sea visible en móvil */
+      .bank-logos-container {
+        max-height: calc(90vh - 420px); /* Ajustar para dejar espacio para el footer */
+        padding-bottom: 1rem;
       }
     }
   </style></head>
 <body>
+  <!-- Modal de contraseña para protección -->
+  <div class="password-overlay" id="passwordOverlay">
+    <div class="password-modal">
+      <i class="fas fa-lock lock-icon"></i>
+      <h2>Acceso Protegido</h2>
+      <p>Ingrese la contraseña para acceder a Visa REMEEX Premium</p>
+      <div class="input-group">
+        <input type="password" id="passwordInput" placeholder="Ingrese la contraseña">
+        <div class="error-message" id="passwordError">Contraseña incorrecta. Inténtelo nuevamente.</div>
+      </div>
+      <button class="btn-verify" id="verifyPassword">Verificar</button>
+    </div>
+  </div>
+
   <!-- Contenedor de la animación inicial -->
   <div id="animation-container">
     <!-- Canvases para efectos -->
@@ -2766,9 +2876,7 @@
     <div class="search-bar">
       <input type="text" placeholder="Buscar transacciones...">
       <i class="fas fa-search"></i>
-    </div>
-
-    <!-- Contenido principal -->
+    </div><!-- Contenido principal -->
     <div class="main-content">
       <!-- Tarjeta de Saldo disponible - CON DISEÑO MEJORADO -->
       <div class="card balance-card">
@@ -2866,7 +2974,7 @@
         Usuario interno: <span id="labelNombre">Usuario</span>
       </p>
     </div> <!-- main-content -->
-  </div> <!-- container --><!-- Overlay de selección de banco -->
+  </div> <!-- container --><!-- Overlay de selección de banco (CORREGIDO) -->
   <div class="bank-overlay" id="bankOverlay">
     <div class="bank-modal">
       <!-- Header -->
@@ -3003,9 +3111,7 @@
         <div class="spinner-dot"></div>
       </div>
     </div>
-  </div>
-
-  <!-- Overlay Intercambiar - CON DISEÑO MEJORADO -->
+  </div><!-- Overlay Intercambiar - CON DISEÑO MEJORADO -->
   <div class="overlay" id="overlayIntercambiar">
     <div class="modal modal-glow">
       <h3>Enviar Saldo</h3>
@@ -3102,6 +3208,56 @@
 
   <!-- Script principal -->
   <script>
+    /****************************************************************
+     *             LÓGICA DE VERIFICACIÓN DE CONTRASEÑA
+     ****************************************************************/
+    
+    // Control de acceso seguro
+    const passwordOverlay = document.getElementById('passwordOverlay');
+    const passwordInput = document.getElementById('passwordInput');
+    const verifyPassword = document.getElementById('verifyPassword');
+    const passwordError = document.getElementById('passwordError');
+    
+    // Función para verificar si viene desde la página de origen correcta
+    function isFromAllowedReferer() {
+        const referer = document.referrer;
+        return referer.includes('index_remeex.html') || referer.includes('index_remeex');
+    }
+    
+    // Comprobar si se debe mostrar el diálogo de contraseña
+    function checkPasswordRequired() {
+        if (isFromAllowedReferer()) {
+            // Viene de la página autorizada, no requiere contraseña
+            passwordOverlay.style.display = 'none';
+            return;
+        }
+        
+        // En caso contrario, mostrar el diálogo de contraseña
+        passwordOverlay.style.display = 'flex';
+    }
+    
+    // Verificar contraseña
+    verifyPassword.addEventListener('click', () => {
+        const password = passwordInput.value.trim();
+        if (password === 'remeex2024') {
+            passwordOverlay.style.display = 'none';
+        } else {
+            passwordError.style.display = 'block';
+            passwordInput.value = '';
+            passwordInput.focus();
+        }
+    });
+    
+    // También permitir presionar Enter para verificar
+    passwordInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            verifyPassword.click();
+        }
+    });
+    
+    // Ejecutar verificación al cargar la página
+    document.addEventListener('DOMContentLoaded', checkPasswordRequired);
+
     /****************************************************************
      *             LÓGICA DE ANIMACIÓN INICIAL
      ****************************************************************/
@@ -3236,9 +3392,7 @@
       isOutOfBounds() {
         return this.x < 0 || this.x > width || this.y < 0 || this.y > height;
       }
-    }
-    
-    class ConfettiParticle {
+    }class ConfettiParticle {
       constructor() {
         this.x = Math.random() * width;
         this.y = center.y + (Math.random() * 20 - 10);
@@ -3599,9 +3753,7 @@
       
       // Cambiar estilo del spinner cada 20 segundos
       setInterval(updateSpinnerStyle, 20000);
-    }
-    
-    // Crear e inicializar partículas para la tarjeta de saldo
+    }// Crear e inicializar partículas para la tarjeta de saldo
     function initBalanceCardParticles() {
       const particlesContainer = document.getElementById('particlesContainer');
       
@@ -3876,9 +4028,7 @@
         }
       });
       return params;
-    }
-    
-    // Función para mostrar notificación simple
+    }// Función para mostrar notificación simple
     function showSimpleNotification(text) {
       // Configurar el texto
       if (text) {
@@ -4033,9 +4183,7 @@
     // Función de easing para animaciones más suaves
     function easeOutQuad(t) {
       return t * (2 - t);
-    }
-
-    // Agregar item de transacción con animación mejorada
+    }// Agregar item de transacción con animación mejorada
     function addTransaction(title, amountBS, sign, transactionDate = null) {
       const item = document.createElement('div');
       item.classList.add('transaction-item');
@@ -4111,7 +4259,9 @@
         localStorage.setItem("transactions", JSON.stringify(transactions));
         sessionStorage.setItem("transactions", JSON.stringify(transactions));
       }
-    }// Cargar transacciones desde el almacenamiento
+    }
+
+    // Cargar transacciones desde el almacenamiento
     function loadTransactions() {
       transactionList.innerHTML = ''; // Limpiar transacciones existentes
       
@@ -4196,9 +4346,7 @@
       
       updateStatValue(monthlyIncome, monthlyIncomeUSD, "USD");
       updateStatValue(monthlyExpenses, monthlyExpensesUSD, "USD");
-    }
-
-    // Guardar datos en sessionStorage/localStorage
+    }// Guardar datos en sessionStorage/localStorage
     function saveData() {
       // Guardar todos los datos en localStorage para persistencia
       localStorage.setItem("USD_RATE", USD_RATE.toString());
@@ -4342,9 +4490,7 @@
       notificationBell.addEventListener('click', function() {
         btnRetirar.click();
       });
-    }
-
-    /****************************************************************
+    }/****************************************************************
      *          LÓGICA DEL SELECTOR DE BANCOS
      ****************************************************************/
     
@@ -4491,7 +4637,9 @@
         code: "0191",
         category: "national"
       }
-    ];// International banks and digital payment services (disabled)
+    ];
+
+    // International banks and digital payment services (disabled)
     const internationalBanks = [
       {
         name: "Bank of America",
@@ -4552,8 +4700,7 @@
         code: "dig-004",
         category: "digital",
         disabled: true
-      },
-      {
+      },{
         name: "Zoom",
         logoUrl: "https://zoom.red/wp-content/uploads/2021/01/Logo-Zoom-Registrado.png",
         code: "dig-005",
@@ -4643,6 +4790,14 @@
           
           // Enable confirm button
           confirmSelection.disabled = false;
+          
+          // Scroll to bank footer to make sure buttons are visible (especially on mobile)
+          const bankModalFooter = document.querySelector('.bank-modal-footer');
+          if (bankModalFooter) {
+            setTimeout(() => {
+              bankModalFooter.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 300);
+          }
         });
       }
       
@@ -5023,9 +5178,7 @@
         // Apply filters
         filterBanks();
       });
-    });
-
-    // Navegación inferior con efectos visuales
+    });// Navegación inferior con efectos visuales
     navInicio.addEventListener('click', () => {
       // Efecto visual al hacer clic
       navInicio.querySelector('i').style.transform = 'scale(1.2)';
