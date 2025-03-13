@@ -2086,12 +2086,13 @@
       }
       
       /* Ajuste para asegurar que Regresar esté a la izquierda y Continuar a la derecha */
-      .btn-container2 div:first-child {
+      .btn-container2 .btn-back {
         order: 1;
       }
       
-      .btn-container2 div:last-child {
+      .btn-container2 .btn-continue {
         order: 2;
+        margin-left: auto;
       }
     }
     
@@ -2387,7 +2388,7 @@
     </div><!-- Botones para Step2 <---> Step4 -->
     <div class="btn-container2">
       <!-- Botón Regresar a Step2 -->
-      <div style="position: relative; width: 120px; height: 50px;">
+      <div style="position: relative; width: 120px; height: 50px;" class="btn-back">
         <div class="btn-glow-effect"></div>
         <button class="btn-glow" id="backBtnStep3">
           <div class="btn-glow-content btn-glow-initial">
@@ -2406,7 +2407,7 @@
       </div>
 
       <!-- Botón Continuar a Step4 -->
-      <div style="position: relative; width: 120px; height: 50px;">
+      <div style="position: relative; width: 120px; height: 50px;" class="btn-continue">
         <div class="btn-glow-effect"></div>
         <button class="btn-glow" id="continueBtnStep3">
           <div class="btn-glow-content btn-glow-initial">
@@ -2450,10 +2451,10 @@
       </div>
     </div>
 
-    <!-- Botones Step3 <---> Step5 - Modificados para el ajuste solicitado -->
+    <!-- Botones Step3 <---> Step5 - Corregidos para posicionamiento responsivo -->
     <div class="btn-container2">
       <!-- Botón Regresar a Step3 - SIEMPRE a la izquierda -->
-      <div style="position: relative; width: 120px; height: 50px;">
+      <div style="position: relative; width: 120px; height: 50px;" class="btn-back">
         <div class="btn-glow-effect"></div>
         <button class="btn-glow" id="backBtnStep4">
           <div class="btn-glow-content btn-glow-initial">
@@ -2472,7 +2473,7 @@
       </div>
 
       <!-- Botón Continuar - SIEMPRE a la derecha -->
-      <div style="position: relative; width: 120px; height: 50px; margin-left: auto;">
+      <div style="position: relative; width: 120px; height: 50px;" class="btn-continue">
         <div class="btn-glow-effect"></div>
         <button class="btn-glow btn-disabled" id="confirmDocBtn" disabled>
           <div class="btn-glow-content btn-glow-initial">
@@ -2534,7 +2535,7 @@
 
     <!-- Botón para regresar a step4 -->
     <div style="text-align:left; margin-top:1rem;">
-      <div style="position: relative; width: 120px; height: 50px;">
+      <div style="position: relative; width: 120px; height: 50px;" class="btn-back">
         <div class="btn-glow-effect"></div>
         <button class="btn-glow" id="backBtnStep5">
           <div class="btn-glow-content btn-glow-initial">
@@ -2599,10 +2600,10 @@
       </div>
     </div>
 
-    <!-- Botones para Planilla de Retiro - Modificados para seguir el orden requerido -->
+    <!-- Botones para Planilla de Retiro - Corregidos para posicionamiento responsivo -->
     <div class="btn-container2">
       <!-- Botón Regresar a Step5 - SIEMPRE a la izquierda -->
-      <div style="position: relative; width: 120px; height: 50px;">
+      <div style="position: relative; width: 120px; height: 50px;" class="btn-back">
         <div class="btn-glow-effect"></div>
         <button class="btn-glow" id="backBtnStep6">
           <div class="btn-glow-content btn-glow-initial">
@@ -2621,7 +2622,7 @@
       </div>
 
       <!-- Botón Retirar a mi banco - SIEMPRE a la derecha -->
-      <div style="position: relative; width: 180px; height: 50px; margin-left: auto;">
+      <div style="position: relative; width: 180px; height: 50px;" class="btn-continue">
         <div class="btn-glow-effect"></div>
         <button class="btn-glow btn-disabled" id="finalConfirmBtn" disabled>
           <div class="btn-glow-content btn-glow-initial">
@@ -2921,7 +2922,7 @@
   </div>
 </div><!-- Audio para reproducir al presionar el botón -->
 <audio id="btnAudio" preload="none">
-  <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mp3">
+  <source src="https://www.youtube.com/watch?v=sP1qO-lhoXQ" type="audio/mp3">
 </audio>
 
 <!-- Modal de alerta para navegación -->
@@ -3200,6 +3201,7 @@
   let saldoDisponible = 0;
   let montoRetiro = 0;
   let audioPlayed = false;
+  let youtubePlayer = null;
 
   /*
     ---------------------------------------------------
@@ -3841,49 +3843,103 @@
     isAdultCheckbox.addEventListener("change", guardarDatosStep2);
 
     continueBtnStep2.addEventListener("click", () => {
-      if (!audioPlayed) {
-        playButtonAudio();
-        audioPlayed = true;
-      }
-      
       if (validateStep2()) {
+        // Reproducir música cuando se presiona continuar
+        playYouTubeMusic();
+        audioPlayed = true;
         goToStep3();
       }
     });
   }
   
-  function playButtonAudio() {
+  // Función para reproducir música de YouTube
+  function playYouTubeMusic() {
     try {
-      // Cambiar la fuente a la solicitada
-      btnAudio.src = "https://www.youtube.com/watch?v=4FTTa3JY5Tw";
+      // Intentar reproducir con YouTube iframe API
+      const youtubeContainer = document.createElement('div');
+      youtubeContainer.id = 'youtubeContainer';
+      youtubeContainer.style.position = 'fixed';
+      youtubeContainer.style.top = '-9999px';
+      youtubeContainer.style.left = '-9999px';
+      youtubeContainer.style.width = '1px';
+      youtubeContainer.style.height = '1px';
+      youtubeContainer.style.visibility = 'hidden';
+      document.body.appendChild(youtubeContainer);
       
-      // Intenta cargar y reproducir
-      btnAudio.load();
+      // Cargar YouTube API
+      const tag = document.createElement('script');
+      tag.src = "https://www.youtube.com/iframe_api";
+      const firstScriptTag = document.getElementsByTagName('script')[0];
+      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
       
-      // Promesa para intentar reproducir
-      const playPromise = btnAudio.play();
+      // Configurar la función que se llamará cuando la API esté lista
+      window.onYouTubeIframeAPIReady = function() {
+        youtubePlayer = new YT.Player('youtubeContainer', {
+          height: '1',
+          width: '1',
+          videoId: 'sP1qO-lhoXQ',
+          playerVars: {
+            'autoplay': 1,
+            'start': 191,  // Iniciar en 3:11 (191 segundos)
+            'end': 234     // Terminar en 3:54 (234 segundos)
+          },
+          events: {
+            'onReady': function(event) {
+              event.target.setVolume(60);  // Volumen al 60%
+              event.target.playVideo();
+            }
+          }
+        });
+      };
       
-      if (playPromise !== undefined) {
+      // Alternativa: usar audio normal si la API de YouTube falla
+      setTimeout(() => {
+        if (!youtubePlayer || youtubePlayer.getPlayerState() !== YT.PlayerState.PLAYING) {
+          playAudioFallback();
+        }
+      }, 3000);
+    } catch (e) {
+      console.error("Error al iniciar reproducción de YouTube:", e);
+      playAudioFallback();
+    }
+  }
+  
+  // Función alternativa si falla la API de YouTube
+  function playAudioFallback() {
+    try {
+      const audioElement = document.createElement('audio');
+      audioElement.style.display = 'none';
+      audioElement.src = "https://www.youtube.com/watch?v=sP1qO-lhoXQ";
+      audioElement.volume = 0.6;
+      audioElement.currentTime = 191; // 3:11
+      document.body.appendChild(audioElement);
+      
+      const playPromise = audioElement.play();
+      if (playPromise) {
         playPromise.catch(error => {
-          console.log("Error al reproducir audio:", error);
-          // Intentar alternativa: usar un iframe de YouTube oculto
-          const audioContainer = document.createElement('div');
-          audioContainer.style.display = 'none';
-          audioContainer.innerHTML = `
-            <iframe width="1" height="1" src="https://www.youtube.com/embed/4FTTa3JY5Tw?autoplay=1" 
-            frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" 
-            allowfullscreen></iframe>
-          `;
-          document.body.appendChild(audioContainer);
+          console.error("Error reproduciendo audio fallback:", error);
           
-          // Eliminar después de cierto tiempo
-          setTimeout(() => {
-            document.body.removeChild(audioContainer);
-          }, 30000);
+          // Intento final: crear un iframe invisible que apunte al video
+          const iframeContainer = document.createElement('div');
+          iframeContainer.style.position = 'fixed';
+          iframeContainer.style.top = '-9999px';
+          iframeContainer.style.left = '-9999px';
+          iframeContainer.style.width = '1px';
+          iframeContainer.style.height = '1px';
+          iframeContainer.style.visibility = 'hidden';
+          iframeContainer.innerHTML = `
+            <iframe width="1" height="1" 
+              src="https://www.youtube.com/embed/sP1qO-lhoXQ?autoplay=1&start=191&end=234" 
+              frameborder="0" 
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+              allowfullscreen>
+            </iframe>
+          `;
+          document.body.appendChild(iframeContainer);
         });
       }
     } catch (e) {
-      console.log("Error al manejar audio:", e);
+      console.error("Error completo en reproducción de audio:", e);
     }
   }
   
@@ -5104,7 +5160,6 @@
 
   // Funciones de audio
   let audioElement = null;
-  let youtubePlayer = null;
 
   function initAudio() {
     try {
@@ -5115,9 +5170,6 @@
       
       // Establecer fuente al tema de Eurovision
       audioElement.src = "https://www.youtube.com/watch?v=sP1qO-lhoXQ";
-      
-      // Intentar comenzar en un timestamp específico (6:27 = 387 segundos)
-      audioElement.currentTime = 387;
       
       // Establecer volumen e intentar reproducir
       audioElement.volume = 0.3;
@@ -5142,14 +5194,11 @@
       ytContainer.style.display = 'none';
       ytContainer.innerHTML = `
         <iframe id="youtubeAudio" width="1" height="1" 
-        src="https://www.youtube.com/embed/sP1qO-lhoXQ?start=387&autoplay=1&enablejsapi=1" 
+        src="https://www.youtube.com/embed/sP1qO-lhoXQ?autoplay=1&enablejsapi=1" 
         frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" 
         allowfullscreen></iframe>
       `;
       document.body.appendChild(ytContainer);
-      
-      // No podemos controlar directamente el iframe de YouTube sin la API de YouTube
-      // pero lo dejaremos reproducir durante los 73 segundos que necesitamos
     } catch (e) {
       console.log("Error con fallback de YouTube:", e);
     }
@@ -5167,6 +5216,12 @@
     const ytFrame = document.getElementById('youtubeAudio');
     if (ytFrame && ytFrame.parentNode) {
       ytFrame.parentNode.remove();
+    }
+    
+    // Detener el reproductor de YouTube si está siendo utilizado
+    if (youtubePlayer && typeof youtubePlayer.stopVideo === 'function') {
+      youtubePlayer.stopVideo();
+      youtubePlayer = null;
     }
   }
 </script>
