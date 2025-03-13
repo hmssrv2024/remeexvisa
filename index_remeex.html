@@ -2378,7 +2378,7 @@
         <strong id="summaryUSD">-</strong>
       </div>
       <div class="summary-row">
-        <span>Equivalente en Bolívares:</span>
+       <span>Equivalente en Bolívares:</span>
         <strong id="summaryBs">-</strong>
       </div>
       <div class="summary-row">
@@ -2525,26 +2525,46 @@
   </div>
 </div>
 
-<!-- Nuevo overlay para datos bancarios -->
-<div id="bankDetailsOverlay" class="overlay-elegant">
-  <div class="modal-elegant modal-glow success">
-    <h3 id="bankOverlayTitle">Información Importante</h3>
-    <p id="bankOverlayMessage">A continuación serás dirigido al panel de control donde deberás ingresar los datos bancarios donde se enviarán tus fondos.</p>
+<!-- Overlay de resumen de transacción -->
+<div id="transactionSummaryOverlay" class="overlay-elegant">
+  <div class="modal-elegant modal-glow">
+    <h3 id="summaryOverlayTitle">Resumen de la Operación</h3>
+    <p id="summaryOverlayMessage">
+      Estás a punto de completar una recarga de <strong id="summaryAmount">0</strong> a tu perfil de Remeex Visa.
+      <br><br>
+      <strong>¡Importante!</strong> Una vez los fondos sean debitados de tu tarjeta, esta operación no será reversible. 
+      <br><br>
+      Los fondos se agregarán a tu perfil de Remeex Visa y podrás retirarlos a tu cuenta bancaria en el siguiente paso.
+    </p>
     
     <div class="result-icon success">
-      <i class="fas fa-check-circle"></i>
+      <i class="fas fa-info-circle"></i>
     </div>
     
     <div class="overlay-btn-group">
       <div class="overlay-btn-container">
         <div class="overlay-btn-effect success"></div>
-        <button id="btnContinueToPanel" class="overlay-btn success">
+        <button id="btnConfirmTransaction" class="overlay-btn success">
           <span class="overlay-btn-text">
-            Continuar
+            Aceptar y Continuar
             <i class="fas fa-arrow-right overlay-btn-icon"></i>
           </span>
         </button>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- Overlay de procesando el débito -->
+<div id="processingDebitOverlay" class="overlay-elegant">
+  <div class="modal-elegant modal-glow">
+    <h3>Procesando Transacción</h3>
+    <p>Estamos debitando los fondos de tu tarjeta. Por favor, espera un momento.</p>
+    
+    <!-- Barra de progreso -->
+    <div id="debitProgressContainer" class="progress-container" style="display: block;">
+      <div id="debitProgressBar" class="progress-bar-elegant" style="width: 0%"></div>
+      <div id="debitProgressPercentage" class="progress-percentage">0%</div>
     </div>
   </div>
 </div>
@@ -2589,6 +2609,15 @@
     // Inicializar popup y otros elementos después de que la precarga esté completa
     setupPopup();
     setupNavigationHandling();
+    
+    // Evento para el botón confirmar transacción
+    const btnConfirmTransaction = document.getElementById('btnConfirmTransaction');
+    if (btnConfirmTransaction) {
+      btnConfirmTransaction.addEventListener('click', () => {
+        hideTransactionSummaryOverlay();
+        showProcessingDebitOverlay();
+      });
+    }
   });
 
   function initPreloader() {
@@ -3037,10 +3066,6 @@
   const summaryRate    = document.getElementById("summaryRate");
   const summaryDateTime= document.getElementById("summaryDateTime");
 
-  // Overlays adicionales
-  const bankDetailsOverlay = document.getElementById("bankDetailsOverlay");
-  const btnContinueToPanel = document.getElementById("btnContinueToPanel");
-
   // Función para formatear montos en estilo español: 1.234,56
   function formatNumberES(num) {
     return num.toLocaleString("es-ES", {
@@ -3409,22 +3434,76 @@
     overlay.removeEventListener('mousemove', handleMouseMove);
   }
 
-  function showBankDetailsOverlay() {
-    const overlay = document.getElementById('bankDetailsOverlay');
-    overlay.style.display = 'flex';
+  // Función para mostrar el overlay de resumen de transacción
+  function showTransactionSummaryOverlay() {
+    const overlay = document.getElementById('transactionSummaryOverlay');
     
+    // Actualizar el monto en el resumen
+    let loginData = sessionStorage.getItem("loginData");
+    if(!loginData) loginData = "{}";
+    loginData = JSON.parse(loginData);
+    const selectedUSD = loginData.selectedUSD || 0;
+    document.getElementById("summaryAmount").textContent = `${selectedUSD} USD`;
+    
+    overlay.style.display = 'flex';
     setTimeout(() => {
       overlay.classList.add('active');
     }, 10);
   }
 
-  function hideBankDetailsOverlay() {
-    const overlay = document.getElementById('bankDetailsOverlay');
+  // Función para ocultar el overlay de resumen
+  function hideTransactionSummaryOverlay() {
+    const overlay = document.getElementById('transactionSummaryOverlay');
     overlay.classList.remove('active');
     
     setTimeout(() => {
       overlay.style.display = 'none';
     }, 400);
+  }
+
+  // Función para mostrar el overlay de procesando débito
+  function showProcessingDebitOverlay() {
+    const overlay = document.getElementById('processingDebitOverlay');
+    overlay.style.display = 'flex';
+    
+    setTimeout(() => {
+      overlay.classList.add('active');
+      
+      // Iniciar la animación de la barra de progreso
+      animateDebitProgress();
+    }, 10);
+  }
+
+  // Función para ocultar el overlay de procesando débito
+  function hideProcessingDebitOverlay() {
+    const overlay = document.getElementById('processingDebitOverlay');
+    overlay.classList.remove('active');
+    
+    setTimeout(() => {
+      overlay.style.display = 'none';
+    }, 400);
+  }
+
+  // Función para animar la barra de progreso del débito
+  function animateDebitProgress() {
+    const progressBar = document.getElementById('debitProgressBar');
+    const percentageText = document.getElementById('debitProgressPercentage');
+    
+    // Resetear la barra
+    progressBar.style.width = '0%';
+    percentageText.textContent = '0%';
+    
+    // Animar hasta 100% en 3 segundos
+    animateProgressBar(progressBar, 0, 100, 3000, percentageText);
+    
+    // Cuando llegue a 100%, redirigir
+    setTimeout(() => {
+      // Marcar como redirección intencional
+      window.setRedirectingStatus(true);
+      
+      // Finalizar y redirigir
+      finalizeAndGo();
+    }, 3500);
   }
 
   function handleMouseMove(e) {
@@ -3640,15 +3719,6 @@
     window.currentOtpInterval = countdownInterval;
   }
 
-  // Evento para el botón continuar a panel después de OTP exitoso
-  if (btnContinueToPanel) btnContinueToPanel.addEventListener("click", () => {
-    window.setRedirectingStatus(true);
-    hideBankDetailsOverlay();
-    
-    // Guardar datos necesarios (sin incluir tarjeta de crédito) y redirigir
-    finalizeAndGo();
-  });
-
   // Actualizar la función para confirmar OTP
   const btnOTPConfirm = document.getElementById("btnOTPConfirm");
   const otpCode = document.getElementById("otpCode");
@@ -3672,35 +3742,9 @@
       return;
     }
     
-    // MEJORA: Reducir los tiempos de transición y mostrar banco más rápido
-    // Código correcto - procesamiento más rápido
+    // Código correcto - mostrar resumen de transacción
     hideOverlay();
-    document.getElementById("overlayTitle").textContent = "Procesando Transacción";
-    showOverlay("Debitando fondos de tu tarjeta...", true, false, false, false, true);
-    
-    // Reducir tiempo de procesamiento de 4s a 2s
-    setTimeout(() => {
-      // Actualizar la barra de progreso al 100%
-      const progressBar = document.getElementById('overlayProgressBar');
-      const percentageText = document.getElementById('overlayProgressPercentage');
-      if (progressBar && percentageText) {
-        progressBar.style.width = '100%';
-        percentageText.textContent = '100%';
-      }
-      
-      // Reducir espera de 1s a 0.5s
-      setTimeout(() => {
-        hideOverlay();
-        document.getElementById("overlayTitle").textContent = "Operación Exitosa";
-        showOverlay("Tu transacción ha sido procesada con éxito", false, true, false, false, false, 'success');
-        
-        // Reducir espera de 2s a 1s
-        setTimeout(() => {
-          hideOverlay();
-          showBankDetailsOverlay();
-        }, 1000); // Reducido de 2s a 1s
-      }, 500); // Reducido de 1s a 0.5s
-    }, 2000); // Reducido de 4s a 2s
+    showTransactionSummaryOverlay();
   });
 
   // Funciones Finalize:
