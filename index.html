@@ -1,16 +1,25 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Remeex VISA - Transferencias Internacionales Sin Comisiones</title>
-  <meta name="description" content="Envía dinero al instante a cualquier parte del mundo sin comisiones. Respaldado por VISA para transferencias seguras e inmediatas.">
-  
+  <meta
+    name="description"
+    content="Envía dinero al instante a cualquier parte del mundo sin comisiones. Respaldado por VISA para transferencias seguras e inmediatas."
+  />
+
   <!-- Fuentes y estilos -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+  />
 
   <style>
     :root {
@@ -24,7 +33,7 @@
       --accent-green-light: #33C16E;
       --accent-orange: #FF6B35;
       --accent-orange-light: #FF8C61;
-      
+
       /* Neutros */
       --white: #FFFFFF;
       --gray-50: #F9FAFB;
@@ -37,27 +46,32 @@
       --gray-700: #374151;
       --gray-800: #1F2937;
       --gray-900: #111827;
-      
+
       /* Estados */
       --success: #10B981;
       --warning: #FBBF24;
       --danger: #EF4444;
-      
+
       /* Sombras */
       --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-      --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-      --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-      
+      --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1),
+        0 1px 2px 0 rgba(0, 0, 0, 0.06);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+        0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+        0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+        0 10px 10px -5px rgba(0, 0, 0, 0.04);
+
       /* Tipografía */
-      --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-      
+      --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont,
+        'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+
       /* Transiciones */
       --transition-fast: all 0.2s ease;
       --transition-normal: all 0.3s ease;
       --transition-slow: all 0.5s ease;
-      
+
       /* Border radius */
       --radius-sm: 0.25rem;
       --radius: 0.5rem;
@@ -69,14 +83,16 @@
     }
 
     /* Reset y estilos base */
-    *, *::before, *::after {
+    *,
+    *::before,
+    *::after {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
 
     html {
-      font-size: 62.5%; /* 1rem = 10px */
+      font-size: 62.5%;
       scroll-behavior: smooth;
     }
 
@@ -103,7 +119,8 @@
       transition: var(--transition-fast);
     }
 
-    button, .btn {
+    button,
+    .btn {
       font-family: var(--font-sans);
       cursor: pointer;
     }
@@ -121,21 +138,48 @@
       text-align: center;
     }
 
-    .mb-1 { margin-bottom: 0.5rem; }
-    .mb-2 { margin-bottom: 1rem; }
-    .mb-3 { margin-bottom: 1.5rem; }
-    .mb-4 { margin-bottom: 2rem; }
-    .mb-5 { margin-bottom: 2.5rem; }
-    .mb-6 { margin-bottom: 3rem; }
+    .mb-1 {
+      margin-bottom: 0.5rem;
+    }
+    .mb-2 {
+      margin-bottom: 1rem;
+    }
+    .mb-3 {
+      margin-bottom: 1.5rem;
+    }
+    .mb-4 {
+      margin-bottom: 2rem;
+    }
+    .mb-5 {
+      margin-bottom: 2.5rem;
+    }
+    .mb-6 {
+      margin-bottom: 3rem;
+    }
 
-    .mt-1 { margin-top: 0.5rem; }
-    .mt-2 { margin-top: 1rem; }
-    .mt-3 { margin-top: 1.5rem; }
-    .mt-4 { margin-top: 2rem; }
-    .mt-5 { margin-top: 2.5rem; }
-    .mt-6 { margin-top: 3rem; }
+    .mt-1 {
+      margin-top: 0.5rem;
+    }
+    .mt-2 {
+      margin-top: 1rem;
+    }
+    .mt-3 {
+      margin-top: 1.5rem;
+    }
+    .mt-4 {
+      margin-top: 2rem;
+    }
+    .mt-5 {
+      margin-top: 2.5rem;
+    }
+    .mt-6 {
+      margin-top: 3rem;
+    }
 
-    .mx-auto { margin-left: auto; margin-right: auto; }
+    .mx-auto {
+      margin-left: auto;
+      margin-right: auto;
+    }
 
     /* Navegación */
     .navbar {
@@ -183,7 +227,7 @@
       transition: var(--transition-fast);
     }
 
-    .navbar-menu-item:hover, 
+    .navbar-menu-item:hover,
     .navbar-menu-item.active {
       color: var(--visa-blue);
     }
@@ -296,7 +340,7 @@
       transform: rotate(180deg);
     }
 
-    /* Botones */
+    /* Botones con textura (gradiente) */
     .btn {
       display: inline-flex;
       align-items: center;
@@ -309,6 +353,13 @@
       text-align: center;
       cursor: pointer;
       white-space: nowrap;
+      background-image: linear-gradient(
+        135deg,
+        var(--visa-blue-dark) 0%,
+        var(--visa-blue) 100%
+      );
+      color: var(--white);
+      box-shadow: var(--shadow-md);
     }
 
     .btn-sm {
@@ -321,70 +372,60 @@
       font-size: 1.8rem;
     }
 
+    /* Variantes de los botones */
     .btn-primary {
-      background-color: var(--visa-blue);
-      color: var(--white);
-      box-shadow: var(--shadow-md);
+      background-image: linear-gradient(
+        135deg,
+        var(--visa-blue) 0%,
+        var(--visa-blue-light) 100%
+      );
     }
     .btn-primary:hover {
-      background-color: var(--visa-blue-light);
+      filter: brightness(1.1);
       transform: translateY(-3px);
       box-shadow: var(--shadow-lg);
     }
 
     .btn-secondary {
-      background-color: var(--white);
+      background-image: linear-gradient(
+        135deg,
+        var(--gray-200) 0%,
+        var(--gray-300) 100%
+      );
       color: var(--visa-blue);
-      box-shadow: var(--shadow);
-      border: 1px solid var(--gray-200);
     }
     .btn-secondary:hover {
+      filter: brightness(1.1);
       transform: translateY(-3px);
       box-shadow: var(--shadow-md);
-      background-color: var(--gray-50);
     }
 
     .btn-accent {
-      background-color: var(--accent-green);
+      background-image: linear-gradient(
+        135deg,
+        var(--accent-green) 0%,
+        var(--accent-green-light) 100%
+      );
       color: var(--white);
-      box-shadow: var(--shadow-md);
     }
     .btn-accent:hover {
-      background-color: var(--accent-green-light);
-      transform: translateY(-3px);
-      box-shadow: var(--shadow-lg);
-    }
-    
-    .btn-orange {
-      background-color: var(--accent-orange);
-      color: var(--white);
-      box-shadow: var(--shadow-md);
-    }
-    .btn-orange:hover {
-      background-color: var(--accent-orange-light);
+      filter: brightness(1.1);
       transform: translateY(-3px);
       box-shadow: var(--shadow-lg);
     }
 
-    .btn-ghost {
-      background-color: transparent;
-      color: var(--visa-blue);
-      border: 1px solid var(--visa-blue);
-    }
-    .btn-ghost:hover {
-      background-color: var(--visa-blue);
+    .btn-orange {
+      background-image: linear-gradient(
+        135deg,
+        var(--accent-orange) 0%,
+        var(--accent-orange-light) 100%
+      );
       color: var(--white);
-      transform: translateY(-3px);
     }
-    
-    .btn-white-ghost {
-      background-color: transparent;
-      color: var(--white);
-      border: 1px solid var(--white);
-    }
-    .btn-white-ghost:hover {
-      background-color: rgba(255, 255, 255, 0.1);
+    .btn-orange:hover {
+      filter: brightness(1.1);
       transform: translateY(-3px);
+      box-shadow: var(--shadow-lg);
     }
 
     .btn-icon {
@@ -426,6 +467,7 @@
       line-height: 1.1;
       margin-bottom: 2.5rem;
       letter-spacing: -0.02em;
+      transition: opacity 0.5s ease;
     }
     .hero-subheadline {
       font-size: 2.2rem;
@@ -433,6 +475,7 @@
       max-width: 60rem;
       opacity: 0.9;
       line-height: 1.5;
+      transition: opacity 0.5s ease;
     }
     .hero-media {
       flex: 1;
@@ -470,14 +513,14 @@
       font-size: 1.6rem;
     }
 
-    /* Secciones Features, Testimonials y Pricing con Grid en la clase .row */
+    /* Secciones Features, Testimonials, Pricing con Grid */
     .features .row,
     .testimonials .row,
     .pricing .row {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(28rem, 1fr));
       gap: 3rem;
-      margin-top: 6rem; /* Algo de espacio adicional arriba */
+      margin-top: 6rem;
     }
 
     /* Features Section */
@@ -513,7 +556,7 @@
       opacity: 0;
       transform: translateY(20px);
       border: 1px solid var(--gray-200);
-      text-align: center; /* Centra texto e icono */
+      text-align: center;
       display: flex;
       flex-direction: column;
       justify-content: flex-start;
@@ -665,7 +708,7 @@
       border-color: var(--gray-300);
     }
     .testimony-card::before {
-      content: '\201C';
+      content: '“';
       position: absolute;
       top: 2rem;
       left: 2rem;
@@ -774,7 +817,11 @@
       position: absolute;
       top: 0;
       right: 3rem;
-      background: linear-gradient(135deg, var(--visa-blue) 0%, var(--visa-blue-light) 100%);
+      background: linear-gradient(
+        135deg,
+        var(--visa-blue) 0%,
+        var(--visa-blue-light) 100%
+      );
       color: var(--white);
       padding: 0.8rem 2rem;
       font-size: 1.4rem;
@@ -828,7 +875,11 @@
     /* CTA Section */
     .cta {
       padding: 12rem 0;
-      background: linear-gradient(135deg, var(--visa-blue) 0%, var(--visa-blue-dark) 100%);
+      background: linear-gradient(
+        135deg,
+        var(--visa-blue) 0%,
+        var(--visa-blue-dark) 100%
+      );
       color: var(--white);
       position: relative;
       overflow: hidden;
@@ -1102,9 +1153,15 @@
       animation: floating 3s ease-in-out infinite;
     }
     @keyframes floating {
-      0% { transform: translate(0, 0px); }
-      50% { transform: translate(0, -15px); }
-      100% { transform: translate(0, 0px); }
+      0% {
+        transform: translate(0, 0px);
+      }
+      50% {
+        transform: translate(0, -15px);
+      }
+      100% {
+        transform: translate(0, 0px);
+      }
     }
 
     /* Botón de chat flotante */
@@ -1114,7 +1171,11 @@
       right: 9rem;
       width: 6rem;
       height: 6rem;
-      background: linear-gradient(135deg, var(--accent-green) 0%, var(--accent-green-light) 100%);
+      background: linear-gradient(
+        135deg,
+        var(--accent-green) 0%,
+        var(--accent-green-light) 100%
+      );
       color: var(--white);
       border-radius: 50%;
       display: flex;
@@ -1161,12 +1222,16 @@
       top: -5rem;
     }
 
-    /* Botón flotante "Gana 10 USD ya" */
+    /* Botón flotante \"Gana 10 USD ya\" */
     .floating-promo {
       position: fixed;
       bottom: 3rem;
       right: 16rem; /* Para que no se encime con el chat-support */
-      background-color: var(--accent-orange);
+      background-image: linear-gradient(
+        135deg,
+        var(--accent-orange) 0%,
+        var(--accent-orange-light) 100%
+      );
       color: var(--white);
       border: none;
       border-radius: var(--radius-full);
@@ -1181,7 +1246,7 @@
       justify-content: center;
     }
     .floating-promo:hover {
-      background-color: var(--accent-orange-light);
+      filter: brightness(1.1);
       transform: translateY(-3px);
       box-shadow: var(--shadow-xl);
     }
@@ -1216,6 +1281,92 @@
       top: -4.2rem;
     }
 
+    /* Nueva sección de \"10 Beneficios Increíbles\" */
+    .benefits {
+      padding: 10rem 0;
+      background-color: var(--gray-50);
+    }
+    .benefits-container {
+      max-width: 80rem;
+      margin: 0 auto;
+    }
+    .benefits h2 {
+      font-size: 3.2rem;
+      font-weight: 800;
+      color: var(--gray-900);
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+    .benefit-item {
+      margin-bottom: 2rem;
+      padding: 2rem;
+      background-color: var(--white);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow);
+      transition: var(--transition-normal);
+    }
+    .benefit-item:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-3px);
+    }
+    .benefit-item h3 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--visa-blue);
+      margin-bottom: 1rem;
+    }
+    .benefit-item p {
+      font-size: 1.6rem;
+      color: var(--gray-600);
+      line-height: 1.7;
+    }
+
+    /* Descarga de la app */
+    .download-app {
+      padding: 8rem 0;
+      background-color: var(--white);
+      text-align: center;
+    }
+    .download-app h2 {
+      font-size: 3rem;
+      font-weight: 800;
+      color: var(--gray-900);
+      margin-bottom: 2rem;
+    }
+    .download-app p {
+      font-size: 1.8rem;
+      color: var(--gray-600);
+      max-width: 70rem;
+      margin: 0 auto 3rem;
+      line-height: 1.5;
+    }
+    .download-app-buttons {
+      display: flex;
+      gap: 2rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .app-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 1rem;
+      background-color: var(--visa-blue-dark);
+      color: var(--white);
+      padding: 1.2rem 2.4rem;
+      border-radius: var(--radius-full);
+      font-size: 1.6rem;
+      box-shadow: var(--shadow-md);
+      transition: var(--transition-normal);
+    }
+    .app-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-lg);
+      background-color: var(--visa-blue-light);
+    }
+    .app-btn i {
+      font-size: 2rem;
+    }
+
     /* Media Queries */
     @media (max-width: 1400px) {
       .container {
@@ -1238,7 +1389,7 @@
       html {
         font-size: 56%;
       }
-      .navbar-menu, 
+      .navbar-menu,
       .navbar-actions {
         display: none;
       }
@@ -1393,11 +1544,13 @@
     <div class="container navbar-container">
       <div class="navbar-logo">
         <a href="#">
-          <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhnBzNdjl6bNp-nIdaiHVENczJhwlJNA7ocsyiOObMmzbu8at0dY5yGcZ9cLxLF39qI6gwNfqBxlkTDC0txVULEwQVwGkeEzN0Jq9MRTRagA48mh18UqTlR4WhsXOLAEZugUyhqJHB19xJgnkpe-S5VOWFgzpKFwctv3XP9XhH41vNTvq0ZS-nik58Qhr-O/s320/remeex.png"
-               alt="Remeex VISA Logo">
+          <img
+            src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhnBzNdjl6bNp-nIdaiHVENczJhwlJNA7ocsyiOObMmzbu8at0dY5yGcZ9cLxLF39qI6gwNfqBxlkTDC0txVULEwQVwGkeEzN0Jq9MRTRagA48mh18UqTlR4WhsXOLAEZugUyhqJHB19xJgnkpe-S5VOWFgzpKFwctv3XP9XhH41vNTvq0ZS-nik58Qhr-O/s320/remeex.png"
+            alt="Remeex VISA Logo"
+          />
         </a>
       </div>
-      
+
       <!-- Menú principal -->
       <div class="navbar-menu">
         <a href="#" class="navbar-menu-item active">Inicio</a>
@@ -1407,10 +1560,10 @@
         <a href="#opiniones" class="navbar-menu-item">Opiniones</a>
         <a href="#" class="navbar-menu-item">Contacto</a>
       </div>
-      
+
       <div class="navbar-actions">
         <button id="controlPanelToggle" class="navbar-controls-toggle">
-          <i class="fas fa-sliders-h"></i> 
+          <i class="fas fa-sliders-h"></i>
           <span>Acciones rápidas</span>
           <i class="fas fa-chevron-down"></i>
         </button>
@@ -1423,7 +1576,7 @@
       </button>
     </div>
   </nav>
-  
+
   <!-- Panel de Control -->
   <div class="control-panel" id="controlPanel">
     <div class="container control-panel-container">
@@ -1464,15 +1617,17 @@
     <div class="mobile-menu-header">
       <div class="navbar-logo">
         <a href="#">
-          <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhnBzNdjl6bNp-nIdaiHVENczJhwlJNA7ocsyiOObMmzbu8at0dY5yGcZ9cLxLF39qI6gwNfqBxlkTDC0txVULEwQVwGkeEzN0Jq9MRTRagA48mh18UqTlR4WhsXOLAEZugUyhqJHB19xJgnkpe-S5VOWFgzpKFwctv3XP9XhH41vNTvq0ZS-nik58Qhr-O/s320/remeex.png"
-               alt="Remeex VISA Logo">
+          <img
+            src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhnBzNdjl6bNp-nIdaiHVENczJhwlJNA7ocsyiOObMmzbu8at0dY5yGcZ9cLxLF39qI6gwNfqBxlkTDC0txVULEwQVwGkeEzN0Jq9MRTRagA48mh18UqTlR4WhsXOLAEZugUyhqJHB19xJgnkpe-S5VOWFgzpKFwctv3XP9XhH41vNTvq0ZS-nik58Qhr-O/s320/remeex.png"
+            alt="Remeex VISA Logo"
+          />
         </a>
       </div>
       <button class="mobile-menu-close" id="mobileMenuClose">
         <i class="fas fa-times"></i>
       </button>
     </div>
-    
+
     <div class="mobile-menu-items">
       <a href="#" class="mobile-menu-item active">Inicio</a>
       <a href="#features" class="mobile-menu-item">¿Por qué Remeex?</a>
@@ -1481,10 +1636,18 @@
       <a href="#opiniones" class="mobile-menu-item">Opiniones</a>
       <a href="#" class="mobile-menu-item">Contacto</a>
     </div>
-    
+
     <div class="mobile-divider"></div>
-    
-    <h4 style="color: var(--gray-900); font-weight: 600; font-size: 1.8rem;">Acciones rápidas</h4>
+
+    <h4
+      style="
+        color: var(--gray-900);
+        font-weight: 600;
+        font-size: 1.8rem;
+      "
+    >
+      Acciones rápidas
+    </h4>
     <div class="mobile-control-items">
       <a href="#" class="mobile-control-button">
         <i class="fas fa-paper-plane"></i>
@@ -1503,9 +1666,9 @@
         <span>Sucursales</span>
       </a>
     </div>
-    
+
     <div class="mobile-divider"></div>
-    
+
     <div class="mobile-menu-actions">
       <a href="#" class="btn btn-secondary">Iniciar sesión</a>
       <a href="#" class="btn btn-primary">Registrarse</a>
@@ -1518,14 +1681,18 @@
   <section class="hero">
     <div class="container hero-container">
       <div class="hero-content">
+        <!-- Texto de fallback inicial -->
         <h1 class="hero-headline">
-          Si las remesas son el pasado, 
+          Si las remesas son el pasado,
           <span style="color: var(--visa-gold);">Remeex</span> es el futuro
         </h1>
         <p class="hero-subheadline">
           Envía dinero al instante a cualquier parte del mundo sin comisiones.
-          Con la tecnología de Remeex y la seguridad de VISA, tus transferencias nunca fueron tan simples.
+          Con la tecnología de Remeex y la seguridad de VISA, tus transferencias
+          nunca fueron tan simples.
         </p>
+
+        <!-- Botones de CTA -->
         <div class="hero-cta">
           <a href="#" class="btn btn-accent btn-lg">
             <i class="fas fa-paper-plane btn-icon"></i>
@@ -1536,6 +1703,8 @@
             Cómo funciona
           </a>
         </div>
+
+        <!-- Badges -->
         <div class="hero-badges">
           <div class="badge">
             <i class="fas fa-bolt badge-icon"></i>
@@ -1556,10 +1725,11 @@
         </div>
       </div>
       <div class="hero-media">
-        <img 
-          src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjPtD8FqtVMZL8Zfjk7jv58EcNiPtEb0Bwy0G_GTeVuileKbzX7ZQK0ewOePWLS61NsgiLDHpW8eosS8j2RRRCz49ZP9WDVUPxjlkfLz8RnTVg03pZj9ETCoxt8AdQz3EASyJTF9Lcvfsz7qIb_S0DdOfozNWGBu8d8RWXA9agsmTMJW95Lyf2HpkOkIKRx/w945-h600-p-k-no-nu/a-professional-photo-of-a-latin-american_JRyaA1s4SbWZAHkcI4u3bA_y6HdECjgSTir5Hi6Mlv26A.jpeg" 
-          alt="Familia Latina enviando dinero con Remeex" 
-          class="hero-image floating">
+        <img
+          src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjPtD8FqtVMZL8Zfjk7jv58EcNiPtEb0Bwy0G_GTeVuileKbzX7ZQK0ewOePWLS61NsgiLDHpW8eosS8j2RRRCz49ZP9WDVUPxjlkfLz8RnTVg03pZj9ETCoxt8AdQz3EASyJTF9Lcvfsz7qIb_S0DdOfozNWGBu8d8RWXA9agsmTMJW95Lyf2HpkOkIKRx/w945-h600-p-k-no-nu/a-professional-photo-of-a-latin-american_JRyaA1s4SbWZAHkcI4u3bA_y6HdECjgSTir5Hi6Mlv26A.jpeg"
+          alt="Familia Latina enviando dinero con Remeex"
+          class="hero-image floating"
+        />
       </div>
     </div>
   </section>
@@ -1569,10 +1739,11 @@
     <div class="container">
       <h2 class="section-title">¿Por qué elegir Remeex VISA?</h2>
       <p class="section-subtitle">
-        Mientras las remesas tradicionales viajan a caballo, Remeex va a la velocidad de la luz.
-        Sin complicaciones, sin esperas, sin comisiones ocultas.
+        Mientras las remesas tradicionales viajan a caballo, Remeex va a la
+        velocidad de la luz. Sin complicaciones, sin esperas, sin comisiones
+        ocultas.
       </p>
-      
+
       <div class="row">
         <div class="feature-card">
           <div class="feature-icon">
@@ -1580,63 +1751,66 @@
           </div>
           <h3 class="feature-title">Transferencias instantáneas</h3>
           <p class="feature-desc">
-            El dinero llega en segundos, no en días. Nuestro sistema de transferencia es inmediato,
-            permitiendo que tus seres queridos reciban ayuda cuando más lo necesitan.
+            El dinero llega en segundos, no en días. Nuestro sistema de
+            transferencia es inmediato, permitiendo que tus seres queridos
+            reciban ayuda cuando más lo necesitan.
           </p>
         </div>
-        
+
         <div class="feature-card">
           <div class="feature-icon">
             <i class="fas fa-percent"></i>
           </div>
           <h3 class="feature-title">0% comisiones</h3>
           <p class="feature-desc">
-            A diferencia de Western Union o MoneyGram, no cobramos comisiones por envío. 
-            Todo el dinero llega a destino sin recortes ni sorpresas.
+            A diferencia de Western Union o MoneyGram, no cobramos comisiones
+            por envío. Todo el dinero llega a destino sin recortes ni sorpresas.
           </p>
         </div>
-        
+
         <div class="feature-card">
           <div class="feature-icon">
             <i class="fas fa-shield-alt"></i>
           </div>
           <h3 class="feature-title">Respaldo de VISA</h3>
           <p class="feature-desc">
-            Con la seguridad y confianza que proporciona VISA, líder mundial en tecnología de pagos seguros.
-            Tus transferencias están protegidas por los más altos estándares.
+            Con la seguridad y confianza que proporciona VISA, líder mundial en
+            tecnología de pagos seguros. Tus transferencias están protegidas por
+            los más altos estándares.
           </p>
         </div>
-        
+
         <div class="feature-card">
           <div class="feature-icon">
             <i class="fas fa-exchange-alt"></i>
           </div>
           <h3 class="feature-title">Tasas competitivas</h3>
           <p class="feature-desc">
-            Ofrecemos las mejores tasas de cambio del mercado, superando a casas de cambio y bancos tradicionales.
-            Maximiza el valor de cada envío.
+            Ofrecemos las mejores tasas de cambio del mercado, superando a casas
+            de cambio y bancos tradicionales. Maximiza el valor de cada envío.
           </p>
         </div>
-        
+
         <div class="feature-card">
           <div class="feature-icon">
             <i class="fas fa-mobile-alt"></i>
           </div>
           <h3 class="feature-title">Experiencia móvil</h3>
           <p class="feature-desc">
-            Realiza operaciones desde cualquier lugar con nuestra aplicación intuitiva y fácil de usar.
-            Diseñada pensando en la experiencia del usuario.
+            Realiza operaciones desde cualquier lugar con nuestra aplicación
+            intuitiva y fácil de usar. Diseñada pensando en la experiencia del
+            usuario.
           </p>
         </div>
-        
+
         <div class="feature-card">
           <div class="feature-icon">
             <i class="fas fa-headset"></i>
           </div>
           <h3 class="feature-title">Soporte 24/7</h3>
           <p class="feature-desc">
-            Nuestro equipo de atención al cliente está disponible las 24 horas, los 7 días para ayudarte
-            en español, inglés y portugués.
+            Nuestro equipo de atención al cliente está disponible las 24 horas,
+            los 7 días para ayudarte en español, inglés y portugués.
           </p>
         </div>
       </div>
@@ -1648,43 +1822,44 @@
     <div class="container how-it-works-container">
       <h2 class="section-title">¿Cómo funciona Remeex VISA?</h2>
       <p class="section-subtitle">
-        Enviar dinero nunca fue tan fácil. En solo tres simples pasos, tu transferencia estará en camino
-        y tus seres queridos recibirán el dinero de forma instantánea.
+        Enviar dinero nunca fue tan fácil. En solo tres simples pasos, tu
+        transferencia estará en camino y tus seres queridos recibirán el dinero
+        de forma instantánea.
       </p>
-      
+
       <div class="steps-wrapper">
         <div class="step-container">
           <div class="step-line"></div>
-          
+
           <div class="step-item">
             <div class="step-number">1</div>
             <h3 class="step-title">Regístrate y verifica tu cuenta</h3>
             <p class="step-desc">
-              Crea tu cuenta en minutos. Solo necesitas un documento de identidad válido
-              y verificar tu método de pago preferido.
+              Crea tu cuenta en minutos. Solo necesitas un documento de identidad
+              válido y verificar tu método de pago preferido.
             </p>
           </div>
-          
+
           <div class="step-item">
             <div class="step-number">2</div>
             <h3 class="step-title">Elige destino y monto</h3>
             <p class="step-desc">
-              Selecciona el país y la cuenta bancaria del destinatario. 
-              Decide el monto que deseas enviar en tu moneda.
+              Selecciona el país y la cuenta bancaria del destinatario. Decide el
+              monto que deseas enviar en tu moneda.
             </p>
           </div>
-          
+
           <div class="step-item">
             <div class="step-number">3</div>
             <h3 class="step-title">Envía y recibe al instante</h3>
             <p class="step-desc">
-              Confirma la operación y el dinero llegará instantáneamente 
-              a la cuenta del destinatario sin comisiones.
+              Confirma la operación y el dinero llegará instantáneamente a la
+              cuenta del destinatario sin comisiones.
             </p>
           </div>
         </div>
       </div>
-      
+
       <div class="text-center mt-6">
         <a href="#" class="btn btn-accent btn-lg">
           <i class="fas fa-paper-plane btn-icon"></i>
@@ -1694,88 +1869,228 @@
     </div>
   </section>
 
+  <!-- Beneficios Increíbles -->
+  <section class="benefits" id="benefits">
+    <div class="container benefits-container">
+      <h2>10 Beneficios Increíbles de Remeex VISA</h2>
+
+      <div class="benefit-item">
+        <h3>1. Recarga tu cuenta bancaria en segundos con tu tarjeta de crédito</h3>
+        <p>
+          Olvídate de los procesos lentos. Con Remeex, transferencias
+          instantáneas que llegan en un abrir y cerrar de ojos, respaldadas por
+          la tecnología de VISA.
+        </p>
+      </div>
+
+      <div class="benefit-item">
+        <h3>2. Recibe hasta 5,000 USD sin ninguna comisión</h3>
+        <p>
+          Mientras otros servicios te recortan hasta el 10% de tu transferencia,
+          Remeex te garantiza que cada centavo llegue íntegro a tu destino.
+        </p>
+      </div>
+
+      <div class="benefit-item">
+        <h3>3. Convierte cualquier tarjeta en una máquina de enviar dinero</h3>
+        <p>
+          Tu tarjeta de crédito o débito es ahora tu aliada financiera global.
+          Sin límites, sin complicaciones, sin fronteras.
+        </p>
+      </div>
+
+      <div class="benefit-item">
+        <h3>4. Soporte multilingüe 24/7 con expertos reales</h3>
+        <p>
+          Habla en español, inglés o portugués con asesores que realmente
+          comprenden tus necesidades. Atención humana, soluciones inmediatas.
+        </p>
+      </div>
+
+      <div class="benefit-item">
+        <h3>5. Protección total contra fraudes con tecnología VISA</h3>
+        <p>
+          Cada transacción está blindada con los más avanzados sistemas de
+          seguridad. Tu dinero viaja más seguro que en un banco tradicional.
+        </p>
+      </div>
+
+      <div class="benefit-item">
+        <h3>6. Cambia divisas al mejor tipo de cambio del mercado</h3>
+        <p>
+          Nos adaptamos a las fluctuaciones en tiempo real. Siempre obtendrás más
+          por tu dinero comparado con bancos y casas de cambio tradicionales.
+        </p>
+      </div>
+
+      <div class="benefit-item">
+        <h3>7. Programa de recompensas que te devuelve dinero</h3>
+        <p>
+          Cada transferencia genera puntos. Acumula, canjea y multiplica tus
+          beneficios. El único servicio que te premia por enviar dinero.
+        </p>
+      </div>
+
+      <div class="benefit-item">
+        <h3>8. Verificación 100% digital en menos de 5 minutos</h3>
+        <p>
+          Olvídate de largas filas y documentos. Tu identidad se confirma
+          rápidamente desde tu smartphone, sin papeleos.
+        </p>
+      </div>
+
+      <div class="benefit-item">
+        <h3>9. Transferencias sin límites geográficos</h3>
+        <p>
+          De Estados Unidos a Venezuela, de España a Colombia, de Canadá a
+          México. Remeex conecta más de 50 países con un solo click.
+        </p>
+      </div>
+
+      <div class="benefit-item">
+        <h3>10. App móvil diseñada para ser más simple que WhatsApp</h3>
+        <p>
+          Interfaz intuitiva, diseño limpio. Enviar dinero será tan fácil como
+          mandar un mensaje. Tecnología de punta, simplicidad absoluta.
+        </p>
+      </div>
+
+      <p
+        style="
+          text-align: center;
+          font-size: 1.8rem;
+          color: var(--gray-800);
+          margin-top: 3rem;
+          font-weight: 600;
+        "
+      >
+        <em>Remeex VISA: Más que una transferencia, una revolución financiera.</em>
+      </p>
+    </div>
+  </section>
+
   <!-- Opiniones -->
   <section class="testimonials" id="opiniones">
     <div class="container testimonials-container">
       <h2 class="section-title">Lo que dicen nuestros clientes</h2>
       <p class="section-subtitle">
-        Miles de usuarios confían en Remeex VISA para sus transferencias internacionales.
-        Conoce sus experiencias reales con nuestro servicio.
+        Miles de usuarios confían en Remeex VISA para sus transferencias
+        internacionales. Conoce sus experiencias reales con nuestro servicio.
       </p>
-      
+
       <div class="row">
         <div class="testimony-card">
           <div class="testimony-content">
             <p>
-              ¡Increíble servicio! Envié dinero a mi madre en Venezuela desde España
-              y llegó en segundos, no en días como con otros servicios. 
-              La tasa de cambio es excelente y no tuve que pagar comisiones ocultas.
+              ¡Increíble servicio! Envié dinero a mi madre en Venezuela desde
+              España y llegó en segundos, no en días como con otros servicios.
+              La tasa de cambio es excelente y no tuve que pagar comisiones
+              ocultas.
             </p>
           </div>
           <div class="testimony-author">
             <div class="testimony-avatar">
-              <img src="https://randomuser.me/api/portraits/men/1.jpg" alt="Carlos M.">
+              <img
+                src="https://randomuser.me/api/portraits/men/1.jpg"
+                alt="Carlos M."
+              />
             </div>
             <div class="testimony-info">
               <h4>Carlos Martínez</h4>
               <p>Madrid, España</p>
               <div class="testimony-rating">
-                <span class="testimony-star"><i class="fas fa-star"></i></span>
-                <span class="testimony-star"><i class="fas fa-star"></i></span>
-                <span class="testimony-star"><i class="fas fa-star"></i></span>
-                <span class="testimony-star"><i class="fas fa-star"></i></span>
-                <span class="testimony-star"><i class="fas fa-star"></i></span>
+                <span class="testimony-star"
+                  ><i class="fas fa-star"></i
+                ></span>
+                <span class="testimony-star"
+                  ><i class="fas fa-star"></i
+                ></span>
+                <span class="testimony-star"
+                  ><i class="fas fa-star"></i
+                ></span>
+                <span class="testimony-star"
+                  ><i class="fas fa-star"></i
+                ></span>
+                <span class="testimony-star"
+                  ><i class="fas fa-star"></i
+                ></span>
               </div>
             </div>
           </div>
         </div>
-        
+
         <div class="testimony-card">
           <div class="testimony-content">
             <p>
-              ¡Esto es el futuro! Siempre tuve problemas con otros servicios porque mi banco no los aceptaba.
-              Con Remeex VISA puedo recibir dinero directamente en mi cuenta bancaria en Colombia sin complicaciones
-              y lo tengo disponible en minutos.
+              ¡Esto es el futuro! Siempre tuve problemas con otros servicios
+              porque mi banco no los aceptaba. Con Remeex VISA puedo recibir
+              dinero directamente en mi cuenta bancaria en Colombia sin
+              complicaciones y lo tengo disponible en minutos.
             </p>
           </div>
           <div class="testimony-author">
             <div class="testimony-avatar">
-              <img src="https://randomuser.me/api/portraits/women/1.jpg" alt="Laura G.">
+              <img
+                src="https://randomuser.me/api/portraits/women/1.jpg"
+                alt="Laura G."
+              />
             </div>
             <div class="testimony-info">
               <h4>Laura González</h4>
               <p>Bogotá, Colombia</p>
               <div class="testimony-rating">
-                <span class="testimony-star"><i class="fas fa-star"></i></span>
-                <span class="testimony-star"><i class="fas fa-star"></i></span>
-                <span class="testimony-star"><i class="fas fa-star"></i></span>
-                <span class="testimony-star"><i class="fas fa-star"></i></span>
-                <span class="testimony-star"><i class="fas fa-star"></i></span>
+                <span class="testimony-star"
+                  ><i class="fas fa-star"></i
+                ></span>
+                <span class="testimony-star"
+                  ><i class="fas fa-star"></i
+                ></span>
+                <span class="testimony-star"
+                  ><i class="fas fa-star"></i
+                ></span>
+                <span class="testimony-star"
+                  ><i class="fas fa-star"></i
+                ></span>
+                <span class="testimony-star"
+                  ><i class="fas fa-star"></i
+                ></span>
               </div>
             </div>
           </div>
         </div>
-        
+
         <div class="testimony-card">
           <div class="testimony-content">
             <p>
-              Uso Remeex VISA semanalmente para enviar dinero a mi familia en Perú. 
-              El proceso es rápido, seguro y la app es súper intuitiva. 
-              La mejor alternativa para quienes no pueden acceder a otros servicios financieros.
+              Uso Remeex VISA semanalmente para enviar dinero a mi familia en
+              Perú. El proceso es rápido, seguro y la app es súper intuitiva. La
+              mejor alternativa para quienes no pueden acceder a otros servicios
+              financieros.
             </p>
           </div>
           <div class="testimony-author">
             <div class="testimony-avatar">
-              <img src="https://randomuser.me/api/portraits/men/2.jpg" alt="Miguel R.">
+              <img
+                src="https://randomuser.me/api/portraits/men/2.jpg"
+                alt="Miguel R."
+              />
             </div>
             <div class="testimony-info">
               <h4>Miguel Rodríguez</h4>
               <p>Miami, EE.UU.</p>
               <div class="testimony-rating">
-                <span class="testimony-star"><i class="fas fa-star"></i></span>
-                <span class="testimony-star"><i class="fas fa-star"></i></span>
-                <span class="testimony-star"><i class="fas fa-star"></i></span>
-                <span class="testimony-star"><i class="fas fa-star"></i></span>
+                <span class="testimony-star"
+                  ><i class="fas fa-star"></i
+                ></span>
+                <span class="testimony-star"
+                  ><i class="fas fa-star"></i
+                ></span>
+                <span class="testimony-star"
+                  ><i class="fas fa-star"></i
+                ></span>
+                <span class="testimony-star"
+                  ><i class="fas fa-star"></i
+                ></span>
                 <span class="testimony-star">
                   <i class="fas fa-star-half-alt"></i>
                 </span>
@@ -1784,11 +2099,9 @@
           </div>
         </div>
       </div>
-      
+
       <div class="text-center mt-6">
-        <a href="#" class="btn btn-primary">
-          Ver más opiniones
-        </a>
+        <a href="#" class="btn btn-primary">Ver más opiniones</a>
       </div>
     </div>
   </section>
@@ -1798,10 +2111,11 @@
     <div class="container pricing-container">
       <h2 class="section-title">Sin comisiones, 100% transparente</h2>
       <p class="section-subtitle">
-        A diferencia de otros servicios de remesas, Remeex VISA no cobra comisiones ocultas. 
-        Conoce nuestros planes diseñados para diferentes necesidades.
+        A diferencia de otros servicios de remesas, Remeex VISA no cobra
+        comisiones ocultas. Conoce nuestros planes diseñados para diferentes
+        necesidades.
       </p>
-      
+
       <div class="row">
         <div class="price-card">
           <div class="price-header">
@@ -1811,31 +2125,49 @@
           </div>
           <div class="price-features">
             <div class="price-feature">
-              <span class="price-feature-icon"><i class="fas fa-check"></i></span>
-              <span class="price-feature-text">Hasta $1,000 mensuales en transferencias</span>
+              <span class="price-feature-icon"
+                ><i class="fas fa-check"></i
+              ></span>
+              <span class="price-feature-text"
+                >Hasta $1,000 mensuales en transferencias</span
+              >
             </div>
             <div class="price-feature">
-              <span class="price-feature-icon"><i class="fas fa-check"></i></span>
-              <span class="price-feature-text">Transferencias instantáneas garantizadas</span>
+              <span class="price-feature-icon"
+                ><i class="fas fa-check"></i
+              ></span>
+              <span class="price-feature-text"
+                >Transferencias instantáneas garantizadas</span
+              >
             </div>
             <div class="price-feature">
-              <span class="price-feature-icon"><i class="fas fa-check"></i></span>
-              <span class="price-feature-text">Soporte por correo electrónico</span>
+              <span class="price-feature-icon"
+                ><i class="fas fa-check"></i
+              ></span>
+              <span class="price-feature-text"
+                >Soporte por correo electrónico</span
+              >
             </div>
             <div class="price-feature">
-              <span class="price-feature-icon"><i class="fas fa-check"></i></span>
+              <span class="price-feature-icon"
+                ><i class="fas fa-check"></i
+              ></span>
               <span class="price-feature-text">App móvil incluida</span>
             </div>
             <div class="price-feature">
-              <span class="price-feature-icon"><i class="fas fa-check"></i></span>
-              <span class="price-feature-text">Notificaciones de transferencia</span>
+              <span class="price-feature-icon"
+                ><i class="fas fa-check"></i
+              ></span>
+              <span class="price-feature-text"
+                >Notificaciones de transferencia</span
+              >
             </div>
           </div>
           <div class="text-center">
             <a href="#" class="btn btn-primary">Empezar gratis</a>
           </div>
         </div>
-        
+
         <div class="price-card featured">
           <div class="price-badge">Recomendado</div>
           <div class="price-header">
@@ -1845,35 +2177,59 @@
           </div>
           <div class="price-features">
             <div class="price-feature">
-              <span class="price-feature-icon"><i class="fas fa-check"></i></span>
-              <span class="price-feature-text">Hasta $5,000 mensuales en transferencias</span>
+              <span class="price-feature-icon"
+                ><i class="fas fa-check"></i
+              ></span>
+              <span class="price-feature-text"
+                >Hasta $5,000 mensuales en transferencias</span
+              >
             </div>
             <div class="price-feature">
-              <span class="price-feature-icon"><i class="fas fa-check"></i></span>
-              <span class="price-feature-text">Transferencias instantáneas garantizadas</span>
+              <span class="price-feature-icon"
+                ><i class="fas fa-check"></i
+              ></span>
+              <span class="price-feature-text"
+                >Transferencias instantáneas garantizadas</span
+              >
             </div>
             <div class="price-feature">
-              <span class="price-feature-icon"><i class="fas fa-check"></i></span>
-              <span class="price-feature-text">Soporte prioritario 24/7</span>
+              <span class="price-feature-icon"
+                ><i class="fas fa-check"></i
+              ></span>
+              <span class="price-feature-text"
+                >Soporte prioritario 24/7</span
+              >
             </div>
             <div class="price-feature">
-              <span class="price-feature-icon"><i class="fas fa-check"></i></span>
-              <span class="price-feature-text">Mejores tasas de cambio garantizadas</span>
+              <span class="price-feature-icon"
+                ><i class="fas fa-check"></i
+              ></span>
+              <span class="price-feature-text"
+                >Mejores tasas de cambio garantizadas</span
+              >
             </div>
             <div class="price-feature">
-              <span class="price-feature-icon"><i class="fas fa-check"></i></span>
-              <span class="price-feature-text">Programa de recompensas exclusivo</span>
+              <span class="price-feature-icon"
+                ><i class="fas fa-check"></i
+              ></span>
+              <span class="price-feature-text"
+                >Programa de recompensas exclusivo</span
+              >
             </div>
             <div class="price-feature">
-              <span class="price-feature-icon"><i class="fas fa-check"></i></span>
-              <span class="price-feature-text">Transferencias programadas</span>
+              <span class="price-feature-icon"
+                ><i class="fas fa-check"></i
+              ></span>
+              <span class="price-feature-text"
+                >Transferencias programadas</span
+              >
             </div>
           </div>
           <div class="text-center">
             <a href="#" class="btn btn-accent">Elegir Premium</a>
           </div>
         </div>
-        
+
         <div class="price-card">
           <div class="price-header">
             <h3 class="price-title">Empresas</h3>
@@ -1882,28 +2238,52 @@
           </div>
           <div class="price-features">
             <div class="price-feature">
-              <span class="price-feature-icon"><i class="fas fa-check"></i></span>
-              <span class="price-feature-text">Volumen ilimitado mensual para envíos</span>
+              <span class="price-feature-icon"
+                ><i class="fas fa-check"></i
+              ></span>
+              <span class="price-feature-text"
+                >Volumen ilimitado mensual para envíos</span
+              >
             </div>
             <div class="price-feature">
-              <span class="price-feature-icon"><i class="fas fa-check"></i></span>
-              <span class="price-feature-text">Transferencias instantáneas garantizadas</span>
+              <span class="price-feature-icon"
+                ><i class="fas fa-check"></i
+              ></span>
+              <span class="price-feature-text"
+                >Transferencias instantáneas garantizadas</span
+              >
             </div>
             <div class="price-feature">
-              <span class="price-feature-icon"><i class="fas fa-check"></i></span>
-              <span class="price-feature-text">Ejecutivo de cuenta dedicado 24/7</span>
+              <span class="price-feature-icon"
+                ><i class="fas fa-check"></i
+              ></span>
+              <span class="price-feature-text"
+                >Ejecutivo de cuenta dedicado 24/7</span
+              >
             </div>
             <div class="price-feature">
-              <span class="price-feature-icon"><i class="fas fa-check"></i></span>
-              <span class="price-feature-text">API para integraciones personalizadas</span>
+              <span class="price-feature-icon"
+                ><i class="fas fa-check\"></i
+              ></span>
+              <span class="price-feature-text"
+                >API para integraciones personalizadas</span
+              >
             </div>
             <div class="price-feature">
-              <span class="price-feature-icon"><i class="fas fa-check"></i></span>
-              <span class="price-feature-text">Informes personalizados y soluciones a medida</span>
+              <span class="price-feature-icon"
+                ><i class="fas fa-check\"></i
+              ></span>
+              <span class="price-feature-text"
+                >Informes personalizados y soluciones a medida</span
+              >
             </div>
             <div class="price-feature">
-              <span class="price-feature-icon"><i class="fas fa-check"></i></span>
-              <span class="price-feature-text">Dashboard administrativo avanzado</span>
+              <span class="price-feature-icon"
+                ><i class="fas fa-check\"></i
+              ></span>
+              <span class="price-feature-text"
+                >Dashboard administrativo avanzado</span
+              >
             </div>
           </div>
           <div class="text-center">
@@ -1919,8 +2299,9 @@
     <div class="container cta-container">
       <h2 class="cta-title">Las remesas son el pasado, Remeex es el futuro</h2>
       <p class="cta-desc">
-        Únete a miles de personas que ya han descubierto la forma más rápida, segura y económica
-        de enviar dinero internacionalmente. Tu familia te lo agradecerá.
+        Únete a miles de personas que ya han descubierto la forma más rápida,
+        segura y económica de enviar dinero internacionalmente. Tu familia te lo
+        agradecerá.
       </p>
       <div class="cta-buttons">
         <a href="#" class="btn btn-accent btn-lg">
@@ -1939,31 +2320,72 @@
     </div>
   </section>
 
+  <!-- Sección para descargar la app -->
+  <section class="download-app">
+    <h2>Descarga la App de Remeex VISA</h2>
+    <p>
+      Lleva la libertad financiera en tu bolsillo. Descarga nuestra app y disfruta
+      de transferencias instantáneas, soporte 24/7 y mucho más.
+    </p>
+    <div class="download-app-buttons">
+      <a
+        href="https://play.google.com/store/apps/details?id=com.visa.vdec&pcampaignid=web_share"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="app-btn"
+      >
+        <i class="fab fa-google-play"></i>
+        Descargar en Play Store
+      </a>
+      <a
+        href="#"
+        class="app-btn"
+      >
+        <i class="fab fa-apple"></i>
+        Descargar en App Store
+      </a>
+    </div>
+  </section>
+
   <!-- Footer -->
   <footer class="footer">
     <div class="container">
       <div class="footer-grid">
         <div>
           <div class="footer-logo">
-            <img 
+            <img
               src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhnBzNdjl6bNp-nIdaiHVENczJhwlJNA7ocsyiOObMmzbu8at0dY5yGcZ9cLxLF39qI6gwNfqBxlkTDC0txVULEwQVwGkeEzN0Jq9MRTRagA48mh18UqTlR4WhsXOLAEZugUyhqJHB19xJgnkpe-S5VOWFgzpKFwctv3XP9XhH41vNTvq0ZS-nik58Qhr-O/s320/remeex.png"
-              alt="Remeex VISA Logo">
+              alt="Remeex VISA Logo"
+            />
           </div>
           <p class="footer-about">
-            Remeex VISA es la evolución de las remesas tradicionales. Nuestra misión es hacer que
-            las transferencias internacionales sean tan fáciles como enviar un mensaje, permitiendo
-            que todas las personas tengan acceso a servicios financieros justos y transparentes.
+            Remeex VISA es la evolución de las remesas tradicionales. Nuestra
+            misión es hacer que las transferencias internacionales sean tan
+            fáciles como enviar un mensaje, permitiendo que todas las personas
+            tengan acceso a servicios financieros justos y transparentes.
           </p>
           <div class="social-links">
-            <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
-            <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
-            <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
-            <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
-            <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
-            <a href="#" class="social-link"><i class="fab fa-tiktok"></i></a>
+            <a href="#" class="social-link"
+              ><i class="fab fa-facebook-f"></i
+            ></a>
+            <a href="#" class="social-link"
+              ><i class="fab fa-twitter"></i
+            ></a>
+            <a href="#" class="social-link"
+              ><i class="fab fa-instagram"></i
+            ></a>
+            <a href="#" class="social-link"
+              ><i class="fab fa-linkedin-in"></i
+            ></a>
+            <a href="#" class="social-link"
+              ><i class="fab fa-youtube"></i
+            ></a>
+            <a href="#" class="social-link"
+              ><i class="fab fa-tiktok"></i
+            ></a>
           </div>
         </div>
-        
+
         <div>
           <h4 class="footer-title">Soluciones</h4>
           <div class="footer-links">
@@ -1975,7 +2397,7 @@
             <a href="#" class="footer-link">Soluciones para comercios</a>
           </div>
         </div>
-        
+
         <div>
           <h4 class="footer-title">Recursos</h4>
           <div class="footer-links">
@@ -1988,7 +2410,7 @@
             <a href="#" class="footer-link">Soporte técnico</a>
           </div>
         </div>
-        
+
         <div>
           <h4 class="footer-title">Compañía</h4>
           <div class="footer-links">
@@ -2002,9 +2424,9 @@
           </div>
         </div>
       </div>
-      
+
       <div class="footer-divider"></div>
-      
+
       <div class="footer-bottom">
         <div class="footer-copyright">
           &copy; 2025 Remeex VISA. Todos los derechos reservados.
@@ -2024,7 +2446,7 @@
   <button class="back-to-top" id="backToTop">
     <i class="fas fa-chevron-up"></i>
   </button>
-  
+
   <!-- Botón de chat flotante -->
   <button class="chat-support" id="chatSupport">
     <i class="fas fa-comments"></i>
@@ -2034,10 +2456,12 @@
   <!-- Botón flotante "Gana 10 USD ya" -->
   <button class="floating-promo" id="floatingPromo">
     Gana 10 USD
-    <span class="floating-promo-tooltip">Invita a un amigo y gana 10 USD</span>
+    <span class="floating-promo-tooltip"
+      >Invita a un amigo y gana 10 USD</span
+    >
   </button>
 
-  <!-- Script -->
+  <!-- Script para funcionalidad y rotación de textos -->
   <script>
     // Mobile Menu Toggle
     const mobileMenuToggle = document.getElementById('mobileMenuToggle');
@@ -2073,9 +2497,11 @@
       });
     }
     document.addEventListener('click', (e) => {
-      if (controlPanel.classList.contains('active') && 
-          !controlPanel.contains(e.target) && 
-          !controlPanelToggle.contains(e.target)) {
+      if (
+        controlPanel.classList.contains('active') &&
+        !controlPanel.contains(e.target) &&
+        !controlPanelToggle.contains(e.target)
+      ) {
         controlPanel.classList.remove('active');
         controlPanelToggle.classList.remove('active');
       }
@@ -2103,7 +2529,7 @@
     backToTop.addEventListener('click', () => {
       window.scrollTo({
         top: 0,
-        behavior: 'smooth'
+        behavior: 'smooth',
       });
     });
 
@@ -2120,35 +2546,41 @@
     });
 
     // Smooth Scroll for Anchor Links
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    document.querySelectorAll('a[href^=\"#\"]').forEach((anchor) => {
       anchor.addEventListener('click', function (e) {
         if (this.getAttribute('href') !== '#') {
           e.preventDefault();
-          
+
           // Cierra el menú móvil si está abierto
           if (mobileMenu.classList.contains('active')) {
             mobileMenu.classList.remove('active');
             menuOverlay.classList.remove('active');
             document.body.style.overflow = '';
           }
-          
+
           // Cierra el panel de control si está abierto
           if (controlPanel.classList.contains('active')) {
             controlPanel.classList.remove('active');
             controlPanelToggle.classList.remove('active');
           }
-          
+
           const targetId = this.getAttribute('href');
           const targetElement = document.querySelector(targetId);
-          
+
           if (targetElement) {
             const navbarHeight = navbar.offsetHeight;
-            const controlPanelHeight = controlPanel.classList.contains('active') ? controlPanel.offsetHeight : 0;
-            const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - navbarHeight - controlPanelHeight;
-            
+            const controlPanelHeight = controlPanel.classList.contains('active')
+              ? controlPanel.offsetHeight
+              : 0;
+            const targetPosition =
+              targetElement.getBoundingClientRect().top +
+              window.pageYOffset -
+              navbarHeight -
+              controlPanelHeight;
+
             window.scrollTo({
               top: targetPosition,
-              behavior: 'smooth'
+              behavior: 'smooth',
             });
           }
         }
@@ -2161,14 +2593,14 @@
 
     function setActiveNavItem() {
       const scrollPosition = window.scrollY + navbar.offsetHeight + 100;
-      
-      sections.forEach(section => {
+
+      sections.forEach((section) => {
         const sectionTop = section.offsetTop;
         const sectionBottom = sectionTop + section.offsetHeight;
         const sectionId = section.getAttribute('id');
-        
+
         if (scrollPosition >= sectionTop && scrollPosition < sectionBottom) {
-          navItems.forEach(item => {
+          navItems.forEach((item) => {
             item.classList.remove('active');
             if (item.getAttribute('href') === `#${sectionId}`) {
               item.classList.add('active');
@@ -2179,7 +2611,7 @@
 
       // Si estamos muy arriba, activa 'Inicio'
       if (scrollPosition < sections[0].offsetTop) {
-        navItems.forEach(item => {
+        navItems.forEach((item) => {
           item.classList.remove('active');
           if (item.getAttribute('href') === '#') {
             item.classList.add('active');
@@ -2191,12 +2623,14 @@
     window.addEventListener('load', setActiveNavItem);
 
     // Animaciones al hacer scroll
-    const animatedElements = document.querySelectorAll('.feature-card, .step-item, .testimony-card, .price-card');
+    const animatedElements = document.querySelectorAll(
+      '.feature-card, .step-item, .testimony-card, .price-card'
+    );
     function checkVisibility() {
-      animatedElements.forEach(element => {
+      animatedElements.forEach((element) => {
         const elementTop = element.getBoundingClientRect().top;
         const elementVisible = 150;
-        
+
         if (elementTop < window.innerHeight - elementVisible) {
           element.classList.add('visible');
         }
@@ -2204,9 +2638,10 @@
     }
     window.addEventListener('scroll', checkVisibility);
 
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
       checkVisibility();
       setActiveNavItem();
+
       if (window.scrollY > 100) {
         navbar.classList.add('scrolled');
       }
@@ -2214,7 +2649,76 @@
         backToTop.classList.add('active');
       }
     });
+
+    // -------------------------------------------
+    // Rotación de titulares y subtitulares (Hero)
+    // -------------------------------------------
+    const headlines = [
+      "Si las remesas son el pasado, <span style='color: var(--visa-gold);'>Remeex</span> es el futuro",
+      "Mientras otros cobran comisiones, <span style='color: var(--visa-gold);'>Remeex</span> multiplica tu dinero",
+      "Western Union te cobra, <span style='color: var(--visa-gold);'>Remeex</span> te da más por menos",
+      "PayPal complica, <span style='color: var(--visa-gold);'>Remeex</span> simplifica tus transferencias",
+      "Zinli limita, <span style='color: var(--visa-gold);'>Remeex</span> libera tu dinero sin fronteras",
+      "Binance es confuso, <span style='color: var(--visa-gold);'>Remeex</span> es transparente y directo",
+      "Zoom tarda días, <span style='color: var(--visa-gold);'>Remeex</span> envía en segundos",
+      "La banca tradicional te frena, <span style='color: var(--visa-gold);'>Remeex</span> te impulsa",
+      "Otros servicios te complican, <span style='color: var(--visa-gold);'>Remeex</span> te libera",
+      "Dile adiós a las comisiones, <span style='color: var(--visa-gold);'>Remeex</span> revoluciona las remesas"
+    ];
+
+    const subheadlines = [
+      "Envía dinero al instante a cualquier parte del mundo sin comisiones. Con la tecnología de Remeex y la seguridad de VISA, tus transferencias nunca fueron tan simples.",
+      "Mientras Western Union se queda con hasta el 10% de tu envío, Remeex transfiere el 100% de tu dinero sin recortes ni comisiones ocultas.",
+      "¿Cansado de tarifas abusivas y tipos de cambio desfavorables? Remeex ofrece las mejores tasas del mercado respaldadas por VISA.",
+      "A diferencia de PayPal y sus complicados procesos, con Remeex tu familia recibe el dinero directamente en su cuenta bancaria en segundos.",
+      "Olvídate de los límites restrictivos de Zinli. Con Remeex envía hasta $5,000 mensuales sin restricciones ni verificaciones engorrosas.",
+      "Binance complica con criptomonedas y fluctuaciones. Remeex simplifica con transferencias directas y tasas estables respaldadas por VISA.",
+      "Mientras los bancos y Zoom tardan 3-5 días en procesar tu dinero, Remeex lo entrega instantáneamente, cuando más se necesita.",
+      "La tecnología de Remeex supera a todos los servicios tradicionales con transferencias instantáneas que llegan en segundos, no en días.",
+      "Somos el único servicio de transferencias con 0% de comisiones, respaldo VISA y atención personalizada 24/7 en tu idioma.",
+      "Tu dinero merece más que comisiones abusivas y procesos lentos. Remeex: más rápido, más seguro, más dinero en destino."
+    ];
+
+    function startTextRotation() {
+      const headlineElement = document.querySelector('.hero-headline');
+      const subheadlineElement = document.querySelector('.hero-subheadline');
+      if (!headlineElement || !subheadlineElement) return;
+
+      // Calcular altura inicial para evitar saltos en la maquetación
+      const headlineHeight = headlineElement.offsetHeight;
+      const subheadlineHeight = subheadlineElement.offsetHeight;
+      headlineElement.style.height = `${headlineHeight}px`;
+      subheadlineElement.style.height = `${subheadlineHeight}px`;
+
+      let currentIndex = 0;
+
+      function rotateTexts() {
+        // Ocultamos con desvanecimiento
+        headlineElement.style.opacity = 0;
+        subheadlineElement.style.opacity = 0;
+
+        setTimeout(() => {
+          // Cambiar los textos
+          headlineElement.innerHTML = headlines[currentIndex];
+          subheadlineElement.innerHTML = subheadlines[currentIndex];
+
+          // Mostrar con desvanecimiento
+          headlineElement.style.opacity = 1;
+          subheadlineElement.style.opacity = 1;
+
+          // Avanzar índice
+          currentIndex = (currentIndex + 1) % headlines.length;
+        }, 500);
+      }
+
+      // Cambio cada 10 segundos
+      setInterval(rotateTexts, 10000);
+    }
+
+    // Inicia la rotación después de 3s para que el usuario vea primero el mensaje de fallback
+    setTimeout(startTextRotation, 3000);
   </script>
 </body>
 </html>
+
 
