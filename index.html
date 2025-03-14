@@ -1222,7 +1222,7 @@
       top: -5rem;
     }
 
-    /* Botón flotante \"Gana 10 USD ya\" */
+    /* Botón flotante "Gana 10 USD ya" */
     .floating-promo {
       position: fixed;
       bottom: 3rem;
@@ -1281,7 +1281,7 @@
       top: -4.2rem;
     }
 
-    /* Nueva sección de \"10 Beneficios Increíbles\" */
+    /* Nueva sección de "10 Beneficios Increíbles" */
     .benefits {
       padding: 10rem 0;
       background-color: var(--gray-50);
@@ -1536,6 +1536,43 @@
         bottom: 8rem;
       }
     }
+
+    /* Overlays de publicidad */
+    .overlay-ad {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.8);
+      display: none; /* oculto por defecto */
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+    }
+    .overlay-content {
+      position: relative;
+      background-color: #fff;
+      padding: 1rem;
+      border-radius: 8px;
+      max-width: 90%;
+      max-height: 90%;
+    }
+    .overlay-content img {
+      max-width: 100%;
+      max-height: 80vh;
+      display: block;
+    }
+    .close-overlay {
+      position: absolute;
+      top: 0.5rem;
+      right: 1rem;
+      background: transparent;
+      border: none;
+      font-size: 3rem;
+      cursor: pointer;
+      color: #000;
+    }
   </style>
 </head>
 <body>
@@ -1725,7 +1762,9 @@
         </div>
       </div>
       <div class="hero-media">
+        <!-- Imagen principal que se rotará cada 10s -->
         <img
+          id="heroImage"
           src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjPtD8FqtVMZL8Zfjk7jv58EcNiPtEb0Bwy0G_GTeVuileKbzX7ZQK0ewOePWLS61NsgiLDHpW8eosS8j2RRRCz49ZP9WDVUPxjlkfLz8RnTVg03pZj9ETCoxt8AdQz3EASyJTF9Lcvfsz7qIb_S0DdOfozNWGBu8d8RWXA9agsmTMJW95Lyf2HpkOkIKRx/w945-h600-p-k-no-nu/a-professional-photo-of-a-latin-american_JRyaA1s4SbWZAHkcI4u3bA_y6HdECjgSTir5Hi6Mlv26A.jpeg"
           alt="Familia Latina enviando dinero con Remeex"
           class="hero-image floating"
@@ -2263,7 +2302,7 @@
             </div>
             <div class="price-feature">
               <span class="price-feature-icon"
-                ><i class="fas fa-check\"></i
+                ><i class="fas fa-check"></i
               ></span>
               <span class="price-feature-text"
                 >API para integraciones personalizadas</span
@@ -2271,7 +2310,7 @@
             </div>
             <div class="price-feature">
               <span class="price-feature-icon"
-                ><i class="fas fa-check\"></i
+                ><i class="fas fa-check"></i
               ></span>
               <span class="price-feature-text"
                 >Informes personalizados y soluciones a medida</span
@@ -2279,7 +2318,7 @@
             </div>
             <div class="price-feature">
               <span class="price-feature-icon"
-                ><i class="fas fa-check\"></i
+                ><i class="fas fa-check"></i
               ></span>
               <span class="price-feature-text"
                 >Dashboard administrativo avanzado</span
@@ -2461,7 +2500,30 @@
     >
   </button>
 
-  <!-- Script para funcionalidad y rotación de textos -->
+  <!-- Overlays de publicidad/promo -->
+  <!-- Overlay que aparece a los 3 segundos -->
+  <div class="overlay-ad" id="overlayAd1">
+    <div class="overlay-content">
+      <button class="close-overlay" id="closeOverlay1">&times;</button>
+      <img
+        src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjcftd7buxUx59XY4L_etRrR0mDjEgDkbjlSZqkD8WeBvYLKvEhKwtAMzE2oQ50lpmWNQDwcFtylCkuDR7ii5V7Ig0ixuIBa7yAXBuTSdkU22jMCP2uUa6yjmrSxn26n-PL4GR5qIQoZJcPmZIUqR30VYgCzB-s4zjf_W_JuHPSNpxjnG8akYKEfD7WM8Ke/s16000/%231%20EN%20VENEZUELA%20(2).png"
+        alt="Publicidad"
+      />
+    </div>
+  </div>
+
+  <!-- Overlay que aparece a los 30 segundos -->
+  <div class="overlay-ad" id="overlayAd2">
+    <div class="overlay-content">
+      <button class="close-overlay" id="closeOverlay2">&times;</button>
+      <img
+        src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEh1ZMu79Yc6wPdwxws5FU46z64Fav7yuDDTdvlubFKa4fCjPyHSuBH5wowS2iX1kkU48ZGp_BEdL0QpVolvHdqgHbs3Gi4o3o382lQdpY9wDzhR8_ZG9FBe-TBa1xD1ZElRrHDMMHMEbeM9psPfSfabol-P82bn5exgu4tjeoGRZU2CcxuaM5YwMLBGjhlq/s16000/FD.png"
+        alt="Promoción"
+      />
+    </div>
+  </div>
+
+  <!-- Script para funcionalidad y rotación de textos/imágenes -->
   <script>
     // Mobile Menu Toggle
     const mobileMenuToggle = document.getElementById('mobileMenuToggle');
@@ -2545,8 +2607,8 @@
       alert('¡Promoción especial! Gana 10 USD por cada amigo que invites y se registre.');
     });
 
-    // Smooth Scroll for Anchor Links
-    document.querySelectorAll('a[href^=\"#\"]').forEach((anchor) => {
+    // Smooth Scroll para enlaces #
+    document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
       anchor.addEventListener('click', function (e) {
         if (this.getAttribute('href') !== '#') {
           e.preventDefault();
@@ -2630,7 +2692,6 @@
       animatedElements.forEach((element) => {
         const elementTop = element.getBoundingClientRect().top;
         const elementVisible = 150;
-
         if (elementTop < window.innerHeight - elementVisible) {
           element.classList.add('visible');
         }
@@ -2684,7 +2745,7 @@
       const subheadlineElement = document.querySelector('.hero-subheadline');
       if (!headlineElement || !subheadlineElement) return;
 
-      // Calcular altura inicial para evitar saltos en la maquetación
+      // Calcular altura inicial para evitar saltos
       const headlineHeight = headlineElement.offsetHeight;
       const subheadlineHeight = subheadlineElement.offsetHeight;
       headlineElement.style.height = `${headlineHeight}px`;
@@ -2715,10 +2776,54 @@
       setInterval(rotateTexts, 10000);
     }
 
-    // Inicia la rotación después de 3s para que el usuario vea primero el mensaje de fallback
+    // Inicia la rotación de textos después de 3s
     setTimeout(startTextRotation, 3000);
+
+    // -------------------------------------------
+    // Rotación de la imagen principal (Hero) cada 10 segundos
+    // -------------------------------------------
+    const heroImage = document.getElementById('heroImage');
+    const heroImages = [
+      "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjPtD8FqtVMZL8Zfjk7jv58EcNiPtEb0Bwy0G_GTeVuileKbzX7ZQK0ewOePWLS61NsgiLDHpW8eosS8j2RRRCz49ZP9WDVUPxjlkfLz8RnTVg03pZj9ETCoxt8AdQz3EASyJTF9Lcvfsz7qIb_S0DdOfozNWGBu8d8RWXA9agsmTMJW95Lyf2HpkOkIKRx/w945-h600-p-k-no-nu/a-professional-photo-of-a-latin-american_JRyaA1s4SbWZAHkcI4u3bA_y6HdECjgSTir5Hi6Mlv26A.jpeg",
+      "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiYGtL5USlZCi-hFsAm0qveLhY6-B1B36F7_SJqFZVHNZ9Ki3amwKuh3NL7NsZi3YMSIFDXxoz-HB3Z94mjSr3FcRWWeNMILME-2C9jZbhheQ-MEA6B5KfQFOlaj8rJFkplagm-JbWwSWt2VjYvaUxf5HP5WEtQjTVai3NPIomY7tpBb-LvsYjbAdy4Hf_N/s16000/%231%20EN%20VENEZUELA.png"
+    ];
+    let currentImageIndex = 0;
+    setInterval(() => {
+      // Alternar índice: 0 -> 1, 1 -> 0
+      currentImageIndex = (currentImageIndex + 1) % heroImages.length;
+      heroImage.src = heroImages[currentImageIndex];
+    }, 10000);
+
+    // -------------------------------------------
+    // Overlays de publicidad
+    // -------------------------------------------
+    const overlayAd1 = document.getElementById('overlayAd1');
+    const closeOverlay1 = document.getElementById('closeOverlay1');
+    const overlayAd2 = document.getElementById('overlayAd2');
+    const closeOverlay2 = document.getElementById('closeOverlay2');
+
+    // Mostrar el primer overlay a los 3s
+    setTimeout(() => {
+      overlayAd1.style.display = 'flex';
+    }, 3000);
+
+    // Cerrar primer overlay
+    closeOverlay1.addEventListener('click', () => {
+      overlayAd1.style.display = 'none';
+    });
+
+    // Mostrar el segundo overlay a los 30s
+    setTimeout(() => {
+      overlayAd2.style.display = 'flex';
+    }, 30000);
+
+    // Cerrar segundo overlay
+    closeOverlay2.addEventListener('click', () => {
+      overlayAd2.style.display = 'none';
+    });
   </script>
 </body>
 </html>
+
 
 
