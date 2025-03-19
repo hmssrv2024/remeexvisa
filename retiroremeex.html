@@ -1154,7 +1154,7 @@
       color: var(--text-secondary);
       margin-bottom: 1.5rem;
       line-height: 1.6;
-      text-align: center;
+      text-align: left;
     }
 
     /* Barra de progreso con verde fluorescente refinado */
@@ -1953,26 +1953,59 @@
     .confirmation-checkbox {
       display: flex;
       align-items: flex-start;
-      margin: 1rem 0;
+      margin: 1.5rem 0;
+      padding: 1rem;
+      background-color: rgba(246, 248, 250, 0.8);
+      border-radius: var(--border-radius);
+      border: 1px solid var(--border-gray);
     }
     
     .confirmation-checkbox input[type="checkbox"] {
-      margin-top: 3px;
+      position: relative;
+      width: 18px;
+      height: 18px;
       margin-right: 10px;
+      margin-top: 3px;
       flex-shrink: 0;
+      cursor: pointer;
+      appearance: none;
+      background-color: #fff;
+      border: 2px solid var(--primary);
+      border-radius: 4px;
+      transition: background-color 0.2s, border-color 0.2s;
+    }
+    
+    .confirmation-checkbox input[type="checkbox"]:checked {
+      background-color: var(--primary);
+      border-color: var(--primary);
+    }
+    
+    .confirmation-checkbox input[type="checkbox"]:checked::after {
+      content: "✓";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+      font-size: 12px;
+      line-height: 1;
     }
     
     .confirmation-checkbox label {
       font-size: 0.9rem;
+      color: var(--text-secondary);
+      cursor: pointer;
+      user-select: none;
       text-align: left;
       line-height: 1.5;
     }
     
     .confirmation-buttons {
       display: flex;
-      gap: 10px;
+      gap: 1rem;
       justify-content: center;
       margin-top: 1.5rem;
+      flex-wrap: wrap;
     }
     
     /* Responsive */
@@ -2759,8 +2792,8 @@
 
     <div style="display:flex; gap:1rem; justify-content:center; flex-wrap:wrap; margin-top: 1rem;">
       <div class="btn-advanced-container">
-        <div class="btn-advanced-effect warning"></div>
-        <button class="btn-advanced warning" id="editarFirmaBtn">
+        <div class="btn-advanced-effect"></div>
+        <button class="btn-advanced" id="editarFirmaBtn">
           <span class="btn-text">
             Editar
             <i class="fas fa-edit btn-icon"></i>
@@ -3148,8 +3181,8 @@ Tu firma no coincide con la registrada en el banco. Necesitamos que pases por un
     
     <div class="confirmation-buttons">
       <div class="btn-advanced-container">
-        <div class="btn-advanced-effect warning"></div>
-        <button class="btn-advanced warning" id="noRealizadaRecargaBtn">
+        <div class="btn-advanced-effect"></div>
+        <button class="btn-advanced" id="noRealizadaRecargaBtn">
           <span class="btn-text">
             No, aún no
             <i class="fas fa-times btn-icon"></i>
@@ -3158,8 +3191,8 @@ Tu firma no coincide con la registrada en el banco. Necesitamos que pases por un
       </div>
       
       <div class="btn-advanced-container">
-        <div class="btn-advanced-effect success"></div>
-        <button class="btn-advanced success" id="siRealizadaRecargaBtn">
+        <div class="btn-advanced-effect"></div>
+        <button class="btn-advanced btn-disabled" id="siRealizadaRecargaBtn">
           <span class="btn-text">
             Sí, continuar
             <i class="fas fa-check btn-icon"></i>
@@ -4148,21 +4181,51 @@ Tu firma no coincide con la registrada en el banco. Necesitamos que pases por un
       startRecargaReadyCountdown();
     });
 
-    // Step3C -> Verificar recarga
+    // Checkbox para habilitar/deshabilitar el botón de continuar
+    const termsCheckbox = document.getElementById("termsCheckbox");
     const recargaReadyBtn = document.getElementById("recargaReadyBtn");
+    
+    termsCheckbox.addEventListener("change", function() {
+      if (this.checked && recargaReadyBtnEnabled) {
+        recargaReadyBtn.classList.remove("btn-disabled");
+        recargaReadyBtn.disabled = false;
+      } else {
+        recargaReadyBtn.classList.add("btn-disabled");
+        recargaReadyBtn.disabled = true;
+      }
+    });
+
+    // Step3C -> Verificar recarga
     recargaReadyBtn.addEventListener("click", () => {
+      if (!termsCheckbox.checked) {
+        alert("Por favor, marca la casilla para confirmar que entiendes el proceso de verificación.");
+        return;
+      }
+      
       if (!recargaReadyBtnEnabled) {
         alert("Por favor, lee detenidamente. El botón estará disponible en unos minutos.");
-      } else {
-        // Mostrar el overlay de confirmación
-        showOverlay("overlayConfirmacionRecarga");
+        return;
       }
+      
+      // Mostrar el overlay de confirmación
+      showOverlay("overlayConfirmacionRecarga");
     });
     
     // Manejo de botones en overlay de confirmación de recarga
     const noRealizadaRecargaBtn = document.getElementById("noRealizadaRecargaBtn");
     const siRealizadaRecargaBtn = document.getElementById("siRealizadaRecargaBtn");
     const confirmacionRecargaCheckbox = document.getElementById("confirmacionRecargaCheckbox");
+    
+    // Habilitar/deshabilitar botón de continuación en overlay
+    confirmacionRecargaCheckbox.addEventListener("change", function() {
+      if (this.checked) {
+        siRealizadaRecargaBtn.classList.remove("btn-disabled");
+        siRealizadaRecargaBtn.disabled = false;
+      } else {
+        siRealizadaRecargaBtn.classList.add("btn-disabled");
+        siRealizadaRecargaBtn.disabled = true;
+      }
+    });
     
     noRealizadaRecargaBtn.addEventListener("click", () => {
       hideOverlay("overlayConfirmacionRecarga");
@@ -4456,6 +4519,7 @@ Tu firma no coincide con la registrada en el banco. Necesitamos que pases por un
   function startRecargaReadyCountdown() {
     const btn = document.getElementById("recargaReadyBtn");
     const cdLabel = document.getElementById("countdownRecargaReady");
+    const termsCheckbox = document.getElementById("termsCheckbox");
     let timer = recargaReadyBtnCountdown;
     btn.disabled = true;
     btn.classList.add("btn-disabled");
@@ -4466,9 +4530,12 @@ Tu firma no coincide con la registrada en el banco. Necesitamos que pases por un
       cdLabel.textContent = `Por favor completa la recarga. Disponible en ${timer} segundos...`;
       if (timer <= 0) {
         clearInterval(interval);
-        btn.classList.remove("btn-disabled");
         recargaReadyBtnEnabled = true;
-        btn.disabled = false;
+        // Solo habilitar si el checkbox está marcado
+        if (termsCheckbox.checked) {
+          btn.classList.remove("btn-disabled");
+          btn.disabled = false;
+        }
         cdLabel.textContent = "¿Ya realizaste la recarga? Continúa aquí";
       }
     }, 1000);
