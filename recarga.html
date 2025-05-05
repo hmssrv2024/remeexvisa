@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>REMEEX Visa Banking</title>
   <link rel="icon" href="https://w7.pngwing.com/pngs/400/28/png-transparent-credit-card-computer-icons-visa-electron-bank-curio-blue-text-rectangle-thumbnail.png" type="image/png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -106,12 +106,12 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0.6rem 1.25rem;
+      padding: 0.6rem 1rem;
       background: var(--neutral-100);
       border-bottom: 1px solid var(--neutral-300);
       box-shadow: var(--shadow-sm);
       z-index: 1000;
-      height: 70px;
+      height: 60px;
     }
     
     .header-brand {
@@ -121,19 +121,19 @@
     }
     
     .header-brand img {
-      height: 38px;
+      height: 32px;
       width: auto;
     }
     
     .header-actions {
       display: flex;
       align-items: center;
-      gap: 0.75rem;
+      gap: 0.5rem;
     }
     
     .header-action-btn {
-      width: 40px;
-      height: 40px;
+      width: 36px;
+      height: 36px;
       border-radius: var(--radius-full);
       display: flex;
       align-items: center;
@@ -159,8 +159,8 @@
       color: white;
       border-radius: var(--radius-full);
       font-size: 0.6rem;
-      width: 18px;
-      height: 18px;
+      width: 16px;
+      height: 16px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -172,7 +172,7 @@
       align-items: center;
       gap: 0.5rem;
       cursor: pointer;
-      padding: 0.375rem 0.75rem;
+      padding: 0.25rem 0.5rem;
       border-radius: var(--radius-md);
       transition: var(--transition-base);
     }
@@ -182,8 +182,8 @@
     }
     
     .header-avatar {
-      width: 36px;
-      height: 36px;
+      width: 32px;
+      height: 32px;
       border-radius: var(--radius-full);
       background: var(--primary);
       color: white;
@@ -191,7 +191,8 @@
       align-items: center;
       justify-content: center;
       font-weight: 600;
-      font-size: 0.875rem;
+      font-size: 0.8rem;
+      flex-shrink: 0;
     }
     
     .header-user-info {
@@ -200,35 +201,40 @@
     
     .header-username {
       font-weight: 600;
-      font-size: 0.875rem;
+      font-size: 0.8rem;
       color: var(--neutral-900);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 120px;
     }
     
     .header-date {
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       color: var(--neutral-600);
     }
     
     /* Connected Users Badge */
     .users-online-badge {
-      display: flex;
+      display: none;
       align-items: center;
       gap: 0.5rem;
-      padding: 0.375rem 0.75rem;
+      padding: 0.25rem 0.5rem;
       background: rgba(26, 31, 113, 0.08);
       border-radius: var(--radius-md);
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       color: var(--primary);
       font-weight: 500;
+      white-space: nowrap;
     }
     
     .users-online-badge i {
-      font-size: 0.8rem;
+      font-size: 0.7rem;
     }
     
     .pulse-dot {
-      width: 8px;
-      height: 8px;
+      width: 6px;
+      height: 6px;
       background-color: var(--success);
       border-radius: 50%;
       animation: pulse 1.5s infinite;
@@ -242,7 +248,7 @@
       
       70% {
         transform: scale(1);
-        box-shadow: 0 0 0 5px rgba(0, 211, 77, 0);
+        box-shadow: 0 0 0 4px rgba(0, 211, 77, 0);
       }
       
       100% {
@@ -255,7 +261,7 @@
     .balance-card {
       background: var(--card-gradient);
       border-radius: var(--radius-lg);
-      padding: 1.5rem;
+      padding: 1.25rem;
       color: white;
       box-shadow: var(--shadow-lg);
       position: relative;
@@ -308,7 +314,7 @@
     }
     
     .balance-label {
-      font-size: 0.875rem;
+      font-size: 0.8rem;
       opacity: 0.8;
       margin-bottom: 0.25rem;
       display: flex;
@@ -317,81 +323,92 @@
     }
     
     .balance-label i {
-      font-size: 1rem;
+      font-size: 0.9rem;
     }
     
     .balance-amount {
-      font-size: 2.5rem;
+      font-size: clamp(1.5rem, 5vw, 2.25rem);
       font-weight: 700;
-      margin: 0.75rem 0 1rem;
+      margin: 0.5rem 0 0.75rem;
       display: flex;
       align-items: center;
       gap: 0.5rem;
+      flex-wrap: nowrap;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     
     .currency-flag {
-      width: 24px;
-      height: 16px;
+      width: 20px;
+      height: 14px;
       border-radius: 2px;
       object-fit: cover;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      flex-shrink: 0;
     }
     
     .balance-equivalents {
       display: flex;
       flex-wrap: wrap;
-      gap: 1rem;
-      margin-bottom: 1rem;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
     }
     
     .balance-equivalent {
       background: rgba(255, 255, 255, 0.1);
       border-radius: var(--radius-md);
-      padding: 0.5rem 0.75rem;
-      font-size: 0.85rem;
+      padding: 0.4rem 0.6rem;
+      font-size: 0.8rem;
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.4rem;
       backdrop-filter: blur(5px);
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      white-space: nowrap;
     }
     
     .exchange-rate {
       background: rgba(255, 255, 255, 0.15);
       border-radius: var(--radius-md);
-      padding: 0.5rem 0.75rem;
-      font-size: 0.8rem;
-      margin-bottom: 1rem;
+      padding: 0.4rem 0.6rem;
+      font-size: 0.75rem;
+      margin-bottom: 0.75rem;
       display: inline-block;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100%;
     }
     
     .balance-date {
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       opacity: 0.7;
-      margin-bottom: 1.25rem;
+      margin-bottom: 1rem;
     }
     
     .balance-actions {
       display: flex;
       gap: 0.75rem;
-      margin-top: 1rem;
+      margin-top: 0.75rem;
     }
     
     .balance-btn {
       flex: 1;
       border: none;
       border-radius: var(--radius-md);
-      height: 46px;
+      height: 42px;
       display: flex;
       align-items: center;
       justify-content: center;
       font-weight: 600;
-      font-size: 0.875rem;
+      font-size: 0.8rem;
       background: rgba(255,255,255,0.15);
       color: white;
       cursor: pointer;
       transition: all 0.3s var(--animation-bounce);
       backdrop-filter: blur(5px);
+      white-space: nowrap;
     }
     
     .balance-btn:hover {
@@ -404,8 +421,8 @@
     }
     
     .balance-btn i {
-      margin-right: 8px;
-      font-size: 1rem;
+      margin-right: 6px;
+      font-size: 0.9rem;
     }
     
     /* Pending transactions badge */
@@ -413,9 +430,9 @@
       background: rgba(255, 173, 51, 0.2);
       border-left: 3px solid var(--warning);
       border-radius: var(--radius-md);
-      padding: 0.75rem;
-      margin-top: 0.75rem;
-      font-size: 0.85rem;
+      padding: 0.6rem;
+      margin-top: 0.6rem;
+      font-size: 0.75rem;
       display: flex;
       align-items: center;
       gap: 0.5rem;
@@ -423,12 +440,13 @@
     
     .pending-transaction-badge i {
       color: var(--warning);
-      font-size: 1rem;
+      font-size: 0.9rem;
+      flex-shrink: 0;
     }
     
     /* Dashboard Layout */
     .app-container {
-      padding-top: 85px;
+      padding-top: 70px;
       padding-bottom: 70px;
       max-width: 100%;
       margin: 0 auto;
@@ -439,7 +457,7 @@
     }
     
     .dashboard-content {
-      padding: 1rem;
+      padding: 0.75rem;
       max-width: 1200px;
       margin: 0 auto;
     }
@@ -447,7 +465,7 @@
     /* Quick Actions */
     .quick-actions {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(2, 1fr);
       gap: 0.75rem;
       margin-bottom: 1.25rem;
     }
@@ -459,7 +477,7 @@
       justify-content: center;
       background: var(--neutral-100);
       border-radius: var(--radius-md);
-      padding: 1rem 0.75rem;
+      padding: 0.75rem 0.5rem;
       box-shadow: var(--shadow-sm);
       cursor: pointer;
       transition: all 0.3s var(--animation-bounce);
@@ -476,16 +494,16 @@
     }
     
     .action-icon {
-      width: 48px;
-      height: 48px;
+      width: 40px;
+      height: 40px;
       border-radius: var(--radius-full);
       display: flex;
       align-items: center;
       justify-content: center;
       background: var(--primary-light);
       color: white;
-      font-size: 1.25rem;
-      margin-bottom: 0.75rem;
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
       transition: all 0.3s var(--animation-bounce);
     }
     
@@ -532,14 +550,14 @@
     }
     
     .action-label {
-      font-size: 0.85rem;
+      font-size: 0.75rem;
       font-weight: 600;
       text-align: center;
       color: var(--neutral-700);
     }
     
     .action-description {
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       color: var(--neutral-500);
       text-align: center;
       margin-top: 0.25rem;
@@ -547,7 +565,7 @@
     
     /* Sections */
     .section-title {
-      font-size: 1.125rem;
+      font-size: 1rem;
       font-weight: 600;
       color: var(--neutral-900);
       margin-bottom: 1rem;
@@ -562,7 +580,7 @@
     }
     
     .section-title a {
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       color: var(--primary);
       text-decoration: none;
     }
@@ -572,7 +590,7 @@
       background: var(--neutral-100);
       border-radius: var(--radius-lg);
       box-shadow: var(--shadow-sm);
-      padding: 1.25rem;
+      padding: 1rem;
       margin-bottom: 1.25rem;
       transition: transform 0.3s var(--animation-bounce), box-shadow 0.3s ease;
     }
@@ -586,14 +604,14 @@
     .stats-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 1rem;
+      gap: 0.75rem;
       margin-bottom: 1.25rem;
     }
     
     .stat-card {
       background: var(--neutral-100);
       border-radius: var(--radius-md);
-      padding: 1rem;
+      padding: 0.75rem;
       box-shadow: var(--shadow-sm);
       position: relative;
       transition: transform 0.3s var(--animation-bounce), box-shadow 0.3s ease;
@@ -606,9 +624,9 @@
     
     .stat-icon {
       position: absolute;
-      top: 0.75rem;
-      right: 0.75rem;
-      font-size: 1.25rem;
+      top: 0.5rem;
+      right: 0.5rem;
+      font-size: 1rem;
       color: var(--neutral-400);
       transition: transform 0.3s var(--animation-bounce);
     }
@@ -618,22 +636,25 @@
     }
     
     .stat-label {
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       color: var(--neutral-600);
       margin-bottom: 0.25rem;
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.4rem;
     }
     
     .stat-value {
-      font-size: 1.5rem;
+      font-size: 1.1rem;
       font-weight: 700;
       color: var(--neutral-900);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     
     .stat-change {
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       margin-top: 0.25rem;
       display: flex;
       align-items: center;
@@ -658,8 +679,8 @@
     .transaction-item {
       display: flex;
       align-items: center;
-      gap: 1rem;
-      padding: 1rem;
+      gap: 0.75rem;
+      padding: 0.75rem;
       background: var(--neutral-100);
       border-radius: var(--radius-md);
       transition: all 0.3s ease;
@@ -673,13 +694,13 @@
     }
     
     .transaction-icon {
-      width: 44px;
-      height: 44px;
+      width: 36px;
+      height: 36px;
       border-radius: var(--radius-full);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.25rem;
+      font-size: 1rem;
       flex-shrink: 0;
     }
     
@@ -710,7 +731,7 @@
     
     .transaction-title {
       font-weight: 600;
-      font-size: 0.9rem;
+      font-size: 0.8rem;
       color: var(--neutral-900);
       margin-bottom: 0.125rem;
       white-space: nowrap;
@@ -719,6 +740,7 @@
       display: flex;
       align-items: center;
       gap: 0.5rem;
+      flex-wrap: wrap;
     }
     
     .transaction-badge {
@@ -726,9 +748,10 @@
       align-items: center;
       padding: 0.125rem 0.375rem;
       border-radius: var(--radius-sm);
-      font-size: 0.65rem;
+      font-size: 0.6rem;
       font-weight: 600;
       text-transform: uppercase;
+      margin-top: 1px;
     }
     
     .transaction-badge.pending {
@@ -744,8 +767,9 @@
     .transaction-details {
       display: flex;
       align-items: center;
+      flex-wrap: wrap;
       gap: 0.5rem;
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       color: var(--neutral-600);
     }
     
@@ -771,8 +795,9 @@
     
     .transaction-amount {
       font-weight: 600;
-      font-size: 0.9rem;
+      font-size: 0.8rem;
       white-space: nowrap;
+      flex-shrink: 0;
     }
     
     .transaction-amount.deposit {
@@ -807,12 +832,11 @@
       align-items: center;
       justify-content: center;
       gap: 0.25rem;
-      padding: 0.5rem;
+      padding: 0.4rem;
       border-radius: var(--radius-md);
       transition: var(--transition-base);
       cursor: pointer;
       flex: 1;
-      max-width: 80px;
     }
     
     .nav-item.active {
@@ -820,7 +844,7 @@
     }
     
     .nav-icon {
-      font-size: 1.25rem;
+      font-size: 1.1rem;
       transition: transform 0.3s var(--animation-bounce);
     }
     
@@ -829,7 +853,7 @@
     }
     
     .nav-label {
-      font-size: 0.625rem;
+      font-size: 0.6rem;
       font-weight: 600;
     }
     
@@ -848,9 +872,9 @@
       background: var(--neutral-100);
       border-radius: var(--radius-lg);
       box-shadow: var(--shadow-lg);
-      padding: 2rem;
+      padding: 1.5rem;
       width: 100%;
-      max-width: 420px;
+      max-width: 400px;
       animation: fadeIn 0.5s ease;
     }
     
@@ -859,12 +883,12 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      margin-bottom: 2rem;
+      margin-bottom: 1.5rem;
     }
     
     .login-logo-container {
-      width: 70px;
-      height: 70px;
+      width: 60px;
+      height: 60px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -872,25 +896,25 @@
     }
     
     .login-logo img {
-      height: 50px;
+      height: 45px;
       width: auto;
       object-fit: contain;
     }
     
     .login-heading {
       text-align: center;
-      margin-bottom: 2rem;
+      margin-bottom: 1.5rem;
     }
     
     .login-title {
-      font-size: 1.75rem;
+      font-size: 1.5rem;
       font-weight: 700;
       color: var(--primary);
       margin-bottom: 0.5rem;
     }
     
     .login-subtitle {
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       color: var(--neutral-600);
     }
     
@@ -900,7 +924,7 @@
     
     .form-label {
       display: block;
-      font-size: 0.875rem;
+      font-size: 0.8rem;
       font-weight: 500;
       color: var(--neutral-700);
       margin-bottom: 0.5rem;
@@ -908,11 +932,11 @@
     
     .form-control {
       width: 100%;
-      height: 48px;
+      height: 44px;
       padding: 0 1rem;
       border: 1px solid var(--neutral-400);
       border-radius: var(--radius-md);
-      font-size: 0.95rem;
+      font-size: 0.85rem;
       color: var(--neutral-900);
       background: var(--neutral-100);
       transition: var(--transition-base);
@@ -925,7 +949,7 @@
     }
     
     .error-message {
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       color: var(--danger);
       margin-top: 0.5rem;
       display: none;
@@ -935,11 +959,11 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      height: 48px;
+      height: 44px;
       padding: 0 1.5rem;
       border-radius: var(--radius-md);
       font-weight: 600;
-      font-size: 0.95rem;
+      font-size: 0.85rem;
       border: none;
       cursor: pointer;
       transition: all 0.3s var(--animation-bounce);
@@ -974,7 +998,7 @@
     
     .btn i {
       margin-right: 0.5rem;
-      font-size: 1.1rem;
+      font-size: 0.9rem;
     }
     
     /* OTP Verification for Card Payment */
@@ -998,13 +1022,13 @@
       background: var(--neutral-100);
       border-radius: var(--radius-lg);
       width: 90%;
-      max-width: 400px;
-      padding: 2rem;
+      max-width: 380px;
+      padding: 1.5rem;
       animation: scaleIn 0.3s ease;
     }
     
     .modal-title {
-      font-size: 1.5rem;
+      font-size: 1.25rem;
       font-weight: 700;
       color: var(--neutral-900);
       margin-bottom: 0.75rem;
@@ -1012,7 +1036,7 @@
     }
     
     .modal-subtitle {
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       color: var(--neutral-600);
       margin-bottom: 1.5rem;
       text-align: center;
@@ -1020,18 +1044,18 @@
     
     .otp-container {
       display: flex;
-      gap: 0.75rem;
+      gap: 0.5rem;
       margin: 1.5rem 0;
       justify-content: center;
     }
     
     .otp-input {
-      width: 48px;
-      height: 56px;
+      width: 40px;
+      height: 48px;
       border: 1px solid var(--neutral-400);
       border-radius: var(--radius-md);
       text-align: center;
-      font-size: 1.5rem;
+      font-size: 1.25rem;
       font-weight: 600;
       color: var(--neutral-900);
     }
@@ -1045,7 +1069,7 @@
     .resend-code {
       text-align: center;
       margin-top: 1rem;
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       color: var(--neutral-600);
     }
     
@@ -1075,36 +1099,36 @@
       background: var(--neutral-100);
       border-radius: var(--radius-lg);
       width: 90%;
-      max-width: 400px;
-      padding: 2rem;
+      max-width: 380px;
+      padding: 1.5rem;
       animation: scaleIn 0.3s ease;
       text-align: center;
     }
 
     .feature-blocked-icon {
-      width: 70px;
-      height: 70px;
+      width: 60px;
+      height: 60px;
       border-radius: 50%;
       background: var(--warning);
       color: white;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 2rem;
-      margin: 0 auto 1.5rem;
+      font-size: 1.75rem;
+      margin: 0 auto 1.25rem;
     }
 
     .feature-blocked-title {
-      font-size: 1.5rem;
+      font-size: 1.25rem;
       font-weight: 700;
       color: var(--neutral-900);
       margin-bottom: 0.75rem;
     }
 
     .feature-blocked-message {
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       color: var(--neutral-600);
-      margin-bottom: 2rem;
+      margin-bottom: 1.5rem;
       line-height: 1.6;
     }
 
@@ -1117,7 +1141,7 @@
     /* Recharge Page */
     .recharge-container {
       padding: 1rem;
-      padding-top: 85px;
+      padding-top: 70px;
       padding-bottom: 70px;
       display: none;
       max-width: 800px;
@@ -1135,12 +1159,13 @@
     .payment-method-tab {
       flex: 1;
       text-align: center;
-      padding: 0.75rem;
+      padding: 0.6rem 0.5rem;
       border-radius: var(--radius-md);
-      font-size: 0.9rem;
+      font-size: 0.8rem;
       font-weight: 600;
       cursor: pointer;
       transition: var(--transition-base);
+      white-space: nowrap;
     }
     
     .payment-method-tab.active {
@@ -1160,16 +1185,16 @@
     
     .amount-options {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1rem;
-      margin: 1.5rem 0;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.75rem;
+      margin: 1.25rem 0;
     }
     
     .amount-option {
       background: var(--neutral-100);
       border: 1px solid var(--neutral-300);
       border-radius: var(--radius-md);
-      padding: 1.25rem;
+      padding: 1rem;
       text-align: center;
       cursor: pointer;
       transition: all 0.3s var(--animation-bounce);
@@ -1187,27 +1212,27 @@
     }
     
     .amount-value {
-      font-size: 1.5rem;
+      font-size: 1.25rem;
       font-weight: 700;
       color: var(--neutral-900);
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.4rem;
     }
     
     .amount-equivalent {
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       color: var(--neutral-600);
       line-height: 1.4;
     }
     
     .custom-amount {
-      margin-top: 2rem;
+      margin-top: 1.5rem;
     }
     
     .custom-amount-title {
-      font-size: 1rem;
+      font-size: 0.9rem;
       font-weight: 600;
       color: var(--neutral-800);
-      margin-bottom: 1rem;
+      margin-bottom: 0.75rem;
       display: flex;
       align-items: center;
     }
@@ -1226,20 +1251,20 @@
     .custom-amount-prefix {
       position: absolute;
       left: 1rem;
-      font-size: 1.25rem;
+      font-size: 1.1rem;
       font-weight: 700;
       color: var(--neutral-700);
     }
     
     .custom-amount-input {
-      height: 56px;
-      padding-left: 2.5rem;
-      font-size: 1.25rem;
+      height: 50px;
+      padding-left: 2.25rem;
+      font-size: 1.1rem;
       font-weight: 600;
     }
     
     .amount-limits {
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       color: var(--neutral-600);
       margin-top: 0.5rem;
     }
@@ -1248,8 +1273,8 @@
     .bank-details {
       background: var(--neutral-200);
       border-radius: var(--radius-md);
-      padding: 1.25rem;
-      margin: 1.5rem 0;
+      padding: 1.1rem;
+      margin: 1.25rem 0;
     }
     
     .bank-detail-row {
@@ -1267,30 +1292,36 @@
     }
     
     .bank-detail-label {
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       color: var(--neutral-600);
+      flex-shrink: 0;
+      margin-right: 0.5rem;
     }
     
     .bank-detail-value {
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       font-weight: 600;
       color: var(--neutral-900);
       display: flex;
       align-items: center;
       gap: 0.5rem;
+      text-align: right;
+      word-break: break-word;
+      flex-grow: 1;
     }
     
     .copy-btn {
       background: var(--neutral-300);
       color: var(--neutral-700);
-      width: 28px;
-      height: 28px;
+      width: 26px;
+      height: 26px;
       display: flex;
       align-items: center;
       justify-content: center;
       border-radius: var(--radius-full);
       cursor: pointer;
       transition: var(--transition-base);
+      flex-shrink: 0;
     }
     
     .copy-btn:hover {
@@ -1301,14 +1332,14 @@
     .bank-warning {
       background: rgba(247, 182, 0, 0.1);
       border-left: 3px solid var(--warning);
-      padding: 1rem;
-      margin-top: 1.5rem;
+      padding: 0.75rem;
+      margin-top: 1.25rem;
       border-radius: var(--radius-sm);
     }
     
     .bank-warning-title {
       font-weight: 600;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       color: var(--neutral-900);
       margin-bottom: 0.5rem;
       display: flex;
@@ -1321,7 +1352,7 @@
     }
     
     .bank-warning-content {
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       color: var(--neutral-700);
     }
     
@@ -1329,8 +1360,8 @@
     .receipt-upload {
       border: 2px dashed var(--neutral-400);
       border-radius: var(--radius-md);
-      padding: 2rem 1rem;
-      margin: 1.5rem 0;
+      padding: 1.5rem 1rem;
+      margin: 1.25rem 0;
       text-align: center;
       cursor: pointer;
       transition: var(--transition-base);
@@ -1342,62 +1373,67 @@
     }
     
     .receipt-upload i {
-      font-size: 2.5rem;
+      font-size: 2rem;
       color: var(--neutral-500);
-      margin-bottom: 1rem;
+      margin-bottom: 0.75rem;
     }
     
     .receipt-upload-title {
       font-weight: 600;
-      font-size: 1rem;
+      font-size: 0.9rem;
       color: var(--neutral-800);
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.4rem;
     }
     
     .receipt-upload-subtitle {
-      font-size: 0.85rem;
+      font-size: 0.75rem;
       color: var(--neutral-600);
     }
     
     .receipt-preview {
       display: none;
-      margin-top: 1.5rem;
+      margin-top: 1.25rem;
     }
     
     .receipt-preview-container {
       display: flex;
       align-items: center;
-      gap: 1rem;
-      padding: 1rem;
+      gap: 0.75rem;
+      padding: 0.8rem;
       background: var(--neutral-200);
       border-radius: var(--radius-md);
-      margin-bottom: 1rem;
+      margin-bottom: 0.75rem;
     }
     
     .receipt-preview-icon {
-      width: 48px;
-      height: 48px;
+      width: 40px;
+      height: 40px;
       border-radius: var(--radius-md);
       background: var(--primary);
       color: white;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.25rem;
+      font-size: 1.1rem;
+      flex-shrink: 0;
     }
     
     .receipt-preview-content {
       flex: 1;
+      min-width: 0;
     }
     
     .receipt-preview-name {
       font-weight: 600;
-      font-size: 0.9rem;
-      margin-bottom: 0.25rem;
+      font-size: 0.8rem;
+      margin-bottom: 0.2rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     
     .receipt-preview-size {
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       color: var(--neutral-600);
     }
     
@@ -1408,15 +1444,15 @@
     
     /* Reference Number */
     .reference-number {
-      margin-top: 1.5rem;
+      margin-top: 1.25rem;
     }
     
     /* Credit Card Form */
     .card-preview {
       width: 100%;
-      max-width: 380px;
-      height: 220px;
-      margin: 0 auto 2rem;
+      max-width: 350px;
+      height: 200px;
+      margin: 0 auto 1.5rem;
       perspective: 1000px;
       transition: var(--transition-base);
     }
@@ -1441,7 +1477,7 @@
       -webkit-backface-visibility: hidden;
       backface-visibility: hidden;
       border-radius: var(--radius-lg);
-      padding: 1.5rem;
+      padding: 1.25rem;
       box-shadow: var(--shadow-lg);
     }
     
@@ -1460,52 +1496,62 @@
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      margin-bottom: 2.5rem;
+      margin-bottom: 2rem;
     }
     
     .card-chip {
-      width: 45px;
+      width: 40px;
       height: auto;
+      flex-shrink: 0;
     }
     
     .card-brand {
-      width: 65px;
+      width: 55px;
       height: auto;
+      flex-shrink: 0;
     }
     
     .card-number {
-      font-size: 1.5rem;
-      letter-spacing: 2px;
-      margin-bottom: 1.5rem;
+      font-size: 1.25rem;
+      letter-spacing: 1px;
+      margin-bottom: 1.25rem;
       font-family: monospace;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     
     .card-details {
       display: flex;
       justify-content: space-between;
-      font-size: 0.85rem;
+      font-size: 0.8rem;
     }
     
     .card-holder {
       text-transform: uppercase;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 65%;
     }
     
     .card-expiry {
       display: flex;
       gap: 0.25rem;
+      flex-shrink: 0;
     }
     
     .card-stripe {
-      height: 50px;
+      height: 40px;
       background: #000;
-      margin: 1.25rem 0;
+      margin: 1rem 0;
     }
     
     .card-cvv {
       display: flex;
       justify-content: flex-end;
       align-items: center;
-      height: 45px;
+      height: 40px;
       background: white;
       color: black;
       border-radius: 4px;
@@ -1517,12 +1563,12 @@
     .card-form {
       display: flex;
       flex-direction: column;
-      gap: 1.5rem;
+      gap: 1.25rem;
     }
     
     .card-row {
       display: flex;
-      gap: 1rem;
+      gap: 0.75rem;
     }
     
     .card-col {
@@ -1536,36 +1582,39 @@
       gap: 0.75rem;
       background: rgba(26, 31, 113, 0.05);
       border-radius: var(--radius-md);
-      padding: 0.75rem 1rem;
-      margin-bottom: 1.5rem;
+      padding: 0.75rem;
+      margin-bottom: 1.25rem;
     }
     
     .security-badge-icon {
-      width: 32px;
-      height: 32px;
+      width: 30px;
+      height: 30px;
       background: var(--primary);
       border-radius: var(--radius-full);
       display: flex;
       align-items: center;
       justify-content: center;
       color: white;
-      font-size: 1rem;
+      font-size: 0.9rem;
+      flex-shrink: 0;
     }
     
     .security-badge-content {
       flex: 1;
+      min-width: 0;
     }
     
     .security-badge-title {
       font-weight: 600;
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       color: var(--neutral-900);
       margin-bottom: 0.125rem;
     }
     
     .security-badge-text {
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       color: var(--neutral-600);
+      white-space: normal;
     }
     
     /* Loading */
@@ -1586,26 +1635,26 @@
     }
     
     .spinner {
-      width: 60px;
-      height: 60px;
-      border: 4px solid rgba(255, 255, 255, 0.2);
+      width: 50px;
+      height: 50px;
+      border: 3px solid rgba(255, 255, 255, 0.2);
       border-radius: 50%;
       border-top-color: white;
       animation: spin 1s linear infinite;
-      margin-bottom: 2rem;
+      margin-bottom: 1.5rem;
     }
     
     .loading-text {
       color: white;
-      font-size: 1.1rem;
-      margin-bottom: 2rem;
+      font-size: 1rem;
+      margin-bottom: 1.5rem;
       font-weight: 500;
     }
     
     .progress-bar-container {
       width: 80%;
-      max-width: 300px;
-      height: 10px;
+      max-width: 280px;
+      height: 8px;
       background: rgba(255, 255, 255, 0.2);
       border-radius: var(--radius-full);
       overflow: hidden;
@@ -1639,29 +1688,29 @@
       background: white;
       border-radius: var(--radius-lg);
       width: 90%;
-      max-width: 400px;
-      padding: 2.5rem;
+      max-width: 380px;
+      padding: 2rem;
       text-align: center;
       animation: scaleIn 0.3s ease;
     }
     
     .success-checkmark {
-      width: 90px;
-      height: 90px;
+      width: 80px;
+      height: 80px;
       border-radius: 50%;
       background: var(--success);
       color: white;
-      font-size: 2.5rem;
+      font-size: 2.25rem;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin: 0 auto 2rem;
+      margin: 0 auto 1.5rem;
       transform: scale(0);
       animation: checkmarkScale 0.5s ease forwards 0.3s;
     }
     
     .success-title {
-      font-size: 1.75rem;
+      font-size: 1.5rem;
       font-weight: 700;
       color: var(--neutral-900);
       margin-bottom: 0.75rem;
@@ -1670,18 +1719,18 @@
     }
     
     .success-amount {
-      font-size: 2.5rem;
+      font-size: 2.25rem;
       font-weight: 700;
       color: var(--primary);
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.25rem;
       opacity: 0;
       animation: fadeInUp 0.5s ease forwards 1.1s;
     }
     
     .success-message {
-      font-size: 1rem;
+      font-size: 0.9rem;
       color: var(--neutral-600);
-      margin-bottom: 2rem;
+      margin-bottom: 1.5rem;
       opacity: 0;
       animation: fadeInUp 0.5s ease forwards 1.4s;
     }
@@ -1698,54 +1747,56 @@
     .verify-banner {
       background: linear-gradient(135deg, var(--warning) 0%, #f59e0b 100%);
       border-radius: var(--radius-md);
-      padding: 1rem;
+      padding: 0.9rem;
       display: flex;
       align-items: center;
-      gap: 1rem;
-      margin: 1.5rem 0;
+      gap: 0.8rem;
+      margin: 1.25rem 0;
       box-shadow: var(--shadow-md);
     }
     
     .verify-icon {
-      width: 40px;
-      height: 40px;
+      width: 36px;
+      height: 36px;
       background: white;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       color: var(--warning);
-      font-size: 1.25rem;
+      font-size: 1.1rem;
       flex-shrink: 0;
     }
     
     .verify-content {
       flex: 1;
+      min-width: 0;
     }
     
     .verify-title {
       font-weight: 600;
       color: white;
       margin-bottom: 0.25rem;
-      font-size: 1rem;
+      font-size: 0.9rem;
     }
     
     .verify-text {
       color: rgba(255, 255, 255, 0.8);
-      font-size: 0.85rem;
+      font-size: 0.8rem;
     }
     
     .verify-action {
       background: white;
       color: var(--warning);
       font-weight: 600;
-      font-size: 0.85rem;
-      padding: 0.5rem 1rem;
+      font-size: 0.8rem;
+      padding: 0.4rem 0.75rem;
       border-radius: var(--radius-md);
       flex-shrink: 0;
       transition: all 0.3s var(--animation-bounce);
       cursor: pointer;
       border: none;
+      white-space: nowrap;
     }
     
     .verify-action:hover {
@@ -1761,15 +1812,15 @@
     
     .id-upload-sides {
       display: flex;
-      gap: 1rem;
-      margin-bottom: 1.5rem;
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
     }
     
     .id-upload-side {
       flex: 1;
       border: 2px dashed var(--neutral-400);
       border-radius: var(--radius-md);
-      padding: 1.5rem 1rem;
+      padding: 1.25rem 0.75rem;
       text-align: center;
       cursor: pointer;
       transition: var(--transition-base);
@@ -1781,27 +1832,27 @@
     }
     
     .id-upload-side i {
-      font-size: 2rem;
+      font-size: 1.75rem;
       color: var(--neutral-500);
       margin-bottom: 0.75rem;
     }
     
     .id-upload-title {
       font-weight: 600;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       color: var(--neutral-800);
       margin-bottom: 0.25rem;
     }
     
     .id-upload-subtitle {
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       color: var(--neutral-600);
     }
     
     .id-preview {
       display: flex;
       align-items: center;
-      gap: 1rem;
+      gap: 0.75rem;
       padding: 0.75rem;
       background: var(--neutral-200);
       border-radius: var(--radius-md);
@@ -1809,29 +1860,34 @@
     }
     
     .id-preview-icon {
-      width: 40px;
-      height: 40px;
+      width: 36px;
+      height: 36px;
       border-radius: var(--radius-md);
       background: var(--primary);
       color: white;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.1rem;
+      font-size: 1rem;
+      flex-shrink: 0;
     }
     
     .id-preview-content {
       flex: 1;
+      min-width: 0;
     }
     
     .id-preview-name {
       font-weight: 600;
-      font-size: 0.8rem;
-      margin-bottom: 0.25rem;
+      font-size: 0.75rem;
+      margin-bottom: 0.2rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     
     .id-preview-size {
-      font-size: 0.7rem;
+      font-size: 0.65rem;
       color: var(--neutral-600);
     }
     
@@ -1844,15 +1900,15 @@
     .contact-options {
       display: flex;
       flex-direction: column;
-      gap: 1rem;
-      margin-top: 1.5rem;
+      gap: 0.75rem;
+      margin-top: 1.25rem;
     }
     
     .contact-option {
       display: flex;
       align-items: center;
-      gap: 1rem;
-      padding: 1rem;
+      gap: 0.75rem;
+      padding: 0.9rem;
       background: var(--neutral-200);
       border-radius: var(--radius-md);
       transition: all 0.3s ease;
@@ -1867,13 +1923,13 @@
     }
     
     .contact-icon {
-      width: 44px;
-      height: 44px;
+      width: 40px;
+      height: 40px;
       border-radius: var(--radius-full);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.25rem;
+      font-size: 1.1rem;
       flex-shrink: 0;
       color: white;
     }
@@ -1888,17 +1944,21 @@
     
     .contact-content {
       flex: 1;
+      min-width: 0;
     }
     
     .contact-title {
       font-weight: 600;
-      font-size: 0.9rem;
-      margin-bottom: 0.25rem;
+      font-size: 0.85rem;
+      margin-bottom: 0.2rem;
     }
     
     .contact-description {
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       color: var(--neutral-600);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     
     /* Security Verification Modal */
@@ -1921,44 +1981,44 @@
       background: white;
       border-radius: var(--radius-lg);
       width: 90%;
-      max-width: 480px;
-      padding: 2rem;
+      max-width: 380px;
+      padding: 1.5rem;
       animation: scaleIn 0.3s ease;
     }
     
     .verification-header {
       text-align: center;
-      margin-bottom: 2rem;
+      margin-bottom: 1.5rem;
     }
     
     .verification-title {
-      font-size: 1.5rem;
+      font-size: 1.25rem;
       font-weight: 700;
       color: var(--neutral-900);
       margin-bottom: 0.5rem;
     }
     
     .verification-subtitle {
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       color: var(--neutral-600);
     }
     
     .verification-steps {
       display: flex;
       flex-direction: column;
-      gap: 1.5rem;
-      margin-bottom: 2rem;
+      gap: 1.25rem;
+      margin-bottom: 1.5rem;
     }
     
     .verification-step {
       display: flex;
-      gap: 1rem;
+      gap: 0.75rem;
       align-items: flex-start;
     }
     
     .step-number {
-      width: 28px;
-      height: 28px;
+      width: 26px;
+      height: 26px;
       border-radius: var(--radius-full);
       background: var(--primary);
       color: white;
@@ -1966,7 +2026,7 @@
       align-items: center;
       justify-content: center;
       font-weight: 600;
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       flex-shrink: 0;
     }
     
@@ -1976,21 +2036,21 @@
     
     .step-title {
       font-weight: 600;
-      font-size: 1rem;
+      font-size: 0.9rem;
       color: var(--neutral-900);
       margin-bottom: 0.25rem;
     }
     
     .step-description {
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       color: var(--neutral-600);
     }
     
     /* Toast Notifications */
     .toast-container {
       position: fixed;
-      top: 80px;
-      right: 20px;
+      top: 70px;
+      right: 16px;
       z-index: 9999;
       display: flex;
       flex-direction: column;
@@ -2001,9 +2061,9 @@
       background: var(--neutral-900);
       color: white;
       border-radius: var(--radius-md);
-      padding: 1rem 1.25rem;
-      min-width: 280px;
-      max-width: 350px;
+      padding: 0.75rem 1rem;
+      min-width: 250px;
+      max-width: 320px;
       box-shadow: var(--shadow-lg);
       display: flex;
       align-items: center;
@@ -2033,23 +2093,26 @@
     
     .toast-content {
       flex: 1;
+      min-width: 0;
     }
     
     .toast-title {
       font-weight: 600;
-      font-size: 0.9rem;
-      margin-bottom: 0.25rem;
+      font-size: 0.85rem;
+      margin-bottom: 0.2rem;
     }
     
     .toast-message {
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       opacity: 0.9;
+      word-wrap: break-word;
     }
     
     .toast-close {
       color: var(--neutral-400);
       cursor: pointer;
       transition: var(--transition-base);
+      flex-shrink: 0;
     }
     
     .toast-close:hover {
@@ -2077,49 +2140,49 @@
       background: white;
       border-radius: var(--radius-lg);
       width: 90%;
-      max-width: 400px;
-      padding: 2rem;
+      max-width: 320px;
+      padding: 1.5rem;
       text-align: center;
       animation: scaleIn 0.3s ease;
     }
     
     .inactivity-icon {
-      width: 70px;
-      height: 70px;
+      width: 60px;
+      height: 60px;
       border-radius: 50%;
       background: var(--warning);
       color: white;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 2rem;
-      margin: 0 auto 1.5rem;
+      font-size: 1.75rem;
+      margin: 0 auto 1.25rem;
     }
     
     .inactivity-title {
-      font-size: 1.5rem;
+      font-size: 1.25rem;
       font-weight: 700;
       color: var(--neutral-900);
       margin-bottom: 0.75rem;
     }
     
     .inactivity-message {
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       color: var(--neutral-600);
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.25rem;
     }
     
     .inactivity-timer {
-      font-size: 2rem;
+      font-size: 1.75rem;
       font-weight: 700;
       color: var(--danger);
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.25rem;
     }
     
     .inactivity-actions {
       display: flex;
       flex-direction: column;
-      gap: 1rem;
+      gap: 0.75rem;
     }
     
     /* Welcome Modal */
@@ -2142,68 +2205,69 @@
       background: white;
       border-radius: var(--radius-lg);
       width: 90%;
-      max-width: 500px;
-      padding: 2rem;
+      max-width: 380px;
+      padding: 1.5rem;
       animation: scaleIn 0.3s ease;
     }
     
     .welcome-header {
       display: flex;
       align-items: center;
-      gap: 1.5rem;
-      margin-bottom: 1.5rem;
+      gap: 1.25rem;
+      margin-bottom: 1.25rem;
     }
     
     .welcome-icon {
-      width: 60px;
-      height: 60px;
+      width: 50px;
+      height: 50px;
       border-radius: 50%;
       background: var(--primary);
       color: white;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.5rem;
+      font-size: 1.25rem;
       flex-shrink: 0;
     }
     
     .welcome-title-container {
       flex: 1;
+      min-width: 0;
     }
     
     .welcome-title {
-      font-size: 1.5rem;
+      font-size: 1.25rem;
       font-weight: 700;
       color: var(--neutral-900);
       margin-bottom: 0.25rem;
     }
     
     .welcome-subtitle {
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       color: var(--neutral-600);
     }
     
     .welcome-content {
-      margin-bottom: 2rem;
+      margin-bottom: 1.5rem;
     }
     
     .welcome-step {
       display: flex;
-      gap: 1rem;
+      gap: 0.75rem;
       align-items: flex-start;
       margin-bottom: 1.25rem;
     }
     
     .welcome-step-icon {
-      width: 32px;
-      height: 32px;
+      width: 28px;
+      height: 28px;
       border-radius: var(--radius-full);
       background: var(--primary-light);
       color: white;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1rem;
+      font-size: 0.9rem;
       flex-shrink: 0;
     }
     
@@ -2213,28 +2277,28 @@
     
     .welcome-step-title {
       font-weight: 600;
-      font-size: 1rem;
+      font-size: 0.9rem;
       color: var(--neutral-900);
       margin-bottom: 0.25rem;
     }
     
     .welcome-step-description {
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       color: var(--neutral-600);
     }
 
     /* Community feature buttons */
     .community-features {
       display: flex;
-      gap: 1rem;
-      margin-top: 1.5rem;
+      gap: 0.75rem;
+      margin-top: 1.25rem;
     }
     
     .community-feature {
       flex: 1;
       background: var(--neutral-200);
       border-radius: var(--radius-md);
-      padding: 1rem;
+      padding: 0.9rem;
       text-align: center;
       transition: all 0.3s var(--animation-bounce);
       text-decoration: none;
@@ -2242,7 +2306,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.4rem;
     }
     
     .community-feature:hover {
@@ -2252,16 +2316,16 @@
     }
     
     .community-feature-icon {
-      width: 48px;
-      height: 48px;
+      width: 42px;
+      height: 42px;
       border-radius: var(--radius-full);
       background: var(--primary);
       color: white;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.25rem;
-      margin-bottom: 0.5rem;
+      font-size: 1.1rem;
+      margin-bottom: 0.4rem;
     }
     
     .community-feature-icon.chat {
@@ -2274,11 +2338,11 @@
     
     .community-feature-title {
       font-weight: 600;
-      font-size: 0.9rem;
+      font-size: 0.8rem;
     }
     
     .community-feature-description {
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       color: var(--neutral-600);
     }
     
@@ -2323,22 +2387,90 @@
       to { opacity: 0; visibility: hidden; }
     }
     
+    /* Custom toggle switch */
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      height: 24px;
+    }
+    
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: var(--neutral-400);
+      transition: .4s;
+    }
+    
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .4s;
+    }
+    
+    input:checked + .slider {
+      background-color: var(--primary);
+    }
+    
+    input:focus + .slider {
+      box-shadow: 0 0 1px var(--primary);
+    }
+    
+    input:checked + .slider:before {
+      transform: translateX(26px);
+    }
+    
+    .slider.round {
+      border-radius: 24px;
+    }
+    
+    .slider.round:before {
+      border-radius: 50%;
+    }
+    
     /* Responsive Styles */
     @media (min-width: 480px) {
       .header-user-info {
         display: block;
       }
       
+      .users-online-badge {
+        display: flex;
+      }
+      
       .quick-actions {
         grid-template-columns: repeat(4, 1fr);
       }
       
-      .stats-grid {
-        grid-template-columns: repeat(3, 1fr);
+      .stat-value {
+        font-size: 1.25rem;
       }
       
       .amount-options {
         grid-template-columns: repeat(3, 1fr);
+      }
+      
+      .action-label {
+        font-size: 0.8rem;
+      }
+      
+      .action-description {
+        font-size: 0.75rem;
       }
     }
     
@@ -2348,7 +2480,7 @@
       }
       
       .dashboard-content {
-        padding: 1.5rem;
+        padding: 1.25rem;
       }
       
       .header-brand-text {
@@ -2358,15 +2490,15 @@
       .nav-desktop {
         display: flex;
         align-items: center;
-        gap: 1.5rem;
+        gap: 1.25rem;
       }
       
       .nav-desktop-item {
-        padding: 0.5rem 0.75rem;
+        padding: 0.4rem 0.6rem;
         border-radius: var(--radius-md);
         color: var(--neutral-700);
         font-weight: 500;
-        font-size: 0.875rem;
+        font-size: 0.8rem;
         transition: var(--transition-base);
         cursor: pointer;
       }
@@ -2384,14 +2516,29 @@
       .dashboard-grid {
         display: grid;
         grid-template-columns: 2fr 1fr;
-        gap: 1.5rem;
+        gap: 1.25rem;
         margin-bottom: 1.5rem;
+      }
+      
+      .action-icon {
+        width: 44px;
+        height: 44px;
+        font-size: 1.1rem;
+      }
+      
+      .balance-amount {
+        font-size: 2.25rem;
+      }
+      
+      .balance-btn {
+        height: 44px;
+        font-size: 0.85rem;
       }
     }
     
     @media (min-width: 1024px) {
       .dashboard-content {
-        padding: 2rem;
+        padding: 1.5rem;
       }
       
       .bottom-nav {
@@ -2752,7 +2899,7 @@
             <i class="fas fa-star"></i> Servicios Destacados
           </div>
           
-          <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
+          <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem;">
             <div class="action-item" id="service-bills">
               <div class="action-icon services">
                 <i class="fas fa-file-invoice"></i>
@@ -2779,711 +2926,722 @@
             
             <div class="action-item" id="service-zelle">
               <div class="action-icon info">
-            <i class="fas fa-university"></i>
+                <i class="fas fa-university"></i>
+              </div>
+              <div class="action-label">Cuenta Zelle</div>
+              <div class="action-description">Pagos internacionales</div>
+            </div>
           </div>
-          <div class="action-label">Cuenta Zelle</div>
-          <div class="action-description">Pagos internacionales</div>
+        </div>
+        
+        <!-- Contact Section -->
+        <div class="card">
+          <div class="section-title" style="margin-bottom: 1rem;">
+            <i class="fas fa-headset"></i> Soporte y Ayuda
+          </div>
+          
+          <div class="contact-options">
+            <a href="https://wa.me/+17373018059" class="contact-option" target="_blank">
+              <div class="contact-icon whatsapp">
+                <i class="fab fa-whatsapp"></i>
+              </div>
+              <div class="contact-content">
+                <div class="contact-title">WhatsApp</div>
+                <div class="contact-description">Atención 24/7 vía chat</div>
+              </div>
+            </a>
+            
+            <a href="mailto:soporte@remeex.com" class="contact-option">
+              <div class="contact-icon email">
+                <i class="fas fa-envelope"></i>
+              </div>
+              <div class="contact-content">
+                <div class="contact-title">Correo Electrónico</div>
+                <div class="contact-description">soporte@remeex.com</div>
+              </div>
+            </a>
+          </div>
         </div>
       </div>
-    </div>
-    
-    <!-- Contact Section -->
-    <div class="card">
-      <div class="section-title" style="margin-bottom: 1rem;">
-        <i class="fas fa-headset"></i> Soporte y Ayuda
+      
+      <!-- History Section -->
+      <div id="history-section" style="display: none;">
+        <div class="section-title">
+          <i class="fas fa-history"></i> Historial de Transacciones
+        </div>
+        
+        <div class="card">
+          <div class="transaction-list" id="all-transactions">
+            <!-- Will be populated by JavaScript -->
+          </div>
+        </div>
       </div>
       
-      <div class="contact-options">
-        <a href="https://wa.me/+17373018059" class="contact-option" target="_blank">
-          <div class="contact-icon whatsapp">
-            <i class="fab fa-whatsapp"></i>
-          </div>
-          <div class="contact-content">
-            <div class="contact-title">WhatsApp</div>
-            <div class="contact-description">Atención 24/7 vía chat</div>
-          </div>
-        </a>
+      <!-- Settings Section -->
+      <div id="settings-section" style="display: none;">
+        <div class="section-title">
+          <i class="fas fa-user"></i> Información de Cuenta
+        </div>
         
-        <a href="mailto:soporte@remeex.com" class="contact-option">
-          <div class="contact-icon email">
-            <i class="fas fa-envelope"></i>
+        <div class="card">
+          <div class="form-group">
+            <label class="form-label" for="settings-name">Nombre Completo</label>
+            <input type="text" class="form-control" id="settings-name" disabled>
           </div>
-          <div class="contact-content">
-            <div class="contact-title">Correo Electrónico</div>
-            <div class="contact-description">soporte@remeex.com</div>
+          
+          <div class="form-group">
+            <label class="form-label" for="settings-email">Correo Electrónico</label>
+            <input type="email" class="form-control" id="settings-email" disabled>
           </div>
-        </a>
+          
+          <button class="btn btn-primary">
+            <i class="fas fa-lock"></i> Cambiar Contraseña
+          </button>
+        </div>
+        
+        <div class="section-title" style="margin-top: 1.5rem;">
+          <i class="fas fa-bell"></i> Notificaciones
+        </div>
+        
+        <div class="card">
+          <div style="display: flex; flex-direction: column; gap: 1rem;">
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+              <div>Notificaciones por correo</div>
+              <label class="switch">
+                <input type="checkbox" checked>
+                <span class="slider round"></span>
+              </label>
+            </div>
+            
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+              <div>Notificaciones por SMS</div>
+              <label class="switch">
+                <input type="checkbox" checked>
+                <span class="slider round"></span>
+              </label>
+            </div>
+            
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+              <div>Alertas de seguridad</div>
+              <label class="switch">
+                <input type="checkbox" checked>
+                <span class="slider round"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+        
+        <div class="section-title" style="margin-top: 1.5rem;">
+          <i class="fas fa-shield-alt"></i> Seguridad
+        </div>
+        
+        <div class="card">
+          <div style="display: flex; flex-direction: column; gap: 1rem;">
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+              <div>Autenticación de dos factores</div>
+              <label class="switch">
+                <input type="checkbox">
+                <span class="slider round"></span>
+              </label>
+            </div>
+            
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+              <div>Notificaciones de inicio de sesión</div>
+              <label class="switch">
+                <input type="checkbox" checked>
+                <span class="slider round"></span>
+              </label>
+            </div>
+          </div>
+          
+          <div style="display: flex; gap: 0.75rem; margin-top: 1.5rem;">
+            <a href="verificacion.html" class="btn btn-primary" style="flex: 1;">
+              <i class="fas fa-id-card"></i> Verificar mi Identidad
+            </a>
+            <button class="btn btn-primary" id="verify-identity-btn" style="flex: 1;">
+              <i class="fas fa-user-shield"></i> Verificar Ahora
+            </button>
+          </div>
+        </div>
+        
+        <div class="section-title" style="margin-top: 1.5rem;">
+          <i class="fas fa-headset"></i> Soporte
+        </div>
+        
+        <div class="card">
+          <div class="contact-options">
+            <a href="https://wa.me/+17373018059" class="contact-option" target="_blank">
+              <div class="contact-icon whatsapp">
+                <i class="fab fa-whatsapp"></i>
+              </div>
+              <div class="contact-content">
+                <div class="contact-title">WhatsApp</div>
+                <div class="contact-description">Atención 24/7 vía chat</div>
+              </div>
+            </a>
+            
+            <a href="mailto:soporte@remeex.com" class="contact-option">
+              <div class="contact-icon email">
+                <i class="fas fa-envelope"></i>
+              </div>
+              <div class="contact-content">
+                <div class="contact-title">Correo Electrónico</div>
+                <div class="contact-description">soporte@remeex.com</div>
+              </div>
+            </a>
+          </div>
+          
+          <button class="btn btn-primary" style="width: 100%; margin-top: 1.5rem;" id="logout-btn">
+            <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+          </button>
+        </div>
       </div>
     </div>
   </div>
-  
-  <!-- History Section -->
-  <div id="history-section" style="display: none;">
-    <div class="section-title">
-      <i class="fas fa-history"></i> Historial de Transacciones
-    </div>
-    
-    <div class="card">
-      <div class="transaction-list" id="all-transactions">
-        <!-- Will be populated by JavaScript -->
-      </div>
-    </div>
-  </div>
-  
-  <!-- Settings Section -->
-  <div id="settings-section" style="display: none;">
-    <div class="section-title">
-      <i class="fas fa-user"></i> Información de Cuenta
-    </div>
-    
-    <div class="card">
-      <div class="form-group">
-        <label class="form-label" for="settings-name">Nombre Completo</label>
-        <input type="text" class="form-control" id="settings-name" disabled>
-      </div>
-      
-      <div class="form-group">
-        <label class="form-label" for="settings-email">Correo Electrónico</label>
-        <input type="email" class="form-control" id="settings-email" disabled>
-      </div>
-      
-      <button class="btn btn-primary">
-        <i class="fas fa-lock"></i> Cambiar Contraseña
-      </button>
-    </div>
-    
-    <div class="section-title" style="margin-top: 1.5rem;">
-      <i class="fas fa-bell"></i> Notificaciones
-    </div>
-    
-    <div class="card">
-      <div style="display: flex; flex-direction: column; gap: 1rem;">
-        <div style="display: flex; align-items: center; justify-content: space-between;">
-          <div>Notificaciones por correo</div>
-          <label class="switch">
-            <input type="checkbox" checked>
-            <span class="slider round"></span>
-          </label>
-        </div>
-        
-        <div style="display: flex; align-items: center; justify-content: space-between;">
-          <div>Notificaciones por SMS</div>
-          <label class="switch">
-            <input type="checkbox" checked>
-            <span class="slider round"></span>
-          </label>
-        </div>
-        
-        <div style="display: flex; align-items: center; justify-content: space-between;">
-          <div>Alertas de seguridad</div>
-          <label class="switch">
-            <input type="checkbox" checked>
-            <span class="slider round"></span>
-          </label>
-        </div>
-      </div>
-    </div>
-    
-    <div class="section-title" style="margin-top: 1.5rem;">
-      <i class="fas fa-shield-alt"></i> Seguridad
-    </div>
-    
-    <div class="card">
-      <div style="display: flex; flex-direction: column; gap: 1rem;">
-        <div style="display: flex; align-items: center; justify-content: space-between;">
-          <div>Autenticación de dos factores</div>
-          <label class="switch">
-            <input type="checkbox">
-            <span class="slider round"></span>
-          </label>
-        </div>
-        
-        <div style="display: flex; align-items: center; justify-content: space-between;">
-          <div>Notificaciones de inicio de sesión</div>
-          <label class="switch">
-            <input type="checkbox" checked>
-            <span class="slider round"></span>
-          </label>
-        </div>
-      </div>
-      
-      <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
-        <a href="verificacion.html" class="btn btn-primary" style="flex: 1;">
-          <i class="fas fa-id-card"></i> Verificar mi Identidad
-        </a>
-        <button class="btn btn-primary" id="verify-identity-btn" style="flex: 1;">
-          <i class="fas fa-user-shield"></i> Verificar Ahora
-        </button>
-      </div>
-    </div>
-    
-    <div class="section-title" style="margin-top: 1.5rem;">
-      <i class="fas fa-headset"></i> Soporte
-    </div>
-    
-    <div class="card">
-      <div class="contact-options">
-        <a href="https://wa.me/+17373018059" class="contact-option" target="_blank">
-          <div class="contact-icon whatsapp">
-            <i class="fab fa-whatsapp"></i>
-          </div>
-          <div class="contact-content">
-            <div class="contact-title">WhatsApp</div>
-            <div class="contact-description">Atención 24/7 vía chat</div>
-          </div>
-        </a>
-        
-        <a href="mailto:soporte@remeex.com" class="contact-option">
-          <div class="contact-icon email">
-            <i class="fas fa-envelope"></i>
-          </div>
-          <div class="contact-content">
-            <div class="contact-title">Correo Electrónico</div>
-            <div class="contact-description">soporte@remeex.com</div>
-          </div>
-        </a>
-      </div>
-      
-      <button class="btn btn-primary" style="width: 100%; margin-top: 1.5rem;" id="logout-btn">
-        <i class="fas fa-sign-out-alt"></i> Cerrar Sesión</button>
-    </div>
-  </div>
-</div>
 
-<!-- Bottom Navigation -->
-<nav class="bottom-nav">
-  <div class="nav-item active" data-section="home">
-    <div class="nav-icon"><i class="fas fa-home"></i></div>
-    <div class="nav-label">Inicio</div>
-  </div>
-  
-  <div class="nav-item" data-section="history">
-    <div class="nav-icon"><i class="fas fa-history"></i></div>
-    <div class="nav-label">Historial</div>
-  </div>
-  
-  <div class="nav-item" id="nav-recharge">
-    <div class="nav-icon"><i class="fas fa-plus-circle"></i></div>
-    <div class="nav-label">Recargar</div>
-  </div>
-  
-  <div class="nav-item" data-section="settings">
-    <div class="nav-icon"><i class="fas fa-cog"></i></div>
-    <div class="nav-label">Ajustes</div>
-  </div>
-</nav></div>
+  <!-- Bottom Navigation -->
+  <nav class="bottom-nav">
+    <div class="nav-item active" data-section="home">
+      <div class="nav-icon"><i class="fas fa-home"></i></div>
+      <div class="nav-label">Inicio</div>
+    </div>
+    
+    <div class="nav-item" data-section="history">
+      <div class="nav-icon"><i class="fas fa-history"></i></div>
+      <div class="nav-label">Historial</div>
+    </div>
+    
+    <div class="nav-item" id="nav-recharge">
+      <div class="nav-icon"><i class="fas fa-plus-circle"></i></div>
+      <div class="nav-label">Recargar</div>
+    </div>
+    
+    <div class="nav-item" data-section="settings">
+      <div class="nav-icon"><i class="fas fa-cog"></i></div>
+      <div class="nav-label">Ajustes</div>
+    </div>
+  </nav>
+
   <!-- Recharge Container -->
   <div class="recharge-container" id="recharge-container">
     <div class="section-title" style="margin-bottom: 1.5rem; display: flex; align-items: center;">
       <i class="fas fa-arrow-left" id="recharge-back" style="cursor: pointer; margin-right: 1rem;"></i>
       <span>Recargar Saldo</span>
-    </div><div class="security-badge" style="margin-bottom: 1.5rem;">
-  <div class="security-badge-icon">
-    <i class="fas fa-lock"></i>
-  </div>
-  <div class="security-badge-content">
-    <div class="security-badge-title">Transacción Segura</div>
-    <div class="security-badge-text">Todos los pagos están protegidos con cifrado SSL</div>
-  </div>
-</div>
+    </div>
+    
+    <div class="security-badge" style="margin-bottom: 1.5rem;">
+      <div class="security-badge-icon">
+        <i class="fas fa-lock"></i>
+      </div>
+      <div class="security-badge-content">
+        <div class="security-badge-title">Transacción Segura</div>
+        <div class="security-badge-text">Todos los pagos están protegidos con cifrado SSL</div>
+      </div>
+    </div>
 
-<div class="payment-method-tabs">
-  <div class="payment-method-tab active" data-target="card-payment">Tarjeta de Crédito</div>
-  <div class="payment-method-tab" data-target="bank-payment">Transferencia Bancaria</div>
-  <div class="payment-method-tab" data-target="mobile-payment">Pago Móvil</div>
-</div>
+    <div class="payment-method-tabs">
+      <div class="payment-method-tab active" data-target="card-payment">Tarjeta de Crédito</div>
+      <div class="payment-method-tab" data-target="bank-payment">Transferencia Bancaria</div>
+      <div class="payment-method-tab" data-target="mobile-payment">Pago Móvil</div>
+    </div>
 
-<!-- Credit Card Payment Method -->
-<div class="payment-method-content active" id="card-payment">
-  <div class="card">
-    <div style="margin-bottom: 1.5rem; text-align: center;">
-      <div style="font-size: 0.875rem; color: var(--neutral-600); margin-bottom: 0.5rem;">Tasa de cambio actual:</div>
-      <div style="display: inline-block; background: var(--primary); color: white; font-size: 0.85rem; font-weight: 600; padding: 0.5rem 1rem; border-radius: var(--radius-md);">
-        1 USD = 109.19 Bs | 1 USD = 0.94 EUR
-      </div>
-    </div>
-    
-    <div class="section-title" style="margin-bottom: 0.5rem;">
-      <i class="fas fa-th-large"></i> Montos Predefinidos
-    </div>
-    
-    <div class="amount-options">
-      <div class="amount-option" data-amount="500" data-bs="54595" data-eur="470">
-        <div class="amount-value">$500</div>
-        <div class="amount-equivalent">Bs 54,595.00<br>€470.00</div>
-      </div>
-      
-      <div class="amount-option" data-amount="1000" data-bs="109190" data-eur="940">
-        <div class="amount-value">$1000</div>
-        <div class="amount-equivalent">Bs 109,190.00<br>€940.00</div>
-      </div>
-      
-      <div class="amount-option" data-amount="3000" data-bs="327570" data-eur="2820">
-        <div class="amount-value">$3000</div>
-        <div class="amount-equivalent">Bs 327,570.00<br>€2,820.00</div>
-      </div>
-      
-      <div class="amount-option" data-amount="5000" data-bs="545950" data-eur="4700">
-        <div class="amount-value">$5000</div>
-        <div class="amount-equivalent">Bs 545,950.00<br>€4,700.00</div>
-      </div>
-    </div>
-    
-    <div class="custom-amount">
-      <div class="custom-amount-title">
-        <i class="fas fa-edit"></i> O Ingrese un Monto Personalizado
-      </div>
-      
-      <div class="custom-amount-container">
-        <span class="custom-amount-prefix">$</span>
-        <input type="number" class="form-control custom-amount-input" id="custom-amount" placeholder="0" min="500" max="8000" aria-label="Monto personalizado">
-      </div>
-      <div class="amount-limits">Monto mínimo: $500 - Monto máximo: $8000</div>
-      
-      <div id="custom-amount-preview" style="margin-top: 1rem; font-size: 0.9rem; color: var(--neutral-600); display: none;">
-        <div style="margin-bottom: 0.5rem; font-weight: 500;">Equivalente a:</div>
-        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
-          <div>
-            <img src="https://upload.wikimedia.org/wikipedia/commons/0/06/Flag_of_Venezuela.svg" style="width: 16px; height: 10px; margin-right: 0.25rem; vertical-align: middle;" alt="Bandera de Venezuela">
-            <span id="custom-amount-bs">Bs 0.00</span>
+    <!-- Credit Card Payment Method -->
+    <div class="payment-method-content active" id="card-payment">
+      <div class="card">
+        <div style="margin-bottom: 1.25rem; text-align: center;">
+          <div style="font-size: 0.8rem; color: var(--neutral-600); margin-bottom: 0.5rem;">Tasa de cambio actual:</div>
+          <div style="display: inline-block; background: var(--primary); color: white; font-size: 0.8rem; font-weight: 600; padding: 0.5rem 0.75rem; border-radius: var(--radius-md);">
+            1 USD = 109.19 Bs | 1 USD = 0.94 EUR
           </div>
-          <div>
-            <img src="https://flagcdn.com/es.svg" style="width: 16px; height: 10px; margin-right: 0.25rem; vertical-align: middle;" alt="Bandera de España">
-            <span id="custom-amount-eur">€0.00</span>
+        </div>
+        
+        <div class="section-title" style="margin-bottom: 0.5rem;">
+          <i class="fas fa-th-large"></i> Montos Predefinidos
+        </div>
+        
+        <div class="amount-options">
+          <div class="amount-option" data-amount="500" data-bs="54595" data-eur="470">
+            <div class="amount-value">$500</div>
+            <div class="amount-equivalent">Bs 54,595.00<br>€470.00</div>
+          </div>
+          
+          <div class="amount-option" data-amount="1000" data-bs="109190" data-eur="940">
+            <div class="amount-value">$1000</div>
+            <div class="amount-equivalent">Bs 109,190.00<br>€940.00</div>
+          </div>
+          
+          <div class="amount-option" data-amount="3000" data-bs="327570" data-eur="2820">
+            <div class="amount-value">$3000</div>
+            <div class="amount-equivalent">Bs 327,570.00<br>€2,820.00</div>
+          </div>
+          
+          <div class="amount-option" data-amount="5000" data-bs="545950" data-eur="4700">
+            <div class="amount-value">$5000</div>
+            <div class="amount-equivalent">Bs 545,950.00<br>€4,700.00</div>
+          </div>
+        </div>
+        
+        <div class="custom-amount">
+          <div class="custom-amount-title">
+            <i class="fas fa-edit"></i> O Ingrese un Monto Personalizado
+          </div>
+          
+          <div class="custom-amount-container">
+            <span class="custom-amount-prefix">$</span>
+            <input type="number" class="form-control custom-amount-input" id="custom-amount" placeholder="0" min="500" max="8000" aria-label="Monto personalizado">
+          </div>
+          <div class="amount-limits">Monto mínimo: $500 - Monto máximo: $8000</div>
+          
+          <div id="custom-amount-preview" style="margin-top: 1rem; font-size: 0.85rem; color: var(--neutral-600); display: none;">
+            <div style="margin-bottom: 0.5rem; font-weight: 500;">Equivalente a:</div>
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+              <div>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/0/06/Flag_of_Venezuela.svg" style="width: 16px; height: 10px; margin-right: 0.25rem; vertical-align: middle;" alt="Bandera de Venezuela">
+                <span id="custom-amount-bs">Bs 0.00</span>
+              </div>
+              <div>
+                <img src="https://flagcdn.com/es.svg" style="width: 16px; height: 10px; margin-right: 0.25rem; vertical-align: middle;" alt="Bandera de España">
+                <span id="custom-amount-eur">€0.00</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </div>
-  
-  <div class="card" style="margin-top: 1.5rem;">
-    <div class="section-title" style="margin-bottom: 1rem;">
-      <i class="fas fa-credit-card"></i> Detalles de la Tarjeta
-    </div>
-    
-    <div class="card-preview" id="card-preview">
-      <div class="card-inner">
-        <div class="card-front">
-          <div class="card-logo">
-            <img src="https://raw.githubusercontent.com/muhammederdem/credit-card-form/master/src/assets/images/chip.png" class="card-chip" alt="Chip de tarjeta">
-            <img id="card-brand-logo" src="https://raw.githubusercontent.com/muhammederdem/credit-card-form/master/src/assets/images/visa.png" class="card-brand" alt="Logo de Visa">
-          </div>
-          
-          <div class="card-number" id="card-number-display">•••• •••• •••• ••••</div>
-          
-          <div class="card-details">
-            <div class="card-holder">
-              <div style="opacity: 0.7; font-size: 0.75rem; margin-bottom: 4px;">Titular</div>
-              <div id="card-holder-display">••••••• •••••••</div>
+      
+      <div class="card" style="margin-top: 1.5rem;">
+        <div class="section-title" style="margin-bottom: 1rem;">
+          <i class="fas fa-credit-card"></i> Detalles de la Tarjeta
+        </div>
+        
+        <div class="card-preview" id="card-preview">
+          <div class="card-inner">
+            <div class="card-front">
+              <div class="card-logo">
+                <img src="https://raw.githubusercontent.com/muhammederdem/credit-card-form/master/src/assets/images/chip.png" class="card-chip" alt="Chip de tarjeta">
+                <img id="card-brand-logo" src="https://raw.githubusercontent.com/muhammederdem/credit-card-form/master/src/assets/images/visa.png" class="card-brand" alt="Logo de Visa">
+              </div>
+              
+              <div class="card-number" id="card-number-display">•••• •••• •••• ••••</div>
+              
+              <div class="card-details">
+                <div class="card-holder">
+                  <div style="opacity: 0.7; font-size: 0.7rem; margin-bottom: 4px;">Titular</div>
+                  <div id="card-holder-display">••••••• •••••••</div>
+                </div>
+                
+                <div class="card-expiry">
+                  <div style="text-align: right;">
+                    <div style="opacity: 0.7; font-size: 0.7rem; margin-bottom: 4px;">Expira</div>
+                    <div><span id="card-month-display">••</span>/<span id="card-year-display">••</span></div>
+                  </div>
+                </div>
+              </div>
             </div>
             
-            <div class="card-expiry">
-              <div style="text-align: right;">
-                <div style="opacity: 0.7; font-size: 0.75rem; margin-bottom: 4px;">Expira</div>
-                <div><span id="card-month-display">••</span>/<span id="card-year-display">••</span></div>
+            <div class="card-back">
+              <div class="card-stripe"></div>
+              <div style="padding: 0 1.25rem;">
+                <div style="font-size: 0.7rem; margin-bottom: 0.5rem;">CVV</div>
+                <div class="card-cvv" id="card-cvv-display">•••</div>
               </div>
             </div>
           </div>
         </div>
         
-        <div class="card-back">
-          <div class="card-stripe"></div>
-          <div style="padding: 0 1.25rem;">
-            <div style="font-size: 0.75rem; margin-bottom: 0.5rem;">CVV</div>
-            <div class="card-cvv" id="card-cvv-display">•••</div>
+        <div class="card-form">
+          <div class="form-group">
+            <label class="form-label" for="cardName">Titular de la Tarjeta</label>
+            <input type="text" class="form-control" id="cardName" placeholder="Nombre como aparece en la tarjeta" aria-describedby="card-name-error">
+            <div class="error-message" id="card-name-error">Por favor, introduce el nombre del titular.</div>
           </div>
+          
+          <div class="form-group">
+            <label class="form-label" for="cardNumber">Número de Tarjeta</label>
+            <input type="text" class="form-control" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19" aria-describedby="card-number-error">
+            <div class="error-message" id="card-number-error">Número de tarjeta no válido.</div>
+          </div>
+          
+          <div class="card-row">
+            <div class="card-col">
+              <label class="form-label">Fecha de Expiración</label>
+              <div style="display: flex; gap: 0.5rem;">
+                <select class="form-control" id="cardMonth" aria-describedby="card-date-error">
+                  <option value="" disabled selected>Mes</option>
+                  <option value="01">01</option>
+                  <option value="02">02</option>
+                  <option value="03">03</option>
+                  <option value="04">04</option>
+                  <option value="05">05</option>
+                  <option value="06">06</option>
+                  <option value="07">07</option>
+                  <option value="08">08</option>
+                  <option value="09">09</option>
+                  <option value="10">10</option>
+                  <option value="11">11</option>
+                  <option value="12">12</option>
+                </select>
+                
+                <select class="form-control" id="cardYear" aria-describedby="card-date-error">
+                  <option value="" disabled selected>Año</option>
+                  <option value="2025">2025</option>
+                  <option value="2026">2026</option>
+                  <option value="2027">2027</option>
+                  <option value="2028">2028</option>
+                  <option value="2029">2029</option>
+                  <option value="2030">2030</option>
+                </select>
+              </div>
+              <div class="error-message" id="card-date-error">Por favor, selecciona una fecha válida.</div>
+            </div>
+            
+            <div class="card-col" style="max-width: 120px;">
+              <label class="form-label" for="cardCvv">CVV</label>
+              <input type="password" class="form-control" id="cardCvv" placeholder="•••" maxlength="3" aria-describedby="card-cvv-error">
+              <div class="error-message" id="card-cvv-error">CVV inválido.</div>
+            </div>
+          </div>
+          
+          <button class="btn btn-primary" id="submit-payment" style="margin-top: 1.5rem;">
+            <i class="fas fa-credit-card"></i> Pagar $500
+          </button>
         </div>
       </div>
     </div>
-    
-    <div class="card-form">
-      <div class="form-group">
-        <label class="form-label" for="cardName">Titular de la Tarjeta</label>
-        <input type="text" class="form-control" id="cardName" placeholder="Nombre como aparece en la tarjeta" aria-describedby="card-name-error">
-        <div class="error-message" id="card-name-error">Por favor, introduce el nombre del titular.</div>
-      </div>
-      
-      <div class="form-group">
-        <label class="form-label" for="cardNumber">Número de Tarjeta</label>
-        <input type="text" class="form-control" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19" aria-describedby="card-number-error">
-        <div class="error-message" id="card-number-error">Número de tarjeta no válido.</div>
-      </div>
-      
-      <div class="card-row">
-        <div class="card-col">
-          <label class="form-label">Fecha de Expiración</label>
-          <div style="display: flex; gap: 0.5rem;">
-            <select class="form-control" id="cardMonth" aria-describedby="card-date-error">
-              <option value="" disabled selected>Mes</option>
-              <option value="01">01</option>
-              <option value="02">02</option>
-              <option value="03">03</option>
-              <option value="04">04</option>
-              <option value="05">05</option>
-              <option value="06">06</option>
-              <option value="07">07</option>
-              <option value="08">08</option>
-              <option value="09">09</option>
-              <option value="10">10</option>
-              <option value="11">11</option>
-              <option value="12">12</option>
-            </select>
-            
-            <select class="form-control" id="cardYear" aria-describedby="card-date-error">
-              <option value="" disabled selected>Año</option>
-              <option value="2025">2025</option>
-              <option value="2026">2026</option>
-              <option value="2027">2027</option>
-              <option value="2028">2028</option>
-              <option value="2029">2029</option>
-              <option value="2030">2030</option>
-            </select>
+
+    <!-- Bank Transfer Payment Method -->
+    <div class="payment-method-content" id="bank-payment">
+      <div class="card">
+        <div style="margin-bottom: 1.25rem; text-align: center;">
+          <div style="font-size: 0.8rem; color: var(--neutral-600); margin-bottom: 0.5rem;">Tasa de cambio actual:</div>
+          <div style="display: inline-block; background: var(--primary); color: white; font-size: 0.8rem; font-weight: 600; padding: 0.5rem 0.75rem; border-radius: var(--radius-md);">
+            1 USD = 109.19 Bs | 1 USD = 0.94 EUR
           </div>
-          <div class="error-message" id="card-date-error">Por favor, selecciona una fecha válida.</div>
         </div>
         
-        <div class="card-col" style="max-width: 120px;">
-          <label class="form-label" for="cardCvv">CVV</label>
-          <input type="password" class="form-control" id="cardCvv" placeholder="•••" maxlength="3" aria-describedby="card-cvv-error">
-          <div class="error-message" id="card-cvv-error">CVV inválido.</div>
+        <div class="section-title" style="margin-bottom: 0.5rem;">
+          <i class="fas fa-th-large"></i> Montos Predefinidos
         </div>
+        
+        <div class="amount-options">
+          <div class="amount-option bank-amount" data-amount="25" data-bs="2730" data-eur="23.5">
+            <div class="amount-value">$25</div>
+            <div class="amount-equivalent">Bs 2,730.00<br>€23.50</div>
+          </div>
+          
+          <div class="amount-option bank-amount" data-amount="100" data-bs="10919" data-eur="94">
+            <div class="amount-value">$100</div>
+            <div class="amount-equivalent">Bs 10,919.00<br>€94.00</div>
+          </div>
+          
+          <div class="amount-option bank-amount" data-amount="200" data-bs="21838" data-eur="188">
+            <div class="amount-value">$200</div>
+            <div class="amount-equivalent">Bs 21,838.00<br>€188.00</div>
+          </div>
+          
+          <div class="amount-option bank-amount" data-amount="300" data-bs="32757" data-eur="282">
+            <div class="amount-value">$300</div>
+            <div class="amount-equivalent">Bs 32,757.00<br>€282.00</div>
+          </div>
+          
+          <div class="amount-option bank-amount" data-amount="400" data-bs="43676" data-eur="376">
+            <div class="amount-value">$400</div>
+            <div class="amount-equivalent">Bs 43,676.00<br>€376.00</div>
+          </div>
+          
+          <div class="amount-option bank-amount" data-amount="500" data-bs="54595" data-eur="470">
+            <div class="amount-value">$500</div>
+            <div class="amount-equivalent">Bs 54,595.00<br>€470.00</div>
+          </div>
+        </div>
+        
+        <div class="custom-amount">
+          <div class="custom-amount-title">
+            <i class="fas fa-edit"></i> O Ingrese un Monto Personalizado
+          </div>
+          
+          <div class="custom-amount-container">
+            <span class="custom-amount-prefix">$</span>
+            <input type="number" class="form-control custom-amount-input" id="custom-amount-bank" placeholder="0" min="25" max="500" aria-label="Monto personalizado para transferencia">
+          </div>
+          <div class="amount-limits">Monto mínimo: $25 - Monto máximo: $500</div>
+          
+          <div id="custom-amount-bank-preview" style="margin-top: 1rem; font-size: 0.85rem; color: var(--neutral-600); display: none;">
+            <div style="margin-bottom: 0.5rem; font-weight: 500;">Equivalente a:</div>
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+              <div>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/0/06/Flag_of_Venezuela.svg" style="width: 16px; height: 10px; margin-right: 0.25rem; vertical-align: middle;" alt="Bandera de Venezuela">
+                <span id="custom-amount-bank-bs">Bs 0.00</span>
+              </div>
+              <div>
+                <img src="https://flagcdn.com/es.svg" style="width: 16px; height: 10px; margin-right: 0.25rem; vertical-align: middle;" alt="Bandera de España">
+                <span id="custom-amount-bank-eur">€0.00</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="section-title" style="margin-top: 1.5rem; margin-bottom: 1rem;">
+          <i class="fas fa-university"></i> Datos Bancarios
+        </div>
+        
+        <div class="bank-details">
+          <div class="bank-detail-row">
+            <div class="bank-detail-label">Banco:</div>
+            <div class="bank-detail-value">
+              Banco Venezolano de Crédito
+              <div class="copy-btn" data-copy="Banco Venezolano de Crédito"><i class="far fa-copy"></i></div>
+            </div>
+          </div>
+          
+          <div class="bank-detail-row">
+            <div class="bank-detail-label">Titular:</div>
+            <div class="bank-detail-value">
+              Global VISA Venezuela
+              <div class="copy-btn" data-copy="Global VISA Venezuela"><i class="far fa-copy"></i></div>
+            </div>
+          </div>
+          
+          <div class="bank-detail-row">
+            <div class="bank-detail-label">RIF:</div>
+            <div class="bank-detail-value">
+              J407502646
+              <div class="copy-btn" data-copy="J407502646"><i class="far fa-copy"></i></div>
+            </div>
+          </div>
+          
+          <div class="bank-detail-row">
+            <div class="bank-detail-label">Cuenta Corriente:</div>
+            <div class="bank-detail-value">
+              0104-0019-86-0190162931
+              <div class="copy-btn" data-copy="0104-0019-86-0190162931"><i class="far fa-copy"></i></div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="bank-warning">
+          <div class="bank-warning-title">
+            <i class="fas fa-exclamation-triangle"></i> Importante
+          </div>
+          <div class="bank-warning-content">
+            Asegúrese de realizar la transferencia <strong>únicamente</strong> al Banco Venezolano de Crédito. No confundir con Banco Nacional de Crédito ni Banco de Venezuela. Una vez realizada la transferencia, complete el formulario a continuación.
+          </div>
+        </div>
+        
+        <div class="section-title" style="margin-top: 1.5rem; margin-bottom: 1rem;">
+          <i class="fas fa-upload"></i> Comprobante de Pago
+        </div>
+        
+        <div class="receipt-upload" id="receipt-upload">
+          <i class="fas fa-cloud-upload-alt"></i>
+          <div class="receipt-upload-title">Subir Comprobante</div>
+          <div class="receipt-upload-subtitle">Haga clic aquí para cargar su comprobante de pago<br>Formatos aceptados: JPG, PNG, PDF (máx. 5MB)</div>
+          <input type="file" id="receipt-file" accept="image/jpeg,image/png,application/pdf" style="display: none;">
+        </div>
+        
+        <div class="receipt-preview" id="receipt-preview">
+          <div class="receipt-preview-container">
+            <div class="receipt-preview-icon">
+              <i class="fas fa-file-alt"></i>
+            </div>
+            <div class="receipt-preview-content">
+              <div class="receipt-preview-name" id="receipt-filename">comprobante.jpg</div>
+              <div class="receipt-preview-size" id="receipt-filesize">120 KB</div>
+            </div>
+            <div class="receipt-preview-actions">
+              <div class="copy-btn" id="receipt-remove"><i class="fas fa-trash"></i></div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="form-group reference-number">
+          <label class="form-label" for="reference-number">Número de Referencia</label>
+          <input type="text" class="form-control" id="reference-number" placeholder="Ingrese el número de referencia de la transferencia" aria-describedby="reference-error">
+          <div class="error-message" id="reference-error">Por favor, ingrese un número de referencia válido.</div>
+        </div>
+        
+        <button class="btn btn-primary" id="submit-bank-transfer" style="margin-top: 1.5rem;">
+          <i class="fas fa-paper-plane"></i> Enviar Comprobante
+        </button>
       </div>
-      
-      <button class="btn btn-primary" id="submit-payment" style="margin-top: 1.5rem;">
-        <i class="fas fa-credit-card"></i> Pagar $500
-      </button>
     </div>
-  </div>
-</div>
 
-<!-- Bank Transfer Payment Method -->
-<div class="payment-method-content" id="bank-payment">
-  <div class="card">
-    <div style="margin-bottom: 1.5rem; text-align: center;">
-      <div style="font-size: 0.875rem; color: var(--neutral-600); margin-bottom: 0.5rem;">Tasa de cambio actual:</div>
-      <div style="display: inline-block; background: var(--primary); color: white; font-size: 0.85rem; font-weight: 600; padding: 0.5rem 1rem; border-radius: var(--radius-md);">
-        1 USD = 109.19 Bs | 1 USD = 0.94 EUR
-      </div>
-    </div>
-    
-    <div class="section-title" style="margin-bottom: 0.5rem;">
-      <i class="fas fa-th-large"></i> Montos Predefinidos
-    </div>
-    
-    <div class="amount-options">
-      <div class="amount-option bank-amount" data-amount="25" data-bs="2730" data-eur="23.5">
-        <div class="amount-value">$25</div>
-        <div class="amount-equivalent">Bs 2,730.00<br>€23.50</div>
-      </div>
-      
-      <div class="amount-option bank-amount" data-amount="100" data-bs="10919" data-eur="94">
-        <div class="amount-value">$100</div>
-        <div class="amount-equivalent">Bs 10,919.00<br>€94.00</div>
-      </div>
-      
-      <div class="amount-option bank-amount" data-amount="200" data-bs="21838" data-eur="188">
-        <div class="amount-value">$200</div>
-        <div class="amount-equivalent">Bs 21,838.00<br>€188.00</div>
-      </div>
-      
-      <div class="amount-option bank-amount" data-amount="300" data-bs="32757" data-eur="282">
-        <div class="amount-value">$300</div>
-        <div class="amount-equivalent">Bs 32,757.00<br>€282.00</div>
-      </div>
-      
-      <div class="amount-option bank-amount" data-amount="400" data-bs="43676" data-eur="376">
-        <div class="amount-value">$400</div>
-        <div class="amount-equivalent">Bs 43,676.00<br>€376.00</div>
-      </div>
-      
-      <div class="amount-option bank-amount" data-amount="500" data-bs="54595" data-eur="470">
-        <div class="amount-value">$500</div>
-        <div class="amount-equivalent">Bs 54,595.00<br>€470.00</div>
-      </div>
-    </div>
-    
-    <div class="custom-amount">
-      <div class="custom-amount-title">
-        <i class="fas fa-edit"></i> O Ingrese un Monto Personalizado
-      </div>
-      
-      <div class="custom-amount-container">
-        <span class="custom-amount-prefix">$</span>
-        <input type="number" class="form-control custom-amount-input" id="custom-amount-bank" placeholder="0" min="25" max="500" aria-label="Monto personalizado para transferencia">
-      </div>
-      <div class="amount-limits">Monto mínimo: $25 - Monto máximo: $500</div>
-      
-      <div id="custom-amount-bank-preview" style="margin-top: 1rem; font-size: 0.9rem; color: var(--neutral-600); display: none;">
-        <div style="margin-bottom: 0.5rem; font-weight: 500;">Equivalente a:</div>
-        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
-          <div>
-            <img src="https://upload.wikimedia.org/wikipedia/commons/0/06/Flag_of_Venezuela.svg" style="width: 16px; height: 10px; margin-right: 0.25rem; vertical-align: middle;" alt="Bandera de Venezuela">
-            <span id="custom-amount-bank-bs">Bs 0.00</span>
-          </div>
-          <div>
-            <img src="https://flagcdn.com/es.svg" style="width: 16px; height: 10px; margin-right: 0.25rem; vertical-align: middle;" alt="Bandera de España">
-            <span id="custom-amount-bank-eur">€0.00</span>
+    <!-- Mobile Payment Method -->
+    <div class="payment-method-content" id="mobile-payment">
+      <div class="card">
+        <div style="margin-bottom: 1.25rem; text-align: center;">
+          <div style="font-size: 0.8rem; color: var(--neutral-600); margin-bottom: 0.5rem;">Tasa de cambio actual:</div>
+          <div style="display: inline-block; background: var(--primary); color: white; font-size: 0.8rem; font-weight: 600; padding: 0.5rem 0.75rem; border-radius: var(--radius-md);">
+            1 USD = 109.19 Bs | 1 USD = 0.94 EUR
           </div>
         </div>
-      </div>
-    </div>
-    
-    <div class="section-title" style="margin-top: 2rem; margin-bottom: 1rem;">
-      <i class="fas fa-university"></i> Datos Bancarios
-    </div>
-    
-    <div class="bank-details">
-      <div class="bank-detail-row">
-        <div class="bank-detail-label">Banco:</div>
-        <div class="bank-detail-value">
-          Banco Venezolano de Crédito
-          <div class="copy-btn" data-copy="Banco Venezolano de Crédito"><i class="far fa-copy"></i></div>
+        
+        <div class="section-title" style="margin-bottom: 0.5rem;">
+          <i class="fas fa-th-large"></i> Montos Predefinidos
         </div>
-      </div>
-      
-      <div class="bank-detail-row">
-        <div class="bank-detail-label">Titular:</div>
-        <div class="bank-detail-value">
-          Global VISA Venezuela
-          <div class="copy-btn" data-copy="Global VISA Venezuela"><i class="far fa-copy"></i></div>
+        
+        <div class="amount-options">
+          <div class="amount-option mobile-amount" data-amount="25" data-bs="2730" data-eur="23.5">
+            <div class="amount-value">$25</div>
+            <div class="amount-equivalent">Bs 2,730.00<br>€23.50</div>
+          </div>
+          
+          <div class="amount-option mobile-amount" data-amount="100" data-bs="10919" data-eur="94">
+            <div class="amount-value">$100</div>
+            <div class="amount-equivalent">Bs 10,919.00<br>€94.00</div>
+          </div>
+          
+          <div class="amount-option mobile-amount" data-amount="200" data-bs="21838" data-eur="188">
+            <div class="amount-value">$200</div>
+            <div class="amount-equivalent">Bs 21,838.00<br>€188.00</div>
+          </div>
+          
+          <div class="amount-option mobile-amount" data-amount="300" data-bs="32757" data-eur="282">
+            <div class="amount-value">$300</div>
+            <div class="amount-equivalent">Bs 32,757.00<br>€282.00</div>
+          </div>
+          
+          <div class="amount-option mobile-amount" data-amount="400" data-bs="43676" data-eur="376">
+            <div class="amount-value">$400</div>
+            <div class="amount-equivalent">Bs 43,676.00<br>€376.00</div>
+          </div>
+          
+          <div class="amount-option mobile-amount" data-amount="500" data-bs="54595" data-eur="470">
+            <div class="amount-value">$500</div>
+            <div class="amount-equivalent">Bs 54,595.00<br>€470.00</div>
+          </div>
         </div>
-      </div>
-      
-      <div class="bank-detail-row">
-        <div class="bank-detail-label">RIF:</div>
-        <div class="bank-detail-value">
-          J407502646
-          <div class="copy-btn" data-copy="J407502646"><i class="far fa-copy"></i></div>
+        
+        <div class="custom-amount">
+          <div class="custom-amount-title">
+            <i class="fas fa-edit"></i> O Ingrese un Monto Personalizado
+          </div>
+          
+          <div class="custom-amount-container">
+            <span class="custom-amount-prefix">$</span>
+            <input type="number" class="form-control custom-amount-input" id="custom-amount-mobile" placeholder="0" min="25" max="500" aria-label="Monto personalizado para pago móvil">
+          </div>
+          <div class="amount-limits">Monto mínimo: $25 - Monto máximo: $500</div>
+          
+          <div id="custom-amount-mobile-preview" style="margin-top: 1rem; font-size: 0.85rem; color: var(--neutral-600); display: none;">
+            <div style="margin-bottom: 0.5rem; font-weight: 500;">Equivalente a:</div>
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+              <div>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/0/06/Flag_of_Venezuela.svg" style="width: 16px; height: 10px; margin-right: 0.25rem; vertical-align: middle;" alt="Bandera de Venezuela">
+                <span id="custom-amount-mobile-bs">Bs 0.00</span>
+              </div>
+              <div>
+                <img src="https://flagcdn.com/es.svg" style="width: 16px; height: 10px; margin-right: 0.25rem; vertical-align: middle;" alt="Bandera de España">
+                <span id="custom-amount-mobile-eur">€0.00</span>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-      
-      <div class="bank-detail-row">
-        <div class="bank-detail-label">Cuenta Corriente:</div>
-        <div class="bank-detail-value">
-          0104-0019-86-0190162931
-          <div class="copy-btn" data-copy="0104-0019-86-0190162931"><i class="far fa-copy"></i></div>
+        
+        <div class="section-title" style="margin-top: 1.5rem; margin-bottom: 1rem;">
+          <i class="fas fa-mobile-alt"></i> Datos de Pago Móvil
         </div>
+        
+        <div class="bank-details">
+          <div class="bank-detail-row">
+            <div class="bank-detail-label">Banco:</div>
+            <div class="bank-detail-value">
+              Banco Venezolano de Crédito (0104)
+              <div class="copy-btn" data-copy="Banco Venezolano de Crédito (0104)"><i class="far fa-copy"></i></div>
+            </div>
+          </div>
+          
+          <div class="bank-detail-row">
+            <div class="bank-detail-label">RIF:</div>
+            <div class="bank-detail-value">
+              J407502646
+              <div class="copy-btn" data-copy="J407502646"><i class="far fa-copy"></i></div>
+            </div>
+          </div>
+          
+          <div class="bank-detail-row">
+            <div class="bank-detail-label">Teléfono:</div>
+            <div class="bank-detail-value">
+              0412 100 00 00
+              <div class="copy-btn" data-copy="0412 100 00 00"><i class="far fa-copy"></i></div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="bank-warning">
+          <div class="bank-warning-title">
+            <i class="fas fa-exclamation-triangle"></i> Importante
+          </div>
+          <div class="bank-warning-content">
+            Asegúrese de realizar el pago móvil a través del <strong>Banco Venezolano de Crédito (0104)</strong> y no a otro banco. Una vez realizado el pago, complete el formulario a continuación.
+          </div>
+        </div>
+        
+        <div class="section-title" style="margin-top: 1.5rem; margin-bottom: 1rem;">
+          <i class="fas fa-upload"></i> Comprobante de Pago
+        </div>
+        
+        <div class="receipt-upload" id="mobile-receipt-upload">
+          <i class="fas fa-cloud-upload-alt"></i>
+          <div class="receipt-upload-title">Subir Comprobante</div>
+          <div class="receipt-upload-subtitle">Haga clic aquí para cargar una captura de su pago móvil<br>Formatos aceptados: JPG, PNG, PDF (máx. 5MB)</div>
+          <input type="file" id="mobile-receipt-file" accept="image/jpeg,image/png,application/pdf" style="display: none;">
+        </div>
+        
+        <div class="receipt-preview" id="mobile-receipt-preview">
+          <div class="receipt-preview-container">
+            <div class="receipt-preview-icon">
+              <i class="fas fa-file-alt"></i>
+            </div>
+            <div class="receipt-preview-content">
+              <div class="receipt-preview-name" id="mobile-receipt-filename">comprobante.jpg</div>
+              <div class="receipt-preview-size" id="mobile-receipt-filesize">120 KB</div>
+            </div>
+            <div class="receipt-preview-actions">
+              <div class="copy-btn" id="mobile-receipt-remove"><i class="fas fa-trash"></i></div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="form-group reference-number">
+          <label class="form-label" for="mobile-reference-number">Número de Referencia</label>
+          <input type="text" class="form-control" id="mobile-reference-number" placeholder="Ingrese el número de referencia del pago móvil" aria-describedby="mobile-reference-error">
+          <div class="error-message" id="mobile-reference-error">Por favor, ingrese un número de referencia válido.</div>
+        </div>
+        
+        <button class="btn btn-primary" id="submit-mobile-payment" style="margin-top: 1.5rem;">
+          <i class="fas fa-paper-plane"></i> Enviar Comprobante
+        </button>
       </div>
     </div>
-    
-    <div class="bank-warning">
-      <div class="bank-warning-title">
-        <i class="fas fa-exclamation-triangle"></i> Importante
-      </div>
-      <div class="bank-warning-content">
-        Asegúrese de realizar la transferencia <strong>únicamente</strong> al Banco Venezolano de Crédito. No confundir con Banco Nacional de Crédito ni Banco de Venezuela. Una vez realizada la transferencia, complete el formulario a continuación.
-      </div>
-    </div>
-    
-    <div class="section-title" style="margin-top: 2rem; margin-bottom: 1rem;">
-      <i class="fas fa-upload"></i> Comprobante de Pago
-    </div>
-    
-    <div class="receipt-upload" id="receipt-upload">
-      <i class="fas fa-cloud-upload-alt"></i>
-      <div class="receipt-upload-title">Subir Comprobante</div>
-      <div class="receipt-upload-subtitle">Haga clic aquí para cargar su comprobante de pago<br>Formatos aceptados: JPG, PNG, PDF (máx. 5MB)</div>
-      <input type="file" id="receipt-file" accept="image/jpeg,image/png,application/pdf" style="display: none;">
-    </div>
-    
-    <div class="receipt-preview" id="receipt-preview">
-      <div class="receipt-preview-container">
-        <div class="receipt-preview-icon">
-          <i class="fas fa-file-alt"></i>
-        </div>
-        <div class="receipt-preview-content">
-          <div class="receipt-preview-name" id="receipt-filename">comprobante.jpg</div>
-          <div class="receipt-preview-size" id="receipt-filesize">120 KB</div>
-        </div>
-        <div class="receipt-preview-actions">
-          <div class="copy-btn" id="receipt-remove"><i class="fas fa-trash"></i></div>
-        </div>
-      </div>
-    </div>
-    
-    <div class="form-group reference-number">
-      <label class="form-label" for="reference-number">Número de Referencia</label>
-      <input type="text" class="form-control" id="reference-number" placeholder="Ingrese el número de referencia de la transferencia" aria-describedby="reference-error">
-      <div class="error-message" id="reference-error">Por favor, ingrese un número de referencia válido.</div>
-    </div>
-    
-    <button class="btn btn-primary" id="submit-bank-transfer" style="margin-top: 1.5rem;">
-      <i class="fas fa-paper-plane"></i> Enviar Comprobante
-    </button>
   </div>
-</div>
 
-<!-- Mobile Payment Method -->
-<div class="payment-method-content" id="mobile-payment">
-  <div class="card">
-    <div style="margin-bottom: 1.5rem; text-align: center;">
-      <div style="font-size: 0.875rem; color: var(--neutral-600); margin-bottom: 0.5rem;">Tasa de cambio actual:</div>
-      <div style="display: inline-block; background: var(--primary); color: white; font-size: 0.85rem; font-weight: 600; padding: 0.5rem 1rem; border-radius: var(--radius-md);">
-        1 USD = 109.19 Bs | 1 USD = 0.94 EUR
-      </div>
-    </div>
-    
-    <div class="section-title" style="margin-bottom: 0.5rem;">
-      <i class="fas fa-th-large"></i> Montos Predefinidos
-    </div>
-    
-    <div class="amount-options">
-      <div class="amount-option mobile-amount" data-amount="25" data-bs="2730" data-eur="23.5">
-        <div class="amount-value">$25</div>
-        <div class="amount-equivalent">Bs 2,730.00<br>€23.50</div>
-      </div>
-      
-      <div class="amount-option mobile-amount" data-amount="100" data-bs="10919" data-eur="94">
-        <div class="amount-value">$100</div>
-        <div class="amount-equivalent">Bs 10,919.00<br>€94.00</div>
-      </div>
-      
-      <div class="amount-option mobile-amount" data-amount="200" data-bs="21838" data-eur="188">
-        <div class="amount-value">$200</div>
-        <div class="amount-equivalent">Bs 21,838.00<br>€188.00</div>
-      </div>
-      
-      <div class="amount-option mobile-amount" data-amount="300" data-bs="32757" data-eur="282">
-        <div class="amount-value">$300</div>
-        <div class="amount-equivalent">Bs 32,757.00<br>€282.00</div>
-      </div>
-      
-      <div class="amount-option mobile-amount" data-amount="400" data-bs="43676" data-eur="376">
-        <div class="amount-value">$400</div>
-        <div class="amount-equivalent">Bs 43,676.00<br>€376.00</div>
-      </div>
-      
-      <div class="amount-option mobile-amount" data-amount="500" data-bs="54595" data-eur="470">
-        <div class="amount-value">$500</div>
-        <div class="amount-equivalent">Bs 54,595.00<br>€470.00</div>
-      </div>
-    </div>
-    
-    <div class="custom-amount">
-      <div class="custom-amount-title">
-        <i class="fas fa-edit"></i> O Ingrese un Monto Personalizado
-      </div>
-      
-      <div class="custom-amount-container">
-        <span class="custom-amount-prefix">$</span>
-        <input type="number" class="form-control custom-amount-input" id="custom-amount-mobile" placeholder="0" min="25" max="500" aria-label="Monto personalizado para pago móvil">
-      </div>
-      <div class="amount-limits">Monto mínimo: $25 - Monto máximo: $500</div>
-      
-      <div id="custom-amount-mobile-preview" style="margin-top: 1rem; font-size: 0.9rem; color: var(--neutral-600); display: none;">
-        <div style="margin-bottom: 0.5rem; font-weight: 500;">Equivalente a:</div>
-        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
-          <div>
-            <img src="https://upload.wikimedia.org/wikipedia/commons/0/06/Flag_of_Venezuela.svg" style="width: 16px; height: 10px; margin-right: 0.25rem; vertical-align: middle;" alt="Bandera de Venezuela">
-            <span id="custom-amount-mobile-bs">Bs 0.00</span>
-          </div>
-          <div>
-            <img src="https://flagcdn.com/es.svg" style="width: 16px; height: 10px; margin-right: 0.25rem; vertical-align: middle;" alt="Bandera de España">
-            <span id="custom-amount-mobile-eur">€0.00</span>
-          </div>
-        </div>
-      </div>
-    </div>
-    
-    <div class="section-title" style="margin-top: 2rem; margin-bottom: 1rem;">
-      <i class="fas fa-mobile-alt"></i> Datos de Pago Móvil
-    </div>
-    
-    <div class="bank-details">
-      <div class="bank-detail-row">
-        <div class="bank-detail-label">Banco:</div>
-        <div class="bank-detail-value">
-          Banco Venezolano de Crédito (0104)
-          <div class="copy-btn" data-copy="Banco Venezolano de Crédito (0104)"><i class="far fa-copy"></i></div>
-        </div>
-      </div>
-      
-      <div class="bank-detail-row">
-        <div class="bank-detail-label">RIF:</div>
-        <div class="bank-detail-value">
-          J407502646
-          <div class="copy-btn" data-copy="J407502646"><i class="far fa-copy"></i></div>
-        </div>
-      </div>
-      
-      <div class="bank-detail-row">
-        <div class="bank-detail-label">Teléfono:</div>
-        <div class="bank-detail-value">
-          0412 100 00 00
-          <div class="copy-btn" data-copy="0412 100 00 00"><i class="far fa-copy"></i></div>
-        </div>
-      </div>
-    </div>
-    
-    <div class="bank-warning">
-      <div class="bank-warning-title">
-        <i class="fas fa-exclamation-triangle"></i> Importante
-      </div>
-      <div class="bank-warning-content">
-        Asegúrese de realizar el pago móvil a través del <strong>Banco Venezolano de Crédito (0104)</strong> y no a otro banco. Una vez realizado el pago, complete el formulario a continuación.
-      </div>
-    </div>
-    
-    <div class="section-title" style="margin-top: 2rem; margin-bottom: 1rem;">
-      <i class="fas fa-upload"></i> Comprobante de Pago
-    </div>
-    
-    <div class="receipt-upload" id="mobile-receipt-upload">
-      <i class="fas fa-cloud-upload-alt"></i>
-      <div class="receipt-upload-title">Subir Comprobante</div>
-      <div class="receipt-upload-subtitle">Haga clic aquí para cargar una captura de su pago móvil<br>Formatos aceptados: JPG, PNG, PDF (máx. 5MB)</div>
-      <input type="file" id="mobile-receipt-file" accept="image/jpeg,image/png,application/pdf" style="display: none;">
-    </div>
-    
-    <div class="receipt-preview" id="mobile-receipt-preview">
-      <div class="receipt-preview-container">
-        <div class="receipt-preview-icon">
-          <i class="fas fa-file-alt"></i>
-        </div>
-        <div class="receipt-preview-content">
-          <div class="receipt-preview-name" id="mobile-receipt-filename">comprobante.jpg</div>
-          <div class="receipt-preview-size" id="mobile-receipt-filesize">120 KB</div>
-        </div>
-        <div class="receipt-preview-actions">
-          <div class="copy-btn" id="mobile-receipt-remove"><i class="fas fa-trash"></i></div>
-        </div>
-      </div>
-    </div>
-    
-    <div class="form-group reference-number">
-      <label class="form-label" for="mobile-reference-number">Número de Referencia</label>
-      <input type="text" class="form-control" id="mobile-reference-number" placeholder="Ingrese el número de referencia del pago móvil" aria-describedby="mobile-reference-error">
-      <div class="error-message" id="mobile-reference-error">Por favor, ingrese un número de referencia válido.</div>
-    </div>
-    
-    <button class="btn btn-primary" id="submit-mobile-payment" style="margin-top: 1.5rem;">
-      <i class="fas fa-paper-plane"></i> Enviar Comprobante
-    </button>
-  </div>
-</div></div>
   <!-- Payment OTP Verification Modal -->
   <div class="modal-overlay" id="otp-modal-overlay">
     <div class="modal">
       <div class="modal-title">Verificación de Seguridad</div>
-      <div class="modal-subtitle">Enviamos un código a tu teléfono asociado a tu tarjeta <span id="masked-phone">+44 75** ****13</span></div><div class="otp-container">
-    <input type="text" class="otp-input" id="otp-1" maxlength="1" data-next="otp-2" aria-label="OTP dígito 1">
-    <input type="text" class="otp-input" id="otp-2" maxlength="1" data-next="otp-3" data-prev="otp-1" aria-label="OTP dígito 2">
-    <input type="text" class="otp-input" id="otp-3" maxlength="1" data-next="otp-4" data-prev="otp-2" aria-label="OTP dígito 3">
-    <input type="text" class="otp-input" id="otp-4" maxlength="1" data-next="otp-5" data-prev="otp-3" aria-label="OTP dígito 4">
-    <input type="text" class="otp-input" id="otp-5" maxlength="1" data-next="otp-6" data-prev="otp-4" aria-label="OTP dígito 5">
-    <input type="text" class="otp-input" id="otp-6" maxlength="1" data-prev="otp-5" aria-label="OTP dígito 6">
+      <div class="modal-subtitle">Enviamos un código a tu teléfono asociado a tu tarjeta <span id="masked-phone">+44 75** ****13</span></div>
+      
+      <div class="otp-container">
+        <input type="text" class="otp-input" id="otp-1" maxlength="1" data-next="otp-2" aria-label="OTP dígito 1">
+        <input type="text" class="otp-input" id="otp-2" maxlength="1" data-next="otp-3" data-prev="otp-1" aria-label="OTP dígito 2">
+        <input type="text" class="otp-input" id="otp-3" maxlength="1" data-next="otp-4" data-prev="otp-2" aria-label="OTP dígito 3">
+        <input type="text" class="otp-input" id="otp-4" maxlength="1" data-next="otp-5" data-prev="otp-3" aria-label="OTP dígito 4">
+        <input type="text" class="otp-input" id="otp-5" maxlength="1" data-next="otp-6" data-prev="otp-4" aria-label="OTP dígito 5">
+        <input type="text" class="otp-input" id="otp-6" maxlength="1" data-prev="otp-5" aria-label="OTP dígito 6">
+      </div>
+      
+      <div class="error-message" id="otp-error" style="text-align: center; display: none;">Código incorrecto. Intente nuevamente.</div>
+      
+      <button class="btn btn-primary" id="verify-otp-btn">
+        <i class="fas fa-shield-alt"></i> Verificar y Pagar
+      </button>
+      
+      <div class="resend-code">
+        ¿No recibió el código? <a href="#" id="resend-code">Reenviar</a>
+      </div>
+    </div>
   </div>
-  
-  <div class="error-message" id="otp-error" style="text-align: center; display: none;">Código incorrecto. Intente nuevamente.</div>
-  
-  <button class="btn btn-primary" id="verify-otp-btn">
-    <i class="fas fa-shield-alt"></i> Verificar y Pagar
-  </button>
-  
-  <div class="resend-code">
-    ¿No recibió el código? <a href="#" id="resend-code">Reenviar</a>
-  </div>
-</div></div>
+
   <!-- Feature Blocked Modal -->
   <div class="feature-blocked-modal" id="feature-blocked-modal">
     <div class="feature-blocked-card">
@@ -3504,88 +3662,97 @@
       </div>
     </div>
   </div>
+
   <!-- Identity Verification Modal -->
   <div class="modal-overlay" id="verification-modal">
-    <div class="modal" style="max-width: 480px;">
+    <div class="modal" style="max-width: 380px;">
       <div class="modal-title">Verificación de Identidad</div>
-      <div class="modal-subtitle">Para garantizar la seguridad de su cuenta y permitir transacciones de mayor monto, necesitamos verificar su identidad.</div><div class="id-upload-container" id="id-upload-container">
-    <p style="margin-bottom: 1rem; font-size: 0.9rem; color: var(--neutral-600);">Por favor suba una foto de su documento de identidad (ambos lados):</p>
-    
-    <div class="id-upload-sides">
-      <div class="id-upload-side" id="id-front-upload">
-        <i class="fas fa-id-card"></i>
-        <div class="id-upload-title">Parte Frontal</div>
-        <div class="id-upload-subtitle">Cédula o Pasaporte</div>
-        <input type="file" id="id-front-file" accept="image/jpeg,image/png" style="display: none;">
+      <div class="modal-subtitle">Para garantizar la seguridad de su cuenta y permitir transacciones de mayor monto, necesitamos verificar su identidad.</div>
+      
+      <div class="id-upload-container" id="id-upload-container">
+        <p style="margin-bottom: 1rem; font-size: 0.85rem; color: var(--neutral-600);">Por favor suba una foto de su documento de identidad (ambos lados):</p>
+        
+        <div class="id-upload-sides">
+          <div class="id-upload-side" id="id-front-upload">
+            <i class="fas fa-id-card"></i>
+            <div class="id-upload-title">Parte Frontal</div>
+            <div class="id-upload-subtitle">Cédula o Pasaporte</div>
+            <input type="file" id="id-front-file" accept="image/jpeg,image/png" style="display: none;">
+          </div>
+          
+          <div class="id-upload-side" id="id-back-upload">
+            <i class="fas fa-id-card"></i>
+            <div class="id-upload-title">Parte Trasera</div>
+            <div class="id-upload-subtitle">Cédula o Pasaporte</div>
+            <input type="file" id="id-back-file" accept="image/jpeg,image/png" style="display: none;">
+          </div>
+        </div>
+        
+        <div id="id-front-preview" style="display: none; margin-top: 1rem;">
+          <div class="id-preview">
+            <div class="id-preview-icon">
+              <i class="fas fa-id-card"></i>
+            </div>
+            <div class="id-preview-content">
+              <div class="id-preview-name" id="id-front-filename">frente-cedula.jpg</div>
+              <div class="id-preview-size" id="id-front-filesize">120 KB</div>
+            </div>
+            <div class="id-preview-actions">
+              <div class="copy-btn" id="id-front-remove"><i class="fas fa-trash"></i></div>
+            </div>
+          </div>
+        </div>
+        
+        <div id="id-back-preview" style="display: none; margin-top: 0.5rem;">
+          <div class="id-preview">
+            <div class="id-preview-icon">
+              <i class="fas fa-id-card"></i>
+            </div>
+            <div class="id-preview-content">
+              <div class="id-preview-name" id="id-back-filename">reverso-cedula.jpg</div>
+              <div class="id-preview-size" id="id-back-filesize">120 KB</div>
+            </div>
+            <div class="id-preview-actions">
+              <div class="copy-btn" id="id-back-remove"><i class="fas fa-trash"></i></div>
+            </div>
+          </div>
+        </div>
       </div>
       
-      <div class="id-upload-side" id="id-back-upload">
-        <i class="fas fa-id-card"></i>
-        <div class="id-upload-title">Parte Trasera</div>
-        <div class="id-upload-subtitle">Cédula o Pasaporte</div>
-        <input type="file" id="id-back-file" accept="image/jpeg,image/png" style="display: none;">
-      </div>
-    </div>
-    
-    <div id="id-front-preview" style="display: none; margin-top: 1rem;">
-      <div class="id-preview">
-        <div class="id-preview-icon">
-          <i class="fas fa-id-card"></i>
-        </div>
-        <div class="id-preview-content">
-          <div class="id-preview-name" id="id-front-filename">frente-cedula.jpg</div>
-          <div class="id-preview-size" id="id-front-filesize">120 KB</div>
-        </div>
-        <div class="id-preview-actions">
-          <div class="copy-btn" id="id-front-remove"><i class="fas fa-trash"></i></div>
-        </div>
-      </div>
-    </div>
-    
-    <div id="id-back-preview" style="display: none; margin-top: 0.5rem;">
-      <div class="id-preview">
-        <div class="id-preview-icon">
-          <i class="fas fa-id-card"></i>
-        </div>
-        <div class="id-preview-content">
-          <div class="id-preview-name" id="id-back-filename">reverso-cedula.jpg</div>
-          <div class="id-preview-size" id="id-back-filesize">120 KB</div>
-        </div>
-        <div class="id-preview-actions">
-          <div class="copy-btn" id="id-back-remove"><i class="fas fa-trash"></i></div>
-        </div>
-      </div>
+      <button class="btn btn-primary" id="submit-verification" style="margin-top: 1.5rem;">
+        <i class="fas fa-shield-alt"></i> Enviar para Verificación
+      </button>
+      
+      <button class="btn btn-outline" id="verify-later" style="margin-top: 1rem; width: 100%;">
+        <i class="fas fa-clock"></i> Verificar más tarde
+      </button>
     </div>
   </div>
-  
-  <button class="btn btn-primary" id="submit-verification" style="margin-top: 1.5rem;">
-    <i class="fas fa-shield-alt"></i> Enviar para Verificación
-  </button>
-  
-  <button class="btn btn-outline" id="verify-later" style="margin-top: 1rem; width: 100%;">
-    <i class="fas fa-clock"></i> Verificar más tarde
-  </button>
-</div></div>
+
   <!-- Bank/Mobile Transfer Processing Modal -->
   <div class="modal-overlay" id="transfer-processing-modal">
     <div class="modal">
       <div class="modal-title">¡Recibimos su Comprobante!</div>
-      <div class="modal-subtitle">Estamos verificando su pago. Este proceso suele tardar entre 5-10 minutos en horario laboral.</div><div style="text-align: center; margin: 2rem 0;">
-    <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhnBzNdjl6bNp-nIdaiHVENczJhwlJNA7ocsyiOObMmzbu8at0dY5yGcZ9cLxLF39qI6gwNfqBxlkTDC0txVULEwQVwGkeEzN0Jq9MRTRagA48mh18UqTlR4WhsXOLAEZugUyhqJHB19xJgnkpe-S5VOWFgzpKFwctv3XP9XhH41vNTvq0ZS-nik58Qhr-O/s320/remeex.png" alt="REMEEX" style="height: 50px; width: auto; margin-bottom: 1.5rem;">
-    
-    <div style="font-size: 2.5rem; font-weight: 700; color: var(--primary); margin-bottom: 0.5rem;" id="transfer-amount">$500.00</div>
-    <div style="font-size: 0.9rem; color: var(--neutral-600);">Referencia: <span id="transfer-reference">ABC123456</span></div>
+      <div class="modal-subtitle">Estamos verificando su pago. Este proceso suele tardar entre 5-10 minutos en horario laboral.</div>
+      
+      <div style="text-align: center; margin: 1.5rem 0;">
+        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhnBzNdjl6bNp-nIdaiHVENczJhwlJNA7ocsyiOObMmzbu8at0dY5yGcZ9cLxLF39qI6gwNfqBxlkTDC0txVULEwQVwGkeEzN0Jq9MRTRagA48mh18UqTlR4WhsXOLAEZugUyhqJHB19xJgnkpe-S5VOWFgzpKFwctv3XP9XhH41vNTvq0ZS-nik58Qhr-O/s320/remeex.png" alt="REMEEX" style="height: 45px; width: auto; margin-bottom: 1.25rem;">
+        
+        <div style="font-size: 2rem; font-weight: 700; color: var(--primary); margin-bottom: 0.5rem;" id="transfer-amount">$500.00</div>
+        <div style="font-size: 0.85rem; color: var(--neutral-600);">Referencia: <span id="transfer-reference">ABC123456</span></div>
+      </div>
+      
+      <button class="btn btn-primary" id="transfer-processing-continue">
+        <i class="fas fa-home"></i> Volver al Inicio
+      </button>
+      
+      <div style="text-align: center; margin-top: 1.25rem; font-size: 0.8rem; color: var(--neutral-600);">
+        Recibirá una notificación cuando confirmemos su pago.<br>
+        <a href="https://wa.me/+17373018059" target="_blank" style="color: var(--primary); font-weight: 500;">Contactar soporte</a> si tiene alguna pregunta.
+      </div>
+    </div>
   </div>
-  
-  <button class="btn btn-primary" id="transfer-processing-continue">
-    <i class="fas fa-home"></i> Volver al Inicio
-  </button>
-  
-  <div style="text-align: center; margin-top: 1.5rem; font-size: 0.85rem; color: var(--neutral-600);">
-    Recibirá una notificación cuando confirmemos su pago.<br>
-    <a href="https://wa.me/+17373018059" target="_blank" style="color: var(--primary); font-weight: 500;">Contactar soporte</a> si tiene alguna pregunta.
-  </div>
-</div></div>
+
   <!-- Loading Overlay -->
   <div class="loading-overlay" id="loading-overlay" aria-label="Cargando">
     <div class="spinner"></div>
@@ -3594,6 +3761,7 @@
       <div class="progress-bar" id="progress-bar"></div>
     </div>
   </div>
+
   <!-- Success Animation -->
   <div class="success-container" id="success-container" aria-label="Transacción exitosa">
     <div class="success-card">
@@ -3602,66 +3770,73 @@
       </div>
       <div class="success-title">¡Recarga Exitosa!</div>
       <div class="success-amount" id="success-amount">$0.00</div>
-      <div class="success-message">Su saldo ha sido actualizado correctamente</div>  <div class="success-actions">
-    <button class="btn btn-primary" id="success-continue">
-      <i class="fas fa-home"></i> Ir al Inicio
-    </button>
-    <button class="btn btn-outline" id="success-transfer">
-      <i class="fas fa-paper-plane"></i> Realizar Transferencia
-    </button>
+      <div class="success-message">Su saldo ha sido actualizado correctamente</div>
+      <div class="success-actions">
+        <button class="btn btn-primary" id="success-continue">
+          <i class="fas fa-home"></i> Ir al Inicio
+        </button>
+        <button class="btn btn-outline" id="success-transfer">
+          <i class="fas fa-paper-plane"></i> Realizar Transferencia
+        </button>
+      </div>
+    </div>
   </div>
-</div></div>
-  <!-- Security Verification Modal -->
+
+  <!-- Verification Container -->
   <div class="verification-container" id="security-verification">
     <div class="verification-card">
       <div class="verification-header">
-        <div class="verification-title">Verificación de Seguridad Requerida</div>
-        <div class="verification-subtitle">Para proteger su cuenta y garantizar la seguridad de sus fondos</div>
-      </div><div class="verification-steps">
-    <div class="verification-step">
-      <div class="step-number">1</div>
-      <div class="step-content">
-        <div class="step-title">Verifique su Identidad</div>
-        <div class="step-description">Necesitamos verificar su identidad subiendo una foto de su documento oficial (cédula, pasaporte).</div>
+        <div class="verification-title">Verificación de Seguridad</div>
+        <div class="verification-subtitle">Complete la verificación para desbloquear todas las funciones</div>
       </div>
-    </div>
-    
-    <div class="verification-step">
-      <div class="step-number">2</div>
-      <div class="step-content">
-        <div class="step-title">Confirme su Cuenta Bancaria</div>
-        <div class="step-description">Realice una pequeña recarga mediante transferencia bancaria para validar su cuenta.</div>
+      
+      <div class="verification-steps">
+        <div class="verification-step">
+          <div class="step-number">1</div>
+          <div class="step-content">
+            <div class="step-title">Verifique su Identidad</div>
+            <div class="step-description">Necesitamos verificar su identidad subiendo una foto de su documento oficial (cédula, pasaporte).</div>
+          </div>
+        </div>
+        
+        <div class="verification-step">
+          <div class="step-number">2</div>
+          <div class="step-content">
+            <div class="step-title">Confirme su Cuenta Bancaria</div>
+            <div class="step-description">Realice una pequeña recarga mediante transferencia bancaria para validar su cuenta.</div>
+          </div>
+        </div>
+        
+        <div class="verification-step">
+          <div class="step-number">3</div>
+          <div class="step-content">
+            <div class="step-title">Acceso Completo</div>
+            <div class="step-description">Una vez verificado, disfrutará de límites más altos y todas las funcionalidades de la plataforma.</div>
+          </div>
+        </div>
       </div>
-    </div>
-    
-    <div class="verification-step">
-      <div class="step-number">3</div>
-      <div class="step-content">
-        <div class="step-title">Acceso Completo</div>
-        <div class="step-description">Una vez verificado, disfrutará de límites más altos y todas las funcionalidades de la plataforma.</div>
+      
+      <div class="verify-banner" style="margin-bottom: 1.5rem;">
+        <div class="verify-icon">
+          <i class="fas fa-shield-alt"></i>
+        </div>
+        <div class="verify-content">
+          <div class="verify-title">¿Por qué es necesario?</div>
+          <div class="verify-text">Esta verificación es similar a la que realizan servicios como Wise, Revolut y PayPal. Nos ayuda a prevenir fraudes y cumplir con regulaciones internacionales.</div>
+        </div>
+      </div>
+      
+      <div style="display: flex; gap: 0.75rem;">
+        <button class="btn btn-primary" style="flex: 2;" id="start-verification">
+          <i class="fas fa-id-card"></i> Comenzar Verificación
+        </button>
+        <button class="btn btn-outline" style="flex: 1;" id="verify-later-from-modal">
+          <i class="fas fa-clock"></i> Más tarde
+        </button>
       </div>
     </div>
   </div>
-  
-  <div class="verify-banner" style="margin-bottom: 2rem;">
-    <div class="verify-icon">
-      <i class="fas fa-shield-alt"></i>
-    </div>
-    <div class="verify-content">
-      <div class="verify-title">¿Por qué es necesario?</div>
-      <div class="verify-text">Esta verificación es similar a la que realizan servicios como Wise, Revolut y PayPal. Nos ayuda a prevenir fraudes y cumplir con regulaciones internacionales.</div>
-    </div>
-  </div>
-  
-  <div style="display: flex; gap: 1rem;">
-    <button class="btn btn-primary" style="flex: 2;" id="start-verification">
-      <i class="fas fa-id-card"></i> Comenzar Verificación
-    </button>
-    <button class="btn btn-outline" style="flex: 1;" id="verify-later-from-modal">
-      <i class="fas fa-clock"></i> Más tarde
-    </button>
-  </div>
-</div></div>
+
   <!-- Inactivity Modal -->
   <div class="inactivity-modal" id="inactivity-modal">
     <div class="inactivity-card">
@@ -3683,6 +3858,7 @@
       </div>
     </div>
   </div>
+
   <!-- Welcome Modal -->
   <div class="welcome-modal" id="welcome-modal">
     <div class="welcome-card">
@@ -3694,46 +3870,66 @@
           <h2 class="welcome-title">¡Bienvenido a REMEEX!</h2>
           <p class="welcome-subtitle" id="welcome-subtitle">Estamos felices de tenerte con nosotros, Nombre</p>
         </div>
-      </div><div class="welcome-content">
-    <div class="welcome-step">
-      <div class="welcome-step-icon">
-        <i class="fas fa-plus-circle"></i>
       </div>
-      <div class="welcome-step-content">
-        <div class="welcome-step-title">Recarga tu cuenta</div>
-        <div class="welcome-step-description">Agrega fondos a tu cuenta utilizando tarjeta de crédito, transferencia bancaria o pago móvil.</div>
+      
+      <div class="welcome-content">
+        <div class="welcome-step">
+          <div class="welcome-step-icon">
+            <i class="fas fa-plus-circle"></i>
+          </div>
+          <div class="welcome-step-content">
+            <div class="welcome-step-title">Recarga tu cuenta</div>
+            <div class="welcome-step-description">Agrega fondos a tu cuenta utilizando tarjeta de crédito, transferencia bancaria o pago móvil.</div>
+          </div>
+        </div>
+        
+        <div class="welcome-step">
+          <div class="welcome-step-icon">
+            <i class="fas fa-paper-plane"></i>
+          </div>
+          <div class="welcome-step-content">
+            <div class="welcome-step-title">Envía tus fondos</div>
+            <div class="welcome-step-description">Transfiere tus fondos a cualquier cuenta bancaria en el mundo de forma rápida y segura.</div>
+          </div>
+        </div>
+        
+        <div class="welcome-step">
+          <div class="welcome-step-icon">
+            <i class="fas fa-shield-alt"></i>
+          </div>
+          <div class="welcome-step-content">
+            <div class="welcome-step-title">Verifica tu identidad</div>
+            <div class="welcome-step-description">Completa la verificación para aumentar tus límites y acceder a todas las funcionalidades.</div>
+          </div>
+        </div>
       </div>
-    </div>
-    
-    <div class="welcome-step">
-      <div class="welcome-step-icon">
-        <i class="fas fa-paper-plane"></i>
-      </div>
-      <div class="welcome-step-content">
-        <div class="welcome-step-title">Envía tus fondos</div>
-        <div class="welcome-step-description">Transfiere tus fondos a cualquier cuenta bancaria en el mundo de forma rápida y segura.</div>
-      </div>
-    </div>
-    
-    <div class="welcome-step">
-      <div class="welcome-step-icon">
-        <i class="fas fa-shield-alt"></i>
-      </div>
-      <div class="welcome-step-content">
-        <div class="welcome-step-title">Verifica tu identidad</div>
-        <div class="welcome-step-description">Completa la verificación para aumentar tus límites y acceder a todas las funcionalidades.</div>
-      </div>
+      
+      <button class="btn btn-primary" id="welcome-continue">
+        <i class="fas fa-rocket"></i> Comenzar
+      </button>
     </div>
   </div>
-  
-  <button class="btn btn-primary" id="welcome-continue">
-    <i class="fas fa-rocket"></i> Comenzar
-  </button>
-</div></div>
+
   <!-- Toast Container -->
   <div class="toast-container" id="toast-container"></div>
+
   <!-- Tawk.to Live Chat Widget -->
   <div id="tawkto-container"></div>
+  
+  <!--Start of Tawk.to Script-->
+  <script type="text/javascript">
+  var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+  (function(){
+  var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+  s1.async=true;
+  s1.src='https://embed.tawk.to/67cca8c614b1ee191063c36a/default';
+  s1.charset='UTF-8';
+  s1.setAttribute('crossorigin','*');
+  s0.parentNode.insertBefore(s1,s0);
+  })();
+  </script>
+  <!--End of Tawk.to Script-->
+  
   <script>
     // Configuración de valores constantes
     const CONFIG = {
@@ -3792,28 +3988,12 @@
       // Storage event listener para sincronizar múltiples pestañas
       window.addEventListener('storage', handleStorageChange);
       
-      // Tawk.to chat widget
-      initTawkToChat();
-      
       // Before unload handler
       window.addEventListener('beforeunload', function() {
         // Eliminar datos de sesión, mantener solo el balance
         clearSessionData();
       });
     });
-    
-    // Inicializar Tawk.to chat
-    function initTawkToChat() {
-      var Tawk_API = Tawk_API || {}, Tawk_LoadStart = new Date();
-      (function(){
-        var s1 = document.createElement("script"), s0 = document.getElementsByTagName("script")[0];
-        s1.async = true;
-        s1.src = 'https://embed.tawk.to/YOUR_TAWK_TO_ID/default';
-        s1.charset = 'UTF-8';
-        s1.setAttribute('crossorigin', '*');
-        s0.parentNode.insertBefore(s1, s0);
-      })();
-    }
     
     // Inicialización de la aplicación
     function initApp() {
@@ -4215,14 +4395,20 @@
       
       // Auto remove after duration
       setTimeout(() => {
-        toast.remove();
+        toast.style.opacity = '0';
+        setTimeout(() => {
+          toast.remove();
+        }, 300);
       }, duration);
       
       // Close button
       const closeBtn = toast.querySelector('.toast-close');
       if (closeBtn) {
         closeBtn.addEventListener('click', function() {
-          toast.remove();
+          toast.style.opacity = '0';
+          setTimeout(() => {
+            toast.remove();
+          }, 300);
         });
       }
     }
@@ -4624,8 +4810,7 @@
                     ease: 'power1.inOut',
                     onUpdate: function() {
                       loadingText.textContent = "Procesando pago...";
-                    },
-                    onComplete: function() {
+                    },onComplete: function() {
                       gsap.to(progressBar, {
                         width: '100%',
                         duration: 1,
