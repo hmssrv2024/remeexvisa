@@ -1,0 +1,2899 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>REMEEX Visa - Retiro de Fondos</title>
+  <link rel="icon" href="https://w7.pngwing.com/pngs/400/28/png-transparent-credit-card-computer-icons-visa-electron-bank-curio-blue-text-rectangle-thumbnail.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/v-mask@2.3.0/dist/v-mask.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.11.4/dist/gsap.min.js"></script>
+
+  <style>
+    :root {
+      /* Modern color palette based on Revolut/N26 style */
+      --primary: #1a1f71;
+      --primary-dark: #0c1045;
+      --primary-light: #3244b6;
+      --secondary: #00579f;
+      --accent: #f7b600;
+      --success: #00d34d;
+      --danger: #ff4d4d;
+      --warning: #ffad33;
+      --info: #0095ff;
+      --neutral-100: #ffffff;
+      --neutral-200: #f5f7fa;
+      --neutral-300: #eaecf0;
+      --neutral-400: #d0d5dd;
+      --neutral-500: #9da4b4;
+      --neutral-600: #6e7891;
+      --neutral-700: #4f5d75;
+      --neutral-800: #293249;
+      --neutral-900: #1a1f37;
+
+      /* Shadows & Effects */
+      --shadow-sm: 0 1px 3px rgba(16, 24, 40, 0.1);
+      --shadow-md: 0 4px 8px -2px rgba(16, 24, 40, 0.1), 0 2px 4px -2px rgba(16, 24, 40, 0.06);
+      --shadow-lg: 0 12px 16px -4px rgba(16, 24, 40, 0.08), 0 4px 6px -2px rgba(16, 24, 40, 0.03);
+      --shadow-xl: 0 20px 24px -4px rgba(16, 24, 40, 0.08), 0 8px 8px -4px rgba(16, 24, 40, 0.03);
+      --shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+      
+      /* Border radius */
+      --radius-sm: 6px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-xl: 24px;
+      --radius-full: 9999px;
+      
+      /* Transitions */
+      --transition-fast: all 0.2s ease;
+      --transition-base: all 0.3s ease;
+      --transition-slow: all 0.5s ease;
+      
+      /* Card gradients */
+      --card-gradient: linear-gradient(135deg, #1a1f71 0%, #0c1045 100%);
+      --success-gradient: linear-gradient(135deg, #00c057 0%, #00a346 100%);
+      
+      /* Animations */
+      --animation-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--neutral-200);
+      color: var(--neutral-900);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+      height: 100vh;
+      margin: 0;
+      position: relative;
+    }
+    
+    /* Scrollbars */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    
+    ::-webkit-scrollbar-track {
+      background: var(--neutral-200);
+    }
+    
+    ::-webkit-scrollbar-thumb {
+      background: var(--neutral-500);
+      border-radius: var(--radius-full);
+    }
+    
+    /* Header */
+    .app-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.6rem 1rem;
+      background: var(--neutral-100);
+      border-bottom: 1px solid var(--neutral-300);
+      box-shadow: var(--shadow-sm);
+      z-index: 1000;
+      height: 60px;
+    }
+    
+    .header-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .header-brand img {
+      height: 32px;
+      width: auto;
+    }
+    
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .header-action-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-full);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--neutral-200);
+      color: var(--neutral-700);
+      border: none;
+      cursor: pointer;
+      transition: var(--transition-base);
+      position: relative;
+    }
+    
+    .header-action-btn:hover {
+      background: var(--neutral-300);
+      color: var(--neutral-900);
+    }
+    
+    .notification-badge {
+      position: absolute;
+      top: -2px;
+      right: -2px;
+      background: var(--danger);
+      color: white;
+      border-radius: var(--radius-full);
+      font-size: 0.6rem;
+      width: 16px;
+      height: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+    }
+    
+    /* Connected Users Badge */
+    .users-online-badge {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.25rem 0.5rem;
+      background: rgba(26, 31, 113, 0.08);
+      border-radius: var(--radius-md);
+      font-size: 0.7rem;
+      color: var(--primary);
+      font-weight: 500;
+      white-space: nowrap;
+    }
+    
+    .users-online-badge i {
+      font-size: 0.7rem;
+    }
+    
+    .pulse-dot {
+      width: 6px;
+      height: 6px;
+      background-color: var(--success);
+      border-radius: 50%;
+      animation: pulse 1.5s infinite;
+    }
+    
+    @keyframes pulse {
+      0% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(0, 211, 77, 0.7);
+      }
+      
+      70% {
+        transform: scale(1);
+        box-shadow: 0 0 0 4px rgba(0, 211, 77, 0);
+      }
+      
+      100% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(0, 211, 77, 0);
+      }
+    }
+    
+    /* Account Balance Card */
+    .balance-card {
+      background: var(--card-gradient);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+      color: white;
+      box-shadow: var(--shadow-lg);
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 1.25rem;
+      transition: transform 0.3s var(--animation-bounce), box-shadow 0.3s ease;
+    }
+    
+    .balance-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-xl);
+    }
+    
+    .balance-card::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+      animation: shine 3s infinite;
+    }
+    
+    @keyframes shine {
+      100% { left: 200%; }
+    }
+    
+    .card-decoration {
+      position: absolute;
+      right: -50px;
+      bottom: -50px;
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+      z-index: 1;
+    }
+    
+    .card-decoration:nth-child(2) {
+      left: -30px;
+      top: -30px;
+      width: 150px;
+      height: 150px;
+    }
+    
+    .balance-content {
+      position: relative;
+      z-index: 2;
+    }
+    
+    .balance-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+    
+    .header-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-full);
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 0.8rem;
+      flex-shrink: 0;
+    }
+
+    .balance-label {
+      font-size: 0.8rem;
+      opacity: 0.8;
+      margin-bottom: 0.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .balance-label i {
+      font-size: 0.9rem;
+    }
+    
+    .balance-amount {
+      font-size: clamp(1.5rem, 5vw, 2.25rem);
+      font-weight: 700;
+      margin: 0.5rem 0 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: nowrap;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    
+    .currency-flag {
+      width: 20px;
+      height: 14px;
+      border-radius: 2px;
+      object-fit: cover;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      flex-shrink: 0;
+    }
+    
+    .balance-equivalents {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+    
+    .balance-equivalent {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: var(--radius-md);
+      padding: 0.4rem 0.6rem;
+      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      backdrop-filter: blur(5px);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      white-space: nowrap;
+    }
+    
+    .exchange-rate {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: var(--radius-md);
+      padding: 0.4rem 0.6rem;
+      font-size: 0.75rem;
+      margin-bottom: 0.75rem;
+      display: inline-block;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100%;
+    }
+    
+    .balance-date {
+      font-size: 0.7rem;
+      opacity: 0.7;
+      margin-bottom: 1rem;
+    }
+    
+    .balance-actions {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 0.75rem;
+    }
+    
+    .balance-btn {
+      flex: 1;
+      border: none;
+      border-radius: var(--radius-md);
+      height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 0.8rem;
+      background: rgba(255,255,255,0.15);
+      color: white;
+      cursor: pointer;
+      transition: all 0.3s var(--animation-bounce);
+      backdrop-filter: blur(5px);
+      white-space: nowrap;
+    }
+    
+    .balance-btn:hover {
+      background: rgba(255,255,255,0.25);
+      transform: translateY(-3px);
+    }
+    
+    .balance-btn:active {
+      transform: translateY(0);
+    }
+    
+    .balance-btn i {
+      margin-right: 6px;
+      font-size: 0.9rem;
+    }
+    
+    /* Dashboard Layout */
+    .app-container {
+      padding-top: 70px;
+      padding-bottom: 70px;
+      max-width: 100%;
+      margin: 0 auto;
+      height: 100vh;
+      overflow-y: auto;
+      overflow-x: hidden;
+      position: relative;
+    }
+    
+    .dashboard-content {
+      padding: 0.75rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+   
+    /* Sections */
+    .section-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--neutral-900);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    
+    .section-title i {
+      margin-right: 0.5rem;
+      color: var(--primary);
+    }
+    
+    .section-title a {
+      font-size: 0.7rem;
+      color: var(--primary);
+      text-decoration: none;
+    }
+    
+    /* Cards */
+    .card {
+      background: var(--neutral-100);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      padding: 1rem;
+      margin-bottom: 1.25rem;
+      transition: transform 0.3s var(--animation-bounce), box-shadow 0.3s ease;
+    }
+    
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+    }
+    
+    /* Bottom Navigation */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--neutral-100);
+      display: flex;
+      justify-content: space-around;
+      padding: 0.5rem 0;
+      box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.05);
+      z-index: 900;
+    }
+    
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.25rem;
+      padding: 0.4rem;
+      border-radius: var(--radius-md);
+      transition: var(--transition-base);
+      cursor: pointer;
+      flex: 1;
+    }
+    
+    .nav-item.active {
+      color: var(--primary);
+    }
+    
+    .nav-icon {
+      font-size: 1.1rem;
+      transition: transform 0.3s var(--animation-bounce);
+    }
+    
+    .nav-item:hover .nav-icon {
+      transform: translateY(-3px);
+    }
+    
+    .nav-label {
+      font-size: 0.6rem;
+      font-weight: 600;
+    }
+
+    /* Withdrawal Container */
+    .withdrawal-container {
+      padding: 1rem;
+      padding-top: 70px;
+      padding-bottom: 70px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    
+    /* Timeline */
+    .timeline-container {
+      position: relative;
+      margin: 1.5rem 0;
+      padding: 0 1rem;
+    }
+    
+    .timeline {
+      display: flex;
+      justify-content: space-between;
+      position: relative;
+      margin-bottom: 2rem;
+    }
+    
+    .timeline::before {
+      content: '';
+      position: absolute;
+      top: 1.25rem;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--neutral-400);
+      z-index: 1;
+    }
+    
+    .timeline-step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      z-index: 2;
+      width: 25%;
+    }
+    
+    .timeline-icon {
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: var(--radius-full);
+      background: var(--neutral-300);
+      color: var(--neutral-600);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+      box-shadow: var(--shadow-sm);
+    }
+    
+    .timeline-step.active .timeline-icon {
+      background: var(--primary);
+      color: white;
+    }
+    
+    .timeline-step.completed .timeline-icon {
+      background: var(--success);
+      color: white;
+    }
+    
+    .timeline-label {
+      font-size: 0.7rem;
+      text-align: center;
+      color: var(--neutral-600);
+      max-width: 80px;
+      line-height: 1.2;
+    }
+    
+    .timeline-step.active .timeline-label {
+      color: var(--primary);
+      font-weight: 600;
+    }
+    
+    .timeline-step.completed .timeline-label {
+      color: var(--success);
+      font-weight: 600;
+    }
+    
+    /* Progress between timeline steps */
+    .timeline-progress {
+      position: absolute;
+      top: 1.25rem;
+      left: 0;
+      height: 3px;
+      background: var(--success);
+      z-index: 1;
+      transition: width 0.5s ease;
+    }
+    
+    /* Form Styles */
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+    
+    .form-label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--neutral-700);
+      margin-bottom: 0.5rem;
+    }
+    
+    .form-control {
+      width: 100%;
+      height: 44px;
+      padding: 0 1rem;
+      border: 1px solid var(--neutral-400);
+      border-radius: var(--radius-md);
+      font-size: 0.85rem;
+      color: var(--neutral-900);
+      background: var(--neutral-100);
+      transition: var(--transition-base);
+    }
+    
+    .form-control:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(26, 31, 113, 0.15);
+    }
+    
+    .error-message {
+      font-size: 0.7rem;
+      color: var(--danger);
+      margin-top: 0.5rem;
+      display: none;
+    }
+    
+    .btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 44px;
+      padding: 0 1.5rem;
+      border-radius: var(--radius-md);
+      font-weight: 600;
+      font-size: 0.85rem;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s var(--animation-bounce);
+    }
+    
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+      width: 100%;
+    }
+    
+    .btn-primary:hover {
+      background: var(--primary-light);
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+    }
+    
+    .btn-primary:active {
+      transform: translateY(0);
+    }
+    
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--primary);
+      color: var(--primary);
+    }
+    
+    .btn-outline:hover {
+      background: rgba(26, 31, 113, 0.05);
+      transform: translateY(-3px);
+    }
+    
+    .btn i {
+      margin-right: 0.5rem;
+      font-size: 0.9rem;
+    }
+    
+    /* Bank Method */
+    .method-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .method-option {
+      flex: 1;
+      min-width: 100px;
+      background: var(--neutral-200);
+      border: 2px solid var(--neutral-300);
+      border-radius: var(--radius-md);
+      padding: 1rem;
+      cursor: pointer;
+      transition: var(--transition-base);
+      text-align: center;
+    }
+    
+    .method-option:hover {
+      background: var(--neutral-100);
+      border-color: var(--neutral-400);
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-sm);
+    }
+    
+    .method-option.active {
+      background: var(--neutral-100);
+      border-color: var(--primary);
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+    }
+    
+    .method-icon {
+      font-size: 1.5rem;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+    }
+    
+    .method-label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--neutral-800);
+    }
+    
+    .method-description {
+      font-size: 0.7rem;
+      color: var(--neutral-600);
+      margin-top: 0.25rem;
+    }
+    
+    /* Bank Selection */
+    .bank-selection {
+      display: none;
+      margin-top: 1.5rem;
+    }
+    
+    .bank-selection.active {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+    
+    .bank-list {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    
+    @media (max-width: 768px) {
+      .bank-list {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .bank-list {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    .bank-item {
+      background: var(--neutral-200);
+      border: 1px solid var(--neutral-300);
+      border-radius: var(--radius-md);
+      padding: 0.75rem;
+      cursor: pointer;
+      transition: var(--transition-base);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    
+    .bank-item:hover {
+      background: var(--neutral-100);
+      border-color: var(--neutral-400);
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-sm);
+    }
+    
+    .bank-item.active {
+      background: var(--neutral-100);
+      border-color: var(--primary);
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+    }
+    
+    .bank-logo {
+      width: 40px;
+      height: 40px;
+      object-fit: contain;
+      flex-shrink: 0;
+    }
+    
+    .bank-name {
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--neutral-800);
+    }
+    
+    /* Account Details */
+    .account-details {
+      margin-top: 1.5rem;
+      display: none;
+    }
+    
+    .account-details.active {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+    
+    /* Security Badge */
+    .security-badge {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      background: rgba(26, 31, 113, 0.05);
+      border-radius: var(--radius-md);
+      padding: 0.75rem;
+      margin-bottom: 1.25rem;
+    }
+    
+    .security-badge-icon {
+      width: 30px;
+      height: 30px;
+      background: var(--primary);
+      border-radius: var(--radius-full);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+    }
+    
+    .security-badge-content {
+      flex: 1;
+      min-width: 0;
+    }
+    
+    .security-badge-title {
+      font-weight: 600;
+      font-size: 0.8rem;
+      color: var(--neutral-900);
+      margin-bottom: 0.125rem;
+    }
+    
+    .security-badge-text {
+      font-size: 0.7rem;
+      color: var(--neutral-600);
+      white-space: normal;
+    }
+    
+    /* Verify Banner */
+    .verify-banner {
+      background: linear-gradient(135deg, var(--warning) 0%, #f59e0b 100%);
+      border-radius: var(--radius-md);
+      padding: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      margin: 1.25rem 0;
+      box-shadow: var(--shadow-md);
+    }
+    
+    .verify-icon {
+      width: 36px;
+      height: 36px;
+      background: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--warning);
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+    
+    .verify-content {
+      flex: 1;
+      min-width: 0;
+    }
+    
+    .verify-title {
+      font-weight: 600;
+      color: white;
+      margin-bottom: 0.25rem;
+      font-size: 0.9rem;
+    }
+    
+    .verify-text {
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 0.8rem;
+    }
+    
+    .verify-action {
+      background: white;
+      color: var(--warning);
+      font-weight: 600;
+      font-size: 0.8rem;
+      padding: 0.4rem 0.75rem;
+      border-radius: var(--radius-md);
+      flex-shrink: 0;
+      transition: all 0.3s var(--animation-bounce);
+      cursor: pointer;
+      border: none;
+      white-space: nowrap;
+    }
+    
+    .verify-action:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Bank Details */
+    .bank-details {
+      background: var(--neutral-200);
+      border-radius: var(--radius-md);
+      padding: 1.1rem;
+      margin: 1.25rem 0;
+    }
+    
+    .bank-detail-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--neutral-300);
+    }
+    
+    .bank-detail-row:last-child {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+    
+    .bank-detail-label {
+      font-size: 0.8rem;
+      color: var(--neutral-600);
+      flex-shrink: 0;
+      margin-right: 0.5rem;
+    }
+    
+    .bank-detail-value {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--neutral-900);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-align: right;
+      word-break: break-word;
+      flex-grow: 1;
+    }
+    
+    .copy-btn {
+      background: var(--neutral-300);
+      color: var(--neutral-700);
+      width: 26px;
+      height: 26px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius-full);
+      cursor: pointer;
+      transition: var(--transition-base);
+      flex-shrink: 0;
+    }
+    
+    .copy-btn:hover {
+      background: var(--primary);
+      color: white;
+    }
+    
+    /* Toast Notifications */
+    .toast-container {
+      position: fixed;
+      top: 70px;
+      right: 16px;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    
+    .toast {
+      background: var(--neutral-900);
+      color: white;
+      border-radius: var(--radius-md);
+      padding: 0.75rem 1rem;
+      min-width: 250px;
+      max-width: 320px;
+      box-shadow: var(--shadow-lg);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      animation: slideInRight 0.3s ease, fadeOut 0.3s ease 3s forwards;
+    }
+    
+    .toast.success {
+      border-left: 4px solid var(--success);
+    }
+    
+    .toast.error {
+      border-left: 4px solid var(--danger);
+    }
+    
+    .toast.warning {
+      border-left: 4px solid var(--warning);
+    }
+    
+    .toast.info {
+      border-left: 4px solid var(--info);
+    }
+    
+    .toast-icon {
+      flex-shrink: 0;
+    }
+    
+    .toast-content {
+      flex: 1;
+      min-width: 0;
+    }
+    
+    .toast-title {
+      font-weight: 600;
+      font-size: 0.85rem;
+      margin-bottom: 0.2rem;
+    }
+    
+    .toast-message {
+      font-size: 0.75rem;
+      opacity: 0.9;
+      word-wrap: break-word;
+    }
+    
+    .toast-close {
+      color: var(--neutral-400);
+      cursor: pointer;
+      transition: var(--transition-base);
+      flex-shrink: 0;
+    }
+    
+    .toast-close:hover {
+      color: white;
+    }
+    
+    /* Contact Section */
+    .contact-options {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-top: 1.25rem;
+    }
+    
+    .contact-option {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.9rem;
+      background: var(--neutral-200);
+      border-radius: var(--radius-md);
+      transition: all 0.3s ease;
+      text-decoration: none;
+      color: var(--neutral-900);
+    }
+    
+    .contact-option:hover {
+      background: var(--neutral-300);
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+    }
+    
+    .contact-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-full);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+      color: white;
+    }
+    
+    .contact-icon.whatsapp {
+      background: #25D366;
+    }
+    
+    .contact-icon.email {
+      background: var(--primary);
+    }
+
+    .contact-icon.chat {
+      background: var(--info);
+    }
+
+    .contact-icon.reviews {
+      background: var(--warning);
+    }
+    
+    .contact-content {
+      flex: 1;
+      min-width: 0;
+    }
+    
+    .contact-title {
+      font-weight: 600;
+      font-size: 0.85rem;
+      margin-bottom: 0.2rem;
+    }
+    
+    .contact-description {
+      font-size: 0.75rem;
+      color: var(--neutral-600);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    
+    /* Loading */
+    .loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(5px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 1100;
+      display: none;
+    }
+    
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 3px solid rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 1s linear infinite;
+      margin-bottom: 1.5rem;
+    }
+    
+    .loading-text {
+      color: white;
+      font-size: 1rem;
+      margin-bottom: 1.5rem;
+      font-weight: 500;
+    }
+    
+    .progress-bar-container {
+      width: 80%;
+      max-width: 280px;
+      height: 8px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: var(--radius-full);
+      overflow: hidden;
+    }
+    
+    .progress-bar {
+      height: 100%;
+      background: white;
+      width: 0%;
+      border-radius: var(--radius-full);
+      transition: width 0.3s ease;
+    }
+
+    /* Verification Modal */
+    .verification-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(5px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1100;
+    }
+    
+    .verification-card {
+      background: white;
+      border-radius: var(--radius-lg);
+      width: 90%;
+      max-width: 500px;
+      padding: 1.5rem;
+      animation: scaleIn 0.3s ease;
+    }
+    
+    .verification-header {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+    
+    .verification-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--neutral-900);
+      margin-bottom: 0.5rem;
+    }
+    
+    .verification-subtitle {
+      font-size: 0.85rem;
+      color: var(--neutral-600);
+    }
+    
+    .verification-steps {
+      margin-bottom: 1.5rem;
+    }
+    
+    .verification-step {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.25rem;
+    }
+    
+    .verification-step-number {
+      width: 24px;
+      height: 24px;
+      border-radius: var(--radius-full);
+      background: var(--primary);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+    
+    .verification-step-content {
+      flex: 1;
+    }
+    
+    .verification-step-title {
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: var(--neutral-900);
+      margin-bottom: 0.25rem;
+    }
+    
+    .verification-step-description {
+      font-size: 0.8rem;
+      color: var(--neutral-600);
+    }
+    
+    .verification-actions {
+      display: flex;
+      gap: 1rem;
+    }
+    
+    /* Withdrawal Receipt Modal */
+    .receipt-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(5px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1100;
+    }
+    
+    .receipt-card {
+      background: white;
+      border-radius: var(--radius-lg);
+      width: 90%;
+      max-width: 380px;
+      padding: 1.5rem;
+      animation: scaleIn 0.3s ease;
+    }
+    
+    .receipt-header {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+    
+    .receipt-logo {
+      height: 45px;
+      width: auto;
+      margin-bottom: 1rem;
+    }
+    
+    .receipt-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--neutral-900);
+      margin-bottom: 0.5rem;
+    }
+    
+    .receipt-subtitle {
+      font-size: 0.85rem;
+      color: var(--neutral-600);
+    }
+    
+    .receipt-amount {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin: 1rem 0;
+    }
+    
+    .receipt-details {
+      background: var(--neutral-200);
+      border-radius: var(--radius-md);
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .receipt-detail-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.75rem;
+      font-size: 0.85rem;
+    }
+    
+    .receipt-detail-row:last-child {
+      margin-bottom: 0;
+    }
+    
+    .receipt-detail-label {
+      color: var(--neutral-600);
+    }
+    
+    .receipt-detail-value {
+      color: var(--neutral-900);
+      font-weight: 500;
+    }
+    
+    .receipt-message {
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--neutral-600);
+      margin-bottom: 1.5rem;
+    }
+    
+    .receipt-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    
+    .receipt-share {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    
+    .receipt-share-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-full);
+      background: var(--neutral-200);
+      color: var(--neutral-600);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: var(--transition-base);
+    }
+    
+    .receipt-share-btn:hover {
+      background: var(--neutral-300);
+      transform: translateY(-3px);
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    @keyframes scaleIn {
+      from { transform: scale(0.9); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    @keyframes slideInRight {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    
+    @keyframes fadeOut {
+      from { opacity: 1; }
+      to { opacity: 0; visibility: hidden; }
+    }
+    
+    /* Responsive Adjustments */
+    @media (min-width: 768px) {
+      .withdrawal-container {
+        padding: 1.5rem;
+        padding-top: 80px;
+        padding-bottom: 80px;
+      }
+      
+      .timeline {
+        margin-bottom: 3rem;
+      }
+      
+      .timeline-icon {
+        width: 3rem;
+        height: 3rem;
+        font-size: 1.25rem;
+        margin-bottom: 0.75rem;
+      }
+      
+      .timeline-label {
+        font-size: 0.8rem;
+        max-width: 100px;
+      }
+      
+      .method-options {
+        gap: 1.5rem;
+      }
+      
+      .method-option {
+        padding: 1.25rem;
+      }
+      
+      .method-icon {
+        font-size: 1.75rem;
+      }
+      
+      .method-label {
+        font-size: 0.9rem;
+      }
+      
+      .method-description {
+        font-size: 0.75rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- App Header -->
+  <header class="app-header">
+    <div class="header-brand">
+      <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhnBzNdjl6bNp-nIdaiHVENczJhwlJNA7ocsyiOObMmzbu8at0dY5yGcZ9cLxLF39qI6gwNfqBxlkTDC0txVULEwQVwGkeEzN0Jq9MRTRagA48mh18UqTlR4WhsXOLAEZugUyhqJHB19xJgnkpe-S5VOWFgzpKFwctv3XP9XhH41vNTvq0ZS-nik58Qhr-O/s320/remeex.png" alt="REMEEX">
+    </div>
+    
+    <div class="header-actions">
+      <div class="users-online-badge">
+        <div class="pulse-dot"></div>
+        <span id="users-online-count">124 usuarios conectados</span>
+      </div>
+      
+      <button class="header-action-btn" id="notification-btn" aria-label="Notificaciones">
+        <i class="fas fa-bell"></i>
+        <span class="notification-badge">3</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <div class="withdrawal-container">
+    <div class="section-title" style="margin-bottom: 1.5rem; display: flex; align-items: center;">
+      <a href="recarga.html" style="color: var(--primary); text-decoration: none; display: flex; align-items: center;">
+        <i class="fas fa-arrow-left" style="margin-right: 1rem;"></i>
+      </a>
+      <span>Retiro de Fondos</span>
+    </div>
+    
+    <!-- Security Badge -->
+    <div class="security-badge">
+      <div class="security-badge-icon">
+        <i class="fas fa-shield-alt"></i>
+      </div>
+      <div class="security-badge-content">
+        <div class="security-badge-title">Retirada Segura</div>
+        <div class="security-badge-text">Todas las transferencias están protegidas con cifrado SSL</div>
+      </div>
+    </div>
+
+    <!-- Withdrawal Process Timeline -->
+    <div class="timeline-container">
+      <div class="timeline">
+        <div class="timeline-progress" id="timeline-progress" style="width: 25%;"></div>
+        
+        <div class="timeline-step active" id="step-create">
+          <div class="timeline-icon">
+            <i class="fas fa-edit"></i>
+          </div>
+          <div class="timeline-label">Crear Orden</div>
+        </div>
+        
+        <div class="timeline-step" id="step-verify">
+          <div class="timeline-icon">
+            <i class="fas fa-shield-alt"></i>
+          </div>
+          <div class="timeline-label">Verificar Cuenta</div>
+        </div>
+        
+        <div class="timeline-step" id="step-process">
+          <div class="timeline-icon">
+            <i class="fas fa-cog"></i>
+          </div>
+          <div class="timeline-label">Procesando</div>
+        </div>
+        
+        <div class="timeline-step" id="step-complete">
+          <div class="timeline-icon">
+            <i class="fas fa-check"></i>
+          </div>
+          <div class="timeline-label">Completado</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Balance Cards -->
+    <div class="card">
+      <div class="section-title" style="margin-bottom: 0.5rem;">
+        <i class="fas fa-wallet"></i> Saldo Disponible
+      </div>
+      
+      <div style="display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;">
+        <div style="flex: 1; min-width: 200px; background: var(--primary); color: white; padding: 1rem; border-radius: var(--radius-md); position: relative; overflow: hidden;">
+          <div style="position: absolute; right: -20px; bottom: -20px; width: 100px; height: 100px; border-radius: 50%; background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);"></div>
+          
+          <div style="position: relative; z-index: 2;">
+            <div style="font-size: 0.8rem; opacity: 0.8; margin-bottom: 0.5rem;">Saldo Total</div>
+            <div style="font-size: 1.75rem; font-weight: 700; margin-bottom: 0.5rem;" id="total-balance">Bs 0,00</div>
+            <div style="font-size: 0.8rem; opacity: 0.8;" id="balance-equivalents">≈ $0.00 | ≈ €0.00</div>
+          </div>
+        </div>
+        
+        <div style="flex: 1; min-width: 200px; background: var(--neutral-200); padding: 1rem; border-radius: var(--radius-md);">
+          <div style="font-size: 0.8rem; color: var(--neutral-600); margin-bottom: 0.5rem;">Cantidad a Retirar</div>
+          <div style="position: relative;">
+            <input type="text" class="form-control" id="withdrawal-amount" placeholder="0.00" style="padding-left: 2.5rem; font-size: 1.25rem; font-weight: 600;">
+            <div style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); font-weight: 600; color: var(--neutral-800);">Bs</div>
+          </div>
+          <div style="font-size: 0.75rem; color: var(--neutral-500); margin-top: 0.5rem; text-align: right;" id="amount-equivalents">≈ $0.00 | ≈ €0.00</div>
+        </div>
+      </div>
+      
+      <div style="font-size: 0.75rem; color: var(--neutral-600); margin-bottom: 1rem; text-align: center;">
+        Tasa: <span id="exchange-rate-display">1 USD = 112.00 Bs | 1 USD = 0.94 EUR</span>
+      </div>
+    </div>
+
+    <!-- Withdrawal Method Selection -->
+    <div class="card">
+      <div class="section-title" style="margin-bottom: 0.75rem;">
+        <i class="fas fa-exchange-alt"></i> Método de Retiro
+      </div>
+      
+      <div class="method-options">
+        <div class="method-option active" data-method="mobile" data-limit="250000">
+          <div class="method-icon">
+            <i class="fas fa-mobile-alt"></i>
+          </div>
+          <div class="method-label">Pago Móvil</div>
+          <div class="method-description">Límite: 250.000,00 Bs</div>
+        </div>
+        
+        <div class="method-option" data-method="bank" data-limit="1000000">
+          <div class="method-icon">
+            <i class="fas fa-university"></i>
+          </div>
+          <div class="method-label">Transferencia Bancaria</div>
+          <div class="method-description">Límite: 1.000.000,00 Bs</div>
+        </div>
+        
+        <div class="method-option" data-method="international">
+          <div class="method-icon">
+            <i class="fas fa-globe"></i>
+          </div>
+          <div class="method-label">Transferencia Internacional</div>
+          <div class="method-description">Sin límite</div>
+        </div>
+      </div>
+      
+      <!-- Mobile Payment Form -->
+      <div class="bank-selection active" id="mobile-payment-form">
+        <div class="form-group">
+          <label class="form-label" for="mobile-bank">Banco Emisor</label>
+          <select class="form-control" id="mobile-bank">
+            <option value="" disabled selected>Seleccione su banco</option>
+            <option value="banco-venezuela">Banco de Venezuela</option>
+            <option value="banco-venezolano">Banco Venezolano de Crédito</option>
+            <option value="banco-mercantil">Banco Mercantil</option>
+            <option value="banco-provincial">Banco Provincial</option>
+            <option value="banco-banesco">Banesco</option>
+            <option value="banco-bicentenario">Banco Bicentenario</option>
+            <option value="banco-bnc">Banco Nacional de Crédito</option>
+            <option value="banco-exterior">Banco Exterior</option>
+            <option value="banco-bancaribe">Bancaribe</option>
+            <option value="banco-bancamiga">Bancamiga</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" for="mobile-number">Número de Teléfono</label>
+          <input type="tel" class="form-control" id="mobile-number" placeholder="04XX-XXXXXXX">
+          <div class="error-message" id="mobile-number-error">Por favor, introduce un número de teléfono válido.</div>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" for="mobile-id">Cédula de Identidad</label>
+          <input type="text" class="form-control" id="mobile-id" placeholder="V-XXXXXXXX">
+          <div class="error-message" id="mobile-id-error">Por favor, introduce un número de cédula válido.</div>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" for="mobile-name">Nombre Completo</label>
+          <input type="text" class="form-control" id="mobile-name" placeholder="Como aparece en su banco">
+          <div class="error-message" id="mobile-name-error">Por favor, introduce tu nombre completo.</div>
+        </div>
+      </div>
+      
+      <!-- Bank Transfer Form -->
+      <div class="bank-selection" id="bank-transfer-form">
+        <div class="form-group">
+          <label class="form-label" for="bank-name">Banco</label>
+          <select class="form-control" id="bank-name">
+            <option value="" disabled selected>Seleccione su banco</option>
+            <option value="banco-venezuela">Banco de Venezuela</option>
+            <option value="banco-venezolano">Banco Venezolano de Crédito</option>
+            <option value="banco-mercantil">Banco Mercantil</option>
+            <option value="banco-provincial">Banco Provincial</option>
+            <option value="banco-banesco">Banesco</option>
+            <option value="banco-bicentenario">Banco Bicentenario</option>
+            <option value="banco-bnc">Banco Nacional de Crédito</option>
+            <option value="banco-exterior">Banco Exterior</option>
+            <option value="banco-bancaribe">Bancaribe</option>
+            <option value="banco-bancamiga">Bancamiga</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" for="account-type">Tipo de Cuenta</label>
+          <select class="form-control" id="account-type">
+            <option value="" disabled selected>Seleccione el tipo de cuenta</option>
+            <option value="corriente">Corriente</option>
+            <option value="ahorro">Ahorro</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" for="account-number">Número de Cuenta</label>
+          <input type="text" class="form-control" id="account-number" placeholder="XXXX-XXXX-XXXX-XXXX">
+          <div class="error-message" id="account-number-error">Por favor, introduce un número de cuenta válido.</div>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" for="account-id">Cédula de Identidad</label>
+          <input type="text" class="form-control" id="account-id" placeholder="V-XXXXXXXX">
+          <div class="error-message" id="account-id-error">Por favor, introduce un número de cédula válido.</div>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" for="account-name">Nombre Completo</label>
+          <input type="text" class="form-control" id="account-name" placeholder="Como aparece en su banco">
+          <div class="error-message" id="account-name-error">Por favor, introduce tu nombre completo.</div>
+        </div>
+      </div>
+      
+      <!-- International Transfer Form -->
+      <div class="bank-selection" id="international-transfer-form">
+        <div class="form-group">
+          <label class="form-label" for="int-method">Método de Envío Internacional</label>
+          <select class="form-control" id="int-method">
+            <option value="" disabled selected>Seleccione el método</option>
+            <option value="zelle">Zelle</option>
+            <option value="paypal">PayPal</option>
+            <option value="wise">Wise (Transferwise)</option>
+            <option value="swift">Transferencia SWIFT</option>
+            <option value="crypto">Criptomonedas</option>
+          </select>
+        </div>
+        
+        <div class="form-group" id="zelle-form" style="display: none;">
+          <label class="form-label" for="zelle-email">Correo Electrónico de Zelle</label>
+          <input type="email" class="form-control" id="zelle-email" placeholder="correo@ejemplo.com">
+          <div class="error-message" id="zelle-email-error">Por favor, introduce un correo electrónico válido.</div>
+        </div>
+        
+        <div class="form-group" id="paypal-form" style="display: none;">
+          <label class="form-label" for="paypal-email">Correo Electrónico de PayPal</label>
+          <input type="email" class="form-control" id="paypal-email" placeholder="correo@ejemplo.com">
+          <div class="error-message" id="paypal-email-error">Por favor, introduce un correo electrónico válido.</div>
+        </div>
+        
+        <div id="swift-form" style="display: none;">
+          <div class="form-group">
+            <label class="form-label" for="swift-bank">Nombre del Banco</label>
+            <input type="text" class="form-control" id="swift-bank" placeholder="Nombre del banco">
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label" for="swift-code">Código SWIFT/BIC</label>
+            <input type="text" class="form-control" id="swift-code" placeholder="XXXXXXXX">
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label" for="swift-account">Número de Cuenta/IBAN</label>
+            <input type="text" class="form-control" id="swift-account" placeholder="Número de cuenta o IBAN">
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label" for="swift-name">Nombre del Beneficiario</label>
+            <input type="text" class="form-control" id="swift-name" placeholder="Nombre completo">
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label" for="swift-address">Dirección del Beneficiario</label>
+            <input type="text" class="form-control" id="swift-address" placeholder="Dirección completa">
+          </div>
+        </div>
+        
+        <div class="form-group" id="crypto-form" style="display: none;">
+          <label class="form-label" for="crypto-currency">Seleccione Criptomoneda</label>
+          <select class="form-control" id="crypto-currency">
+            <option value="btc">Bitcoin (BTC)</option>
+            <option value="eth">Ethereum (ETH)</option>
+            <option value="usdt">Tether (USDT)</option>
+            <option value="usdc">USD Coin (USDC)</option>
+            <option value="bnb">Binance Coin (BNB)</option>
+          </select>
+          
+          <label class="form-label" for="crypto-address" style="margin-top: 1rem;">Dirección de Billetera</label>
+          <input type="text" class="form-control" id="crypto-address" placeholder="Dirección de billetera">
+          <div class="error-message" id="crypto-address-error">Por favor, introduce una dirección de billetera válida.</div>
+        </div>
+        
+        <div class="form-group" id="wise-form" style="display: none;">
+          <label class="form-label" for="wise-email">Correo Electrónico de Wise</label>
+          <input type="email" class="form-control" id="wise-email" placeholder="correo@ejemplo.com">
+          <div class="error-message" id="wise-email-error">Por favor, introduce un correo electrónico válido.</div>
+        </div>
+      </div>
+      
+      <!-- Verification Banner -->
+      <div class="verify-banner" id="verify-banner" style="display: none;">
+        <div class="verify-icon">
+          <i class="fas fa-exclamation-triangle"></i>
+        </div>
+        <div class="verify-content">
+          <div class="verify-title">Verificación de Cuenta Requerida</div>
+          <div class="verify-text">Para procesar los retiros de forma segura, debe verificar su cuenta realizando un depósito desde la misma cuenta bancaria.</div>
+        </div>
+        <button class="verify-action" id="verify-now-btn">Verificar</button>
+      </div>
+
+      <button class="btn btn-primary" id="submit-withdrawal" style="margin-top: 1.5rem;">
+        <i class="fas fa-paper-plane"></i> Solicitar Retiro
+      </button>
+    </div>
+
+    <!-- Help and Support Card -->
+    <div class="card">
+      <div class="section-title" style="margin-bottom: 1rem;">
+        <i class="fas fa-headset"></i> Soporte y Ayuda
+      </div>
+      
+      <div class="contact-options">
+        <a href="https://wa.me/+17373018059" class="contact-option" target="_blank">
+          <div class="contact-icon whatsapp">
+            <i class="fab fa-whatsapp"></i>
+          </div>
+          <div class="contact-content">
+            <div class="contact-title">WhatsApp</div>
+            <div class="contact-description">Atención 24/7 vía chat</div>
+          </div>
+        </a>
+        
+        <a href="mailto:soporte@remeex.com" class="contact-option">
+          <div class="contact-icon email">
+            <i class="fas fa-envelope"></i>
+          </div>
+          <div class="contact-content">
+            <div class="contact-title">Correo Electrónico</div>
+            <div class="contact-description">soporte@remeex.com</div>
+          </div>
+        </a>
+
+        <a href="#" class="contact-option" id="faq-btn">
+          <div class="contact-icon reviews">
+            <i class="fas fa-question-circle"></i>
+          </div>
+          <div class="contact-content">
+            <div class="contact-title">Preguntas Frecuentes</div>
+            <div class="contact-description">¿Por qué debo verificar mi cuenta?</div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Navigation -->
+  <nav class="bottom-nav">
+    <a href="recarga.html" class="nav-item">
+      <div class="nav-icon"><i class="fas fa-plus-circle"></i></div>
+      <div class="nav-label">Recargar</div>
+    </a>
+    
+    <div class="nav-item active">
+      <div class="nav-icon"><i class="fas fa-paper-plane"></i></div>
+      <div class="nav-label">Retiros</div>
+    </div>
+    
+    <a href="recarga.html" class="nav-item">
+      <div class="nav-icon"><i class="fas fa-home"></i></div>
+      <div class="nav-label">Inicio</div>
+    </a>
+    
+    <div class="nav-item">
+      <div class="nav-icon"><i class="fas fa-history"></i></div>
+      <div class="nav-label">Historial</div>
+    </div>
+
+    <div class="nav-item">
+      <div class="nav-icon"><i class="fas fa-user"></i></div>
+      <div class="nav-label">Perfil</div>
+    </div>
+  </nav>
+
+  <!-- Account Verification Modal -->
+  <div class="verification-container" id="verification-modal">
+    <div class="verification-card">
+      <div class="verification-header">
+        <div class="verification-title">Verificación de Cuenta</div>
+        <div class="verification-subtitle">Para garantizar la seguridad de sus fondos y cumplir con nuestras políticas de seguridad.</div>
+      </div>
+      
+      <div class="verification-steps">
+        <div class="verification-step">
+          <div class="verification-step-number">1</div>
+          <div class="verification-step-content">
+            <div class="verification-step-title">Realice un depósito de verificación</div>
+            <div class="verification-step-description">Para confirmar que la cuenta bancaria es realmente suya, debe realizar un pequeño depósito de $25 desde esa misma cuenta.</div>
+          </div>
+        </div>
+        
+        <div class="verification-step">
+          <div class="verification-step-number">2</div>
+          <div class="verification-step-content">
+            <div class="verification-step-title">El dinero se acredita a su saldo</div>
+            <div class="verification-step-description">El monto del depósito se agrega inmediatamente a su saldo disponible en Remeex VISA.</div>
+          </div>
+        </div>
+        
+        <div class="verification-step">
+          <div class="verification-step-number">3</div>
+          <div class="verification-step-content">
+            <div class="verification-step-title">Cuenta verificada permanentemente</div>
+            <div class="verification-step-description">Una vez verificada, puede realizar retiros a esa cuenta sin necesidad de verificar nuevamente.</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="bank-details" id="verification-bank-details">
+        <div class="bank-detail-row">
+          <div class="bank-detail-label">Banco:</div>
+          <div class="bank-detail-value">
+            Banco Venezolano de Crédito
+            <div class="copy-btn" data-copy="Banco Venezolano de Crédito"><i class="far fa-copy"></i></div>
+          </div>
+        </div>
+        
+        <div class="bank-detail-row">
+          <div class="bank-detail-label">Titular:</div>
+          <div class="bank-detail-value">
+            Global VISA Venezuela
+            <div class="copy-btn" data-copy="Global VISA Venezuela"><i class="far fa-copy"></i></div>
+          </div>
+        </div>
+        
+        <div class="bank-detail-row">
+          <div class="bank-detail-label">RIF:</div>
+          <div class="bank-detail-value">
+            J407502646
+            <div class="copy-btn" data-copy="J407502646"><i class="far fa-copy"></i></div>
+          </div>
+        </div>
+        
+        <div class="bank-detail-row">
+          <div class="bank-detail-label">Cuenta Corriente:</div>
+          <div class="bank-detail-value">
+            0104-0019-86-0190162931
+            <div class="copy-btn" data-copy="0104-0019-86-0190162931"><i class="far fa-copy"></i></div>
+          </div>
+        </div>
+        
+        <div class="bank-detail-row">
+          <div class="bank-detail-label">Monto a Depositar:</div>
+          <div class="bank-detail-value">
+            $25 USD (≈ 2.800,00 Bs)
+            <div class="copy-btn" data-copy="$25 USD (≈ 2.800,00 Bs)"><i class="far fa-copy"></i></div>
+          </div>
+        </div>
+        
+        <div class="bank-detail-row">
+          <div class="bank-detail-label">Referencia:</div>
+          <div class="bank-detail-value">
+            VER<span id="verification-reference">12345</span>
+            <div class="copy-btn" data-copy="VER12345"><i class="far fa-copy"></i></div>
+          </div>
+        </div>
+      </div>
+      
+      <div style="font-size: 0.8rem; color: var(--neutral-600); margin: 1rem 0; text-align: center;">
+        Una vez realizado el depósito, su cuenta será verificada automáticamente y podrá realizar retiros de inmediato.
+      </div>
+      
+      <div class="verification-actions">
+        <button class="btn btn-primary" id="verification-later">
+          <i class="fas fa-arrow-right"></i> Entendido, Verificaré Después
+        </button>
+        
+        <a href="recarga.html" class="btn btn-outline" style="text-align: center;">
+          <i class="fas fa-arrow-left"></i> Volver al Inicio
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Withdrawal Receipt Modal -->
+  <div class="receipt-overlay" id="receipt-modal">
+    <div class="receipt-card">
+      <div class="receipt-header">
+        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhnBzNdjl6bNp-nIdaiHVENczJhwlJNA7ocsyiOObMmzbu8at0dY5yGcZ9cLxLF39qI6gwNfqBxlkTDC0txVULEwQVwGkeEzN0Jq9MRTRagA48mh18UqTlR4WhsXOLAEZugUyhqJHB19xJgnkpe-S5VOWFgzpKFwctv3XP9XhH41vNTvq0ZS-nik58Qhr-O/s320/remeex.png" alt="REMEEX" class="receipt-logo">
+        <div class="receipt-title">Orden de Retiro Creada</div>
+        <div class="receipt-subtitle">Su solicitud ha sido registrada con éxito</div>
+      </div>
+      
+      <div class="receipt-amount" id="receipt-amount">Bs 0,00</div>
+      
+      <div class="receipt-details">
+        <div class="receipt-detail-row">
+          <div class="receipt-detail-label">Número de Orden:</div>
+          <div class="receipt-detail-value" id="receipt-order">RET-12345</div>
+        </div>
+        
+        <div class="receipt-detail-row">
+          <div class="receipt-detail-label">Fecha:</div>
+          <div class="receipt-detail-value" id="receipt-date">6 de Mayo de 2025</div>
+        </div>
+        
+        <div class="receipt-detail-row">
+          <div class="receipt-detail-label">Método:</div>
+          <div class="receipt-detail-value" id="receipt-method">Pago Móvil</div>
+        </div>
+        
+        <div class="receipt-detail-row">
+          <div class="receipt-detail-label">Destino:</div>
+          <div class="receipt-detail-value" id="receipt-destination">0424-1234567</div>
+        </div>
+        
+        <div class="receipt-detail-row">
+          <div class="receipt-detail-label">Estado:</div>
+          <div class="receipt-detail-value" style="color: var(--warning);">Pendiente de Verificación</div>
+        </div>
+      </div>
+      
+      <div class="receipt-message">
+        Para completar su retiro, es necesario verificar su cuenta. Por favor, realice el depósito de verificación lo antes posible.
+      </div>
+      
+      <div class="receipt-actions">
+        <button class="btn btn-primary" id="verify-from-receipt">
+          <i class="fas fa-shield-alt"></i> Verificar Ahora
+        </button>
+        
+        <button class="btn btn-outline" id="close-receipt">
+          <i class="fas fa-times"></i> Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading Overlay -->
+  <div class="loading-overlay" id="loading-overlay">
+    <div class="spinner"></div>
+    <div class="loading-text" id="loading-text">Procesando su solicitud...</div>
+    <div class="progress-bar-container">
+      <div class="progress-bar" id="progress-bar"></div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <script>
+    // Configuración de valores constantes con tasa de cambio centralizada
+    const CONFIG = {
+      EXCHANGE_RATES: {
+        USD_TO_BS: 112.00,  // Tasa centralizada
+        USD_TO_EUR: 0.94
+      },
+      STORAGE_KEYS: {
+        USER_DATA: 'remeexUserData',
+        BALANCE: 'remeexBalance',
+        TRANSACTIONS: 'remeexTransactions',
+        VERIFICATION: 'remeexVerificationStatus',
+      },
+      LIMITS: {
+        MOBILE: 250000, // 250,000 Bs
+        BANK: 1000000 // 1,000,000 Bs
+      }
+    };
+
+    // Variables globales
+    let currentUser = {
+      name: '',
+      email: '',
+      balance: {
+        usd: 0,
+        bs: 0,
+        eur: 0
+      },
+      isVerified: false
+    };
+
+    let selectedMethod = 'mobile';
+    let activeUsersCount = 0;
+    let withdrawalAmount = 0;
+    let withdrawalAmountUsd = 0;
+    let withdrawalAmountEur = 0;
+
+    // DOM Ready
+    document.addEventListener('DOMContentLoaded', function() {
+      // Iniciar aplicación
+      initApp();
+      
+      // Configurar event listeners
+      setupEventListeners();
+      
+      // Cargar datos del usuario
+      loadUserDataFromSession();
+    });
+
+    // Inicialización de la aplicación
+    function initApp() {
+      // Configurar contadores aleatorios
+      updateOnlineUsersCount();
+      
+      // Generar código de verificación aleatorio
+      generateVerificationCode();
+      
+      // Actualizar fecha en el recibo
+      updateReceiptDate();
+    }
+
+    // Generar código de verificación aleatorio
+    function generateVerificationCode() {
+      const verificationRef = document.getElementById('verification-reference');
+      const receiptOrder = document.getElementById('receipt-order');
+      
+      const randomCode = Math.floor(10000 + Math.random() * 90000);
+      
+      if (verificationRef) verificationRef.textContent = randomCode;
+      if (receiptOrder) receiptOrder.textContent = `RET-${randomCode}`;
+      
+      // Actualizar el atributo data-copy del botón de copia
+      const copyBtn = document.querySelector('.copy-btn[data-copy="VER12345"]');
+      if (copyBtn) copyBtn.setAttribute('data-copy', `VER${randomCode}`);
+    }
+
+    // Actualizar fecha en el recibo
+    function updateReceiptDate() {
+      const receiptDate = document.getElementById('receipt-date');
+      
+      const date = new Date();
+      const options = { day: 'numeric', month: 'long', year: 'numeric' };
+      const formattedDate = date.toLocaleDateString('es-ES', options);
+      
+      if (receiptDate) receiptDate.textContent = formattedDate;
+    }
+
+    // Cargar datos del usuario desde sessionStorage
+    function loadUserDataFromSession() {
+      // Intentar cargar desde sessionStorage primero
+      const balanceData = sessionStorage.getItem(CONFIG.STORAGE_KEYS.BALANCE);
+      const userData = sessionStorage.getItem(CONFIG.STORAGE_KEYS.USER_DATA);
+      const verificationStatus = sessionStorage.getItem(CONFIG.STORAGE_KEYS.VERIFICATION);
+      
+      if (balanceData) {
+        try {
+          currentUser.balance = JSON.parse(balanceData);
+        } catch (e) {
+          console.error('Error al parsear datos de balance:', e);
+        }
+      }
+      
+      if (userData) {
+        try {
+          const user = JSON.parse(userData);
+          currentUser.name = user.name || '';
+          currentUser.email = user.email || '';
+        } catch (e) {
+          console.error('Error al parsear datos de usuario:', e);
+        }
+      }
+      
+      if (verificationStatus) {
+        currentUser.isVerified = verificationStatus === 'verified';
+      }
+      
+      // Actualizar la interfaz con los datos cargados
+      updateBalanceDisplay();
+    }
+
+    // Actualizar contador de usuarios en línea
+    function updateOnlineUsersCount() {
+      const min = 98;
+      const max = 142;
+      activeUsersCount = Math.floor(Math.random() * (max - min + 1)) + min;
+      
+      const userCountElement = document.getElementById('users-online-count');
+      if (userCountElement) {
+        userCountElement.textContent = `${activeUsersCount} usuarios conectados`;
+      }
+    }
+
+    // Configurar event listeners
+    function setupEventListeners() {
+      // Manejo de la cantidad a retirar
+      setupAmountInput();
+      
+      // Selección de método de retiro
+      setupMethodSelection();
+      
+      // Manejo del formulario internacional
+      setupInternationalForm();
+      
+      // Botón de verificación
+      setupVerificationButtons();
+      
+      // Botón de envío del formulario
+      setupSubmitButton();
+      
+      // Botones de copia
+      setupCopyButtons();
+      
+      // Botones del recibo
+      setupReceiptButtons();
+    }
+
+    // Configurar input de cantidad
+    function setupAmountInput() {
+      const amountInput = document.getElementById('withdrawal-amount');
+      if (amountInput) {
+        amountInput.addEventListener('input', function(e) {
+          // Permitir solo números y punto decimal
+          let value = this.value.replace(/[^\d.]/g, '');
+          
+          // Asegurar que solo hay un punto decimal
+          const decimalPoints = value.match(/\./g);
+          if (decimalPoints && decimalPoints.length > 1) {
+            value = value.replace(/\.+$/, '');
+          }
+          
+          this.value = value;
+          
+          // Calcular equivalentes
+          withdrawalAmount = parseFloat(value) || 0;
+          withdrawalAmountUsd = withdrawalAmount / CONFIG.EXCHANGE_RATES.USD_TO_BS;
+          withdrawalAmountEur = withdrawalAmountUsd * CONFIG.EXCHANGE_RATES.USD_TO_EUR;
+          
+          updateEquivalentsDisplay();
+        });
+      }
+    }
+
+    // Actualizar display de equivalentes
+    function updateEquivalentsDisplay() {
+      const amountEquivalents = document.getElementById('amount-equivalents');
+      
+      if (amountEquivalents) {
+        amountEquivalents.textContent = `≈ ${formatCurrency(withdrawalAmountUsd, 'usd')} | ≈ ${formatCurrency(withdrawalAmountEur, 'eur')}`;
+      }
+    }
+
+    // Configurar selección de método
+    function setupMethodSelection() {
+      const methodOptions = document.querySelectorAll('.method-option');
+      
+      methodOptions.forEach(option => {
+        option.addEventListener('click', function() {
+          // Actualizar selección visual
+          methodOptions.forEach(opt => opt.classList.remove('active'));
+          this.classList.add('active');
+          
+          // Guardar método seleccionado
+          selectedMethod = this.getAttribute('data-method');
+          
+          // Mostrar formulario correspondiente
+          const forms = document.querySelectorAll('.bank-selection');
+          forms.forEach(form => form.classList.remove('active'));
+          
+          const selectedForm = document.getElementById(`${selectedMethod}-transfer-form`);
+          if (selectedForm) {
+            selectedForm.classList.add('active');
+          } else {
+            document.getElementById('mobile-payment-form').classList.add('active');
+          }
+          
+          // Verificar límites según método seleccionado
+          checkWithdrawalLimits();
+        });
+      });
+    }
+
+    // Configurar formulario internacional
+    function setupInternationalForm() {
+      const intMethod = document.getElementById('int-method');
+      
+      if (intMethod) {
+        intMethod.addEventListener('change', function() {
+          // Ocultar todos los formularios
+          document.getElementById('zelle-form').style.display = 'none';
+          document.getElementById('paypal-form').style.display = 'none';
+          document.getElementById('swift-form').style.display = 'none';
+          document.getElementById('crypto-form').style.display = 'none';
+          document.getElementById('wise-form').style.display = 'none';
+          
+          // Mostrar el formulario seleccionado
+          const selectedForm = document.getElementById(`${this.value}-form`);
+          if (selectedForm) {
+            selectedForm.style.display = 'block';
+          }
+        });
+      }
+    }
+
+    // Verificar límites de retiro
+    function checkWithdrawalLimits() {
+      const methodElement = document.querySelector(`.method-option[data-method="${selectedMethod}"]`);
+      
+      if (methodElement) {
+        const limit = parseFloat(methodElement.getAttribute('data-limit')) || 0;
+        
+        if (limit > 0 && withdrawalAmount > limit) {
+          showToast('warning', 'Límite Excedido', `El monto máximo para ${methodElement.querySelector('.method-label').textContent} es ${formatCurrency(limit, 'bs')}`);
+          
+          // Ajustar el monto al límite
+          const amountInput = document.getElementById('withdrawal-amount');
+          if (amountInput) {
+            amountInput.value = limit.toFixed(2);
+            
+            // Disparar evento de input para actualizar equivalentes
+            const event = new Event('input', { bubbles: true });
+            amountInput.dispatchEvent(event);
+          }
+        }
+      }
+    }
+
+    // Configurar botones de verificación
+    function setupVerificationButtons() {
+      // Botón de verificar ahora en el banner
+      const verifyNowBtn = document.getElementById('verify-now-btn');
+      if (verifyNowBtn) {
+        verifyNowBtn.addEventListener('click', function() {
+          const verificationModal = document.getElementById('verification-modal');
+          if (verificationModal) {
+            verificationModal.style.display = 'flex';
+          }
+        });
+      }
+      
+      // Botón de verificar luego
+      const verificationLater = document.getElementById('verification-later');
+      if (verificationLater) {
+        verificationLater.addEventListener('click', function() {
+          const verificationModal = document.getElementById('verification-modal');
+          if (verificationModal) {
+            verificationModal.style.display = 'none';
+          }
+        });
+      }
+      
+      // Botón de verificar desde el recibo
+      const verifyFromReceipt = document.getElementById('verify-from-receipt');
+      if (verifyFromReceipt) {
+        verifyFromReceipt.addEventListener('click', function() {
+          const receiptModal = document.getElementById('receipt-modal');
+          const verificationModal = document.getElementById('verification-modal');
+          
+          if (receiptModal) receiptModal.style.display = 'none';
+          if (verificationModal) verificationModal.style.display = 'flex';
+        });
+      }
+    }
+
+    // Configurar botón de envío
+    function setupSubmitButton() {
+      const submitBtn = document.getElementById('submit-withdrawal');
+      
+      if (submitBtn) {
+        submitBtn.addEventListener('click', function() {
+          // Validar monto
+          if (withdrawalAmount <= 0) {
+            showToast('error', 'Monto Inválido', 'Por favor ingrese un monto mayor a cero.');
+            return;
+          }
+          
+          // Validar saldo suficiente
+          if (withdrawalAmount > currentUser.balance.bs) {
+            showToast('error', 'Saldo Insuficiente', 'No tiene fondos suficientes para realizar este retiro.');
+            return;
+          }
+          
+          // Validar límites
+          checkWithdrawalLimits();
+          
+          // Validar datos según método seleccionado
+          if (!validateFormData()) {
+            return;
+          }
+          
+          // Mostrar loading
+          const loadingOverlay = document.getElementById('loading-overlay');
+          const loadingText = document.getElementById('loading-text');
+          const progressBar = document.getElementById('progress-bar');
+          
+          if (loadingOverlay) loadingOverlay.style.display = 'flex';
+          
+          // Simular progreso
+          if (progressBar) {
+            let width = 0;
+            const interval = setInterval(function() {
+              if (width >= 100) {
+                clearInterval(interval);
+                
+                // Ocultar loading
+                if (loadingOverlay) loadingOverlay.style.display = 'none';
+                
+                // Actualizar recibo
+                updateReceiptData();
+                
+                // Mostrar recibo
+                const receiptModal = document.getElementById('receipt-modal');
+                if (receiptModal) receiptModal.style.display = 'flex';
+                
+                // Mostrar banner de verificación si no está verificado
+                const verifyBanner = document.getElementById('verify-banner');
+                if (verifyBanner && !currentUser.isVerified) {
+                  verifyBanner.style.display = 'flex';
+                }
+                
+                // Actualizar timeline
+                const timelineProgress = document.getElementById('timeline-progress');
+                if (timelineProgress) timelineProgress.style.width = '50%';
+                
+                document.getElementById('step-create').classList.remove('active');
+                document.getElementById('step-create').classList.add('completed');
+                document.getElementById('step-verify').classList.add('active');
+              } else {
+                width += 2;
+                if (progressBar) progressBar.style.width = width + '%';
+                
+                // Actualizar texto según progreso
+                if (loadingText) {
+                  if (width < 30) {
+                    loadingText.textContent = "Validando datos...";
+                  } else if (width < 60) {
+                    loadingText.textContent = "Preparando orden de retiro...";
+                  } else if (width < 90) {
+                    loadingText.textContent = "Verificando disponibilidad...";
+                  } else {
+                    loadingText.textContent = "¡Casi listo!";
+                  }
+                }
+              }
+            }, 30);
+          }
+        });
+      }
+    }
+
+    // Validar datos del formulario
+    function validateFormData() {
+      let isValid = true;
+      
+      // Validar según método seleccionado
+      if (selectedMethod === 'mobile') {
+        const mobileBank = document.getElementById('mobile-bank');
+        const mobileNumber = document.getElementById('mobile-number');
+        const mobileId = document.getElementById('mobile-id');
+        const mobileName = document.getElementById('mobile-name');
+        
+        const numberError = document.getElementById('mobile-number-error');
+        const idError = document.getElementById('mobile-id-error');
+        const nameError = document.getElementById('mobile-name-error');
+        
+        // Reset errors
+        if (numberError) numberError.style.display = 'none';
+        if (idError) idError.style.display = 'none';
+        if (nameError) nameError.style.display = 'none';
+        
+        // Validar bancoif (!mobileBank || mobileBank.value === '') {
+          showToast('error', 'Banco Requerido', 'Por favor, seleccione su banco.');
+          isValid = false;
+        }
+        
+        if (!mobileNumber || !mobileNumber.value) {
+          if (numberError) numberError.style.display = 'block';
+          isValid = false;
+        } else if (!/^0[412][0-9]{8,9}$/.test(mobileNumber.value.replace(/\D/g, ''))) {
+          if (numberError) {
+            numberError.textContent = 'El número debe comenzar con 04XX y tener 10-11 dígitos.';
+            numberError.style.display = 'block';
+          }
+          isValid = false;
+        }
+        
+        if (!mobileId || !mobileId.value) {
+          if (idError) idError.style.display = 'block';
+          isValid = false;
+        } else if (!/^[VEJPvejp][-.\s]?\d{6,9}$/.test(mobileId.value)) {
+          if (idError) {
+            idError.textContent = 'Formato de cédula inválido (ej: V-12345678).';
+            idError.style.display = 'block';
+          }
+          isValid = false;
+        }
+        
+        if (!mobileName || !mobileName.value || mobileName.value.trim().length < 5) {
+          if (nameError) nameError.style.display = 'block';
+          isValid = false;
+        }
+      } else if (selectedMethod === 'bank') {
+        const bankName = document.getElementById('bank-name');
+        const accountType = document.getElementById('account-type');
+        const accountNumber = document.getElementById('account-number');
+        const accountId = document.getElementById('account-id');
+        const accountName = document.getElementById('account-name');
+        
+        const accountNumberError = document.getElementById('account-number-error');
+        const accountIdError = document.getElementById('account-id-error');
+        const accountNameError = document.getElementById('account-name-error');
+        
+        // Reset errors
+        if (accountNumberError) accountNumberError.style.display = 'none';
+        if (accountIdError) accountIdError.style.display = 'none';
+        if (accountNameError) accountNameError.style.display = 'none';
+        
+        // Validar banco y tipo de cuenta
+        if (!bankName || bankName.value === '') {
+          showToast('error', 'Banco Requerido', 'Por favor, seleccione su banco.');
+          isValid = false;
+        }
+        
+        if (!accountType || accountType.value === '') {
+          showToast('error', 'Tipo de Cuenta Requerido', 'Por favor, seleccione el tipo de cuenta.');
+          isValid = false;
+        }
+        
+        // Validar número de cuenta
+        if (!accountNumber || !accountNumber.value) {
+          if (accountNumberError) accountNumberError.style.display = 'block';
+          isValid = false;
+        } else if (!/^\d{20}$/.test(accountNumber.value.replace(/\D/g, ''))) {
+          if (accountNumberError) {
+            accountNumberError.textContent = 'El número de cuenta debe tener 20 dígitos.';
+            accountNumberError.style.display = 'block';
+          }
+          isValid = false;
+        }
+        
+        // Validar cédula
+        if (!accountId || !accountId.value) {
+          if (accountIdError) accountIdError.style.display = 'block';
+          isValid = false;
+        } else if (!/^[VEJPvejp][-.\s]?\d{6,9}$/.test(accountId.value)) {
+          if (accountIdError) {
+            accountIdError.textContent = 'Formato de cédula inválido (ej: V-12345678).';
+            accountIdError.style.display = 'block';
+          }
+          isValid = false;
+        }
+        
+        // Validar nombre
+        if (!accountName || !accountName.value || accountName.value.trim().length < 5) {
+          if (accountNameError) accountNameError.style.display = 'block';
+          isValid = false;
+        }
+      } else if (selectedMethod === 'international') {
+        const intMethod = document.getElementById('int-method');
+        
+        if (!intMethod || intMethod.value === '') {
+          showToast('error', 'Método Requerido', 'Por favor, seleccione el método de envío internacional.');
+          isValid = false;
+        } else {
+          // Validar según el método internacional seleccionado
+          switch(intMethod.value) {
+            case 'zelle':
+              const zelleEmail = document.getElementById('zelle-email');
+              const zelleEmailError = document.getElementById('zelle-email-error');
+              
+              if (zelleEmailError) zelleEmailError.style.display = 'none';
+              
+              if (!zelleEmail || !zelleEmail.value) {
+                if (zelleEmailError) zelleEmailError.style.display = 'block';
+                isValid = false;
+              } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(zelleEmail.value)) {
+                if (zelleEmailError) {
+                  zelleEmailError.textContent = 'Por favor, introduce un correo electrónico válido.';
+                  zelleEmailError.style.display = 'block';
+                }
+                isValid = false;
+              }
+              break;
+              
+            case 'paypal':
+              const paypalEmail = document.getElementById('paypal-email');
+              const paypalEmailError = document.getElementById('paypal-email-error');
+              
+              if (paypalEmailError) paypalEmailError.style.display = 'none';
+              
+              if (!paypalEmail || !paypalEmail.value) {
+                if (paypalEmailError) paypalEmailError.style.display = 'block';
+                isValid = false;
+              } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(paypalEmail.value)) {
+                if (paypalEmailError) {
+                  paypalEmailError.textContent = 'Por favor, introduce un correo electrónico válido.';
+                  paypalEmailError.style.display = 'block';
+                }
+                isValid = false;
+              }
+              break;
+              
+            case 'wise':
+              const wiseEmail = document.getElementById('wise-email');
+              const wiseEmailError = document.getElementById('wise-email-error');
+              
+              if (wiseEmailError) wiseEmailError.style.display = 'none';
+              
+              if (!wiseEmail || !wiseEmail.value) {
+                if (wiseEmailError) wiseEmailError.style.display = 'block';
+                isValid = false;
+              } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(wiseEmail.value)) {
+                if (wiseEmailError) {
+                  wiseEmailError.textContent = 'Por favor, introduce un correo electrónico válido.';
+                  wiseEmailError.style.display = 'block';
+                }
+                isValid = false;
+              }
+              break;
+              
+            case 'swift':
+              // Validar campos SWIFT/BIC
+              const swiftBank = document.getElementById('swift-bank');
+              const swiftCode = document.getElementById('swift-code');
+              const swiftAccount = document.getElementById('swift-account');
+              const swiftName = document.getElementById('swift-name');
+              
+              if (!swiftBank || !swiftBank.value) {
+                showToast('error', 'Nombre del Banco Requerido', 'Por favor, ingrese el nombre del banco.');
+                isValid = false;
+              }
+              
+              if (!swiftCode || !swiftCode.value) {
+                showToast('error', 'Código SWIFT Requerido', 'Por favor, ingrese el código SWIFT/BIC.');
+                isValid = false;
+              }
+              
+              if (!swiftAccount || !swiftAccount.value) {
+                showToast('error', 'Número de Cuenta Requerido', 'Por favor, ingrese el número de cuenta o IBAN.');
+                isValid = false;
+              }
+              
+              if (!swiftName || !swiftName.value) {
+                showToast('error', 'Nombre del Beneficiario Requerido', 'Por favor, ingrese el nombre del beneficiario.');
+                isValid = false;
+              }
+              break;
+              
+            case 'crypto':
+              const cryptoAddress = document.getElementById('crypto-address');
+              const cryptoAddressError = document.getElementById('crypto-address-error');
+              
+              if (cryptoAddressError) cryptoAddressError.style.display = 'none';
+              
+              if (!cryptoAddress || !cryptoAddress.value) {
+                if (cryptoAddressError) cryptoAddressError.style.display = 'block';
+                isValid = false;
+              }
+              break;
+          }
+        }
+      }
+      
+      return isValid;
+    }
+
+    // Actualizar datos del recibo
+    function updateReceiptData() {
+      const receiptAmount = document.getElementById('receipt-amount');
+      const receiptMethod = document.getElementById('receipt-method');
+      const receiptDestination = document.getElementById('receipt-destination');
+      
+      if (receiptAmount) receiptAmount.textContent = formatCurrency(withdrawalAmount, 'bs');
+      
+      if (receiptMethod) {
+        switch(selectedMethod) {
+          case 'mobile':
+            receiptMethod.textContent = 'Pago Móvil';
+            
+            const mobileNumber = document.getElementById('mobile-number');
+            const mobileBank = document.getElementById('mobile-bank');
+            
+            if (receiptDestination && mobileNumber && mobileBank) {
+              const bankOption = mobileBank.options[mobileBank.selectedIndex];
+              const bankName = bankOption ? bankOption.text : 'Banco Seleccionado';
+              
+              receiptDestination.textContent = `${mobileNumber.value} (${bankName})`;
+            }
+            break;
+            
+          case 'bank':
+            receiptMethod.textContent = 'Transferencia Bancaria';
+            
+            const accountNumber = document.getElementById('account-number');
+            const bankName = document.getElementById('bank-name');
+            
+            if (receiptDestination && accountNumber && bankName) {
+              const bankOption = bankName.options[bankName.selectedIndex];
+              const bankText = bankOption ? bankOption.text : 'Banco Seleccionado';
+              
+              // Formatear número de cuenta para mostrar solo últimos 4 dígitos
+              let maskedAccount = '';
+              if (accountNumber.value) {
+                const plainAccount = accountNumber.value.replace(/\D/g, '');
+                maskedAccount = '****' + plainAccount.slice(-4);
+              }
+              
+              receiptDestination.textContent = `${maskedAccount} (${bankText})`;
+            }
+            break;
+            
+          case 'international':
+            const intMethod = document.getElementById('int-method');
+            
+            if (intMethod) {
+              const methodOption = intMethod.options[intMethod.selectedIndex];
+              const methodText = methodOption ? methodOption.text : 'Transferencia Internacional';
+              
+              if (receiptMethod) receiptMethod.textContent = methodText;
+              
+              // Determinar destino según método internacional
+              if (receiptDestination) {
+                switch(intMethod.value) {
+                  case 'zelle':
+                    const zelleEmail = document.getElementById('zelle-email');
+                    if (zelleEmail) receiptDestination.textContent = zelleEmail.value;
+                    break;
+                    
+                  case 'paypal':
+                    const paypalEmail = document.getElementById('paypal-email');
+                    if (paypalEmail) receiptDestination.textContent = paypalEmail.value;
+                    break;
+                    
+                  case 'wise':
+                    const wiseEmail = document.getElementById('wise-email');
+                    if (wiseEmail) receiptDestination.textContent = wiseEmail.value;
+                    break;
+                    
+                  case 'swift':
+                    const swiftAccount = document.getElementById('swift-account');
+                    if (swiftAccount) {
+                      // Mostrar los primeros 6 caracteres y los últimos 4
+                      const account = swiftAccount.value;
+                      if (account.length > 10) {
+                        receiptDestination.textContent = account.substring(0, 6) + '...' + account.slice(-4);
+                      } else {
+                        receiptDestination.textContent = account;
+                      }
+                    }
+                    break;
+                    
+                  case 'crypto':
+                    const cryptoAddress = document.getElementById('crypto-address');
+                    const cryptoCurrency = document.getElementById('crypto-currency');
+                    
+                    if (cryptoAddress && cryptoCurrency) {
+                      const currency = cryptoCurrency.options[cryptoCurrency.selectedIndex].text;
+                      const address = cryptoAddress.value;
+                      
+                      // Truncar dirección si es muy larga
+                      if (address.length > 15) {
+                        receiptDestination.textContent = `${address.substring(0, 6)}...${address.slice(-6)} (${currency})`;
+                      } else {
+                        receiptDestination.textContent = `${address} (${currency})`;
+                      }
+                    }
+                    break;
+                    
+                  default:
+                    receiptDestination.textContent = 'Destino Internacional';
+                }
+              }
+            }
+            break;
+        }
+      }
+    }
+
+    // Configurar botones de copia
+    function setupCopyButtons() {
+      const copyButtons = document.querySelectorAll('.copy-btn[data-copy]');
+      
+      copyButtons.forEach(btn => {
+        btn.addEventListener('click', function() {
+          const textToCopy = this.getAttribute('data-copy');
+          
+          navigator.clipboard.writeText(textToCopy)
+            .then(() => {
+              showToast('success', 'Copiado', 'Texto copiado al portapapeles');
+            })
+            .catch(err => {
+              console.error('Error al copiar: ', err);
+              showToast('error', 'Error', 'No se pudo copiar el texto');
+            });
+        });
+      });
+    }
+
+    // Configurar botones del recibo
+    function setupReceiptButtons() {
+      const closeReceiptBtn = document.getElementById('close-receipt');
+      
+      if (closeReceiptBtn) {
+        closeReceiptBtn.addEventListener('click', function() {
+          const receiptModal = document.getElementById('receipt-modal');
+          if (receiptModal) receiptModal.style.display = 'none';
+        });
+      }
+    }
+
+    // Actualizar display de balance
+    function updateBalanceDisplay() {
+      const totalBalance = document.getElementById('total-balance');
+      const balanceEquivalents = document.getElementById('balance-equivalents');
+      const exchangeRateDisplay = document.getElementById('exchange-rate-display');
+      
+      if (totalBalance) {
+        totalBalance.textContent = formatCurrency(currentUser.balance.bs, 'bs');
+      }
+      
+      if (balanceEquivalents) {
+        balanceEquivalents.textContent = `≈ ${formatCurrency(currentUser.balance.usd, 'usd')} | ≈ ${formatCurrency(currentUser.balance.eur, 'eur')}`;
+      }
+      
+      if (exchangeRateDisplay) {
+        exchangeRateDisplay.textContent = `1 USD = ${CONFIG.EXCHANGE_RATES.USD_TO_BS.toFixed(2)} Bs | 1 USD = ${CONFIG.EXCHANGE_RATES.USD_TO_EUR.toFixed(2)} EUR`;
+      }
+      
+      // Mostrar banner de verificación si el usuario no está verificado
+      const verifyBanner = document.getElementById('verify-banner');
+      if (verifyBanner) {
+        if (!currentUser.isVerified) {
+          verifyBanner.style.display = 'flex';
+        } else {
+          verifyBanner.style.display = 'none';
+        }
+      }
+    }
+
+    // Formatear moneda
+    function formatCurrency(amount, currency) {
+      if (isNaN(amount)) amount = 0;
+      
+      if (currency === 'bs') {
+        return `Bs ${amount.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      } else if (currency === 'usd') {
+        return `$${amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      } else if (currency === 'eur') {
+        return `€${amount.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      }
+      
+      return amount.toLocaleString();
+    }
+
+    // Función para escapar caracteres especiales (sanitizar entradas)
+    function escapeHTML(str) {
+      return str
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    // Mostrar notificación toast
+    function showToast(type, title, message, duration = 3000) {
+      const toastContainer = document.getElementById('toast-container');
+      
+      if (!toastContainer) return;
+      
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      
+      // Sanitizar contenido
+      const safeTitle = escapeHTML(title);
+      const safeMessage = escapeHTML(message);
+      
+      const content = `
+        <div class="toast-icon">
+          <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : type === 'warning' ? 'exclamation-triangle' : 'info-circle'}"></i>
+        </div>
+        <div class="toast-content">
+          <div class="toast-title">${safeTitle}</div>
+          <div class="toast-message">${safeMessage}</div>
+        </div>
+        <div class="toast-close">
+          <i class="fas fa-times"></i>
+        </div>
+      `;
+      
+      toast.innerHTML = content;
+      toastContainer.appendChild(toast);
+      
+      // Auto remove after duration
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => {
+          toast.remove();
+        }, 300);
+      }, duration);
+      
+      // Close button
+      const closeBtn = toast.querySelector('.toast-close');
+      if (closeBtn) {
+        closeBtn.addEventListener('click', function() {
+          toast.style.opacity = '0';
+          setTimeout(() => {
+            toast.remove();
+          }, 300);
+        });
+      }
+    }
+
+    // Cargar datos simulados para demostración
+    function loadDemoData() {
+      currentUser = {
+        name: 'Juan Pérez',
+        email: 'juan.perez@ejemplo.com',
+        balance: {
+          bs: 30000,
+          usd: 30000 / CONFIG.EXCHANGE_RATES.USD_TO_BS,
+          eur: (30000 / CONFIG.EXCHANGE_RATES.USD_TO_BS) * CONFIG.EXCHANGE_RATES.USD_TO_EUR
+        },
+        isVerified: false
+      };
+      
+      // Guardar en sessionStorage para pruebas
+      sessionStorage.setItem(CONFIG.STORAGE_KEYS.USER_DATA, JSON.stringify({
+        name: currentUser.name,
+        email: currentUser.email
+      }));
+      
+      sessionStorage.setItem(CONFIG.STORAGE_KEYS.BALANCE, JSON.stringify(currentUser.balance));
+      sessionStorage.setItem(CONFIG.STORAGE_KEYS.VERIFICATION, currentUser.isVerified ? 'verified' : 'unverified');
+      
+      // Actualizar UI
+      updateBalanceDisplay();
+    }
+
+    // Llamar a loadDemoData si no hay datos en sessionStorage
+    if (!sessionStorage.getItem(CONFIG.STORAGE_KEYS.BALANCE)) {
+      loadDemoData();
+    }
+
+    // Botón de preguntas frecuentes
+    const faqBtn = document.getElementById('faq-btn');
+    if (faqBtn) {
+      faqBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        showToast('info', 'Verificación de Cuenta', 'La verificación es un paso de seguridad para confirmar que la cuenta bancaria es realmente suya. Este proceso es estándar en plataformas financieras serias.');
+        
+        setTimeout(() => {
+          showToast('info', '¿Los $25 son una comisión?', 'No, los $25 no son una comisión. Se acreditan completamente a su saldo disponible y puede usarlos de inmediato.');
+        }, 3500);
+      });
+    }
+  </script>
+</body>
+</html>
