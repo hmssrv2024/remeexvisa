@@ -1129,12 +1129,11 @@
       bottom: 0;
       background: rgba(0, 0, 0, 0.8);
       backdrop-filter: blur(5px);
-      display: flex;
+      display: none;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       z-index: 1100;
-      display: none;
     }
     
     .spinner {
@@ -1193,6 +1192,8 @@
       max-width: 500px;
       padding: 1.5rem;
       animation: scaleIn 0.3s ease;
+      max-height: 90vh;
+      overflow-y: auto;
     }
     
     .verification-header {
@@ -1279,6 +1280,8 @@
       max-width: 380px;
       padding: 1.5rem;
       animation: scaleIn 0.3s ease;
+      max-height: 90vh;
+      overflow-y: auto;
     }
     
     .receipt-header {
@@ -1309,6 +1312,7 @@
       font-weight: 700;
       color: var(--primary);
       margin: 1rem 0;
+      text-align: center;
     }
     
     .receipt-details {
@@ -1445,10 +1449,453 @@
         font-size: 0.75rem;
       }
     }
+
+    /* Estilos para select con banco personalizado */
+    .custom-select-container {
+      position: relative;
+      width: 100%;
+      margin-bottom: 1rem;
+    }
+
+    .selected-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0 1rem;
+      height: 44px;
+      background: var(--neutral-100);
+      border: 1px solid var(--neutral-400);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: var(--transition-base);
+    }
+
+    .selected-item:hover {
+      border-color: var(--primary-light);
+    }
+
+    .dropdown-container {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: var(--neutral-100);
+      border: 1px solid var(--neutral-400);
+      border-radius: var(--radius-md);
+      max-height: 280px;
+      overflow-y: auto;
+      z-index: 50;
+      box-shadow: var(--shadow-lg);
+      display: none;
+      margin-top: 0.25rem;
+    }
+
+    .dropdown-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1rem;
+      cursor: pointer;
+      transition: var(--transition-base);
+    }
+
+    .dropdown-item:hover {
+      background: var(--neutral-200);
+    }
+
+    .bank-logo-small {
+      width: 24px;
+      height: 24px;
+      object-fit: contain;
+      border-radius: 4px;
+    }
+
+    /* Estilos para modal de información de seguridad */
+    .security-info-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(5px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1200;
+    }
+
+    .security-info-content {
+      background: white;
+      border-radius: var(--radius-lg);
+      width: 90%;
+      max-width: 600px;
+      padding: 1.5rem;
+      animation: scaleIn 0.3s ease;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .security-info-close {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: var(--neutral-800);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      cursor: pointer;
+      z-index: 10;
+    }
+
+    .faq-container {
+      margin: 1.5rem 0;
+    }
+
+    .faq-item {
+      border-bottom: 1px solid var(--neutral-300);
+      margin-bottom: 0.5rem;
+    }
+
+    .faq-header {
+      padding: 1rem 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      font-weight: 600;
+      color: var(--neutral-800);
+    }
+
+    .faq-content {
+      padding: 0 0 1rem 0;
+      color: var(--neutral-600);
+      display: none;
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    .info-link {
+      color: var(--primary);
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
+    /* Estilo para badges de información */
+    .info-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: white;
+      font-size: 0.7rem;
+      margin-left: 0.5rem;
+      cursor: pointer;
+    }
+
+    /* NUEVOS ESTILOS PARA MEJORAS */
+    .verification-method-options {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .verification-method-option {
+      flex: 1;
+      background: var(--neutral-200);
+      border: 2px solid var(--neutral-300);
+      border-radius: var(--radius-md);
+      padding: 1.25rem;
+      cursor: pointer;
+      transition: var(--transition-base);
+      text-align: center;
+    }
+
+    .verification-method-option:hover {
+      background: var(--neutral-100);
+      border-color: var(--neutral-400);
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .verification-method-option.active {
+      background: var(--neutral-100);
+      border-color: var(--primary);
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .verification-method-icon {
+      font-size: 2rem;
+      color: var(--primary);
+      margin-bottom: 1rem;
+    }
+
+    .verification-method-title {
+      font-weight: 600;
+      font-size: 1rem;
+      color: var(--neutral-800);
+      margin-bottom: 0.5rem;
+    }
+
+    .verification-method-description {
+      font-size: 0.8rem;
+      color: var(--neutral-600);
+    }
+
+    .verification-details {
+      display: none;
+    }
+    
+    .verification-details.active {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .bank-with-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem;
+      border-radius: var(--radius-md);
+      background: var(--neutral-200);
+      margin-bottom: 0.5rem;
+    }
+
+    .bank-logo-container {
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .bank-logo-img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+
+    .bank-name-display {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--neutral-800);
+    }
+
+    /* Estilo para el conteo de tiempo restante */
+    .time-remaining {
+      position: fixed;
+      bottom: 80px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      font-size: 0.75rem;
+      color: var(--neutral-500);
+      padding: 0.5rem;
+      background: var(--neutral-200);
+      z-index: 899;
+    }
+
+    .time-remaining-progress {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      height: 2px;
+      background: var(--primary);
+      transition: width 1s linear;
+    }
+
+    /* Estilos para el monitor de proceso de verificación */
+    .verification-status-container {
+      background: var(--neutral-200);
+      border-radius: var(--radius-md);
+      padding: 1rem;
+      margin-top: 1.5rem;
+      border-left: 4px solid var(--info);
+    }
+
+    .verification-status-title {
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 0.5rem;
+      color: var(--neutral-800);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .verification-status-title i {
+      color: var(--info);
+    }
+
+    .verification-status-text {
+      font-size: 0.8rem;
+      color: var(--neutral-600);
+      margin-bottom: 0.5rem;
+    }
+
+    .verification-status-actions {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.75rem;
+    }
+
+    .status-btn {
+      font-size: 0.75rem;
+      padding: 0.4rem 0.75rem;
+      height: auto;
+    }
+
+    /* Selector de banco con imágenes */
+    .bank-select-container {
+      position: relative;
+    }
+
+    .bank-select-dropdown {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: white;
+      border: 1px solid var(--neutral-400);
+      border-radius: var(--radius-md);
+      max-height: 250px;
+      overflow-y: auto;
+      z-index: 50;
+      margin-top: 0.25rem;
+      box-shadow: var(--shadow-md);
+    }
+
+    .bank-select-display {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0 1rem;
+      height: 44px;
+      background: var(--neutral-100);
+      border: 1px solid var(--neutral-400);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: var(--transition-base);
+    }
+
+    .bank-select-display:hover {
+      border-color: var(--primary);
+    }
+
+    .bank-select-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1rem;
+      cursor: pointer;
+      transition: var(--transition-base);
+    }
+
+    .bank-select-item:hover {
+      background: var(--neutral-200);
+    }
+
+    .bank-select-logo {
+      width: 24px;
+      height: 24px;
+      object-fit: contain;
+    }
+
+    .bank-select-placeholder {
+      color: var(--neutral-500);
+    }
+    
+    /* Mejoras de responsividad para móvil */
+    @media (max-width: 576px) {
+      .section-title {
+        font-size: 0.9rem;
+      }
+      
+      .method-options {
+        flex-direction: column;
+      }
+      
+      .method-option {
+        width: 100%;
+      }
+      
+      .verify-banner {
+        flex-direction: column;
+        text-align: center;
+        padding: 1rem;
+      }
+      
+      .verify-action {
+        width: 100%;
+        margin-top: 0.5rem;
+      }
+      
+      .verification-method-options {
+        flex-direction: column;
+      }
+      
+      .verification-actions {
+        flex-direction: column;
+      }
+      
+      .receipt-card {
+        padding: 1rem;
+      }
+      
+      .users-online-badge {
+        display: none;
+      }
+      
+      .withdrawal-container {
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
+      }
+      
+      .bank-detail-row {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      .bank-detail-value {
+        margin-top: 0.25rem;
+        width: 100%;
+        justify-content: space-between;
+      }
+    }
+    
+    /* Fondo de soporte de imagen */
+    .bg-image {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: 
+      background-size: cover;
+      background-position: center;
+      opacity: 0.02;
+      pointer-events: none;
+      z-index: -1;
+    }
   </style>
 </head>
 
 <body>
+  <!-- Fondo de soporte -->
+  <div class="bg-image"></div>
+  
   <!-- App Header -->
   <header class="app-header">
     <div class="header-brand">
@@ -1527,6 +1974,7 @@
     <div class="card">
       <div class="section-title" style="margin-bottom: 0.5rem;">
         <i class="fas fa-wallet"></i> Saldo Disponible
+        <span class="info-badge" id="info-balance-badge"><i class="fas fa-info"></i></span>
       </div>
       
       <div style="display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;">
@@ -1591,19 +2039,13 @@
       <div class="bank-selection active" id="mobile-payment-form">
         <div class="form-group">
           <label class="form-label" for="mobile-bank">Banco Emisor</label>
-          <select class="form-control" id="mobile-bank">
-            <option value="" disabled selected>Seleccione su banco</option>
-            <option value="banco-venezuela">Banco de Venezuela</option>
-            <option value="banco-venezolano">Banco Venezolano de Crédito</option>
-            <option value="banco-mercantil">Banco Mercantil</option>
-            <option value="banco-provincial">Banco Provincial</option>
-            <option value="banco-banesco">Banesco</option>
-            <option value="banco-bicentenario">Banco Bicentenario</option>
-            <option value="banco-bnc">Banco Nacional de Crédito</option>
-            <option value="banco-exterior">Banco Exterior</option>
-            <option value="banco-bancaribe">Bancaribe</option>
-            <option value="banco-bancamiga">Bancamiga</option>
-          </select>
+          <div class="bank-select-container">
+            <div class="bank-select-display" id="mobile-bank-display">
+              <span class="bank-select-placeholder">Seleccione su banco</span>
+            </div>
+            <div class="bank-select-dropdown" id="mobile-bank-dropdown"></div>
+            <input type="hidden" id="mobile-bank" name="mobile-bank" value="">
+          </div>
         </div>
         
         <div class="form-group">
@@ -1629,19 +2071,13 @@
       <div class="bank-selection" id="bank-transfer-form">
         <div class="form-group">
           <label class="form-label" for="bank-name">Banco</label>
-          <select class="form-control" id="bank-name">
-            <option value="" disabled selected>Seleccione su banco</option>
-            <option value="banco-venezuela">Banco de Venezuela</option>
-            <option value="banco-venezolano">Banco Venezolano de Crédito</option>
-            <option value="banco-mercantil">Banco Mercantil</option>
-            <option value="banco-provincial">Banco Provincial</option>
-            <option value="banco-banesco">Banesco</option>
-            <option value="banco-bicentenario">Banco Bicentenario</option>
-            <option value="banco-bnc">Banco Nacional de Crédito</option>
-            <option value="banco-exterior">Banco Exterior</option>
-            <option value="banco-bancaribe">Bancaribe</option>
-            <option value="banco-bancamiga">Bancamiga</option>
-          </select>
+          <div class="bank-select-container">
+            <div class="bank-select-display" id="bank-name-display">
+              <span class="bank-select-placeholder">Seleccione su banco</span>
+            </div>
+            <div class="bank-select-dropdown" id="bank-name-dropdown"></div>
+            <input type="hidden" id="bank-name" name="bank-name" value="">
+          </div>
         </div>
         
         <div class="form-group">
@@ -1759,9 +2195,41 @@
         <button class="verify-action" id="verify-now-btn">Verificar</button>
       </div>
 
+      <!-- Verificación en Proceso (NUEVO) -->
+      <div class="verification-status-container" id="verification-status-container" style="display: none;">
+        <div class="verification-status-title">
+          <i class="fas fa-clock"></i> Verificación en Proceso
+        </div>
+        <div class="verification-status-text">
+          Su solicitud de verificación está siendo procesada. Este proceso normalmente toma unos minutos, pero puede demorar hasta 24 horas en algunos casos.
+        </div>
+        <div class="verification-status-text">
+          Si ya realizó el depósito de verificación y aún no ha sido procesado, no se preocupe. Estamos trabajando en ello.
+        </div>
+        <div class="verification-status-actions">
+          <button class="btn btn-outline status-btn" id="verification-check-status-btn">
+            <i class="fas fa-sync-alt"></i> Verificar Estado
+          </button>
+          <button class="btn btn-outline status-btn" id="verification-contact-support-btn">
+            <i class="fas fa-headset"></i> Contactar Soporte
+          </button>
+        </div>
+      </div>
+
       <button class="btn btn-primary" id="submit-withdrawal" style="margin-top: 1.5rem;">
         <i class="fas fa-paper-plane"></i> Solicitar Retiro
       </button>
+      
+      <!-- Información de Verificación -->
+      <div style="margin-top: 1rem; padding: 0.75rem; background-color: rgba(26, 31, 113, 0.05); border-radius: var(--radius-md); display: flex; align-items: flex-start; gap: 0.75rem;">
+        <i class="fas fa-info-circle" style="color: var(--primary); font-size: 1.2rem; margin-top: 0.1rem;"></i>
+        <div>
+          <p style="font-size: 0.8rem; color: var(--neutral-700); margin-bottom: 0.5rem;">Para garantizar su seguridad, es necesario <strong>verificar su cuenta</strong> antes de realizar retiros. Este es un estándar de seguridad bancaria internacional para confirmar que la cuenta bancaria es realmente suya.</p>
+          <p style="font-size: 0.8rem; color: var(--neutral-700);">
+            <a href="#" class="info-link" id="show-security-info">Más información sobre la verificación</a>
+          </p>
+        </div>
+      </div>
     </div>
 
     <!-- Help and Support Card -->
@@ -1866,68 +2334,146 @@
         </div>
       </div>
       
-      <div class="bank-details" id="verification-bank-details">
-        <div class="bank-detail-row">
-          <div class="bank-detail-label">Banco:</div>
-          <div class="bank-detail-value">
-            Banco Venezolano de Crédito
-            <div class="copy-btn" data-copy="Banco Venezolano de Crédito"><i class="far fa-copy"></i></div>
+      <!-- NUEVO: Opciones de método de verificación -->
+      <div class="verification-method-options">
+        <div class="verification-method-option active" id="traditional-transfer-option">
+          <div class="verification-method-icon">
+            <i class="fas fa-university"></i>
           </div>
+          <div class="verification-method-title">Transferencia Bancaria</div>
+          <div class="verification-method-description">Realice una transferencia tradicional desde su banco</div>
         </div>
         
-        <div class="bank-detail-row">
-          <div class="bank-detail-label">Titular:</div>
-          <div class="bank-detail-value">
-            Global VISA Venezuela
-            <div class="copy-btn" data-copy="Global VISA Venezuela"><i class="far fa-copy"></i></div>
+        <div class="verification-method-option" id="pago-movil-option">
+          <div class="verification-method-icon">
+            <i class="fas fa-mobile-alt"></i>
+          </div>
+          <div class="verification-method-title">Pago Móvil</div>
+          <div class="verification-method-description">Verifique su cuenta usando Pago Móvil</div>
+        </div>
+      </div>
+      
+      <!-- Detalles de Transferencia Bancaria -->
+      <div class="verification-details active" id="traditional-transfer-details">
+        <div class="bank-details" id="verification-bank-details">
+          <div class="bank-detail-row">
+            <div class="bank-detail-label">Banco:</div>
+            <div class="bank-detail-value">
+              <div class="bank-with-logo">
+                <div class="bank-logo-container">
+                  <img src="https://www.venezolano.com/images/galeria/108_1.png" alt="Banco Venezolano de Crédito" class="bank-logo-img">
+                </div>
+                <span class="bank-name-display">Banco Venezolano de Crédito</span>
+              </div>
+              <div class="copy-btn" data-copy="Banco Venezolano de Crédito"><i class="far fa-copy"></i></div>
+            </div>
+          </div>
+          
+          <div class="bank-detail-row">
+            <div class="bank-detail-label">Titular:</div>
+            <div class="bank-detail-value">
+              Global VISA Venezuela
+              <div class="copy-btn" data-copy="Global VISA Venezuela"><i class="far fa-copy"></i></div>
+            </div>
+          </div>
+          
+          <div class="bank-detail-row">
+            <div class="bank-detail-label">RIF:</div>
+            <div class="bank-detail-value">
+              J407502646
+              <div class="copy-btn" data-copy="J407502646"><i class="far fa-copy"></i></div>
+            </div>
+          </div>
+          
+          <div class="bank-detail-row">
+            <div class="bank-detail-label">Cuenta Corriente:</div>
+            <div class="bank-detail-value">
+              0104-0019-86-0190162931
+              <div class="copy-btn" data-copy="0104-0019-86-0190162931"><i class="far fa-copy"></i></div>
+            </div>
+          </div>
+          
+          <div class="bank-detail-row">
+            <div class="bank-detail-label">Monto a Depositar:</div>
+            <div class="bank-detail-value">
+              $25 USD (≈ 2.800,00 Bs)
+              <div class="copy-btn" data-copy="$25 USD (≈ 2.800,00 Bs)"><i class="far fa-copy"></i></div>
+            </div>
+          </div>
+          
+          <div class="bank-detail-row">
+            <div class="bank-detail-label">Referencia:</div>
+            <div class="bank-detail-value">
+              VER<span id="verification-reference">12345</span>
+              <div class="copy-btn" data-copy="VER12345" id="reference-copy-btn"><i class="far fa-copy"></i></div>
+            </div>
           </div>
         </div>
-        
-        <div class="bank-detail-row">
-          <div class="bank-detail-label">RIF:</div>
-          <div class="bank-detail-value">
-            J407502646
-            <div class="copy-btn" data-copy="J407502646"><i class="far fa-copy"></i></div>
+      </div>
+      
+      <!-- Detalles de Pago Móvil -->
+      <div class="verification-details" id="pago-movil-details">
+        <div class="bank-details">
+          <div class="bank-detail-row">
+            <div class="bank-detail-label">Banco:</div>
+            <div class="bank-detail-value">
+              <div class="bank-with-logo">
+                <div class="bank-logo-container">
+                  <img src="https://www.venezolano.com/images/galeria/108_1.png" alt="Banco Venezolano de Crédito" class="bank-logo-img">
+                </div>
+                <span class="bank-name-display">Banco Venezolano de Crédito</span>
+              </div>
+              <div class="copy-btn" data-copy="Banco Venezolano de Crédito"><i class="far fa-copy"></i></div>
+            </div>
           </div>
-        </div>
-        
-        <div class="bank-detail-row">
-          <div class="bank-detail-label">Cuenta Corriente:</div>
-          <div class="bank-detail-value">
-            0104-0019-86-0190162931
-            <div class="copy-btn" data-copy="0104-0019-86-0190162931"><i class="far fa-copy"></i></div>
+          
+          <div class="bank-detail-row">
+            <div class="bank-detail-label">Número:</div>
+            <div class="bank-detail-value">
+              0424-1234567
+              <div class="copy-btn" data-copy="0424-1234567"><i class="far fa-copy"></i></div>
+            </div>
           </div>
-        </div>
-        
-        <div class="bank-detail-row">
-          <div class="bank-detail-label">Monto a Depositar:</div>
-          <div class="bank-detail-value">
-            $25 USD (≈ 2.800,00 Bs)
-            <div class="copy-btn" data-copy="$25 USD (≈ 2.800,00 Bs)"><i class="far fa-copy"></i></div>
+          
+          <div class="bank-detail-row">
+            <div class="bank-detail-label">Cédula/RIF:</div>
+            <div class="bank-detail-value">
+              J407502646
+              <div class="copy-btn" data-copy="J407502646"><i class="far fa-copy"></i></div>
+            </div>
           </div>
-        </div>
-        
-        <div class="bank-detail-row">
-          <div class="bank-detail-label">Referencia:</div>
-          <div class="bank-detail-value">
-            VER<span id="verification-reference">12345</span>
-            <div class="copy-btn" data-copy="VER12345"><i class="far fa-copy"></i></div>
+          
+          <div class="bank-detail-row">
+            <div class="bank-detail-label">Monto a Depositar:</div>
+            <div class="bank-detail-value">
+              $25 USD (≈ 2.800,00 Bs)
+              <div class="copy-btn" data-copy="$25 USD (≈ 2.800,00 Bs)"><i class="far fa-copy"></i></div>
+            </div>
+          </div>
+          
+          <div class="bank-detail-row">
+            <div class="bank-detail-label">Referencia:</div>
+            <div class="bank-detail-value">
+              VER<span id="verification-reference-pago-movil">12345</span>
+              <div class="copy-btn" data-copy="VER12345" id="reference-pago-movil-copy-btn"><i class="far fa-copy"></i></div>
+            </div>
           </div>
         </div>
       </div>
       
       <div style="font-size: 0.8rem; color: var(--neutral-600); margin: 1rem 0; text-align: center;">
-        Una vez realizado el depósito, su cuenta será verificada automáticamente y podrá realizar retiros de inmediato.
+        <p>Una vez realizado el depósito, su cuenta será verificada automáticamente y podrá realizar retiros de inmediato.</p>
+        <p style="margin-top: 0.5rem; font-weight: 500; color: var(--primary);">El monto de $25 se sumará a su saldo disponible en Remeex VISA.</p>
       </div>
       
       <div class="verification-actions">
-        <button class="btn btn-primary" id="verification-later">
-          <i class="fas fa-arrow-right"></i> Entendido, Verificaré Después
-        </button>
-        
-        <a href="recarga.html" class="btn btn-outline" style="text-align: center;">
-          <i class="fas fa-arrow-left"></i> Volver al Inicio
+        <a href="recarga.html" class="btn btn-primary">
+          <i class="fas fa-plus-circle"></i> Ir a Recargar Saldo
         </a>
+        
+        <button class="btn btn-outline" id="verification-later">
+          <i class="fas fa-arrow-left"></i> Verificaré Después
+        </button>
       </div>
     </div>
   </div>
@@ -1995,9 +2541,113 @@
     </div>
   </div>
 
+  <!-- Modal de Información de Seguridad -->
+  <div class="security-info-container" id="security-info-modal">
+    <div class="security-info-content">
+      <button class="security-info-close" id="close-security-info">
+        <i class="fas fa-times"></i>
+      </button>
+      <h2 style="font-size: 1.5rem; color: var(--primary); margin-bottom: 1rem; text-align: center;">
+        Verificación de Seguridad: Protegiendo Su Dinero
+      </h2>
+      
+      <p style="margin-bottom: 1rem; line-height: 1.6;">
+        Entendemos que solicitar un depósito de $25 para verificar su cuenta puede generar dudas inicialmente. Sin embargo, esta medida de seguridad es fundamental para proteger sus fondos y asegurar que solo usted pueda retirar dinero a su cuenta bancaria.
+      </p>
+      
+      <div class="faq-container">
+        <div class="faq-item">
+          <div class="faq-header">
+            ¿Por qué necesito hacer un depósito de verificación?
+            <i class="fas fa-chevron-down"></i>
+          </div>
+          <div class="faq-content">
+            Este depósito es la forma más segura de confirmar que la cuenta bancaria a la que quiere enviar sus fondos es realmente suya. Al hacer este depósito desde su banco hacia Remeex VISA, nos demuestra que es usted quien controla esa cuenta. Esto previene que alguien intente desviar su dinero a una cuenta fraudulenta o desconocida y es una práctica común en plataformas financieras seguras a nivel internacional.
+          </div>
+        </div>
+        
+        <div class="faq-item">
+          <div class="faq-header">
+            ¿Voy a perder los $25 del depósito de verificación?
+            <i class="fas fa-chevron-down"></i>
+          </div>
+          <div class="faq-content">
+            ¡Absolutamente NO! Los $25 NO son una comisión ni un cobro. Es únicamente un depósito de verificación. En el mismo instante en que lo recibimos, esos $25 se suman completamente a su saldo disponible en su cuenta Remeex VISA. Sigue siendo su dinero, listo para usarse o retirarse cuando lo desee.
+          </div>
+        </div>
+        
+        <div class="faq-item">
+          <div class="faq-header">
+            ¿Tendré que hacer este depósito cada vez que quiera retirar dinero?
+            <i class="fas fa-chevron-down"></i>
+          </div>
+          <div class="faq-content">
+            No, el proceso de verificación con el depósito de $25 se realiza UNA SOLA VEZ por cada cuenta bancaria que desee registrar. Una vez que su cuenta bancaria está verificada, podrá realizar retiros a esa cuenta de manera rápida y sencilla, sin tener que repetir el depósito. Si en el futuro desea agregar otra cuenta bancaria diferente, deberá verificarla por separado.
+          </div>
+        </div>
+        
+        <div class="faq-item">
+          <div class="faq-header">
+            ¿Es este un método de verificación estándar?
+            <i class="fas fa-chevron-down"></i>
+          </div>
+          <div class="faq-content">
+            Sí, es una práctica de seguridad establecida y reconocida internacionalmente, utilizada por muchas instituciones financieras digitales y tradicionales, incluyendo plataformas como Wise. Se considera una de las formas más efectivas para confirmar que el usuario tiene control real de la cuenta bancaria que está registrando.
+          </div>
+        </div>
+        
+        <div class="faq-item">
+          <div class="faq-header">
+            ¿Qué medidas de seguridad utiliza Remeex VISA?
+            <i class="fas fa-chevron-down"></i>
+          </div>
+          <div class="faq-content">
+            Utilizamos múltiples capas de seguridad de nivel bancario, incluyendo encriptación de extremo a extremo, tokenización de datos sensibles, infraestructura segura con monitoreo constante, y cumplimos con todas las normativas internacionales de seguridad de datos financieros (KYC y AML).
+          </div>
+        </div>
+        
+        <div class="faq-item">
+          <div class="faq-header">
+            ¿Qué pasa si decido no verificar mi cuenta?
+            <i class="fas fa-chevron-down"></i>
+          </div>
+          <div class="faq-content">
+            Sin completar esta verificación, no podremos procesar sus retiros a esa cuenta específica, precisamente porque no podemos confirmar de forma 100% segura que le pertenece. Esta medida es necesaria para protegerle a usted, a todos nuestros usuarios y cumplir con las regulaciones financieras. Puede seguir usando otras funciones de la plataforma mientras decide verificar.
+          </div>
+        </div>
+        
+        <div class="faq-item">
+          <div class="faq-header">
+            ¿Cuánto tiempo tarda en procesarse la verificación?
+            <i class="fas fa-chevron-down"></i>
+          </div>
+          <div class="faq-content">
+            Una vez que realiza el depósito desde su banco, generalmente se refleja en su saldo de Remeex VISA casi instantáneamente o en cuestión de pocos minutos. Tan pronto recibimos la confirmación, su cuenta queda verificada y los $25 aparecen disponibles en su saldo. En casos muy raros, dependiendo de la conexión entre bancos, podría demorar un poco más.
+          </div>
+        </div>
+      </div>
+      
+      <div style="margin-top: 1.5rem; text-align: center;">
+        <p style="font-size: 0.9rem; font-weight: 600; color: var(--primary); margin-bottom: 1rem;">
+          Su seguridad es nuestra máxima prioridad
+        </p>
+        <button class="btn btn-primary" id="close-security-info-btn" style="max-width: 250px; margin: 0 auto;">
+          Entendido
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- Toast Container -->
   <div class="toast-container" id="toast-container"></div>
+  
+  <!-- Tiempo restante antes de redirección por inactividad -->
+  <div class="time-remaining" id="time-remaining" style="display: none;">
+    <div>Sesión inactiva. Redirigiendo en <span id="redirect-countdown">60</span> segundos</div>
+    <div class="time-remaining-progress" id="time-remaining-progress"></div>
+  </div>
 
+  <!-- Script -->
   <script>
     // Configuración de valores constantes con tasa de cambio centralizada
     const CONFIG = {
@@ -2010,11 +2660,59 @@
         BALANCE: 'remeexBalance',
         TRANSACTIONS: 'remeexTransactions',
         VERIFICATION: 'remeexVerificationStatus',
+        TRANSFER_DATA: 'remeexTransferData',
+        REFERRER: 'remeexReferrer'
       },
       LIMITS: {
         MOBILE: 250000, // 250,000 Bs
         BANK: 1000000 // 1,000,000 Bs
-      }
+      },
+      BANKS: {
+        NACIONAL: [
+          { id: 'banco-venezuela', name: 'Banco de Venezuela', logo: 'https://www.bancodevenezuela.com/wp-content/uploads/2023/03/logonuevo.png' },
+          { id: 'banco-venezolano', name: 'Banco Venezolano de Crédito', logo: 'https://www.venezolano.com/images/galeria/108_1.png' },
+          { id: 'banco-mercantil', name: 'Banco Mercantil', logo: 'https://files.socialgest.net/mybio/5f529398b36f8_1599247256.png' },
+          { id: 'banco-provincial', name: 'Banco Provincial', logo: 'https://upload.wikimedia.org/wikipedia/commons/d/d4/BBVAprovinciallogo.svg' },
+          { id: 'banco-bancaribe', name: 'Banco del Caribe (Bancaribe)', logo: 'https://d3olc33sy92l9e.cloudfront.net/wp-content/themes/bancaribe/images/Bancaribe-LogotipoTurquesa.png' },
+          { id: 'banco-exterior', name: 'Banco Exterior', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Banco-Exterior-VE-logo.png/183px-Banco-Exterior-VE-logo.png' },
+          { id: 'banco-caroni', name: 'Banco Caroní', logo: 'https://e7.pngegg.com/pngimages/127/511/png-clipart-bank-computer-icons-bank-building-bank.png' },
+          { id: 'banco-banesco', name: 'Banesco', logo: 'https://banesco-prod-2020.s3.amazonaws.com/wp-content/themes/banescocontigo/assets/images/header/logo.svg.gzip' },
+          { id: 'banco-sofitasa', name: 'Banco Sofitasa', logo: 'https://www.sofitasa.com/assets/img/nuevo_logo.png' },
+          { id: 'banco-plaza', name: 'Banco Plaza', logo: 'https://plazacdn.s3.amazonaws.com/wp-content/themes/bancoplaza/imagenes/logobancoplaza-2.png' },
+          { id: 'banco-gente-emprendedora', name: 'Banco de la Gente Emprendedora', logo: 'https://e7.pngegg.com/pngimages/127/511/png-clipart-bank-computer-icons-bank-building-bank.png' },
+          { id: 'banco-fondo-comun', name: 'Banco Fondo Común', logo: 'https://www.bfc.com.ve/wp-content/uploads/2021/01/logofos.png' },
+          { id: 'banco-100', name: '100% Banco', logo: 'https://www.100x100banco.com/img/logo.png' },
+          { id: 'banco-delsur', name: 'DelSur Banco Universal', logo: 'https://e7.pngegg.com/pngimages/127/511/png-clipart-bank-computer-icons-bank-building-bank.png' },
+          { id: 'banco-tesoro', name: 'Banco del Tesoro', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Logo_Banco_del_Tesoro.jpg/320px-Logo_Banco_del_Tesoro.jpg' },
+          { id: 'banco-agricola', name: 'Banco Agrícola de Venezuela', logo: 'https://e7.pngegg.com/pngimages/127/511/png-clipart-bank-computer-icons-bank-building-bank.png' },
+          { id: 'banco-bancrecer', name: 'Bancrecer', logo: 'https://www.bancrecer.com.ve/images/img/bancrecer-logo.png' },
+          { id: 'banco-mi-banco', name: 'Mi Banco', logo: 'https://e7.pngegg.com/pngimages/127/511/png-clipart-bank-computer-icons-bank-building-bank.png' },
+          { id: 'banco-activo', name: 'Banco Activo', logo: 'https://www.bancoactivo.com/logo.svg' },
+          { id: 'banco-bancamiga', name: 'Bancamiga', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Bancamiga.png/320px-Bancamiga.png' },
+          { id: 'banco-bicentenario', name: 'Banco Bicentenario', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/BancoDigitaldelosTrabajadores.png/320px-BancoDigitaldelosTrabajadores.png' },
+          { id: 'banco-bnc', name: 'Banco Nacional de Crédito', logo: 'https://www.bncenlinea.com/images/default-source/misc/BNCLogo_rebrand.png' },
+          { id: 'banco-central', name: 'Banco Central de Venezuela', logo: 'https://www.bcv.org.ve/sites/default/files/default_images/logo_bcv-04_2.png' }
+        ],
+        INTERNACIONAL: [
+          { id: 'bank-america', name: 'Bank of America', logo: 'https://1000logos.net/wp-content/uploads/2016/10/Bank-of-America-Logo.png' },
+          { id: 'chase-bank', name: 'Chase Bank', logo: 'https://download.logo.wine/logo/Chase_Bank/Chase_Bank-Logo.wine.png' },
+          { id: 'bancolombia', name: 'Bancolombia', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Logo_Bancolombia.svg/2000px-Logo_Bancolombia.svg.png' },
+          { id: 'western-union', name: 'Western Union', logo: 'https://logos-world.net/wp-content/uploads/2023/03/Western-Union-Logo.png' }
+        ],
+        FINTECH: [
+          { id: 'zinli', name: 'Zinli', logo: 'https://images.seeklogo.com/logo-png/41/1/zinli-logo-png_seeklogo-411354.png' },
+          { id: 'paypal', name: 'PayPal', logo: 'https://upload.wikimedia.org/wikipedia/commons/a/a4/Paypal_2014_logo.png' },
+          { id: 'binance', name: 'Binance', logo: 'https://www.logo.wine/a/logo/Binance/Binance-Logo.wine.svg' },
+          { id: 'airtm', name: 'AirTM', logo: 'https://brandlogovector.com/wp-content/uploads/2023/08/Airtm-Logo-PNG.png' },
+          { id: 'zoom', name: 'Zoom', logo: 'https://zoom.red/wp-content/uploads/2021/01/Logo-Zoom-Registrado.png' },
+          { id: 'zelle', name: 'Zelle', logo: 'https://download.logo.wine/logo/Zelle_(payment_service)/Zelle_(payment_service)-Logo.wine.png' },
+          { id: 'venmo', name: 'Venmo', logo: 'https://logos-world.net/wp-content/uploads/2021/12/Venmo-Logo.png' },
+          { id: 'nequi', name: 'Nequi', logo: 'https://images.seeklogo.com/logo-png/40/1/nequi-logo-png_seeklogo-404357.png' },
+          { id: 'pago-movil', name: 'Pago Móvil', logo: 'https://i0.wp.com/logoroga.com/wp-content/uploads/2018/02/pago-movil.png?fit=800%2C800&ssl=1' }
+        ]
+      },
+      INACTIVITY_TIMEOUT: 120, // 2 minutos de inactividad antes de redirección
+      VERIFICATION_CODE: Math.floor(10000 + Math.random() * 90000) // Código de verificación aleatorio
     };
 
     // Variables globales
@@ -2034,7 +2732,11 @@
     let withdrawalAmount = 0;
     let withdrawalAmountUsd = 0;
     let withdrawalAmountEur = 0;
-
+    let userLastActivity = Date.now();
+    let inactivityTimer = null;
+    let inactivityCountdown = CONFIG.INACTIVITY_TIMEOUT;
+    let verificationInProgress = false;
+    
     // DOM Ready
     document.addEventListener('DOMContentLoaded', function() {
       // Iniciar aplicación
@@ -2045,7 +2747,82 @@
       
       // Cargar datos del usuario
       loadUserDataFromSession();
+      
+      // Llenar select de bancos
+      populateBankOptions();
+      
+      // Configurar timer de inactividad
+      setupInactivityTimer();
     });
+    
+    // Configurar timer de inactividad
+    function setupInactivityTimer() {
+      // Reset timer cada vez que el usuario interactúa
+      const userEvents = ['mousemove', 'mousedown', 'keypress', 'touchstart', 'scroll'];
+      
+      userEvents.forEach(event => {
+        document.addEventListener(event, resetInactivityTimer);
+      });
+      
+      // Iniciar timer de inactividad
+      startInactivityTimer();
+    }
+    
+    // Reiniciar timer de inactividad
+    function resetInactivityTimer() {
+      userLastActivity = Date.now();
+      inactivityCountdown = CONFIG.INACTIVITY_TIMEOUT;
+      
+      // Ocultar contador si está visible
+      const timeRemaining = document.getElementById('time-remaining');
+      if (timeRemaining) timeRemaining.style.display = 'none';
+      
+      // Reiniciar timer
+      if (inactivityTimer) {
+        clearInterval(inactivityTimer);
+      }
+      startInactivityTimer();
+    }
+    
+    // Iniciar timer de inactividad
+    function startInactivityTimer() {
+      inactivityTimer = setInterval(function() {
+        const currentTime = Date.now();
+        const timeSinceLastActivity = (currentTime - userLastActivity) / 1000; // en segundos
+        
+        if (timeSinceLastActivity >= CONFIG.INACTIVITY_TIMEOUT) {
+          clearInterval(inactivityTimer);
+          redirectDueToInactivity();
+        } else if (timeSinceLastActivity >= CONFIG.INACTIVITY_TIMEOUT - 60) { // Mostrar contador 60 segundos antes de redirección
+          showInactivityCountdown(Math.floor(CONFIG.INACTIVITY_TIMEOUT - timeSinceLastActivity));
+        }
+      }, 1000);
+    }
+    
+    // Mostrar cuenta regresiva de inactividad
+    function showInactivityCountdown(seconds) {
+      const timeRemaining = document.getElementById('time-remaining');
+      const redirectCountdown = document.getElementById('redirect-countdown');
+      const timeRemainingProgress = document.getElementById('time-remaining-progress');
+      
+      if (timeRemaining) timeRemaining.style.display = 'block';
+      if (redirectCountdown) redirectCountdown.textContent = seconds;
+      
+      // Actualizar barra de progreso
+      if (timeRemainingProgress) {
+        const progressWidth = (seconds / 60) * 100;
+        timeRemainingProgress.style.width = `${progressWidth}%`;
+      }
+    }
+    
+    // Redireccionar por inactividad
+    function redirectDueToInactivity() {
+      showToast('info', 'Sesión Inactiva', 'Redirigiendo a la página principal por inactividad...');
+      
+      setTimeout(function() {
+        window.location.href = 'recarga.html';
+      }, 2000);
+    }
 
     // Inicialización de la aplicación
     function initApp() {
@@ -2062,16 +2839,21 @@
     // Generar código de verificación aleatorio
     function generateVerificationCode() {
       const verificationRef = document.getElementById('verification-reference');
+      const verificationRefPagoMovil = document.getElementById('verification-reference-pago-movil');
       const receiptOrder = document.getElementById('receipt-order');
       
-      const randomCode = Math.floor(10000 + Math.random() * 90000);
+      const randomCode = CONFIG.VERIFICATION_CODE;
       
       if (verificationRef) verificationRef.textContent = randomCode;
+      if (verificationRefPagoMovil) verificationRefPagoMovil.textContent = randomCode;
       if (receiptOrder) receiptOrder.textContent = `RET-${randomCode}`;
       
-      // Actualizar el atributo data-copy del botón de copia
-      const copyBtn = document.querySelector('.copy-btn[data-copy="VER12345"]');
+      // Actualizar los atributos data-copy de los botones de copia
+      const copyBtn = document.getElementById('reference-copy-btn');
       if (copyBtn) copyBtn.setAttribute('data-copy', `VER${randomCode}`);
+      
+      const copyBtnPagoMovil = document.getElementById('reference-pago-movil-copy-btn');
+      if (copyBtnPagoMovil) copyBtnPagoMovil.setAttribute('data-copy', `VER${randomCode}`);
     }
 
     // Actualizar fecha en el recibo
@@ -2087,35 +2869,190 @@
 
     // Cargar datos del usuario desde sessionStorage
     function loadUserDataFromSession() {
-      // Intentar cargar desde sessionStorage primero
-      const balanceData = sessionStorage.getItem(CONFIG.STORAGE_KEYS.BALANCE);
-      const userData = sessionStorage.getItem(CONFIG.STORAGE_KEYS.USER_DATA);
-      const verificationStatus = sessionStorage.getItem(CONFIG.STORAGE_KEYS.VERIFICATION);
+      // Constantes para claves de sessionStorage
+      const STORAGE_KEYS = {
+        BALANCE: 'remeexSessionBalance',
+        EXCHANGE_RATE: 'remeexSessionExchangeRate',
+        TRANSFER_DATA: 'remeexTransferData',
+        VERIFICATION_STATUS: 'remeexVerificationStatus'
+      };
       
-      if (balanceData) {
-        try {
-          currentUser.balance = JSON.parse(balanceData);
-        } catch (e) {
-          console.error('Error al parsear datos de balance:', e);
+      // Recuperar balance y tasa de cambio
+      try {
+        // Recuperar balance
+        const balanceJson = sessionStorage.getItem(STORAGE_KEYS.BALANCE);
+        if (balanceJson) {
+          const balance = JSON.parse(balanceJson);
+          
+          // Actualizar balance del usuario
+          currentUser.balance = balance;
         }
+        
+        // Recuperar estado de verificación
+        const verificationStatus = sessionStorage.getItem(STORAGE_KEYS.VERIFICATION_STATUS);
+        if (verificationStatus) {
+          currentUser.isVerified = verificationStatus === 'verified';
+          verificationInProgress = verificationStatus === 'in_progress';
+        }
+        
+        // Recuperar tasa de cambio
+        const exchangeRateJson = sessionStorage.getItem(STORAGE_KEYS.EXCHANGE_RATE);
+        if (exchangeRateJson) {
+          const rates = JSON.parse(exchangeRateJson);
+          
+          // Actualizar tasas de cambio
+          if (rates.USD_TO_BS) CONFIG.EXCHANGE_RATES.USD_TO_BS = rates.USD_TO_BS;
+          if (rates.USD_TO_EUR) CONFIG.EXCHANGE_RATES.USD_TO_EUR = rates.USD_TO_EUR;
+        }
+        
+        // Recuperar datos de transferencia si existen
+        const transferDataJson = sessionStorage.getItem(STORAGE_KEYS.TRANSFER_DATA);
+        if (transferDataJson) {
+          const transferData = JSON.parse(transferDataJson);
+          
+          // Si hay un monto de transferencia guardado, rellenarlo
+          if (transferData.amount) {
+            const amountInput = document.getElementById('withdrawal-amount');
+            if (amountInput) {
+              amountInput.value = transferData.amount;
+              // Disparar evento input para calcular equivalentes
+              const event = new Event('input');
+              amountInput.dispatchEvent(event);
+            }
+          }
+        }
+      } catch (e) {
+        console.error('Error al cargar datos de sesión:', e);
       }
       
-      if (userData) {
-        try {
-          const user = JSON.parse(userData);
-          currentUser.name = user.name || '';
-          currentUser.email = user.email || '';
-        } catch (e) {
-          console.error('Error al parsear datos de usuario:', e);
+      // Intentar cargar desde sessionStorage antiguo (compatibilidad)
+      if (currentUser.balance.bs === 0) {
+        const balanceData = sessionStorage.getItem(CONFIG.STORAGE_KEYS.BALANCE);
+        const userData = sessionStorage.getItem(CONFIG.STORAGE_KEYS.USER_DATA);
+        const verificationStatus = sessionStorage.getItem(CONFIG.STORAGE_KEYS.VERIFICATION);
+        
+        if (balanceData) {
+          try {
+            currentUser.balance = JSON.parse(balanceData);
+          } catch (e) {
+            console.error('Error al parsear datos de balance:', e);
+          }
         }
-      }
-      
-      if (verificationStatus) {
-        currentUser.isVerified = verificationStatus === 'verified';
+        
+        if (userData) {
+          try {
+            const user = JSON.parse(userData);
+            currentUser.name = user.name || '';
+            currentUser.email = user.email || '';
+          } catch (e) {
+            console.error('Error al parsear datos de usuario:', e);
+          }
+        }
+        
+        if (verificationStatus) {
+          currentUser.isVerified = verificationStatus === 'verified';
+          verificationInProgress = verificationStatus === 'in_progress';
+        }
       }
       
       // Actualizar la interfaz con los datos cargados
       updateBalanceDisplay();
+      
+      // Si la verificación está en progreso, mostrar el contenedor de estado
+      if (verificationInProgress) {
+        showVerificationStatusContainer();
+      }
+    }
+
+    // Mostrar contenedor de estado de verificación
+    function showVerificationStatusContainer() {
+      const verificationStatusContainer = document.getElementById('verification-status-container');
+      if (verificationStatusContainer) {
+        verificationStatusContainer.style.display = 'block';
+      }
+    }
+
+    // Llenar select de bancos con opciones que incluyen logos
+    function populateBankOptions() {
+      const mobileBankDropdown = document.getElementById('mobile-bank-dropdown');
+      const bankNameDropdown = document.getElementById('bank-name-dropdown');
+      
+      // Función para llenar los dropdowns con opciones de bancos y logos
+      function fillBankDropdown(dropdown, banks) {
+        if (!dropdown) return;
+        
+        dropdown.innerHTML = '';
+        
+        banks.forEach(bank => {
+          const item = document.createElement('div');
+          item.className = 'bank-select-item';
+          item.setAttribute('data-bank-id', bank.id);
+          item.setAttribute('data-bank-name', bank.name);
+          item.setAttribute('data-bank-logo', bank.logo);
+          
+          item.innerHTML = `
+            <img src="${bank.logo}" alt="${bank.name}" class="bank-select-logo">
+            <span>${bank.name}</span>
+          `;
+          
+          dropdown.appendChild(item);
+        });
+      }
+      
+      // Llenar dropdowns con bancos nacionales
+      fillBankDropdown(mobileBankDropdown, CONFIG.BANKS.NACIONAL);
+      fillBankDropdown(bankNameDropdown, CONFIG.BANKS.NACIONAL);
+      
+      // Configurar selección de banco para móvil
+      setupBankSelect('mobile-bank-display', 'mobile-bank-dropdown', 'mobile-bank');
+      
+      // Configurar selección de banco para transferencia bancaria
+      setupBankSelect('bank-name-display', 'bank-name-dropdown', 'bank-name');
+    }
+
+    // Configurar selector de banco personalizado con logos
+    function setupBankSelect(displayId, dropdownId, hiddenInputId) {
+      const display = document.getElementById(displayId);
+      const dropdown = document.getElementById(dropdownId);
+      const hiddenInput = document.getElementById(hiddenInputId);
+      
+      if (!display || !dropdown || !hiddenInput) return;
+      
+      // Mostrar/ocultar dropdown al hacer clic en el display
+      display.addEventListener('click', function() {
+        const isVisible = dropdown.style.display === 'block';
+        dropdown.style.display = isVisible ? 'none' : 'block';
+      });
+      
+      // Cerrar dropdown si se hace clic fuera
+      document.addEventListener('click', function(event) {
+        if (!display.contains(event.target) && !dropdown.contains(event.target)) {
+          dropdown.style.display = 'none';
+        }
+      });
+      
+      // Seleccionar banco al hacer clic en una opción
+      const bankItems = dropdown.querySelectorAll('.bank-select-item');
+      bankItems.forEach(item => {
+        item.addEventListener('click', function() {
+          const bankId = this.getAttribute('data-bank-id');
+          const bankName = this.getAttribute('data-bank-name');
+          const bankLogo = this.getAttribute('data-bank-logo');
+          
+          // Actualizar display
+          display.innerHTML = `
+            <img src="${bankLogo}" alt="${bankName}" class="bank-select-logo">
+            <span>${bankName}</span>
+          `;
+          display.classList.add('selected');
+          
+          // Actualizar input oculto
+          hiddenInput.value = bankId;
+          
+          // Cerrar dropdown
+          dropdown.style.display = 'none';
+        });
+      });
     }
 
     // Actualizar contador de usuarios en línea
@@ -2144,6 +3081,9 @@
       // Botón de verificación
       setupVerificationButtons();
       
+      // Selección de método de verificación
+      setupVerificationMethodSelection();
+      
       // Botón de envío del formulario
       setupSubmitButton();
       
@@ -2152,6 +3092,40 @@
       
       // Botones del recibo
       setupReceiptButtons();
+      
+      // Botones de información de seguridad
+      setupSecurityInfoButtons();
+      
+      // Botones de FAQ
+      setupFaqButtons();
+      
+      // Botones de estado de verificación
+      setupVerificationStatusButtons();
+    }
+    
+    // Configurar botones de estado de verificación
+    function setupVerificationStatusButtons() {
+      const checkStatusBtn = document.getElementById('verification-check-status-btn');
+      const contactSupportBtn = document.getElementById('verification-contact-support-btn');
+      
+      if (checkStatusBtn) {
+        checkStatusBtn.addEventListener('click', function() {
+          showLoading('Verificando el estado de su proceso...');
+          
+          setTimeout(() => {
+            hideLoading();
+            showToast('info', 'Estado de Verificación', 'Su verificación sigue en proceso. Por favor, espere un poco más.');
+          }, 2000);
+        });
+      }
+      
+      if (contactSupportBtn) {
+        contactSupportBtn.addEventListener('click', function() {
+          // Abrir WhatsApp con mensaje predefinido
+          const message = encodeURIComponent(`Hola, he realizado mi depósito de verificación con referencia VER${CONFIG.VERIFICATION_CODE} y estoy consultando el estado del proceso.`);
+          window.open(`https://wa.me/+17373018059?text=${message}`, '_blank');
+        });
+      }
     }
 
     // Configurar input de cantidad
@@ -2176,7 +3150,29 @@
           withdrawalAmountEur = withdrawalAmountUsd * CONFIG.EXCHANGE_RATES.USD_TO_EUR;
           
           updateEquivalentsDisplay();
+          
+          // Guardar monto en sessionStorage para recuperación
+          saveTransferData();
         });
+        
+        // Trigger input event to initialize values
+        const event = new Event('input');
+        amountInput.dispatchEvent(event);
+      }
+    }
+    
+    // Guardar datos de transferencia para recuperación
+    function saveTransferData() {
+      const transferData = {
+        amount: withdrawalAmount > 0 ? withdrawalAmount.toString() : '',
+        method: selectedMethod
+      };
+      
+      // Guardar en sessionStorage
+      try {
+        sessionStorage.setItem('remeexTransferData', JSON.stringify(transferData));
+      } catch (e) {
+        console.error('Error al guardar datos de transferencia:', e);
       }
     }
 
@@ -2215,6 +3211,35 @@
           
           // Verificar límites según método seleccionado
           checkWithdrawalLimits();
+          
+          // Guardar método en sessionStorage
+          saveTransferData();
+        });
+      });
+    }
+
+    // Configurar selección de método de verificación
+    function setupVerificationMethodSelection() {
+      const verificationMethodOptions = document.querySelectorAll('.verification-method-option');
+      
+      verificationMethodOptions.forEach(option => {
+        option.addEventListener('click', function() {
+          // Actualizar selección visual
+          verificationMethodOptions.forEach(opt => opt.classList.remove('active'));
+          this.classList.add('active');
+          
+          // Obtener ID del método seleccionado
+          const methodId = this.id;
+          
+          // Mostrar detalles correspondientes
+          const detailsContainers = document.querySelectorAll('.verification-details');
+          detailsContainers.forEach(container => container.classList.remove('active'));
+          
+          if (methodId === 'traditional-transfer-option') {
+            document.getElementById('traditional-transfer-details').classList.add('active');
+          } else if (methodId === 'pago-movil-option') {
+            document.getElementById('pago-movil-details').classList.add('active');
+          }
         });
       });
     }
@@ -2257,7 +3282,7 @@
             amountInput.value = limit.toFixed(2);
             
             // Disparar evento de input para actualizar equivalentes
-            const event = new Event('input', { bubbles: true });
+            const event = new Event('input');
             amountInput.dispatchEvent(event);
           }
         }
@@ -2301,6 +3326,77 @@
       }
     }
 
+    // Configurar botones de información de seguridad
+    function setupSecurityInfoButtons() {
+      // Botón para mostrar modal de información de seguridad
+      const showSecurityInfoBtn = document.getElementById('show-security-info');
+      const securityInfoModal = document.getElementById('security-info-modal');
+      
+      if (showSecurityInfoBtn && securityInfoModal) {
+        showSecurityInfoBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          securityInfoModal.style.display = 'flex';
+        });
+      }
+      
+      // Botones para cerrar modal de información de seguridad
+      const closeSecurityInfoBtns = [
+        document.getElementById('close-security-info'),
+        document.getElementById('close-security-info-btn')
+      ];
+      
+      closeSecurityInfoBtns.forEach(btn => {
+        if (btn) {
+          btn.addEventListener('click', function() {
+            if (securityInfoModal) {
+              securityInfoModal.style.display = 'none';
+            }
+          });
+        }
+      });
+      
+      // Botón de información sobre balance
+      const infoBalanceBadge = document.getElementById('info-balance-badge');
+      if (infoBalanceBadge) {
+        infoBalanceBadge.addEventListener('click', function() {
+          showToast('info', 'Saldo Disponible', 'Este es su saldo total disponible para retiro. Los montos se actualizan automáticamente según la tasa de cambio actual.');
+        });
+      }
+    }
+    
+    // Configurar botones de FAQ
+    function setupFaqButtons() {
+      // Alternar visibilidad del contenido de FAQ
+      const faqHeaders = document.querySelectorAll('.faq-header');
+      
+      faqHeaders.forEach(header => {
+        header.addEventListener('click', function() {
+          const content = this.nextElementSibling;
+          const icon = this.querySelector('i.fas');
+          
+          // Toggle content
+          if (content.style.display === 'block') {
+            content.style.display = 'none';
+            if (icon) icon.className = 'fas fa-chevron-down';
+          } else {
+            content.style.display = 'block';
+            if (icon) icon.className = 'fas fa-chevron-up';
+          }
+        });
+      });
+      
+      // Botón FAQ en las opciones de contacto
+      const faqBtn = document.getElementById('faq-btn');
+      const securityInfoModal = document.getElementById('security-info-modal');
+      
+      if (faqBtn && securityInfoModal) {
+        faqBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          securityInfoModal.style.display = 'flex';
+        });
+      }
+    }
+
     // Configurar botón de envío
     function setupSubmitButton() {
       const submitBtn = document.getElementById('submit-withdrawal');
@@ -2328,63 +3424,81 @@
           }
           
           // Mostrar loading
-          const loadingOverlay = document.getElementById('loading-overlay');
-          const loadingText = document.getElementById('loading-text');
-          const progressBar = document.getElementById('progress-bar');
-          
-          if (loadingOverlay) loadingOverlay.style.display = 'flex';
+          showLoading('Procesando su solicitud...');
           
           // Simular progreso
-          if (progressBar) {
-            let width = 0;
-            const interval = setInterval(function() {
-              if (width >= 100) {
-                clearInterval(interval);
-                
-                // Ocultar loading
-                if (loadingOverlay) loadingOverlay.style.display = 'none';
-                
-                // Actualizar recibo
-                updateReceiptData();
-                
-                // Mostrar recibo
-                const receiptModal = document.getElementById('receipt-modal');
-                if (receiptModal) receiptModal.style.display = 'flex';
-                
-                // Mostrar banner de verificación si no está verificado
-                const verifyBanner = document.getElementById('verify-banner');
-                if (verifyBanner && !currentUser.isVerified) {
-                  verifyBanner.style.display = 'flex';
-                }
-                
-                // Actualizar timeline
-                const timelineProgress = document.getElementById('timeline-progress');
-                if (timelineProgress) timelineProgress.style.width = '50%';
-                
-                document.getElementById('step-create').classList.remove('active');
-                document.getElementById('step-create').classList.add('completed');
-                document.getElementById('step-verify').classList.add('active');
-              } else {
-                width += 2;
-                if (progressBar) progressBar.style.width = width + '%';
-                
-                // Actualizar texto según progreso
-                if (loadingText) {
-                  if (width < 30) {
-                    loadingText.textContent = "Validando datos...";
-                  } else if (width < 60) {
-                    loadingText.textContent = "Preparando orden de retiro...";
-                  } else if (width < 90) {
-                    loadingText.textContent = "Verificando disponibilidad...";
-                  } else {
-                    loadingText.textContent = "¡Casi listo!";
-                  }
-                }
-              }
-            }, 30);
-          }
+          simulateProcessing(function() {
+            // Actualizar recibo
+            updateReceiptData();
+            
+            // Mostrar recibo
+            const receiptModal = document.getElementById('receipt-modal');
+            if (receiptModal) receiptModal.style.display = 'flex';
+            
+            // Mostrar banner de verificación si no está verificado
+            const verifyBanner = document.getElementById('verify-banner');
+            if (verifyBanner && !currentUser.isVerified) {
+              verifyBanner.style.display = 'flex';
+            }
+            
+            // Actualizar timeline
+            const timelineProgress = document.getElementById('timeline-progress');
+            if (timelineProgress) timelineProgress.style.width = '50%';
+            
+            document.getElementById('step-create').classList.remove('active');
+            document.getElementById('step-create').classList.add('completed');
+            document.getElementById('step-verify').classList.add('active');
+          });
         });
       }
+    }
+    
+    // Mostrar loading con progreso
+    function showLoading(message = 'Procesando su solicitud...') {
+      const loadingOverlay = document.getElementById('loading-overlay');
+      const loadingText = document.getElementById('loading-text');
+      const progressBar = document.getElementById('progress-bar');
+      
+      if (loadingText) loadingText.textContent = message;
+      if (progressBar) progressBar.style.width = '0%';
+      if (loadingOverlay) loadingOverlay.style.display = 'flex';
+    }
+    
+    // Ocultar loading
+    function hideLoading() {
+      const loadingOverlay = document.getElementById('loading-overlay');
+      if (loadingOverlay) loadingOverlay.style.display = 'none';
+    }
+    
+    // Simular procesamiento con progreso
+    function simulateProcessing(callback) {
+      const progressBar = document.getElementById('progress-bar');
+      const loadingText = document.getElementById('loading-text');
+      
+      let width = 0;
+      const interval = setInterval(function() {
+        if (width >= 100) {
+          clearInterval(interval);
+          hideLoading();
+          if (callback) callback();
+        } else {
+          width += 2;
+          if (progressBar) progressBar.style.width = width + '%';
+          
+          // Actualizar texto según progreso
+          if (loadingText) {
+            if (width < 30) {
+              loadingText.textContent = "Validando datos...";
+            } else if (width < 60) {
+              loadingText.textContent = "Preparando orden de retiro...";
+            } else if (width < 90) {
+              loadingText.textContent = "Verificando disponibilidad...";
+            } else {
+              loadingText.textContent = "¡Casi listo!";
+            }
+          }
+        }
+      }, 30);
     }
 
     // Validar datos del formulario
@@ -2407,7 +3521,8 @@
         if (idError) idError.style.display = 'none';
         if (nameError) nameError.style.display = 'none';
         
-        // Validar bancoif (!mobileBank || mobileBank.value === '') {
+        // Validar banco
+        if (!mobileBank || mobileBank.value === '') {
           showToast('error', 'Banco Requerido', 'Por favor, seleccione su banco.');
           isValid = false;
         }
@@ -2619,10 +3734,9 @@
             const mobileNumber = document.getElementById('mobile-number');
             const mobileBank = document.getElementById('mobile-bank');
             
-            if (receiptDestination && mobileNumber && mobileBank) {
-              const bankOption = mobileBank.options[mobileBank.selectedIndex];
-              const bankName = bankOption ? bankOption.text : 'Banco Seleccionado';
-              
+            if (receiptDestination && mobileNumber) {
+              // Obtener nombre del banco seleccionado
+              const bankName = getBankNameById(mobileBank.value);
               receiptDestination.textContent = `${mobileNumber.value} (${bankName})`;
             }
             break;
@@ -2631,11 +3745,11 @@
             receiptMethod.textContent = 'Transferencia Bancaria';
             
             const accountNumber = document.getElementById('account-number');
-            const bankName = document.getElementById('bank-name');
+            const bankNameInput = document.getElementById('bank-name');
             
-            if (receiptDestination && accountNumber && bankName) {
-              const bankOption = bankName.options[bankName.selectedIndex];
-              const bankText = bankOption ? bankOption.text : 'Banco Seleccionado';
+            if (receiptDestination && accountNumber) {
+              // Obtener nombre del banco seleccionado
+              const bankText = getBankNameById(bankNameInput.value);
               
               // Formatear número de cuenta para mostrar solo últimos 4 dígitos
               let maskedAccount = '';
@@ -2652,8 +3766,8 @@
             const intMethod = document.getElementById('int-method');
             
             if (intMethod) {
-              const methodOption = intMethod.options[intMethod.selectedIndex];
-              const methodText = methodOption ? methodOption.text : 'Transferencia Internacional';
+              // Obtener texto del método seleccionado
+              const methodText = getInternationalMethodName(intMethod.value);
               
               if (receiptMethod) receiptMethod.textContent = methodText;
               
@@ -2693,14 +3807,14 @@
                     const cryptoCurrency = document.getElementById('crypto-currency');
                     
                     if (cryptoAddress && cryptoCurrency) {
-                      const currency = cryptoCurrency.options[cryptoCurrency.selectedIndex].text;
+                      const currencyText = getCryptoNameById(cryptoCurrency.value);
                       const address = cryptoAddress.value;
                       
                       // Truncar dirección si es muy larga
                       if (address.length > 15) {
-                        receiptDestination.textContent = `${address.substring(0, 6)}...${address.slice(-6)} (${currency})`;
+                        receiptDestination.textContent = `${address.substring(0, 6)}...${address.slice(-6)} (${currencyText})`;
                       } else {
-                        receiptDestination.textContent = `${address} (${currency})`;
+                        receiptDestination.textContent = `${address} (${currencyText})`;
                       }
                     }
                     break;
@@ -2713,6 +3827,49 @@
             break;
         }
       }
+    }
+    
+    // Obtener nombre de banco por ID
+    function getBankNameById(bankId) {
+      // Buscar en bancos nacionales
+      const nationalBank = CONFIG.BANKS.NACIONAL.find(bank => bank.id === bankId);
+      if (nationalBank) return nationalBank.name;
+      
+      // Buscar en bancos internacionales
+      const internationalBank = CONFIG.BANKS.INTERNACIONAL.find(bank => bank.id === bankId);
+      if (internationalBank) return internationalBank.name;
+      
+      // Buscar en servicios fintech
+      const fintechService = CONFIG.BANKS.FINTECH.find(bank => bank.id === bankId);
+      if (fintechService) return fintechService.name;
+      
+      return 'Banco Seleccionado';
+    }
+    
+    // Obtener nombre de método internacional
+    function getInternationalMethodName(methodId) {
+      const methodNames = {
+        'zelle': 'Zelle',
+        'paypal': 'PayPal',
+        'wise': 'Wise (Transferwise)',
+        'swift': 'Transferencia SWIFT',
+        'crypto': 'Criptomonedas'
+      };
+      
+      return methodNames[methodId] || 'Transferencia Internacional';
+    }
+    
+    // Obtener nombre de criptomoneda por ID
+    function getCryptoNameById(cryptoId) {
+      const cryptoNames = {
+        'btc': 'Bitcoin (BTC)',
+        'eth': 'Ethereum (ETH)',
+        'usdt': 'Tether (USDT)',
+        'usdc': 'USD Coin (USDC)',
+        'bnb': 'Binance Coin (BNB)'
+      };
+      
+      return cryptoNames[cryptoId] || cryptoId.toUpperCase();
     }
 
     // Configurar botones de copia
@@ -2768,7 +3925,7 @@
       // Mostrar banner de verificación si el usuario no está verificado
       const verifyBanner = document.getElementById('verify-banner');
       if (verifyBanner) {
-        if (!currentUser.isVerified) {
+        if (!currentUser.isVerified && !verificationInProgress) {
           verifyBanner.style.display = 'flex';
         } else {
           verifyBanner.style.display = 'none';
@@ -2877,22 +4034,8 @@
     }
 
     // Llamar a loadDemoData si no hay datos en sessionStorage
-    if (!sessionStorage.getItem(CONFIG.STORAGE_KEYS.BALANCE)) {
+    if (!sessionStorage.getItem('remeexSessionBalance') && !sessionStorage.getItem(CONFIG.STORAGE_KEYS.BALANCE)) {
       loadDemoData();
-    }
-
-    // Botón de preguntas frecuentes
-    const faqBtn = document.getElementById('faq-btn');
-    if (faqBtn) {
-      faqBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-        
-        showToast('info', 'Verificación de Cuenta', 'La verificación es un paso de seguridad para confirmar que la cuenta bancaria es realmente suya. Este proceso es estándar en plataformas financieras serias.');
-        
-        setTimeout(() => {
-          showToast('info', '¿Los $25 son una comisión?', 'No, los $25 no son una comisión. Se acreditan completamente a su saldo disponible y puede usarlos de inmediato.');
-        }, 3500);
-      });
     }
   </script>
 </body>
