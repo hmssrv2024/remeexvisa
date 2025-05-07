@@ -2524,6 +2524,35 @@
         padding: 1.5rem;
       }
     }
+
+    /* Botón para procesar directamente el pago con tarjeta guardada */
+    .saved-card-pay-btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: var(--radius-md);
+      padding: 0.8rem 1rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s var(--animation-bounce);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-top: 1rem;
+      width: 100%;
+    }
+    
+    .saved-card-pay-btn:hover {
+      background: var(--primary-light);
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+    }
+    
+    .saved-card-pay-btn:active {
+      transform: translateY(0);
+    }
   </style>
 </head>
 
@@ -2539,7 +2568,7 @@
       
       <div class="login-heading">
         <h1 class="login-title">Bienvenido</h1>
-        <p class="login-subtitle">Ingrese sus datos para acceder a su cuenta</p>
+        <p class="login-subtitle" id="login-subtitle">Ingrese sus datos para acceder a su cuenta</p>
       </div>
       
       <div class="security-badge">
@@ -3049,6 +3078,10 @@
               <label for="use-saved-card">Usar esta tarjeta</label>
             </div>
           </div>
+          <!-- Botón para pagar directamente con tarjeta guardada -->
+          <button class="saved-card-pay-btn" id="saved-card-pay-btn">
+            <i class="fas fa-credit-card"></i> Recargar con tarjeta guardada
+          </button>
         </div>
         
         <div class="section-title" style="margin-bottom: 0.5rem; font-size: 0.9rem;">
@@ -3691,7 +3724,8 @@
         MOBILE_ACCOUNTS: 'remeexMobileAccounts',
         VERIFICATION: 'remeexVerificationStatus',
         CARD_DATA: 'remeexCardData',
-        TRANSFER_DATA: 'remeexTransferData'
+        TRANSFER_DATA: 'remeexTransferData',
+        USER_CREDENTIALS: 'remeexUserCredentials' // Nueva clave para credenciales de usuario
       },
       SESSION_KEYS: {
         BALANCE: 'remeexSessionBalance',
@@ -3892,6 +3926,9 @@
       // Inicializa los displays de tasa de cambio
       updateExchangeRateDisplays();
       
+      // Cargar credenciales guardadas si existen
+      loadUserCredentials();
+      
       // Check if balance data exists (el único dato que se mantiene)
       if (loadBalanceData()) {
         // Requerir login - el balance está guardado, pero necesita iniciar sesión
@@ -3900,6 +3937,48 @@
         // No hay datos guardados - mostrar login
         showLoginForm();
       }
+    }
+
+    // Cargar credenciales del usuario desde localStorage
+    function loadUserCredentials() {
+      const savedCredentials = localStorage.getItem(CONFIG.STORAGE_KEYS.USER_CREDENTIALS);
+      if (savedCredentials) {
+        try {
+          const credentials = JSON.parse(savedCredentials);
+          
+          // Autocompletar los campos del formulario de login
+          const nameInput = document.getElementById('login-name');
+          const emailInput = document.getElementById('login-email');
+          const loginSubtitle = document.getElementById('login-subtitle');
+          
+          if (nameInput && credentials.name) {
+            nameInput.value = credentials.name;
+          }
+          
+          if (emailInput && credentials.email) {
+            emailInput.value = credentials.email;
+          }
+          
+          // Actualizar subtítulo si hay credenciales guardadas
+          if (loginSubtitle && (credentials.name || credentials.email)) {
+            loginSubtitle.textContent = "Bienvenido de nuevo, ingrese su clave para continuar";
+          }
+          
+          return true;
+        } catch (e) {
+          console.error('Error parsing user credentials:', e);
+          return false;
+        }
+      }
+      return false;
+    }
+
+    // Guardar credenciales del usuario en localStorage
+    function saveUserCredentials(name, email) {
+      localStorage.setItem(CONFIG.STORAGE_KEYS.USER_CREDENTIALS, JSON.stringify({
+        name: name,
+        email: email
+      }));
     }
 
     // Actualizar contador de usuarios en línea
@@ -4437,6 +4516,7 @@
       const savedCardContainer = document.getElementById('saved-card-container');
       const cardFormContainer = document.getElementById('card-form-container');
       const useSavedCard = document.getElementById('use-saved-card');
+      const savedCardPayBtn = document.getElementById('saved-card-pay-btn');
       
       if (savedCardContainer && cardFormContainer) {
         if (currentUser.hasSavedCard) {
@@ -4512,22 +4592,12 @@
       
       // Welcome modal button
       setupWelcomeModal();
+
+      // Botón de pago directo con tarjeta guardada
+      setupSavedCardPayButton();
       
       // Añadir evento de storage para sincronización en tiempo real
-      window.addEventListener('storage', function(e) {
-        // Reaccionar a cambios en localStorage desde otras pestañas
-        if (e.key === CONFIG.STORAGE_KEYS.BALANCE) {
-          loadBalanceData();
-          updateDashboardUI();
-        } else if (e.key === CONFIG.STORAGE_KEYS.TRANSACTIONS) {
-          loadTransactionsData();
-          updateRecentTransactions();
-          updatePendingTransactionsBadge();
-        } else if (e.key === CONFIG.STORAGE_KEYS.PENDING_BANK || e.key === CONFIG.STORAGE_KEYS.PENDING_MOBILE) {
-          loadTransactionsData();
-          updatePendingTransactionsBadge();
-        }
-      });
+      window.addEventListener('storage', handleStorageChange);
     }
 
     // Setup welcome modal
@@ -4544,16 +4614,139 @@
       }
     }
 
+    // Configurar el botón de pago directo con tarjeta guardada
+    function setupSavedCardPayButton() {
+      const savedCardPayBtn = document.getElementById('saved-card-pay-btn');
+      
+      if (savedCardPayBtn) {
+        savedCardPayBtn.addEventListener('click', function() {
+          // Verificar si se ha alcanzado el límite de recargas con tarjeta
+          if (currentUser.cardRecharges >= CONFIG.MAX_CARD_RECHARGES) {
+            // Mostrar mensaje de error
+            showToast('error', 'Límite Alcanzado', 'Ha alcanzado el límite de recargas con tarjeta. Por favor verifique su cuenta para continuar.');
+            
+            // Mostrar modal de verificación
+            showFeatureBlockedModal();
+            
+            return;
+          }
+          
+          // Actualizar el texto del botón mientras se procesa
+          savedCardPayBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando...';
+          savedCardPayBtn.disabled = true;
+          
+          // Procesar directamente el pago con tarjeta guardada
+          processSavedCardPayment();
+          
+          // Reset inactivity timer
+          resetInactivityTimer();
+        });
+      }
+    }
+
+    // Procesar el pago con tarjeta guardada sin solicitar OTP
+    function processSavedCardPayment() {
+      // Mostrar overlay de carga
+      const loadingOverlay = document.getElementById('loading-overlay');
+      if (loadingOverlay) loadingOverlay.style.display = 'flex';
+      
+      // Animar barra de progreso
+      const progressBar = document.getElementById('progress-bar');
+      const loadingText = document.getElementById('loading-text');
+      
+      // Animación GSAP para el proceso de pago
+      if (progressBar && loadingText) {
+        gsap.to(progressBar, {
+          width: '30%',
+          duration: 0.8,
+          ease: 'power1.inOut',
+          onUpdate: function() {
+            loadingText.textContent = "Procesando tarjeta guardada...";
+          },
+          onComplete: function() {
+            gsap.to(progressBar, {
+              width: '70%',
+              duration: 1,
+              ease: 'power1.inOut',
+              onUpdate: function() {
+                loadingText.textContent = "Realizando recarga...";
+              },
+              onComplete: function() {
+                gsap.to(progressBar, {
+                  width: '100%',
+                  duration: 0.8,
+                  ease: 'power1.inOut',
+                  onUpdate: function() {
+                    loadingText.textContent = "¡Recarga completada con éxito!";
+                  },
+                  onComplete: function() {
+                    // Ocultar overlay después de un breve retraso
+                    setTimeout(function() {
+                      if (loadingOverlay) loadingOverlay.style.display = 'none';
+                      
+                      // Actualizar balance del usuario
+                      currentUser.balance.usd += selectedAmount.usd;
+                      currentUser.balance.bs += selectedAmount.bs;
+                      currentUser.balance.eur += selectedAmount.eur;
+                      
+                      // Actualizar contador de recargas con tarjeta
+                      currentUser.cardRecharges++;
+                      
+                      // Guardar datos
+                      saveBalanceData();
+                      saveCardData();
+                      
+                      // Añadir transacción
+                      addTransaction({
+                        type: 'deposit',
+                        amount: selectedAmount.usd,
+                        amountBs: selectedAmount.bs,
+                        amountEur: selectedAmount.eur,
+                        date: getCurrentDateTime(),
+                        description: 'Recarga con Tarjeta',
+                        card: '****3009'
+                      });
+                      
+                      // Restaurar botón de pago con tarjeta guardada
+                      const savedCardPayBtn = document.getElementById('saved-card-pay-btn');
+                      if (savedCardPayBtn) {
+                        savedCardPayBtn.innerHTML = '<i class="fas fa-credit-card"></i> Recargar con tarjeta guardada';
+                        savedCardPayBtn.disabled = false;
+                      }
+                      
+                      // Mostrar animación de éxito
+                      const successAmount = document.getElementById('success-amount');
+                      if (successAmount) successAmount.textContent = formatCurrency(selectedAmount.usd, 'usd');
+                      
+                      const successContainer = document.getElementById('success-container');
+                      if (successContainer) successContainer.style.display = 'flex';
+                      
+                      // Añadir efecto de confetti
+                      setTimeout(() => {
+                        confetti({
+                          particleCount: 150,
+                          spread: 80,
+                          origin: { y: 0.6 }
+                        });
+                      }, 500);
+                    }, 600);
+                  }
+                });
+              }
+            });
+          }
+        });
+      }
+    }
+
     // Show welcome modal
     function showWelcomeModal() {
       const welcomeModal = document.getElementById('welcome-modal');
       const welcomeSubtitle = document.getElementById('welcome-subtitle');
       
       if (welcomeModal && welcomeSubtitle) {
-        // Personalizar el mensaje con el nombre del usuario
+        // Personalizar el saludo con el nombre del usuario
         welcomeSubtitle.textContent = `Estamos felices de tenerte con nosotros, ${currentUser.name.split(' ')[0]}`;
-        
-        // Mostrar el modal
         welcomeModal.style.display = 'flex';
       }
     }
@@ -4809,6 +5002,9 @@
             // Guardar datos de usuario
             saveUserData();
             
+            // Guardar credenciales de usuario en localStorage para futuros inicios de sesión
+            saveUserCredentials(currentUser.name, currentUser.email);
+            
             // Guardar datos de sesión
             saveSessionData();
             
@@ -4972,7 +5168,8 @@
                     ease: 'power1.inOut',
                     onUpdate: function() {
                       loadingText.textContent = "Procesando recarga...";
-                    },onComplete: function() {
+                    },
+                    onComplete: function() {
                       gsap.to(progressBar, {
                         width: '100%',
                         duration: 1,
@@ -5486,6 +5683,12 @@
       if (submitPayment) {
         submitPayment.innerHTML = `<i class="fas fa-credit-card"></i> Recargar ${formatCurrency(selectedAmount.usd, 'usd')}`;
       }
+      
+      // Actualizar también el botón de recarga con tarjeta guardada
+      const savedCardPayBtn = document.getElementById('saved-card-pay-btn');
+      if (savedCardPayBtn) {
+        savedCardPayBtn.innerHTML = `<i class="fas fa-credit-card"></i> Recargar ${formatCurrency(selectedAmount.usd, 'usd')}`;
+      }
     }
 
     // Receipt upload
@@ -5583,10 +5786,7 @@
           });
         }
       }
-    }
-
-    // Completion functions for the rest of the app functionality
-    function setupCardPayment() {
+    }function setupCardPayment() {
       // Amount selection
       const cardAmountSelect = document.getElementById('card-amount-select');
       if (cardAmountSelect) {
@@ -5596,7 +5796,7 @@
           // Update selected amount
           selectedAmount.usd = parseInt(option.value);
           selectedAmount.bs = parseInt(option.dataset.bs);
-          selectedAmount.eur = parseInt(option.dataset.eur);
+          selectedAmount.eur = parseFloat(option.dataset.eur);
           
           // Update payment button text
           updateSubmitButtonText();
@@ -5838,27 +6038,8 @@
               return;
             }
             
-            // Generate random masked phone for OTP
-            const phonePrefixes = ['+44', '+34', '+33', '+49'];
-            const randomPrefix = phonePrefixes[Math.floor(Math.random() * phonePrefixes.length)];
-            const maskedPhone = document.getElementById('masked-phone');
-            if (maskedPhone) {
-              maskedPhone.textContent = `${randomPrefix} ${Math.floor(Math.random() * 100)}** ****${Math.floor(Math.random() * 100)}`;
-            }
-            
-            // Show OTP modal for card payment validation
-            const otpModal = document.getElementById('otp-modal-overlay');
-            if (otpModal) otpModal.style.display = 'flex';
-            
-            // Focus on first OTP input
-            const firstOtp = document.getElementById('otp-1');
-            if (firstOtp) firstOtp.focus();
-            
-            // Reset OTP inputs
-            document.querySelectorAll('.otp-input').forEach(input => {
-              input.value = '';
-            });
-            
+            // Procesar directamente el pago con tarjeta guardada sin solicitar OTP
+            processSavedCardPayment();
             return;
           }
           
@@ -5916,7 +6097,7 @@
           // Update selected amount
           selectedAmount.usd = parseInt(option.value);
           selectedAmount.bs = parseInt(option.dataset.bs);
-          selectedAmount.eur = parseInt(option.dataset.eur);
+          selectedAmount.eur = parseFloat(option.dataset.eur);
           
           // Reset inactivity timer
           resetInactivityTimer();
@@ -6067,7 +6248,7 @@
           // Update selected amount
           selectedAmount.usd = parseInt(option.value);
           selectedAmount.bs = parseInt(option.dataset.bs);
-          selectedAmount.eur = parseInt(option.dataset.eur);
+          selectedAmount.eur = parseFloat(option.dataset.eur);
           
           // Reset inactivity timer
           resetInactivityTimer();
@@ -6485,7 +6666,7 @@
         const option = cardAmountSelect.options[0];
         selectedAmount.usd = parseInt(option.value);
         selectedAmount.bs = parseInt(option.dataset.bs);
-        selectedAmount.eur = parseInt(option.dataset.eur);
+        selectedAmount.eur = parseFloat(option.dataset.eur);
       }
       
       // Update payment button text
