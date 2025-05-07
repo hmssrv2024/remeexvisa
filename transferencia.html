@@ -3,9 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>REMEEX Visa - Retiro de Fondos</title>
+  <title>REMEEX - Retiro de Fondos</title>
   <link rel="icon" href="https://w7.pngwing.com/pngs/400/28/png-transparent-credit-card-computer-icons-visa-electron-bank-curio-blue-text-rectangle-thumbnail.png" type="image/png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
@@ -16,7 +15,7 @@
 
   <style>
     :root {
-      /* Modern color palette based on Revolut/N26 style */
+      /* Paleta de colores moderna basada en estilo Revolut/N26 */
       --primary: #1a1f71;
       --primary-dark: #0c1045;
       --primary-light: #3244b6;
@@ -36,30 +35,29 @@
       --neutral-800: #293249;
       --neutral-900: #1a1f37;
 
-      /* Shadows & Effects */
+      /* Sombras y efectos */
       --shadow-sm: 0 1px 3px rgba(16, 24, 40, 0.1);
       --shadow-md: 0 4px 8px -2px rgba(16, 24, 40, 0.1), 0 2px 4px -2px rgba(16, 24, 40, 0.06);
       --shadow-lg: 0 12px 16px -4px rgba(16, 24, 40, 0.08), 0 4px 6px -2px rgba(16, 24, 40, 0.03);
       --shadow-xl: 0 20px 24px -4px rgba(16, 24, 40, 0.08), 0 8px 8px -4px rgba(16, 24, 40, 0.03);
-      --shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
       
       /* Border radius */
       --radius-sm: 6px;
-      --radius-md: 12px;
+      --radius-md: 10px;
       --radius-lg: 16px;
       --radius-xl: 24px;
       --radius-full: 9999px;
       
-      /* Transitions */
+      /* Transiciones */
       --transition-fast: all 0.2s ease;
       --transition-base: all 0.3s ease;
       --transition-slow: all 0.5s ease;
       
-      /* Card gradients */
+      /* Gradientes de tarjeta */
       --card-gradient: linear-gradient(135deg, #1a1f71 0%, #0c1045 100%);
       --success-gradient: linear-gradient(135deg, #00c057 0%, #00a346 100%);
       
-      /* Animations */
+      /* Animaciones */
       --animation-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
     }
     
@@ -167,7 +165,7 @@
       font-weight: 600;
     }
     
-    /* Connected Users Badge */
+    /* Badge de usuarios conectados */
     .users-online-badge {
       display: flex;
       align-items: center;
@@ -210,7 +208,7 @@
       }
     }
     
-    /* Account Balance Card */
+    /* Tarjeta de saldo */
     .balance-card {
       background: var(--card-gradient);
       border-radius: var(--radius-lg);
@@ -273,20 +271,6 @@
       margin-bottom: 0.5rem;
     }
     
-    .header-avatar {
-      width: 32px;
-      height: 32px;
-      border-radius: var(--radius-full);
-      background: rgba(255, 255, 255, 0.2);
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 600;
-      font-size: 0.8rem;
-      flex-shrink: 0;
-    }
-
     .balance-label {
       font-size: 0.8rem;
       opacity: 0.8;
@@ -399,7 +383,7 @@
       font-size: 0.9rem;
     }
     
-    /* Dashboard Layout */
+    /* Layout del Dashboard */
     .app-container {
       padding-top: 70px;
       padding-bottom: 70px;
@@ -417,7 +401,7 @@
       margin: 0 auto;
     }
    
-    /* Sections */
+    /* Secciones */
     .section-title {
       font-size: 1rem;
       font-weight: 600;
@@ -439,7 +423,7 @@
       text-decoration: none;
     }
     
-    /* Cards */
+    /* Tarjetas */
     .card {
       background: var(--neutral-100);
       border-radius: var(--radius-lg);
@@ -454,7 +438,7 @@
       box-shadow: var(--shadow-md);
     }
     
-    /* Bottom Navigation */
+    /* Navegación Inferior */
     .bottom-nav {
       position: fixed;
       bottom: 0;
@@ -499,7 +483,7 @@
       font-weight: 600;
     }
 
-    /* Withdrawal Container */
+    /* Contenedor de Retiro */
     .withdrawal-container {
       padding: 1rem;
       padding-top: 70px;
@@ -584,7 +568,7 @@
       font-weight: 600;
     }
     
-    /* Progress between timeline steps */
+    /* Progreso entre pasos de timeline */
     .timeline-progress {
       position: absolute;
       top: 1.25rem;
@@ -595,7 +579,7 @@
       transition: width 0.5s ease;
     }
     
-    /* Form Styles */
+    /* Estilos de Formulario */
     .form-group {
       margin-bottom: 1.25rem;
     }
@@ -610,11 +594,11 @@
     
     .form-control {
       width: 100%;
-      height: 44px;
+      height: 48px;
       padding: 0 1rem;
       border: 1px solid var(--neutral-400);
       border-radius: var(--radius-md);
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       color: var(--neutral-900);
       background: var(--neutral-100);
       transition: var(--transition-base);
@@ -633,15 +617,22 @@
       display: none;
     }
     
+    /* Etiqueta de ayuda */
+    .help-text {
+      font-size: 0.7rem;
+      color: var(--neutral-600);
+      margin-top: 0.5rem;
+    }
+    
     .btn {
       display: flex;
       align-items: center;
       justify-content: center;
-      height: 44px;
+      height: 48px;
       padding: 0 1.5rem;
       border-radius: var(--radius-md);
       font-weight: 600;
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       border: none;
       cursor: pointer;
       transition: all 0.3s var(--animation-bounce);
@@ -679,7 +670,7 @@
       font-size: 0.9rem;
     }
     
-    /* Bank Method */
+    /* Métodos de Pago */
     .method-options {
       display: flex;
       flex-wrap: wrap;
@@ -731,7 +722,7 @@
       margin-top: 0.25rem;
     }
     
-    /* Bank Selection */
+    /* Selección de Banco */
     .bank-selection {
       display: none;
       margin-top: 1.5rem;
@@ -742,7 +733,8 @@
       animation: fadeIn 0.3s ease;
     }
     
-    .bank-list {
+    /* Nueva grilla de logos de bancos */
+    .bank-logo-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 1rem;
@@ -750,57 +742,67 @@
     }
     
     @media (max-width: 768px) {
-      .bank-list {
+      .bank-logo-grid {
         grid-template-columns: repeat(2, 1fr);
       }
     }
     
     @media (max-width: 480px) {
-      .bank-list {
-        grid-template-columns: 1fr;
+      .bank-logo-grid {
+        grid-template-columns: repeat(2, 1fr);
       }
     }
     
-    .bank-item {
+    .bank-logo-item {
       background: var(--neutral-200);
-      border: 1px solid var(--neutral-300);
+      border: 2px solid var(--neutral-300);
       border-radius: var(--radius-md);
-      padding: 0.75rem;
+      padding: 1rem 0.75rem;
       cursor: pointer;
       transition: var(--transition-base);
       display: flex;
+      flex-direction: column;
       align-items: center;
-      gap: 0.75rem;
+      text-align: center;
     }
     
-    .bank-item:hover {
+    .bank-logo-item:hover {
       background: var(--neutral-100);
       border-color: var(--neutral-400);
       transform: translateY(-3px);
       box-shadow: var(--shadow-sm);
     }
     
-    .bank-item.active {
+    .bank-logo-item.active {
       background: var(--neutral-100);
       border-color: var(--primary);
       transform: translateY(-3px);
       box-shadow: var(--shadow-md);
     }
     
+    .bank-logo-container {
+      width: 60px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 0.5rem;
+    }
+    
     .bank-logo {
-      width: 40px;
-      height: 40px;
+      max-width: 100%;
+      max-height: 100%;
       object-fit: contain;
-      flex-shrink: 0;
     }
     
     .bank-name {
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       font-weight: 500;
       color: var(--neutral-800);
+      margin-top: 0.5rem;
     }
     
-    /* Account Details */
+    /* Detalles de la Cuenta */
     .account-details {
       margin-top: 1.5rem;
       display: none;
@@ -811,7 +813,7 @@
       animation: fadeIn 0.3s ease;
     }
     
-    /* Security Badge */
+    /* Badge de Seguridad */
     .security-badge {
       display: flex;
       align-items: center;
@@ -853,29 +855,43 @@
       white-space: normal;
     }
     
-    /* Verify Banner */
+    /* Banner de Verificación Mejorado */
     .verify-banner {
-      background: linear-gradient(135deg, var(--warning) 0%, #f59e0b 100%);
+      background: linear-gradient(135deg, var(--info) 0%, #0077cc 100%);
       border-radius: var(--radius-md);
-      padding: 0.9rem;
+      padding: 1rem;
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       gap: 0.8rem;
       margin: 1.25rem 0;
       box-shadow: var(--shadow-md);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .verify-banner::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+      pointer-events: none;
     }
     
     .verify-icon {
-      width: 36px;
-      height: 36px;
+      width: 40px;
+      height: 40px;
       background: white;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: var(--warning);
+      color: var(--info);
       font-size: 1.1rem;
       flex-shrink: 0;
+      box-shadow: var(--shadow-md);
     }
     
     .verify-content {
@@ -887,34 +903,56 @@
       font-weight: 600;
       color: white;
       margin-bottom: 0.25rem;
-      font-size: 0.9rem;
+      font-size: 1rem;
     }
     
     .verify-text {
-      color: rgba(255, 255, 255, 0.8);
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 0.85rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .verify-benefits {
+      margin-top: 0.75rem;
+    }
+    
+    .verify-benefit-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.3rem;
+      color: white;
       font-size: 0.8rem;
+    }
+    
+    .verify-benefit-item i {
+      color: #f7b600;
+      font-size: 0.9rem;
     }
     
     .verify-action {
       background: white;
-      color: var(--warning);
+      color: var(--info);
       font-weight: 600;
       font-size: 0.8rem;
-      padding: 0.4rem 0.75rem;
+      padding: 0.5rem 1rem;
       border-radius: var(--radius-md);
       flex-shrink: 0;
       transition: all 0.3s var(--animation-bounce);
       cursor: pointer;
       border: none;
       white-space: nowrap;
+      box-shadow: var(--shadow-md);
+      margin-top: 0.75rem;
     }
     
     .verify-action:hover {
       transform: translateY(-3px);
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      box-shadow: var(--shadow-lg);
+      background: #f8f9fa;
     }
 
-    /* Bank Details */
+    /* Detalles del Banco */
     .bank-details {
       background: var(--neutral-200);
       border-radius: var(--radius-md);
@@ -974,7 +1012,7 @@
       color: white;
     }
     
-    /* Toast Notifications */
+    /* Notificaciones Toast */
     .toast-container {
       position: fixed;
       top: 70px;
@@ -1047,7 +1085,7 @@
       color: white;
     }
     
-    /* Contact Section */
+    /* Sección de Contacto */
     .contact-options {
       display: flex;
       flex-direction: column;
@@ -1120,7 +1158,7 @@
       text-overflow: ellipsis;
     }
     
-    /* Loading */
+    /* Cargando */
     .loading-overlay {
       position: fixed;
       top: 0;
@@ -1170,7 +1208,7 @@
       transition: width 0.3s ease;
     }
 
-    /* Verification Modal */
+    /* Modal de Verificación Mejorado */
     .verification-container {
       position: fixed;
       top: 0;
@@ -1202,9 +1240,9 @@
     }
     
     .verification-title {
-      font-size: 1.25rem;
+      font-size: 1.3rem;
       font-weight: 700;
-      color: var(--neutral-900);
+      color: var(--primary);
       margin-bottom: 0.5rem;
     }
     
@@ -1221,6 +1259,9 @@
       display: flex;
       gap: 1rem;
       margin-bottom: 1.25rem;
+      background: var(--neutral-200);
+      padding: 1rem;
+      border-radius: var(--radius-md);
     }
     
     .verification-step-number {
@@ -1258,7 +1299,148 @@
       gap: 1rem;
     }
     
-    /* Withdrawal Receipt Modal */
+    /* Nueva sección de Transacciones en Proceso */
+    .pending-transactions {
+      margin-top: 2rem;
+    }
+    
+    .pending-transaction-item {
+      display: flex;
+      align-items: center;
+      padding: 1rem;
+      margin-bottom: 0.75rem;
+      background: var(--neutral-200);
+      border-radius: var(--radius-md);
+      border-left: 4px solid var(--warning);
+    }
+    
+    .pending-transaction-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-full);
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--warning);
+      margin-right: 1rem;
+      flex-shrink: 0;
+    }
+    
+    .pending-transaction-content {
+      flex: 1;
+    }
+    
+    .pending-transaction-title {
+      font-weight: 600;
+      font-size: 0.85rem;
+      margin-bottom: 0.25rem;
+    }
+    
+    .pending-transaction-info {
+      font-size: 0.75rem;
+      color: var(--neutral-600);
+    }
+    
+    .pending-transaction-amount {
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: var(--neutral-900);
+      margin-left: 1rem;
+    }
+    
+    /* Historial de Transacciones */
+    .transaction-history {
+      margin-top: 2rem;
+    }
+    
+    .transaction-history-item {
+      display: flex;
+      align-items: center;
+      padding: 0.75rem;
+      margin-bottom: 0.75rem;
+      background: var(--neutral-200);
+      border-radius: var(--radius-md);
+      border-left: 4px solid var(--success);
+    }
+    
+    .transaction-history-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-full);
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--success);
+      margin-right: 1rem;
+      flex-shrink: 0;
+    }
+    
+    .transaction-history-content {
+      flex: 1;
+    }
+    
+    .transaction-history-title {
+      font-weight: 600;
+      font-size: 0.85rem;
+      margin-bottom: 0.25rem;
+    }
+    
+    .transaction-history-info {
+      font-size: 0.75rem;
+      color: var(--neutral-600);
+    }
+    
+    .transaction-history-date {
+      font-size: 0.7rem;
+      color: var(--neutral-500);
+      margin-top: 0.2rem;
+    }
+    
+    .transaction-history-amount {
+      font-weight: 700;
+      font-size: 0.85rem;
+      color: var(--neutral-900);
+      margin-left: 1rem;
+    }
+    
+    /* Tabs de navegación */
+    .tabs-container {
+      margin: 1.5rem 0;
+    }
+    
+    .tabs-header {
+      display: flex;
+      border-bottom: 1px solid var(--neutral-300);
+      margin-bottom: 1rem;
+    }
+    
+    .tab-item {
+      padding: 0.75rem 1rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--neutral-600);
+      border-bottom: 2px solid transparent;
+      cursor: pointer;
+      transition: var(--transition-base);
+    }
+    
+    .tab-item.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+      font-weight: 600;
+    }
+    
+    .tab-content {
+      display: none;
+    }
+    
+    .tab-content.active {
+      display: block;
+    }
+
+    /* Modal de Recibo de Retiro */
     .receipt-overlay {
       position: fixed;
       top: 0;
@@ -1380,7 +1562,152 @@
       transform: translateY(-3px);
     }
 
-    /* Animations */
+    /* Modal de Información de Seguridad */
+    .security-info-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(5px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1200;
+    }
+    
+    .security-info-content {
+      background: white;
+      border-radius: var(--radius-lg);
+      width: 90%;
+      max-width: 600px;
+      padding: 1.5rem;
+      animation: scaleIn 0.3s ease;
+      max-height: 90vh;
+      overflow-y: auto;
+      position: relative;
+    }
+    
+    .security-info-close {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: var(--neutral-800);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      cursor: pointer;
+      z-index: 10;
+    }
+    
+    .faq-container {
+      margin: 1.5rem 0;
+    }
+    
+    .faq-item {
+      border-bottom: 1px solid var(--neutral-300);
+      margin-bottom: 0.5rem;
+    }
+    
+    .faq-header {
+      padding: 1rem 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      font-weight: 600;
+      color: var(--neutral-800);
+    }
+    
+    .faq-content {
+      padding: 0 0 1rem 0;
+      color: var(--neutral-600);
+      display: none;
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+    
+    .info-link {
+      color: var(--primary);
+      text-decoration: underline;
+      cursor: pointer;
+    }
+    
+    /* Estilo para badges de información */
+    .info-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: white;
+      font-size: 0.7rem;
+      margin-left: 0.5rem;
+      cursor: pointer;
+    }
+
+    /* Tiempo restante antes de redirección por inactividad */
+    .time-remaining {
+      position: fixed;
+      bottom: 80px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      font-size: 0.75rem;
+      color: var(--neutral-500);
+      padding: 0.5rem;
+      background: var(--neutral-200);
+      z-index: 899;
+    }
+    
+    .time-remaining-progress {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      height: 2px;
+      background: var(--primary);
+      transition: width 1s linear;
+    }
+    
+    /* Estados de transacción mejorados */
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.3rem 0.5rem;
+      border-radius: var(--radius-md);
+      font-size: 0.7rem;
+      font-weight: 600;
+    }
+    
+    .status-badge.pending {
+      background: rgba(255, 173, 51, 0.1);
+      color: var(--warning);
+    }
+    
+    .status-badge.verified {
+      background: rgba(0, 211, 77, 0.1);
+      color: var(--success);
+    }
+    
+    .status-badge.processing {
+      background: rgba(0, 149, 255, 0.1);
+      color: var(--info);
+    }
+    
+    .status-badge.rejected {
+      background: rgba(255, 77, 77, 0.1);
+      color: var(--danger);
+    }
+    
+    /* Animaciones */
     @keyframes fadeIn {
       from { opacity: 0; }
       to { opacity: 1; }
@@ -1405,7 +1732,7 @@
       to { opacity: 0; visibility: hidden; }
     }
     
-    /* Responsive Adjustments */
+    /* Ajustes Responsivos */
     @media (min-width: 768px) {
       .withdrawal-container {
         padding: 1.5rem;
@@ -1448,376 +1775,12 @@
       .method-description {
         font-size: 0.75rem;
       }
-    }
-
-    /* Estilos para select con banco personalizado */
-    .custom-select-container {
-      position: relative;
-      width: 100%;
-      margin-bottom: 1rem;
-    }
-
-    .selected-item {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      padding: 0 1rem;
-      height: 44px;
-      background: var(--neutral-100);
-      border: 1px solid var(--neutral-400);
-      border-radius: var(--radius-md);
-      cursor: pointer;
-      transition: var(--transition-base);
-    }
-
-    .selected-item:hover {
-      border-color: var(--primary-light);
-    }
-
-    .dropdown-container {
-      position: absolute;
-      top: 100%;
-      left: 0;
-      right: 0;
-      background: var(--neutral-100);
-      border: 1px solid var(--neutral-400);
-      border-radius: var(--radius-md);
-      max-height: 280px;
-      overflow-y: auto;
-      z-index: 50;
-      box-shadow: var(--shadow-lg);
-      display: none;
-      margin-top: 0.25rem;
-    }
-
-    .dropdown-item {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      padding: 0.75rem 1rem;
-      cursor: pointer;
-      transition: var(--transition-base);
-    }
-
-    .dropdown-item:hover {
-      background: var(--neutral-200);
-    }
-
-    .bank-logo-small {
-      width: 24px;
-      height: 24px;
-      object-fit: contain;
-      border-radius: 4px;
-    }
-
-    /* Estilos para modal de información de seguridad */
-    .security-info-container {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0, 0, 0, 0.7);
-      backdrop-filter: blur(5px);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 1200;
-    }
-
-    .security-info-content {
-      background: white;
-      border-radius: var(--radius-lg);
-      width: 90%;
-      max-width: 600px;
-      padding: 1.5rem;
-      animation: scaleIn 0.3s ease;
-      max-height: 90vh;
-      overflow-y: auto;
-    }
-
-    .security-info-close {
-      position: absolute;
-      top: 1rem;
-      right: 1rem;
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-      background: var(--neutral-800);
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border: none;
-      cursor: pointer;
-      z-index: 10;
-    }
-
-    .faq-container {
-      margin: 1.5rem 0;
-    }
-
-    .faq-item {
-      border-bottom: 1px solid var(--neutral-300);
-      margin-bottom: 0.5rem;
-    }
-
-    .faq-header {
-      padding: 1rem 0;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      cursor: pointer;
-      font-weight: 600;
-      color: var(--neutral-800);
-    }
-
-    .faq-content {
-      padding: 0 0 1rem 0;
-      color: var(--neutral-600);
-      display: none;
-      font-size: 0.9rem;
-      line-height: 1.5;
-    }
-
-    .info-link {
-      color: var(--primary);
-      text-decoration: underline;
-      cursor: pointer;
-    }
-
-    /* Estilo para badges de información */
-    .info-badge {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 18px;
-      height: 18px;
-      border-radius: 50%;
-      background: var(--primary);
-      color: white;
-      font-size: 0.7rem;
-      margin-left: 0.5rem;
-      cursor: pointer;
-    }
-
-    /* NUEVOS ESTILOS PARA MEJORAS */
-    .verification-method-options {
-      display: flex;
-      gap: 1rem;
-      margin-bottom: 1.5rem;
-    }
-
-    .verification-method-option {
-      flex: 1;
-      background: var(--neutral-200);
-      border: 2px solid var(--neutral-300);
-      border-radius: var(--radius-md);
-      padding: 1.25rem;
-      cursor: pointer;
-      transition: var(--transition-base);
-      text-align: center;
-    }
-
-    .verification-method-option:hover {
-      background: var(--neutral-100);
-      border-color: var(--neutral-400);
-      transform: translateY(-3px);
-      box-shadow: var(--shadow-sm);
-    }
-
-    .verification-method-option.active {
-      background: var(--neutral-100);
-      border-color: var(--primary);
-      transform: translateY(-3px);
-      box-shadow: var(--shadow-md);
-    }
-
-    .verification-method-icon {
-      font-size: 2rem;
-      color: var(--primary);
-      margin-bottom: 1rem;
-    }
-
-    .verification-method-title {
-      font-weight: 600;
-      font-size: 1rem;
-      color: var(--neutral-800);
-      margin-bottom: 0.5rem;
-    }
-
-    .verification-method-description {
-      font-size: 0.8rem;
-      color: var(--neutral-600);
-    }
-
-    .verification-details {
-      display: none;
+      
+      .bank-logo-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
     }
     
-    .verification-details.active {
-      display: block;
-      animation: fadeIn 0.3s ease;
-    }
-
-    .bank-with-logo {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.5rem;
-      border-radius: var(--radius-md);
-      background: var(--neutral-200);
-      margin-bottom: 0.5rem;
-    }
-
-    .bank-logo-container {
-      width: 30px;
-      height: 30px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      flex-shrink: 0;
-    }
-
-    .bank-logo-img {
-      max-width: 100%;
-      max-height: 100%;
-      object-fit: contain;
-    }
-
-    .bank-name-display {
-      font-size: 0.85rem;
-      font-weight: 500;
-      color: var(--neutral-800);
-    }
-
-    /* Estilo para el conteo de tiempo restante */
-    .time-remaining {
-      position: fixed;
-      bottom: 80px;
-      left: 0;
-      right: 0;
-      text-align: center;
-      font-size: 0.75rem;
-      color: var(--neutral-500);
-      padding: 0.5rem;
-      background: var(--neutral-200);
-      z-index: 899;
-    }
-
-    .time-remaining-progress {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      height: 2px;
-      background: var(--primary);
-      transition: width 1s linear;
-    }
-
-    /* Estilos para el monitor de proceso de verificación */
-    .verification-status-container {
-      background: var(--neutral-200);
-      border-radius: var(--radius-md);
-      padding: 1rem;
-      margin-top: 1.5rem;
-      border-left: 4px solid var(--info);
-    }
-
-    .verification-status-title {
-      font-weight: 600;
-      font-size: 0.9rem;
-      margin-bottom: 0.5rem;
-      color: var(--neutral-800);
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .verification-status-title i {
-      color: var(--info);
-    }
-
-    .verification-status-text {
-      font-size: 0.8rem;
-      color: var(--neutral-600);
-      margin-bottom: 0.5rem;
-    }
-
-    .verification-status-actions {
-      display: flex;
-      gap: 0.5rem;
-      margin-top: 0.75rem;
-    }
-
-    .status-btn {
-      font-size: 0.75rem;
-      padding: 0.4rem 0.75rem;
-      height: auto;
-    }
-
-    /* Selector de banco con imágenes */
-    .bank-select-container {
-      position: relative;
-    }
-
-    .bank-select-dropdown {
-      display: none;
-      position: absolute;
-      top: 100%;
-      left: 0;
-      right: 0;
-      background: white;
-      border: 1px solid var(--neutral-400);
-      border-radius: var(--radius-md);
-      max-height: 250px;
-      overflow-y: auto;
-      z-index: 50;
-      margin-top: 0.25rem;
-      box-shadow: var(--shadow-md);
-    }
-
-    .bank-select-display {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      padding: 0 1rem;
-      height: 44px;
-      background: var(--neutral-100);
-      border: 1px solid var(--neutral-400);
-      border-radius: var(--radius-md);
-      cursor: pointer;
-      transition: var(--transition-base);
-    }
-
-    .bank-select-display:hover {
-      border-color: var(--primary);
-    }
-
-    .bank-select-item {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      padding: 0.75rem 1rem;
-      cursor: pointer;
-      transition: var(--transition-base);
-    }
-
-    .bank-select-item:hover {
-      background: var(--neutral-200);
-    }
-
-    .bank-select-logo {
-      width: 24px;
-      height: 24px;
-      object-fit: contain;
-    }
-
-    .bank-select-placeholder {
-      color: var(--neutral-500);
-    }
-    
-    /* Mejoras de responsividad para móvil */
     @media (max-width: 576px) {
       .section-title {
         font-size: 0.9rem;
@@ -1837,13 +1800,13 @@
         padding: 1rem;
       }
       
+      .verify-icon {
+        margin: 0 auto 0.5rem;
+      }
+      
       .verify-action {
         width: 100%;
         margin-top: 0.5rem;
-      }
-      
-      .verification-method-options {
-        flex-direction: column;
       }
       
       .verification-actions {
@@ -1873,16 +1836,26 @@
         width: 100%;
         justify-content: space-between;
       }
+      
+      .tabs-header {
+        overflow-x: auto;
+        white-space: nowrap;
+        padding-bottom: 0.5rem;
+      }
+      
+      .tab-item {
+        padding: 0.75rem 0.5rem;
+        font-size: 0.8rem;
+      }
     }
     
-    /* Fondo de soporte de imagen */
+    /* Soporte de imagen de fondo */
     .bg-image {
       position: fixed;
       top: 0;
       left: 0;
       right: 0;
       bottom: 0;
-      background-image: 
       background-size: cover;
       background-position: center;
       opacity: 0.02;
@@ -1910,12 +1883,12 @@
       
       <button class="header-action-btn" id="notification-btn" aria-label="Notificaciones">
         <i class="fas fa-bell"></i>
-        <span class="notification-badge">3</span>
+        <span class="notification-badge">2</span>
       </button>
     </div>
   </header>
 
-  <!-- Main Container -->
+  <!-- Contenedor Principal -->
   <div class="withdrawal-container">
     <div class="section-title" style="margin-bottom: 1.5rem; display: flex; align-items: center;">
       <a href="recarga.html" style="color: var(--primary); text-decoration: none; display: flex; align-items: center;">
@@ -1924,315 +1897,459 @@
       <span>Retiro de Fondos</span>
     </div>
     
-    <!-- Security Badge -->
+    <!-- Badge de Seguridad -->
     <div class="security-badge">
       <div class="security-badge-icon">
         <i class="fas fa-shield-alt"></i>
       </div>
       <div class="security-badge-content">
-        <div class="security-badge-title">Retirada Segura</div>
-        <div class="security-badge-text">Todas las transferencias están protegidas con cifrado SSL</div>
+        <div class="security-badge-title">Transferencia Segura</div>
+        <div class="security-badge-text">Todas tus transacciones están protegidas con certificados de seguridad</div>
       </div>
     </div>
 
-    <!-- Withdrawal Process Timeline -->
-    <div class="timeline-container">
-      <div class="timeline">
-        <div class="timeline-progress" id="timeline-progress" style="width: 25%;"></div>
-        
-        <div class="timeline-step active" id="step-create">
-          <div class="timeline-icon">
-            <i class="fas fa-edit"></i>
-          </div>
-          <div class="timeline-label">Crear Orden</div>
-        </div>
-        
-        <div class="timeline-step" id="step-verify">
-          <div class="timeline-icon">
-            <i class="fas fa-shield-alt"></i>
-          </div>
-          <div class="timeline-label">Verificar Cuenta</div>
-        </div>
-        
-        <div class="timeline-step" id="step-process">
-          <div class="timeline-icon">
-            <i class="fas fa-cog"></i>
-          </div>
-          <div class="timeline-label">Procesando</div>
-        </div>
-        
-        <div class="timeline-step" id="step-complete">
-          <div class="timeline-icon">
-            <i class="fas fa-check"></i>
-          </div>
-          <div class="timeline-label">Completado</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Balance Cards -->
-    <div class="card">
-      <div class="section-title" style="margin-bottom: 0.5rem;">
-        <i class="fas fa-wallet"></i> Saldo Disponible
-        <span class="info-badge" id="info-balance-badge"><i class="fas fa-info"></i></span>
+    <!-- Tabs de Navegación -->
+    <div class="tabs-container">
+      <div class="tabs-header">
+        <div class="tab-item active" data-tab="new-withdrawal">Crear Retiro</div>
+        <div class="tab-item" data-tab="pending">Operaciones Pendientes</div>
+        <div class="tab-item" data-tab="history">Historial</div>
       </div>
       
-      <div style="display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;">
-        <div style="flex: 1; min-width: 200px; background: var(--primary); color: white; padding: 1rem; border-radius: var(--radius-md); position: relative; overflow: hidden;">
-          <div style="position: absolute; right: -20px; bottom: -20px; width: 100px; height: 100px; border-radius: 50%; background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);"></div>
-          
-          <div style="position: relative; z-index: 2;">
-            <div style="font-size: 0.8rem; opacity: 0.8; margin-bottom: 0.5rem;">Saldo Total</div>
-            <div style="font-size: 1.75rem; font-weight: 700; margin-bottom: 0.5rem;" id="total-balance">Bs 0,00</div>
-            <div style="font-size: 0.8rem; opacity: 0.8;" id="balance-equivalents">≈ $0.00 | ≈ €0.00</div>
-          </div>
-        </div>
-        
-        <div style="flex: 1; min-width: 200px; background: var(--neutral-200); padding: 1rem; border-radius: var(--radius-md);">
-          <div style="font-size: 0.8rem; color: var(--neutral-600); margin-bottom: 0.5rem;">Cantidad a Retirar</div>
-          <div style="position: relative;">
-            <input type="text" class="form-control" id="withdrawal-amount" placeholder="0.00" style="padding-left: 2.5rem; font-size: 1.25rem; font-weight: 600;">
-            <div style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); font-weight: 600; color: var(--neutral-800);">Bs</div>
-          </div>
-          <div style="font-size: 0.75rem; color: var(--neutral-500); margin-top: 0.5rem; text-align: right;" id="amount-equivalents">≈ $0.00 | ≈ €0.00</div>
-        </div>
-      </div>
-      
-      <div style="font-size: 0.75rem; color: var(--neutral-600); margin-bottom: 1rem; text-align: center;">
-        Tasa: <span id="exchange-rate-display">1 USD = 113.82 Bs | 1 USD = 0.94 EUR</span>
-      </div>
-    </div>
-
-    <!-- Withdrawal Method Selection -->
-    <div class="card">
-      <div class="section-title" style="margin-bottom: 0.75rem;">
-        <i class="fas fa-exchange-alt"></i> Método de Retiro
-      </div>
-      
-      <div class="method-options">
-        <div class="method-option active" data-method="mobile" data-limit="250000">
-          <div class="method-icon">
-            <i class="fas fa-mobile-alt"></i>
-          </div>
-          <div class="method-label">Pago Móvil</div>
-          <div class="method-description">Límite: 250.000,00 Bs</div>
-        </div>
-        
-        <div class="method-option" data-method="bank" data-limit="1000000">
-          <div class="method-icon">
-            <i class="fas fa-university"></i>
-          </div>
-          <div class="method-label">Transferencia Bancaria</div>
-          <div class="method-description">Límite: 1.000.000,00 Bs</div>
-        </div>
-        
-        <div class="method-option" data-method="international">
-          <div class="method-icon">
-            <i class="fas fa-globe"></i>
-          </div>
-          <div class="method-label">Transferencia Internacional</div>
-          <div class="method-description">Sin límite</div>
-        </div>
-      </div>
-      
-      <!-- Mobile Payment Form -->
-      <div class="bank-selection active" id="mobile-payment-form">
-        <div class="form-group">
-          <label class="form-label" for="mobile-bank">Banco Emisor</label>
-          <div class="bank-select-container">
-            <div class="bank-select-display" id="mobile-bank-display">
-              <span class="bank-select-placeholder">Seleccione su banco</span>
+      <!-- Tab 1: Crear Nuevo Retiro -->
+      <div class="tab-content active" id="new-withdrawal-tab">
+        <!-- Timeline del Proceso de Retiro -->
+        <div class="timeline-container">
+          <div class="timeline">
+            <div class="timeline-progress" id="timeline-progress" style="width: 25%;"></div>
+            
+            <div class="timeline-step active" id="step-create">
+              <div class="timeline-icon">
+                <i class="fas fa-edit"></i>
+              </div>
+              <div class="timeline-label">Crear Orden</div>
             </div>
-            <div class="bank-select-dropdown" id="mobile-bank-dropdown"></div>
-            <input type="hidden" id="mobile-bank" name="mobile-bank" value="">
-          </div>
-        </div>
-        
-        <div class="form-group">
-          <label class="form-label" for="mobile-number">Número de Teléfono</label>
-          <input type="tel" class="form-control" id="mobile-number" placeholder="04XX-XXXXXXX">
-          <div class="error-message" id="mobile-number-error">Por favor, introduce un número de teléfono válido.</div>
-        </div>
-        
-        <div class="form-group">
-          <label class="form-label" for="mobile-id">Cédula de Identidad</label>
-          <input type="text" class="form-control" id="mobile-id" placeholder="V-XXXXXXXX">
-          <div class="error-message" id="mobile-id-error">Por favor, introduce un número de cédula válido.</div>
-        </div>
-        
-        <div class="form-group">
-          <label class="form-label" for="mobile-name">Nombre Completo</label>
-          <input type="text" class="form-control" id="mobile-name" placeholder="Como aparece en su banco">
-          <div class="error-message" id="mobile-name-error">Por favor, introduce tu nombre completo.</div>
-        </div>
-      </div>
-      
-      <!-- Bank Transfer Form -->
-      <div class="bank-selection" id="bank-transfer-form">
-        <div class="form-group">
-          <label class="form-label" for="bank-name">Banco</label>
-          <div class="bank-select-container">
-            <div class="bank-select-display" id="bank-name-display">
-              <span class="bank-select-placeholder">Seleccione su banco</span>
+            
+            <div class="timeline-step" id="step-verify">
+              <div class="timeline-icon">
+                <i class="fas fa-shield-alt"></i>
+              </div>
+              <div class="timeline-label">Verificar Cuenta</div>
             </div>
-            <div class="bank-select-dropdown" id="bank-name-dropdown"></div>
-            <input type="hidden" id="bank-name" name="bank-name" value="">
+            
+            <div class="timeline-step" id="step-process">
+              <div class="timeline-icon">
+                <i class="fas fa-cog"></i>
+              </div>
+              <div class="timeline-label">Procesando</div>
+            </div>
+            
+            <div class="timeline-step" id="step-complete">
+              <div class="timeline-icon">
+                <i class="fas fa-check"></i>
+              </div>
+              <div class="timeline-label">Completado</div>
+            </div>
           </div>
         </div>
-        
-        <div class="form-group">
-          <label class="form-label" for="account-type">Tipo de Cuenta</label>
-          <select class="form-control" id="account-type">
-            <option value="" disabled selected>Seleccione el tipo de cuenta</option>
-            <option value="corriente">Corriente</option>
-            <option value="ahorro">Ahorro</option>
-          </select>
-        </div>
-        
-        <div class="form-group">
-          <label class="form-label" for="account-number">Número de Cuenta</label>
-          <input type="text" class="form-control" id="account-number" placeholder="XXXX-XXXX-XXXX-XXXX">
-          <div class="error-message" id="account-number-error">Por favor, introduce un número de cuenta válido.</div>
-        </div>
-        
-        <div class="form-group">
-          <label class="form-label" for="account-id">Cédula de Identidad</label>
-          <input type="text" class="form-control" id="account-id" placeholder="V-XXXXXXXX">
-          <div class="error-message" id="account-id-error">Por favor, introduce un número de cédula válido.</div>
-        </div>
-        
-        <div class="form-group">
-          <label class="form-label" for="account-name">Nombre Completo</label>
-          <input type="text" class="form-control" id="account-name" placeholder="Como aparece en su banco">
-          <div class="error-message" id="account-name-error">Por favor, introduce tu nombre completo.</div>
-        </div>
-      </div>
-      
-      <!-- International Transfer Form -->
-      <div class="bank-selection" id="international-transfer-form">
-        <div class="form-group">
-          <label class="form-label" for="int-method">Método de Envío Internacional</label>
-          <select class="form-control" id="int-method">
-            <option value="" disabled selected>Seleccione el método</option>
-            <option value="zelle">Zelle</option>
-            <option value="paypal">PayPal</option>
-            <option value="wise">Wise (Transferwise)</option>
-            <option value="swift">Transferencia SWIFT</option>
-            <option value="crypto">Criptomonedas</option>
-          </select>
-        </div>
-        
-        <div class="form-group" id="zelle-form" style="display: none;">
-          <label class="form-label" for="zelle-email">Correo Electrónico de Zelle</label>
-          <input type="email" class="form-control" id="zelle-email" placeholder="correo@ejemplo.com">
-          <div class="error-message" id="zelle-email-error">Por favor, introduce un correo electrónico válido.</div>
-        </div>
-        
-        <div class="form-group" id="paypal-form" style="display: none;">
-          <label class="form-label" for="paypal-email">Correo Electrónico de PayPal</label>
-          <input type="email" class="form-control" id="paypal-email" placeholder="correo@ejemplo.com">
-          <div class="error-message" id="paypal-email-error">Por favor, introduce un correo electrónico válido.</div>
-        </div>
-        
-        <div id="swift-form" style="display: none;">
-          <div class="form-group">
-            <label class="form-label" for="swift-bank">Nombre del Banco</label>
-            <input type="text" class="form-control" id="swift-bank" placeholder="Nombre del banco">
-          </div>
-          
-          <div class="form-group">
-            <label class="form-label" for="swift-code">Código SWIFT/BIC</label>
-            <input type="text" class="form-control" id="swift-code" placeholder="XXXXXXXX">
-          </div>
-          
-          <div class="form-group">
-            <label class="form-label" for="swift-account">Número de Cuenta/IBAN</label>
-            <input type="text" class="form-control" id="swift-account" placeholder="Número de cuenta o IBAN">
-          </div>
-          
-          <div class="form-group">
-            <label class="form-label" for="swift-name">Nombre del Beneficiario</label>
-            <input type="text" class="form-control" id="swift-name" placeholder="Nombre completo">
-          </div>
-          
-          <div class="form-group">
-            <label class="form-label" for="swift-address">Dirección del Beneficiario</label>
-            <input type="text" class="form-control" id="swift-address" placeholder="Dirección completa">
-          </div>
-        </div>
-        
-        <div class="form-group" id="crypto-form" style="display: none;">
-          <label class="form-label" for="crypto-currency">Seleccione Criptomoneda</label>
-          <select class="form-control" id="crypto-currency">
-            <option value="btc">Bitcoin (BTC)</option>
-            <option value="eth">Ethereum (ETH)</option>
-            <option value="usdt">Tether (USDT)</option>
-            <option value="usdc">USD Coin (USDC)</option>
-            <option value="bnb">Binance Coin (BNB)</option>
-          </select>
-          
-          <label class="form-label" for="crypto-address" style="margin-top: 1rem;">Dirección de Billetera</label>
-          <input type="text" class="form-control" id="crypto-address" placeholder="Dirección de billetera">
-          <div class="error-message" id="crypto-address-error">Por favor, introduce una dirección de billetera válida.</div>
-        </div>
-        
-        <div class="form-group" id="wise-form" style="display: none;">
-          <label class="form-label" for="wise-email">Correo Electrónico de Wise</label>
-          <input type="email" class="form-control" id="wise-email" placeholder="correo@ejemplo.com">
-          <div class="error-message" id="wise-email-error">Por favor, introduce un correo electrónico válido.</div>
-        </div>
-      </div>
-      
-      <!-- Verification Banner -->
-      <div class="verify-banner" id="verify-banner" style="display: none;">
-        <div class="verify-icon">
-          <i class="fas fa-exclamation-triangle"></i>
-        </div>
-        <div class="verify-content">
-          <div class="verify-title">Verificación de Cuenta Requerida</div>
-          <div class="verify-text">Para procesar los retiros de forma segura, debe verificar su cuenta realizando un depósito desde la misma cuenta bancaria.</div>
-        </div>
-        <button class="verify-action" id="verify-now-btn">Verificar</button>
-      </div>
 
-      <!-- Verificación en Proceso (NUEVO) -->
-      <div class="verification-status-container" id="verification-status-container" style="display: none;">
-        <div class="verification-status-title">
-          <i class="fas fa-clock"></i> Verificación en Proceso
+        <!-- Tarjetas de Saldo -->
+        <div class="card">
+          <div class="section-title" style="margin-bottom: 0.5rem;">
+            <i class="fas fa-wallet"></i> Saldo Disponible
+            <span class="info-badge" id="info-balance-badge" title="Información sobre tu saldo"><i class="fas fa-info"></i></span>
+          </div>
+          
+          <div style="display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;">
+            <div style="flex: 1; min-width: 200px; background: var(--primary); color: white; padding: 1rem; border-radius: var(--radius-md); position: relative; overflow: hidden;">
+              <div style="position: absolute; right: -20px; bottom: -20px; width: 100px; height: 100px; border-radius: 50%; background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);"></div>
+              
+              <div style="position: relative; z-index: 2;">
+                <div style="font-size: 0.8rem; opacity: 0.8; margin-bottom: 0.5rem;">Saldo Total</div>
+                <div style="font-size: 1.75rem; font-weight: 700; margin-bottom: 0.5rem;" id="total-balance">Bs 0,00</div>
+                <div style="font-size: 0.8rem; opacity: 0.8;" id="balance-equivalents">≈ $0.00 | ≈ €0.00</div>
+              </div>
+            </div>
+            
+            <div style="flex: 1; min-width: 200px; background: var(--neutral-200); padding: 1rem; border-radius: var(--radius-md);">
+              <div style="font-size: 0.8rem; color: var(--neutral-600); margin-bottom: 0.5rem;">Cantidad a Retirar</div>
+              <div style="position: relative;">
+                <input type="text" class="form-control" id="withdrawal-amount" placeholder="0.00" style="padding-left: 2.5rem; font-size: 1.25rem; font-weight: 600;">
+                <div style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); font-weight: 600; color: var(--neutral-800);">Bs</div>
+              </div>
+              <div style="font-size: 0.75rem; color: var(--neutral-500); margin-top: 0.5rem; text-align: right;" id="amount-equivalents">≈ $0.00 | ≈ €0.00</div>
+            </div>
+          </div>
+          
+          <div style="font-size: 0.75rem; color: var(--neutral-600); margin-bottom: 1rem; text-align: center;">
+            Tasa: <span id="exchange-rate-display">1 USD = 113.82 Bs | 1 USD = 0.94 EUR</span>
+          </div>
         </div>
-        <div class="verification-status-text">
-          Su solicitud de verificación está siendo procesada. Este proceso normalmente toma unos minutos, pero puede demorar hasta 24 horas en algunos casos.
-        </div>
-        <div class="verification-status-text">
-          Si ya realizó el depósito de verificación y aún no ha sido procesado, no se preocupe. Estamos trabajando en ello.
-        </div>
-        <div class="verification-status-actions">
-          <button class="btn btn-outline status-btn" id="verification-check-status-btn">
-            <i class="fas fa-sync-alt"></i> Verificar Estado
+
+        <!-- Selección de Método de Retiro -->
+        <div class="card">
+          <div class="section-title" style="margin-bottom: 0.75rem;">
+            <i class="fas fa-exchange-alt"></i> Método de Retiro
+          </div>
+          
+          <div class="method-options">
+            <div class="method-option active" data-method="mobile" data-limit="250000">
+              <div class="method-icon">
+                <i class="fas fa-mobile-alt"></i>
+              </div>
+              <div class="method-label">Pago Móvil</div>
+              <div class="method-description">Límite: 250.000,00 Bs</div>
+            </div>
+            
+            <div class="method-option" data-method="bank" data-limit="1000000">
+              <div class="method-icon">
+                <i class="fas fa-university"></i>
+              </div>
+              <div class="method-label">Transferencia Bancaria</div>
+              <div class="method-description">Límite: 1.000.000,00 Bs</div>
+            </div>
+            
+            <div class="method-option" data-method="international">
+              <div class="method-icon">
+                <i class="fas fa-globe"></i>
+              </div>
+              <div class="method-label">Transferencia Internacional</div>
+              <div class="method-description">Sin límite</div>
+            </div>
+          </div>
+          
+          <!-- Formulario de Pago Móvil -->
+          <div class="bank-selection active" id="mobile-payment-form">
+            <div class="form-group">
+              <label class="form-label">Banco Emisor <i class="fas fa-info-circle" style="color: var(--info); font-size: 0.75rem; cursor: pointer;" title="Selecciona el banco asociado a tu número de teléfono"></i></label>
+              <p class="help-text">Selecciona el banco donde tienes registrado tu número de pago móvil</p>
+              
+              <!-- Grilla de Logos de Bancos -->
+              <div class="bank-logo-grid" id="mobile-bank-grid">
+                <!-- Los logos de bancos se cargarán dinámicamente por JavaScript -->
+              </div>
+              
+              <input type="hidden" id="mobile-bank" name="mobile-bank" value="">
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label" for="mobile-number">Número de Teléfono</label>
+              <input type="tel" class="form-control" id="mobile-number" placeholder="Ejemplo: 0414-1234567">
+              <div class="error-message" id="mobile-number-error">Por favor, introduce un número de teléfono válido.</div>
+              <div class="help-text">Introduce el número registrado en tu banco para pago móvil</div>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label" for="mobile-id">Cédula de Identidad</label>
+              <input type="text" class="form-control" id="mobile-id" placeholder="Ejemplo: V-12345678">
+              <div class="error-message" id="mobile-id-error">Por favor, introduce un número de cédula válido.</div>
+              <div class="help-text">Debe ser tu propia cédula, igual a la registrada en el banco</div>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label" for="mobile-name">Nombre Completo</label>
+              <input type="text" class="form-control" id="mobile-name" placeholder="Tal como aparece en tu banco">
+              <div class="error-message" id="mobile-name-error">Por favor, introduce tu nombre completo.</div>
+              <div class="help-text">Nombres y apellidos exactamente como aparecen en tu banco</div>
+            </div>
+          </div>
+          
+          <!-- Formulario de Transferencia Bancaria -->
+          <div class="bank-selection" id="bank-transfer-form">
+            <div class="form-group">
+              <label class="form-label">Banco <i class="fas fa-info-circle" style="color: var(--info); font-size: 0.75rem; cursor: pointer;" title="Selecciona el banco donde tienes tu cuenta"></i></label>
+              <p class="help-text">Selecciona el banco donde tienes tu cuenta bancaria</p>
+              
+              <!-- Grilla de Logos de Bancos -->
+              <div class="bank-logo-grid" id="bank-name-grid">
+                <!-- Los logos de bancos se cargarán dinámicamente por JavaScript -->
+              </div>
+              
+              <input type="hidden" id="bank-name" name="bank-name" value="">
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label" for="account-type">Tipo de Cuenta</label>
+              <select class="form-control" id="account-type">
+                <option value="" disabled selected>Seleccione el tipo de cuenta</option>
+                <option value="corriente">Corriente</option>
+                <option value="ahorro">Ahorro</option>
+              </select>
+              <div class="help-text">Selecciona el tipo de cuenta bancaria que tienes</div>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label" for="account-number">Número de Cuenta</label>
+              <input type="text" class="form-control" id="account-number" placeholder="Ejemplo: 0105-0000-00-0000000000">
+              <div class="error-message" id="account-number-error">Por favor, introduce un número de cuenta válido.</div>
+              <div class="help-text">Ingresa tu número de cuenta completo (20 dígitos)</div>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label" for="account-id">Cédula de Identidad</label>
+              <input type="text" class="form-control" id="account-id" placeholder="Ejemplo: V-12345678">
+              <div class="error-message" id="account-id-error">Por favor, introduce un número de cédula válido.</div>
+              <div class="help-text">Debe ser tu propia cédula, igual a la registrada en el banco</div>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label" for="account-name">Nombre Completo</label>
+              <input type="text" class="form-control" id="account-name" placeholder="Tal como aparece en tu banco">
+              <div class="error-message" id="account-name-error">Por favor, introduce tu nombre completo.</div>
+              <div class="help-text">Nombres y apellidos exactamente como aparecen en tu banco</div>
+            </div>
+          </div>
+          
+          <!-- Formulario de Transferencia Internacional -->
+          <div class="bank-selection" id="international-transfer-form">
+            <div class="form-group">
+              <label class="form-label" for="int-method">Método de Envío Internacional</label>
+              <select class="form-control" id="int-method">
+                <option value="" disabled selected>Seleccione el método</option>
+                <option value="zelle">Zelle</option>
+                <option value="paypal">PayPal</option>
+                <option value="wise">Wise (Transferwise)</option>
+                <option value="swift">Transferencia SWIFT</option>
+                <option value="crypto">Criptomonedas</option>
+              </select>
+              <div class="help-text">Selecciona el método que prefieres para recibir tus fondos</div>
+            </div>
+            
+            <!-- Formularios específicos por método internacional -->
+            <!-- Zelle -->
+            <div class="form-group" id="zelle-form" style="display: none;">
+              <label class="form-label" for="zelle-email">Correo Electrónico de Zelle</label>
+              <input type="email" class="form-control" id="zelle-email" placeholder="correo@ejemplo.com">
+              <div class="error-message" id="zelle-email-error">Por favor, introduce un correo electrónico válido.</div>
+              <div class="help-text">El correo debe estar asociado a tu cuenta de Zelle</div>
+            </div>
+            
+            <!-- PayPal -->
+            <div class="form-group" id="paypal-form" style="display: none;">
+              <label class="form-label" for="paypal-email">Correo Electrónico de PayPal</label>
+              <input type="email" class="form-control" id="paypal-email" placeholder="correo@ejemplo.com">
+              <div class="error-message" id="paypal-email-error">Por favor, introduce un correo electrónico válido.</div>
+              <div class="help-text">El correo debe estar asociado a tu cuenta de PayPal</div>
+            </div>
+            
+            <!-- SWIFT -->
+            <div id="swift-form" style="display: none;">
+              <div class="form-group">
+                <label class="form-label" for="swift-bank">Nombre del Banco</label>
+                <input type="text" class="form-control" id="swift-bank" placeholder="Nombre del banco">
+                <div class="help-text">Nombre completo del banco receptor</div>
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label" for="swift-code">Código SWIFT/BIC</label>
+                <input type="text" class="form-control" id="swift-code" placeholder="Ejemplo: BOFAUS3N">
+                <div class="help-text">Código internacional de tu banco (8 o 11 caracteres)</div>
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label" for="swift-account">Número de Cuenta/IBAN</label>
+                <input type="text" class="form-control" id="swift-account" placeholder="Número de cuenta o IBAN">
+                <div class="help-text">Número de cuenta internacional o IBAN completo</div>
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label" for="swift-name">Nombre del Beneficiario</label>
+                <input type="text" class="form-control" id="swift-name" placeholder="Nombre completo">
+                <div class="help-text">Tu nombre completo tal como aparece en el banco</div>
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label" for="swift-address">Dirección del Beneficiario</label>
+                <input type="text" class="form-control" id="swift-address" placeholder="Dirección completa">
+                <div class="help-text">Tu dirección tal como está registrada en el banco</div>
+              </div>
+            </div>
+            
+            <!-- Crypto -->
+            <div class="form-group" id="crypto-form" style="display: none;">
+              <label class="form-label" for="crypto-currency">Seleccione Criptomoneda</label>
+              <select class="form-control" id="crypto-currency">
+                <option value="btc">Bitcoin (BTC)</option>
+                <option value="eth">Ethereum (ETH)</option>
+                <option value="usdt">Tether (USDT)</option>
+                <option value="usdc">USD Coin (USDC)</option>
+                <option value="bnb">Binance Coin (BNB)</option>
+              </select>
+              <div class="help-text">Selecciona la criptomoneda que deseas recibir</div>
+              
+              <label class="form-label" for="crypto-address" style="margin-top: 1rem;">Dirección de Billetera</label>
+              <input type="text" class="form-control" id="crypto-address" placeholder="Dirección de tu billetera">
+              <div class="error-message" id="crypto-address-error">Por favor, introduce una dirección de billetera válida.</div>
+              <div class="help-text">Verifica que la dirección sea correcta antes de continuar</div>
+            </div>
+            
+            <!-- Wise -->
+            <div class="form-group" id="wise-form" style="display: none;">
+              <label class="form-label" for="wise-email">Correo Electrónico de Wise</label>
+              <input type="email" class="form-control" id="wise-email" placeholder="correo@ejemplo.com">
+              <div class="error-message" id="wise-email-error">Por favor, introduce un correo electrónico válido.</div>
+              <div class="help-text">El correo debe estar asociado a tu cuenta de Wise</div>
+            </div>
+          </div>
+          
+          <!-- Banner de Verificación Mejorado -->
+          <div class="verify-banner" id="verify-banner" style="display: none;">
+            <div class="verify-icon">
+              <i class="fas fa-shield-alt"></i>
+            </div>
+            <div class="verify-content">
+              <div class="verify-title">Protege tus fondos verificando tu cuenta</div>
+              <div class="verify-text">Para garantizar la seguridad de tus retiros, debes confirmar que la cuenta bancaria es realmente tuya realizando un pequeño depósito desde ella.</div>
+              
+              <div class="verify-benefits">
+                <div class="verify-benefit-item">
+                  <i class="fas fa-check-circle"></i>
+                  <span>El depósito se suma a tu saldo disponible</span>
+                </div>
+                <div class="verify-benefit-item">
+                  <i class="fas fa-check-circle"></i>
+                  <span>Solo se verifica una vez por cuenta</span>
+                </div>
+                <div class="verify-benefit-item">
+                  <i class="fas fa-check-circle"></i>
+                  <span>Proceso estándar para proteger tu dinero</span>
+                </div>
+              </div>
+              
+              <button class="verify-action" id="verify-now-btn">
+                <i class="fas fa-shield-alt"></i> Verificar Ahora
+              </button>
+            </div>
+          </div>
+
+          <!-- Contenedor de Estado de Verificación -->
+          <div id="verification-status-container" style="display: none; background: rgba(0, 149, 255, 0.1); border-radius: var(--radius-md); padding: 1rem; margin-top: 1rem; border-left: 4px solid var(--info);">
+            <div style="display: flex; align-items: flex-start; gap: 0.75rem;">
+              <div style="color: var(--info); font-size: 1.2rem; margin-top: 0.1rem;">
+                <i class="fas fa-clock"></i>
+              </div>
+              <div>
+                <h3 style="font-size: 0.9rem; margin-bottom: 0.5rem; font-weight: 600; color: var(--info);">Verificación en Proceso</h3>
+                <p style="font-size: 0.8rem; color: var(--neutral-700); margin-bottom: 0.5rem;">Tu depósito de verificación está siendo procesado. Este proceso normalmente toma unos minutos, pero puede demorar hasta 24 horas en algunos casos.</p>
+                <div style="display: flex; gap: 0.5rem; margin-top: 0.75rem; flex-wrap: wrap;">
+                  <button class="btn btn-outline" id="verification-check-status-btn" style="font-size: 0.75rem; padding: 0 0.75rem; height: 36px;">
+                    <i class="fas fa-sync-alt"></i> Verificar Estado
+                  </button>
+                  <button class="btn btn-outline" id="verification-contact-support-btn" style="font-size: 0.75rem; padding: 0 0.75rem; height: 36px;">
+                    <i class="fas fa-headset"></i> Contactar Soporte
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <button class="btn btn-primary" id="submit-withdrawal" style="margin-top: 1.5rem;">
+            <i class="fas fa-paper-plane"></i> Solicitar Retiro
           </button>
-          <button class="btn btn-outline status-btn" id="verification-contact-support-btn">
-            <i class="fas fa-headset"></i> Contactar Soporte
-          </button>
+          
+          <!-- Información de Verificación -->
+          <div style="margin-top: 1.5rem; padding: 1rem; background-color: rgba(26, 31, 113, 0.05); border-radius: var(--radius-md); display: flex; align-items: flex-start; gap: 0.75rem;">
+            <i class="fas fa-info-circle" style="color: var(--primary); font-size: 1.2rem; margin-top: 0.1rem;"></i>
+            <div>
+              <p style="font-size: 0.85rem; color: var(--neutral-700); margin-bottom: 0.5rem;">Para tu seguridad, todos los retiros se procesan únicamente a cuentas verificadas y que estén a <strong>tu nombre</strong>. No se permiten transferencias a cuentas de terceros.</p>
+              <p style="font-size: 0.8rem; color: var(--neutral-700);">
+                <a href="#" class="info-link" id="show-security-info">¿Por qué necesito verificar mi cuenta?</a>
+              </p>
+            </div>
+          </div>
         </div>
       </div>
-
-      <button class="btn btn-primary" id="submit-withdrawal" style="margin-top: 1.5rem;">
-        <i class="fas fa-paper-plane"></i> Solicitar Retiro
-      </button>
       
-      <!-- Información de Verificación -->
-      <div style="margin-top: 1rem; padding: 0.75rem; background-color: rgba(26, 31, 113, 0.05); border-radius: var(--radius-md); display: flex; align-items: flex-start; gap: 0.75rem;">
-        <i class="fas fa-info-circle" style="color: var(--primary); font-size: 1.2rem; margin-top: 0.1rem;"></i>
-        <div>
-          <p style="font-size: 0.8rem; color: var(--neutral-700); margin-bottom: 0.5rem;">Para garantizar su seguridad, es necesario <strong>verificar su cuenta</strong> antes de realizar retiros. Este es un estándar de seguridad bancaria internacional para confirmar que la cuenta bancaria es realmente suya.</p>
-          <p style="font-size: 0.8rem; color: var(--neutral-700);">
-            <a href="#" class="info-link" id="show-security-info">Más información sobre la verificación</a>
-          </p>
+      <!-- Tab 2: Operaciones Pendientes -->
+      <div class="tab-content" id="pending-tab">
+        <div class="pending-transactions" id="pending-transactions-container">
+          <div style="text-align: center; margin: 2rem 0; color: var(--neutral-600); display: none;" id="no-pending-message">
+            <i class="fas fa-check-circle" style="font-size: 2.5rem; color: var(--neutral-400); margin-bottom: 1rem; display: block;"></i>
+            <h3 style="font-size: 1rem; margin-bottom: 0.5rem;">No tienes operaciones pendientes</h3>
+            <p style="font-size: 0.85rem;">Todas tus transacciones han sido procesadas</p>
+          </div>
+          
+          <!-- Lista de operaciones pendientes (se populará dinámicamente) -->
+          <div id="pending-transactions-list">
+            <!-- Ejemplo de operación pendiente -->
+            <div class="pending-transaction-item">
+              <div class="pending-transaction-icon">
+                <i class="fas fa-clock"></i>
+              </div>
+              <div class="pending-transaction-content">
+                <div class="pending-transaction-title">Retiro a Banco de Venezuela</div>
+                <div class="pending-transaction-info">
+                  <div class="status-badge pending">Pendiente de Verificación</div>
+                  <div style="margin-top: 0.35rem; font-size: 0.75rem;">Orden #RET-12345 • 07/05/2025</div>
+                </div>
+              </div>
+              <div class="pending-transaction-amount">Bs 5.000,00</div>
+            </div>
+            
+            <div class="pending-transaction-item">
+              <div class="pending-transaction-icon">
+                <i class="fas fa-sync-alt"></i>
+              </div>
+              <div class="pending-transaction-content">
+                <div class="pending-transaction-title">Retiro a PayPal</div>
+                <div class="pending-transaction-info">
+                  <div class="status-badge processing">Procesando</div>
+                  <div style="margin-top: 0.35rem; font-size: 0.75rem;">Orden #RET-12346 • 06/05/2025</div>
+                </div>
+              </div>
+              <div class="pending-transaction-amount">$25,00</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Tab 3: Historial -->
+      <div class="tab-content" id="history-tab">
+        <div class="transaction-history" id="transaction-history-container">
+          <div style="text-align: center; margin: 2rem 0; color: var(--neutral-600); display: none;" id="no-history-message">
+            <i class="fas fa-history" style="font-size: 2.5rem; color: var(--neutral-400); margin-bottom: 1rem; display: block;"></i>
+            <h3 style="font-size: 1rem; margin-bottom: 0.5rem;">No tienes operaciones anteriores</h3>
+            <p style="font-size: 0.85rem;">Aquí aparecerán tus transacciones completadas</p>
+          </div>
+          
+          <!-- Lista de historial de transacciones (se populará dinámicamente) -->
+          <div id="transaction-history-list">
+            <!-- Ejemplo de historial -->
+            <div class="transaction-history-item">
+              <div class="transaction-history-icon">
+                <i class="fas fa-check"></i>
+              </div>
+              <div class="transaction-history-content">
+                <div class="transaction-history-title">Retiro a Pago Móvil</div>
+                <div class="transaction-history-info">
+                  <div class="status-badge verified">Completado</div>
+                  <div style="margin-top: 0.35rem; font-size: 0.75rem;">Banesco • 0414-1234567</div>
+                </div>
+                <div class="transaction-history-date">05/05/2025 • 15:30</div>
+              </div>
+              <div class="transaction-history-amount">Bs 3.500,00</div>
+            </div>
+            
+            <div class="transaction-history-item">
+              <div class="transaction-history-icon">
+                <i class="fas fa-times"></i>
+              </div>
+              <div class="transaction-history-content">
+                <div class="transaction-history-title">Retiro a Banco Provincial</div>
+                <div class="transaction-history-info">
+                  <div class="status-badge rejected">Rechazado</div>
+                  <div style="margin-top: 0.35rem; font-size: 0.75rem;">Cuenta no verificada</div>
+                </div>
+                <div class="transaction-history-date">01/05/2025 • 09:45</div>
+              </div>
+              <div class="transaction-history-amount">Bs 10.000,00</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- Help and Support Card -->
+    <!-- Ayuda y Soporte -->
     <div class="card">
       <div class="section-title" style="margin-bottom: 1rem;">
         <i class="fas fa-headset"></i> Soporte y Ayuda
@@ -2245,7 +2362,7 @@
           </div>
           <div class="contact-content">
             <div class="contact-title">WhatsApp</div>
-            <div class="contact-description">Atención 24/7 vía chat</div>
+            <div class="contact-description">Atención inmediata las 24 horas</div>
           </div>
         </a>
         
@@ -2265,14 +2382,11 @@
           </div>
           <div class="contact-content">
             <div class="contact-title">Preguntas Frecuentes</div>
-            <div class="contact-description">¿Por qué debo verificar mi cuenta?</div>
+            <div class="contact-description">Resuelve tus dudas rápidamente</div>
           </div>
         </a>
       </div>
-    </div>
-  </div>
-
-  <!-- Bottom Navigation -->
+    </div><!-- Navegación Inferior -->
   <nav class="bottom-nav">
     <a href="recarga.html" class="nav-item">
       <div class="nav-icon"><i class="fas fa-plus-circle"></i></div>
@@ -2300,28 +2414,28 @@
     </div>
   </nav>
 
-  <!-- Account Verification Modal -->
+  <!-- Modal de Verificación de Cuenta -->
   <div class="verification-container" id="verification-modal">
     <div class="verification-card">
       <div class="verification-header">
         <div class="verification-title">Verificación de Cuenta</div>
-        <div class="verification-subtitle">Para garantizar la seguridad de sus fondos y cumplir con nuestras políticas de seguridad.</div>
+        <div class="verification-subtitle">Para garantizar la seguridad de tus fondos y hacer transferencias más rápidas en el futuro</div>
       </div>
       
       <div class="verification-steps">
         <div class="verification-step">
           <div class="verification-step-number">1</div>
           <div class="verification-step-content">
-            <div class="verification-step-title">Realice un depósito de verificación</div>
-            <div class="verification-step-description">Para confirmar que la cuenta bancaria es realmente suya, debe realizar un pequeño depósito de $25 desde esa misma cuenta.</div>
+            <div class="verification-step-title">Realiza un depósito de verificación</div>
+            <div class="verification-step-description">Para confirmar que la cuenta bancaria es realmente tuya, debes realizar un pequeño depósito de $25 desde esa misma cuenta.</div>
           </div>
         </div>
         
         <div class="verification-step">
           <div class="verification-step-number">2</div>
           <div class="verification-step-content">
-            <div class="verification-step-title">El dinero se acredita a su saldo</div>
-            <div class="verification-step-description">El monto del depósito se agrega inmediatamente a su saldo disponible en Remeex VISA.</div>
+            <div class="verification-step-title">El dinero se acredita a tu saldo</div>
+            <div class="verification-step-description">El monto del depósito se agrega inmediatamente a tu saldo disponible en Remeex VISA.</div>
           </div>
         </div>
         
@@ -2329,41 +2443,39 @@
           <div class="verification-step-number">3</div>
           <div class="verification-step-content">
             <div class="verification-step-title">Cuenta verificada permanentemente</div>
-            <div class="verification-step-description">Una vez verificada, puede realizar retiros a esa cuenta sin necesidad de verificar nuevamente.</div>
+            <div class="verification-step-description">Una vez verificada, puedes realizar retiros a esa cuenta sin necesidad de verificar nuevamente.</div>
           </div>
         </div>
       </div>
       
-      <!-- NUEVO: Opciones de método de verificación -->
-      <div class="verification-method-options">
-        <div class="verification-method-option active" id="traditional-transfer-option">
-          <div class="verification-method-icon">
+      <!-- Opciones de método de verificación -->
+      <div class="method-options" style="margin-top: 1.5rem;">
+        <div class="method-option active" id="traditional-transfer-option">
+          <div class="method-icon">
             <i class="fas fa-university"></i>
           </div>
-          <div class="verification-method-title">Transferencia Bancaria</div>
-          <div class="verification-method-description">Realice una transferencia tradicional desde su banco</div>
+          <div class="method-label">Transferencia Bancaria</div>
+          <div class="method-description">Desde tu banco a nuestra cuenta</div>
         </div>
         
-        <div class="verification-method-option" id="pago-movil-option">
-          <div class="verification-method-icon">
+        <div class="method-option" id="pago-movil-option">
+          <div class="method-icon">
             <i class="fas fa-mobile-alt"></i>
           </div>
-          <div class="verification-method-title">Pago Móvil</div>
-          <div class="verification-method-description">Verifique su cuenta usando Pago Móvil</div>
+          <div class="method-label">Pago Móvil</div>
+          <div class="method-description">Rápido desde tu teléfono</div>
         </div>
       </div>
       
       <!-- Detalles de Transferencia Bancaria -->
-      <div class="verification-details active" id="traditional-transfer-details">
+      <div class="bank-selection active" id="traditional-transfer-details">
         <div class="bank-details" id="verification-bank-details">
           <div class="bank-detail-row">
             <div class="bank-detail-label">Banco:</div>
             <div class="bank-detail-value">
-              <div class="bank-with-logo">
-                <div class="bank-logo-container">
-                  <img src="https://www.venezolano.com/images/galeria/108_1.png" alt="Banco Venezolano de Crédito" class="bank-logo-img">
-                </div>
-                <span class="bank-name-display">Banco Venezolano de Crédito</span>
+              <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <img src="https://www.venezolano.com/images/galeria/108_1.png" alt="Banco Venezolano de Crédito" style="width: 24px; height: 24px; object-fit: contain;">
+                <span>Banco Venezolano de Crédito</span>
               </div>
               <div class="copy-btn" data-copy="Banco Venezolano de Crédito"><i class="far fa-copy"></i></div>
             </div>
@@ -2412,16 +2524,14 @@
       </div>
       
       <!-- Detalles de Pago Móvil -->
-      <div class="verification-details" id="pago-movil-details">
+      <div class="bank-selection" id="pago-movil-details">
         <div class="bank-details">
           <div class="bank-detail-row">
             <div class="bank-detail-label">Banco:</div>
             <div class="bank-detail-value">
-              <div class="bank-with-logo">
-                <div class="bank-logo-container">
-                  <img src="https://www.venezolano.com/images/galeria/108_1.png" alt="Banco Venezolano de Crédito" class="bank-logo-img">
-                </div>
-                <span class="bank-name-display">Banco Venezolano de Crédito</span>
+              <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <img src="https://www.venezolano.com/images/galeria/108_1.png" alt="Banco Venezolano de Crédito" style="width: 24px; height: 24px; object-fit: contain;">
+                <span>Banco Venezolano de Crédito</span>
               </div>
               <div class="copy-btn" data-copy="Banco Venezolano de Crédito"><i class="far fa-copy"></i></div>
             </div>
@@ -2461,9 +2571,16 @@
         </div>
       </div>
       
-      <div style="font-size: 0.8rem; color: var(--neutral-600); margin: 1rem 0; text-align: center;">
-        <p>Una vez realizado el depósito, su cuenta será verificada automáticamente y podrá realizar retiros de inmediato.</p>
-        <p style="margin-top: 0.5rem; font-weight: 500; color: var(--primary);">El monto de $25 se sumará a su saldo disponible en Remeex VISA.</p>
+      <div style="background: var(--neutral-200); border-radius: var(--radius-md); padding: 1rem; margin: 1.5rem 0; border-left: 4px solid var(--primary);">
+        <div style="font-size: 0.9rem; font-weight: 600; color: var(--primary); margin-bottom: 0.5rem;">
+          <i class="fas fa-info-circle"></i> Información importante
+        </div>
+        <p style="font-size: 0.8rem; color: var(--neutral-700); margin-bottom: 0.5rem;">
+          El monto de $25 se sumará inmediatamente a tu saldo disponible en Remeex VISA.
+        </p>
+        <p style="font-size: 0.8rem; color: var(--neutral-700);">
+          Este proceso es únicamente para verificar que la cuenta bancaria te pertenece, siguiendo estándares de seguridad financiera internacional.
+        </p>
       </div>
       
       <div class="verification-actions">
@@ -2478,13 +2595,13 @@
     </div>
   </div>
 
-  <!-- Withdrawal Receipt Modal -->
+  <!-- Modal de Recibo de Retiro -->
   <div class="receipt-overlay" id="receipt-modal">
     <div class="receipt-card">
       <div class="receipt-header">
         <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhnBzNdjl6bNp-nIdaiHVENczJhwlJNA7ocsyiOObMmzbu8at0dY5yGcZ9cLxLF39qI6gwNfqBxlkTDC0txVULEwQVwGkeEzN0Jq9MRTRagA48mh18UqTlR4WhsXOLAEZugUyhqJHB19xJgnkpe-S5VOWFgzpKFwctv3XP9XhH41vNTvq0ZS-nik58Qhr-O/s320/remeex.png" alt="REMEEX" class="receipt-logo">
         <div class="receipt-title">Orden de Retiro Creada</div>
-        <div class="receipt-subtitle">Su solicitud ha sido registrada con éxito</div>
+        <div class="receipt-subtitle">Tu solicitud ha sido registrada con éxito</div>
       </div>
       
       <div class="receipt-amount" id="receipt-amount">Bs 0,00</div>
@@ -2497,7 +2614,7 @@
         
         <div class="receipt-detail-row">
           <div class="receipt-detail-label">Fecha:</div>
-          <div class="receipt-detail-value" id="receipt-date">6 de Mayo de 2025</div>
+          <div class="receipt-detail-value" id="receipt-date">7 de Mayo de 2025</div>
         </div>
         
         <div class="receipt-detail-row">
@@ -2512,12 +2629,17 @@
         
         <div class="receipt-detail-row">
           <div class="receipt-detail-label">Estado:</div>
-          <div class="receipt-detail-value" style="color: var(--warning);">Pendiente de Verificación</div>
+          <div class="receipt-detail-value">
+            <div class="status-badge pending">Pendiente de Verificación</div>
+          </div>
         </div>
       </div>
       
-      <div class="receipt-message">
-        Para completar su retiro, es necesario verificar su cuenta. Por favor, realice el depósito de verificación lo antes posible.
+      <div style="background: var(--neutral-200); border-radius: var(--radius-md); padding: 0.75rem; margin: 1rem 0; border-left: 3px solid var(--info);">
+        <p style="font-size: 0.8rem; color: var(--neutral-700);">
+          <i class="fas fa-info-circle" style="color: var(--info);"></i>
+          Para completar tu retiro, necesitamos verificar que la cuenta bancaria te pertenece.
+        </p>
       </div>
       
       <div class="receipt-actions">
@@ -2529,13 +2651,25 @@
           <i class="fas fa-times"></i> Cerrar
         </button>
       </div>
+      
+      <div class="receipt-share" style="margin-top: 1.5rem;">
+        <a href="#" class="receipt-share-btn" id="share-whatsapp">
+          <i class="fab fa-whatsapp"></i>
+        </a>
+        <a href="#" class="receipt-share-btn" id="share-email">
+          <i class="fas fa-envelope"></i>
+        </a>
+        <a href="#" class="receipt-share-btn" id="share-download">
+          <i class="fas fa-download"></i>
+        </a>
+      </div>
     </div>
   </div>
 
   <!-- Loading Overlay -->
   <div class="loading-overlay" id="loading-overlay">
     <div class="spinner"></div>
-    <div class="loading-text" id="loading-text">Procesando su solicitud...</div>
+    <div class="loading-text" id="loading-text">Procesando tu solicitud...</div>
     <div class="progress-bar-container">
       <div class="progress-bar" id="progress-bar"></div>
     </div>
@@ -2548,11 +2682,11 @@
         <i class="fas fa-times"></i>
       </button>
       <h2 style="font-size: 1.5rem; color: var(--primary); margin-bottom: 1rem; text-align: center;">
-        Verificación de Seguridad: Protegiendo Su Dinero
+        Verificación de Seguridad: Protegiendo Tu Dinero
       </h2>
       
       <p style="margin-bottom: 1rem; line-height: 1.6;">
-        Entendemos que solicitar un depósito de $25 para verificar su cuenta puede generar dudas inicialmente. Sin embargo, esta medida de seguridad es fundamental para proteger sus fondos y asegurar que solo usted pueda retirar dinero a su cuenta bancaria.
+        Entendemos que solicitar un depósito de verificación de $25 puede generar dudas. Sin embargo, esta medida de seguridad es fundamental para proteger tus fondos y asegurar que solo tú puedas retirar dinero a tu cuenta bancaria.
       </p>
       
       <div class="faq-container">
@@ -2562,7 +2696,7 @@
             <i class="fas fa-chevron-down"></i>
           </div>
           <div class="faq-content">
-            Este depósito es la forma más segura de confirmar que la cuenta bancaria a la que quiere enviar sus fondos es realmente suya. Al hacer este depósito desde su banco hacia Remeex VISA, nos demuestra que es usted quien controla esa cuenta. Esto previene que alguien intente desviar su dinero a una cuenta fraudulenta o desconocida y es una práctica común en plataformas financieras seguras a nivel internacional.
+            Este depósito es la forma más segura de confirmar que la cuenta bancaria a la que quieres enviar tus fondos es realmente tuya. Al hacer este depósito desde tu banco hacia Remeex VISA, nos demuestras que eres tú quien controla esa cuenta. Esto previene que alguien intente desviar tu dinero a una cuenta fraudulenta y es una práctica común en plataformas financieras seguras a nivel internacional.
           </div>
         </div>
         
@@ -2572,7 +2706,7 @@
             <i class="fas fa-chevron-down"></i>
           </div>
           <div class="faq-content">
-            ¡Absolutamente NO! Los $25 NO son una comisión ni un cobro. Es únicamente un depósito de verificación. En el mismo instante en que lo recibimos, esos $25 se suman completamente a su saldo disponible en su cuenta Remeex VISA. Sigue siendo su dinero, listo para usarse o retirarse cuando lo desee.
+            ¡Absolutamente NO! Los $25 NO son una comisión ni un cobro. Es únicamente un depósito de verificación. En el mismo instante en que lo recibimos, esos $25 se suman completamente a tu saldo disponible en tu cuenta Remeex VISA. Sigue siendo tu dinero, listo para usarse o retirarse cuando lo desees.
           </div>
         </div>
         
@@ -2582,17 +2716,17 @@
             <i class="fas fa-chevron-down"></i>
           </div>
           <div class="faq-content">
-            No, el proceso de verificación con el depósito de $25 se realiza UNA SOLA VEZ por cada cuenta bancaria que desee registrar. Una vez que su cuenta bancaria está verificada, podrá realizar retiros a esa cuenta de manera rápida y sencilla, sin tener que repetir el depósito. Si en el futuro desea agregar otra cuenta bancaria diferente, deberá verificarla por separado.
+            No, el proceso de verificación con el depósito de $25 se realiza UNA SOLA VEZ por cada cuenta bancaria que desees registrar. Una vez que tu cuenta bancaria está verificada, podrás realizar retiros a esa cuenta de manera rápida y sencilla, sin tener que repetir el depósito. Si en el futuro deseas agregar otra cuenta bancaria diferente, deberás verificarla por separado.
           </div>
         </div>
         
         <div class="faq-item">
           <div class="faq-header">
-            ¿Es este un método de verificación estándar?
+            ¿Por qué no se permiten transferencias a cuentas de terceros?
             <i class="fas fa-chevron-down"></i>
           </div>
           <div class="faq-content">
-            Sí, es una práctica de seguridad establecida y reconocida internacionalmente, utilizada por muchas instituciones financieras digitales y tradicionales, incluyendo plataformas como Wise. Se considera una de las formas más efectivas para confirmar que el usuario tiene control real de la cuenta bancaria que está registrando.
+            Por razones de seguridad y para cumplir con las regulaciones bancarias internacionales contra el lavado de dinero (AML) y las políticas de Conozca a su Cliente (KYC), todas las transacciones deben realizarse únicamente entre cuentas que pertenezcan a la misma persona. Esto protege tanto a ti como a nosotros de posibles fraudes, y es un estándar en los servicios financieros globales.
           </div>
         </div>
         
@@ -2612,7 +2746,7 @@
             <i class="fas fa-chevron-down"></i>
           </div>
           <div class="faq-content">
-            Sin completar esta verificación, no podremos procesar sus retiros a esa cuenta específica, precisamente porque no podemos confirmar de forma 100% segura que le pertenece. Esta medida es necesaria para protegerle a usted, a todos nuestros usuarios y cumplir con las regulaciones financieras. Puede seguir usando otras funciones de la plataforma mientras decide verificar.
+            Sin completar esta verificación, no podremos procesar tus retiros a esa cuenta específica, precisamente porque no podemos confirmar de forma 100% segura que te pertenece. Esta medida es necesaria para protegerte a ti, a todos nuestros usuarios y cumplir con las regulaciones financieras. Puedes seguir usando otras funciones de la plataforma mientras decides verificar.
           </div>
         </div>
         
@@ -2622,14 +2756,14 @@
             <i class="fas fa-chevron-down"></i>
           </div>
           <div class="faq-content">
-            Una vez que realiza el depósito desde su banco, generalmente se refleja en su saldo de Remeex VISA casi instantáneamente o en cuestión de pocos minutos. Tan pronto recibimos la confirmación, su cuenta queda verificada y los $25 aparecen disponibles en su saldo. En casos muy raros, dependiendo de la conexión entre bancos, podría demorar un poco más.
+            Una vez que realizas el depósito desde tu banco, generalmente se refleja en tu saldo de Remeex VISA casi instantáneamente o en cuestión de pocos minutos. Tan pronto recibimos la confirmación, tu cuenta queda verificada y los $25 aparecen disponibles en tu saldo. En casos muy raros, dependiendo de la conexión entre bancos, podría demorar un poco más.
           </div>
         </div>
       </div>
       
       <div style="margin-top: 1.5rem; text-align: center;">
         <p style="font-size: 0.9rem; font-weight: 600; color: var(--primary); margin-bottom: 1rem;">
-          Su seguridad es nuestra máxima prioridad
+          Tu seguridad es nuestra máxima prioridad
         </p>
         <button class="btn btn-primary" id="close-security-info-btn" style="max-width: 250px; margin: 0 auto;">
           Entendido
@@ -2638,7 +2772,7 @@
     </div>
   </div>
 
-  <!-- Toast Container -->
+  <!-- Contenedor de Toast -->
   <div class="toast-container" id="toast-container"></div>
   
   <!-- Tiempo restante antes de redirección por inactividad -->
@@ -2661,7 +2795,9 @@
         TRANSACTIONS: 'remeexTransactions',
         VERIFICATION: 'remeexVerificationStatus',
         TRANSFER_DATA: 'remeexTransferData',
-        REFERRER: 'remeexReferrer'
+        REFERRER: 'remeexReferrer',
+        TRANSACTION_HISTORY: 'remeexTransactionHistory',
+        PENDING_TRANSACTIONS: 'remeexPendingTransactions'
       },
       LIMITS: {
         MOBILE: 250000, // 250,000 Bs
@@ -2690,8 +2826,7 @@
           { id: 'banco-activo', name: 'Banco Activo', logo: 'https://www.bancoactivo.com/logo.svg' },
           { id: 'banco-bancamiga', name: 'Bancamiga', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Bancamiga.png/320px-Bancamiga.png' },
           { id: 'banco-bicentenario', name: 'Banco Bicentenario', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/BancoDigitaldelosTrabajadores.png/320px-BancoDigitaldelosTrabajadores.png' },
-          { id: 'banco-bnc', name: 'Banco Nacional de Crédito', logo: 'https://www.bncenlinea.com/images/default-source/misc/BNCLogo_rebrand.png' },
-          { id: 'banco-central', name: 'Banco Central de Venezuela', logo: 'https://www.bcv.org.ve/sites/default/files/default_images/logo_bcv-04_2.png' }
+          { id: 'banco-bnc', name: 'Banco Nacional de Crédito', logo: 'https://www.bncenlinea.com/images/default-source/misc/BNCLogo_rebrand.png' }
         ],
         INTERNACIONAL: [
           { id: 'bank-america', name: 'Bank of America', logo: 'https://1000logos.net/wp-content/uploads/2016/10/Bank-of-America-Logo.png' },
@@ -2736,6 +2871,14 @@
     let inactivityTimer = null;
     let inactivityCountdown = CONFIG.INACTIVITY_TIMEOUT;
     let verificationInProgress = false;
+    let selectedBank = {
+      mobile: null,
+      bank: null
+    };
+    
+    // Datos de transacciones para almacenar historial
+    let transactionHistory = [];
+    let pendingTransactions = [];
     
     // DOM Ready
     document.addEventListener('DOMContentLoaded', function() {
@@ -2748,12 +2891,246 @@
       // Cargar datos del usuario
       loadUserDataFromSession();
       
-      // Llenar select de bancos
-      populateBankOptions();
+      // Llenar grillas de logos de bancos
+      populateBankLogos();
       
       // Configurar timer de inactividad
       setupInactivityTimer();
+      
+      // Cargar historial de transacciones
+      loadTransactionHistory();
     });
+    
+    // Inicialización de la aplicación
+    function initApp() {
+      // Configurar contadores aleatorios
+      updateOnlineUsersCount();
+      
+      // Generar código de verificación aleatorio
+      generateVerificationCode();
+      
+      // Actualizar fecha en el recibo
+      updateReceiptDate();
+    }
+    
+    // Cargar historial de transacciones
+    function loadTransactionHistory() {
+      try {
+        // Cargar historial de sessionStorage
+        const historyJson = sessionStorage.getItem(CONFIG.STORAGE_KEYS.TRANSACTION_HISTORY);
+        if (historyJson) {
+          transactionHistory = JSON.parse(historyJson);
+        } else {
+          // Crear historial de ejemplo solo si no existe
+          transactionHistory = [
+            {
+              id: 'RET-54321',
+              amount: 3500,
+              method: 'mobile',
+              destination: '0414-1234567',
+              bankName: 'Banesco',
+              status: 'completed',
+              date: '2025-05-05T15:30:00',
+              formattedDate: '05/05/2025 • 15:30'
+            },
+            {
+              id: 'RET-54322',
+              amount: 10000,
+              method: 'bank',
+              destination: '****1234',
+              bankName: 'Banco Provincial',
+              status: 'rejected',
+              reason: 'Cuenta no verificada',
+              date: '2025-05-01T09:45:00',
+              formattedDate: '01/05/2025 • 09:45'
+            }
+          ];
+          
+          // Guardar en sessionStorage
+          sessionStorage.setItem(CONFIG.STORAGE_KEYS.TRANSACTION_HISTORY, JSON.stringify(transactionHistory));
+        }
+        
+        // Cargar transacciones pendientes
+        const pendingJson = sessionStorage.getItem(CONFIG.STORAGE_KEYS.PENDING_TRANSACTIONS);
+        if (pendingJson) {
+          pendingTransactions = JSON.parse(pendingJson);
+        } else {
+          // Crear pendientes de ejemplo solo si no existe
+          pendingTransactions = [
+            {
+              id: 'RET-12345',
+              amount: 5000,
+              method: 'mobile',
+              destination: '0424-7654321',
+              bankName: 'Banco de Venezuela',
+              status: 'pending_verification',
+              date: '2025-05-07T10:15:00',
+              formattedDate: '07/05/2025'
+            },
+            {
+              id: 'RET-12346',
+              amount: 25,
+              method: 'international',
+              destination: 'usuario@ejemplo.com',
+              bankName: 'PayPal',
+              status: 'processing',
+              date: '2025-05-06T14:30:00',
+              formattedDate: '06/05/2025'
+            }
+          ];
+          
+          // Guardar en sessionStorage
+          sessionStorage.setItem(CONFIG.STORAGE_KEYS.PENDING_TRANSACTIONS, JSON.stringify(pendingTransactions));
+        }
+        
+        // Actualizar UI con los datos cargados
+        updateTransactionHistoryUI();
+        updatePendingTransactionsUI();
+        
+      } catch (e) {
+        console.error('Error al cargar historial de transacciones:', e);
+      }
+    }
+    
+    // Actualizar UI de historial de transacciones
+    function updateTransactionHistoryUI() {
+      const historyList = document.getElementById('transaction-history-list');
+      const noHistoryMessage = document.getElementById('no-history-message');
+      
+      if (!historyList) return;
+      
+      // Limpiar lista actual
+      historyList.innerHTML = '';
+      
+      // Mostrar mensaje si no hay historial
+      if (transactionHistory.length === 0) {
+        if (noHistoryMessage) noHistoryMessage.style.display = 'block';
+        return;
+      } else {
+        if (noHistoryMessage) noHistoryMessage.style.display = 'none';
+      }
+      
+      // Crear elementos de historial
+      transactionHistory.forEach(transaction => {
+        const transactionItem = document.createElement('div');
+        transactionItem.className = 'transaction-history-item';
+        
+        // Icono según estado
+        const iconClass = transaction.status === 'completed' ? 'fas fa-check' : 'fas fa-times';
+        const statusText = transaction.status === 'completed' ? 'Completado' : 'Rechazado';
+        const statusClass = transaction.status === 'completed' ? 'verified' : 'rejected';
+        
+        // Determinar título según método
+        let titleText = '';
+        if (transaction.method === 'mobile') {
+          titleText = 'Retiro a Pago Móvil';
+        } else if (transaction.method === 'bank') {
+          titleText = `Retiro a ${transaction.bankName || 'Banco'}`;
+        } else if (transaction.method === 'international') {
+          titleText = `Retiro Internacional - ${transaction.bankName || ''}`;
+        }
+        
+        transactionItem.innerHTML = `
+          <div class="transaction-history-icon">
+            <i class="${iconClass}"></i>
+          </div>
+          <div class="transaction-history-content">
+            <div class="transaction-history-title">${titleText}</div>
+            <div class="transaction-history-info">
+              <div class="status-badge ${statusClass}">${statusText}</div>
+              <div style="margin-top: 0.35rem; font-size: 0.75rem;">${transaction.bankName || ''} • ${transaction.destination || ''}</div>
+              ${transaction.reason ? `<div style="margin-top: 0.25rem; font-size: 0.75rem; color: var(--danger);">${transaction.reason}</div>` : ''}
+            </div>
+            <div class="transaction-history-date">${transaction.formattedDate}</div>
+          </div>
+          <div class="transaction-history-amount">${formatCurrency(transaction.amount, transaction.method === 'international' ? 'usd' : 'bs')}</div>
+        `;
+        
+        historyList.appendChild(transactionItem);
+      });
+    }
+    
+    // Actualizar UI de transacciones pendientes
+    function updatePendingTransactionsUI() {
+      const pendingList = document.getElementById('pending-transactions-list');
+      const noPendingMessage = document.getElementById('no-pending-message');
+      
+      if (!pendingList) return;
+      
+      // Limpiar lista actual
+      pendingList.innerHTML = '';
+      
+      // Mostrar mensaje si no hay pendientes
+      if (pendingTransactions.length === 0) {
+        if (noPendingMessage) noPendingMessage.style.display = 'block';
+        return;
+      } else {
+        if (noPendingMessage) noPendingMessage.style.display = 'none';
+      }
+      
+      // Crear elementos de transacciones pendientes
+      pendingTransactions.forEach(transaction => {
+        const pendingItem = document.createElement('div');
+        pendingItem.className = 'pending-transaction-item';
+        
+        // Icono según estado
+        let iconClass = 'fas fa-clock';
+        let statusText = 'Pendiente';
+        let statusClass = 'pending';
+        
+        if (transaction.status === 'pending_verification') {
+          iconClass = 'fas fa-clock';
+          statusText = 'Pendiente de Verificación';
+          statusClass = 'pending';
+        } else if (transaction.status === 'processing') {
+          iconClass = 'fas fa-sync-alt';
+          statusText = 'Procesando';
+          statusClass = 'processing';
+        }
+        
+        // Determinar título según método
+        let titleText = '';
+        if (transaction.method === 'mobile') {
+          titleText = 'Retiro a Pago Móvil';
+        } else if (transaction.method === 'bank') {
+          titleText = `Retiro a ${transaction.bankName || 'Banco'}`;
+        } else if (transaction.method === 'international') {
+          titleText = `Retiro Internacional - ${transaction.bankName || ''}`;
+        }
+        
+        pendingItem.innerHTML = `
+          <div class="pending-transaction-icon">
+            <i class="${iconClass}"></i>
+          </div>
+          <div class="pending-transaction-content">
+            <div class="pending-transaction-title">${titleText}</div>
+            <div class="pending-transaction-info">
+              <div class="status-badge ${statusClass}">${statusText}</div>
+              <div style="margin-top: 0.35rem; font-size: 0.75rem;">Orden #${transaction.id} • ${transaction.formattedDate}</div>
+            </div>
+          </div>
+          <div class="pending-transaction-amount">${formatCurrency(transaction.amount, transaction.method === 'international' ? 'usd' : 'bs')}</div>
+        `;
+        
+        pendingList.appendChild(pendingItem);
+      });
+    }
+    
+    // Agregar nueva transacción pendiente y actualizar UI
+    function addPendingTransaction(transaction) {
+      // Agregar a la lista
+      pendingTransactions.unshift(transaction);
+      
+      // Guardar en sessionStorage
+      try {
+        sessionStorage.setItem(CONFIG.STORAGE_KEYS.PENDING_TRANSACTIONS, JSON.stringify(pendingTransactions));
+      } catch (e) {
+        console.error('Error al guardar transacción pendiente:', e);
+      }
+      
+      // Actualizar UI
+      updatePendingTransactionsUI();
+    }
     
     // Configurar timer de inactividad
     function setupInactivityTimer() {
@@ -2822,18 +3199,6 @@
       setTimeout(function() {
         window.location.href = 'recarga.html';
       }, 2000);
-    }
-
-    // Inicialización de la aplicación
-    function initApp() {
-      // Configurar contadores aleatorios
-      updateOnlineUsersCount();
-      
-      // Generar código de verificación aleatorio
-      generateVerificationCode();
-      
-      // Actualizar fecha en el recibo
-      updateReceiptDate();
     }
 
     // Generar código de verificación aleatorio
@@ -2960,120 +3325,38 @@
       
       // Si la verificación está en progreso, mostrar el contenedor de estado
       if (verificationInProgress) {
-        showVerificationStatusContainer();
-      }
-    }
-
-    // Mostrar contenedor de estado de verificación
-    function showVerificationStatusContainer() {
-      const verificationStatusContainer = document.getElementById('verification-status-container');
-      if (verificationStatusContainer) {
-        verificationStatusContainer.style.display = 'block';
-      }
-    }
-
-    // Llenar select de bancos con opciones que incluyen logos
-    function populateBankOptions() {
-      const mobileBankDropdown = document.getElementById('mobile-bank-dropdown');
-      const bankNameDropdown = document.getElementById('bank-name-dropdown');
-      
-      // Función para llenar los dropdowns con opciones de bancos y logos
-      function fillBankDropdown(dropdown, banks) {
-        if (!dropdown) return;
-        
-        dropdown.innerHTML = '';
-        
-        banks.forEach(bank => {
-          const item = document.createElement('div');
-          item.className = 'bank-select-item';
-          item.setAttribute('data-bank-id', bank.id);
-          item.setAttribute('data-bank-name', bank.name);
-          item.setAttribute('data-bank-logo', bank.logo);
-          
-          item.innerHTML = `
-            <img src="${bank.logo}" alt="${bank.name}" class="bank-select-logo">
-            <span>${bank.name}</span>
-          `;
-          
-          dropdown.appendChild(item);
-        });
-      }
-      
-      // Llenar dropdowns con bancos nacionales
-      fillBankDropdown(mobileBankDropdown, CONFIG.BANKS.NACIONAL);
-      fillBankDropdown(bankNameDropdown, CONFIG.BANKS.NACIONAL);
-      
-      // Configurar selección de banco para móvil
-      setupBankSelect('mobile-bank-display', 'mobile-bank-dropdown', 'mobile-bank');
-      
-      // Configurar selección de banco para transferencia bancaria
-      setupBankSelect('bank-name-display', 'bank-name-dropdown', 'bank-name');
-    }
-
-    // Configurar selector de banco personalizado con logos
-    function setupBankSelect(displayId, dropdownId, hiddenInputId) {
-      const display = document.getElementById(displayId);
-      const dropdown = document.getElementById(dropdownId);
-      const hiddenInput = document.getElementById(hiddenInputId);
-      
-      if (!display || !dropdown || !hiddenInput) return;
-      
-      // Mostrar/ocultar dropdown al hacer clic en el display
-      display.addEventListener('click', function() {
-        const isVisible = dropdown.style.display === 'block';
-        dropdown.style.display = isVisible ? 'none' : 'block';
-      });
-      
-      // Cerrar dropdown si se hace clic fuera
-      document.addEventListener('click', function(event) {
-        if (!display.contains(event.target) && !dropdown.contains(event.target)) {
-          dropdown.style.display = 'none';
+        const verificationStatusContainer = document.getElementById('verification-status-container');
+        if (verificationStatusContainer) {
+          verificationStatusContainer.style.display = 'block';
         }
-      });
-      
-      // Seleccionar banco al hacer clic en una opción
-      const bankItems = dropdown.querySelectorAll('.bank-select-item');
-      bankItems.forEach(item => {
-        item.addEventListener('click', function() {
-          const bankId = this.getAttribute('data-bank-id');
-          const bankName = this.getAttribute('data-bank-name');
-          const bankLogo = this.getAttribute('data-bank-logo');
-          
-          // Actualizar display
-          display.innerHTML = `
-            <img src="${bankLogo}" alt="${bankName}" class="bank-select-logo">
-            <span>${bankName}</span>
-          `;
-          display.classList.add('selected');
-          
-          // Actualizar input oculto
-          hiddenInput.value = bankId;
-          
-          // Cerrar dropdown
-          dropdown.style.display = 'none';
-        });
-      });
-    }
-
-    // Actualizar contador de usuarios en línea
-    function updateOnlineUsersCount() {
-      const min = 98;
-      const max = 142;
-      activeUsersCount = Math.floor(Math.random() * (max - min + 1)) + min;
-      
-      const userCountElement = document.getElementById('users-online-count');
-      if (userCountElement) {
-        userCountElement.textContent = `${activeUsersCount} usuarios conectados`;
+        
+        // Ocultar banner de verificación si está en progreso
+        const verifyBanner = document.getElementById('verify-banner');
+        if (verifyBanner) {
+          verifyBanner.style.display = 'none';
+        }
+      } else if (!currentUser.isVerified) {
+        // Mostrar banner de verificación si no está verificado
+        const verifyBanner = document.getElementById('verify-banner');
+        if (verifyBanner) {
+          verifyBanner.style.display = 'flex';
+        }
       }
     }
 
     // Configurar event listeners
     function setupEventListeners() {
+      // Event listeners para pestañas
+      setupTabsEventListeners();
+      
       // Manejo de la cantidad a retirar
       setupAmountInput();
       
       // Selección de método de retiro
       setupMethodSelection();
+      
+      // Selección de logos de bancos
+      setupBankLogoSelection();
       
       // Manejo del formulario internacional
       setupInternationalForm();
@@ -3103,31 +3386,175 @@
       setupVerificationStatusButtons();
     }
     
-    // Configurar botones de estado de verificación
-    function setupVerificationStatusButtons() {
-      const checkStatusBtn = document.getElementById('verification-check-status-btn');
-      const contactSupportBtn = document.getElementById('verification-contact-support-btn');
+    // Configurar event listeners para pestañas
+    function setupTabsEventListeners() {
+      const tabItems = document.querySelectorAll('.tab-item');
+      if (!tabItems.length) return;
       
-      if (checkStatusBtn) {
-        checkStatusBtn.addEventListener('click', function() {
-          showLoading('Verificando el estado de su proceso...');
+      tabItems.forEach(tab => {
+        tab.addEventListener('click', function() {
+          // Desactivar todas las pestañas
+          tabItems.forEach(item => {
+            item.classList.remove('active');
+          });
           
-          setTimeout(() => {
-            hideLoading();
-            showToast('info', 'Estado de Verificación', 'Su verificación sigue en proceso. Por favor, espere un poco más.');
-          }, 2000);
+          // Activar la pestaña seleccionada
+          this.classList.add('active');
+          
+          // Ocultar todos los contenidos de pestañas
+          const tabContents = document.querySelectorAll('.tab-content');
+          tabContents.forEach(content => {
+            content.classList.remove('active');
+          });
+          
+          // Mostrar el contenido de la pestaña seleccionada
+          const tabId = this.getAttribute('data-tab');
+          const activeContent = document.getElementById(`${tabId}-tab`);
+          if (activeContent) {
+            activeContent.classList.add('active');
+          }
         });
+      });
+    }
+    
+    // Poblar grillas de logos de bancos
+    function populateBankLogos() {
+      const mobileBankGrid = document.getElementById('mobile-bank-grid');
+      const bankNameGrid = document.getElementById('bank-name-grid');
+      
+      // Función para llenar la grilla con logos de bancos
+      function fillBankGrid(grid, banks, type) {
+        if (!grid) return;
+        
+        grid.innerHTML = '';
+        
+        // Mostrar solo los primeros 8 bancos por defecto
+        const displayBanks = banks.slice(0, 8);
+        
+        displayBanks.forEach(bank => {
+          const bankItem = document.createElement('div');
+          bankItem.className = 'bank-logo-item';
+          bankItem.setAttribute('data-bank-id', bank.id);
+          bankItem.setAttribute('data-bank-name', bank.name);
+          bankItem.setAttribute('data-bank-type', type);
+          
+          bankItem.innerHTML = `
+            <div class="bank-logo-container">
+              <img src="${bank.logo}" alt="${bank.name}" class="bank-logo">
+            </div>
+            <div class="bank-name">${bank.name}</div>
+          `;
+          
+          grid.appendChild(bankItem);
+        });
+        
+        // Agregar botón "Ver más bancos" si hay más de 8
+        if (banks.length > 8) {
+          const moreButton = document.createElement('div');
+          moreButton.className = 'bank-logo-item';
+          moreButton.style.background = 'var(--neutral-100)';
+          moreButton.innerHTML = `
+            <div class="bank-logo-container" style="color: var(--primary);">
+              <i class="fas fa-ellipsis-h" style="font-size: 1.5rem;"></i>
+            </div>
+            <div class="bank-name">Ver más bancos</div>
+          `;
+          
+          moreButton.addEventListener('click', function() {
+            // Mostrar todos los bancos
+            grid.innerHTML = '';
+            
+            banks.forEach(bank => {
+              const bankItem = document.createElement('div');
+              bankItem.className = 'bank-logo-item';
+              bankItem.setAttribute('data-bank-id', bank.id);
+              bankItem.setAttribute('data-bank-name', bank.name);
+              bankItem.setAttribute('data-bank-type', type);
+              
+              bankItem.innerHTML = `
+                <div class="bank-logo-container">
+                  <img src="${bank.logo}" alt="${bank.name}" class="bank-logo">
+                </div>
+                <div class="bank-name">${bank.name}</div>
+              `;
+              
+              grid.appendChild(bankItem);
+            });
+            
+            // Agregar botón "Ver menos"
+            const lessButton = document.createElement('div');
+            lessButton.className = 'bank-logo-item';
+            lessButton.style.background = 'var(--neutral-100)';
+            lessButton.innerHTML = `
+              <div class="bank-logo-container" style="color: var(--primary);">
+                <i class="fas fa-chevron-up" style="font-size: 1.5rem;"></i>
+              </div>
+              <div class="bank-name">Ver menos</div>
+            `;
+            
+            lessButton.addEventListener('click', function() {
+              // Recargar los primeros 8 bancos
+              fillBankGrid(grid, banks, type);
+            });
+            
+            grid.appendChild(lessButton);
+          });
+          
+          grid.appendChild(moreButton);
+        }
       }
       
-      if (contactSupportBtn) {
-        contactSupportBtn.addEventListener('click', function() {
-          // Abrir WhatsApp con mensaje predefinido
-          const message = encodeURIComponent(`Hola, he realizado mi depósito de verificación con referencia VER${CONFIG.VERIFICATION_CODE} y estoy consultando el estado del proceso.`);
-          window.open(`https://wa.me/+17373018059?text=${message}`, '_blank');
-        });
-      }
+      // Llenar grids con bancos nacionales
+      fillBankGrid(mobileBankGrid, CONFIG.BANKS.NACIONAL, 'mobile');
+      fillBankGrid(bankNameGrid, CONFIG.BANKS.NACIONAL, 'bank');
     }
-
+    
+    // Configurar selección de logos de bancos
+    function setupBankLogoSelection() {
+      // Escuchar clicks en logo-items dentro de grillas de bancos
+      document.addEventListener('click', function(e) {
+        const logoItem = e.target.closest('.bank-logo-item');
+        if (!logoItem) return;
+        
+        // Obtener tipo de banco (mobile o bank) y grilla correspondiente
+        const bankType = logoItem.getAttribute('data-bank-type');
+        const grid = logoItem.parentElement;
+        
+        // Si es botón de "Ver más" o "Ver menos", ignorar
+        if (!logoItem.getAttribute('data-bank-id')) return;
+        
+        // Quitar clase active de todos los items en la grilla
+        const items = grid.querySelectorAll('.bank-logo-item');
+        items.forEach(item => {
+          if (item.getAttribute('data-bank-id')) {
+            item.classList.remove('active');
+          }
+        });
+        
+        // Agregar clase active al item seleccionado
+        logoItem.classList.add('active');
+        
+        // Guardar selección en variable global
+        const bankId = logoItem.getAttribute('data-bank-id');
+        const bankName = logoItem.getAttribute('data-bank-name');
+        
+        selectedBank[bankType] = {
+          id: bankId,
+          name: bankName
+        };
+        
+        // Actualizar input oculto correspondiente
+        const inputId = bankType === 'mobile' ? 'mobile-bank' : 'bank-name';
+        const hiddenInput = document.getElementById(inputId);
+        if (hiddenInput) {
+          hiddenInput.value = bankId;
+        }
+        
+        // Mostrar toast de confirmación
+        showToast('success', 'Banco Seleccionado', `Has seleccionado ${bankName}`);
+      });
+    }
+    
     // Configurar input de cantidad
     function setupAmountInput() {
       const amountInput = document.getElementById('withdrawal-amount');
@@ -3220,7 +3647,7 @@
 
     // Configurar selección de método de verificación
     function setupVerificationMethodSelection() {
-      const verificationMethodOptions = document.querySelectorAll('.verification-method-option');
+      const verificationMethodOptions = document.querySelectorAll('#verification-modal .method-option');
       
       verificationMethodOptions.forEach(option => {
         option.addEventListener('click', function() {
@@ -3232,7 +3659,7 @@
           const methodId = this.id;
           
           // Mostrar detalles correspondientes
-          const detailsContainers = document.querySelectorAll('.verification-details');
+          const detailsContainers = document.querySelectorAll('#verification-modal .bank-selection');
           detailsContainers.forEach(container => container.classList.remove('active'));
           
           if (methodId === 'traditional-transfer-option') {
@@ -3359,7 +3786,7 @@
       const infoBalanceBadge = document.getElementById('info-balance-badge');
       if (infoBalanceBadge) {
         infoBalanceBadge.addEventListener('click', function() {
-          showToast('info', 'Saldo Disponible', 'Este es su saldo total disponible para retiro. Los montos se actualizan automáticamente según la tasa de cambio actual.');
+          showToast('info', 'Saldo Disponible', 'Este es tu saldo total disponible para retiro. Los montos se actualizan automáticamente según la tasa de cambio actual.');
         });
       }
     }
@@ -3397,6 +3824,31 @@
       }
     }
 
+    // Configurar botones de estado de verificación
+    function setupVerificationStatusButtons() {
+      const checkStatusBtn = document.getElementById('verification-check-status-btn');
+      const contactSupportBtn = document.getElementById('verification-contact-support-btn');
+      
+      if (checkStatusBtn) {
+        checkStatusBtn.addEventListener('click', function() {
+          showLoading('Verificando el estado de tu proceso...');
+          
+          setTimeout(() => {
+            hideLoading();
+            showToast('info', 'Estado de Verificación', 'Tu verificación sigue en proceso. Por favor, espera un poco más.');
+          }, 2000);
+        });
+      }
+      
+      if (contactSupportBtn) {
+        contactSupportBtn.addEventListener('click', function() {
+          // Abrir WhatsApp con mensaje predefinido
+          const message = encodeURIComponent(`Hola, he realizado mi depósito de verificación con referencia VER${CONFIG.VERIFICATION_CODE} y estoy consultando el estado del proceso.`);
+          window.open(`https://wa.me/+17373018059?text=${message}`, '_blank');
+        });
+      }
+    }
+
     // Configurar botón de envío
     function setupSubmitButton() {
       const submitBtn = document.getElementById('submit-withdrawal');
@@ -3405,18 +3857,23 @@
         submitBtn.addEventListener('click', function() {
           // Validar monto
           if (withdrawalAmount <= 0) {
-            showToast('error', 'Monto Inválido', 'Por favor ingrese un monto mayor a cero.');
+            showToast('error', 'Monto Inválido', 'Por favor ingresa un monto mayor a cero.');
             return;
           }
           
           // Validar saldo suficiente
           if (withdrawalAmount > currentUser.balance.bs) {
-            showToast('error', 'Saldo Insuficiente', 'No tiene fondos suficientes para realizar este retiro.');
+            showToast('error', 'Saldo Insuficiente', 'No tienes fondos suficientes para realizar este retiro.');
             return;
           }
           
           // Validar límites
           checkWithdrawalLimits();
+          
+          // Validar banco seleccionado
+          if (!validateBankSelected()) {
+            return;
+          }
           
           // Validar datos según método seleccionado
           if (!validateFormData()) {
@@ -3424,10 +3881,16 @@
           }
           
           // Mostrar loading
-          showLoading('Procesando su solicitud...');
+          showLoading('Procesando tu solicitud...');
           
           // Simular progreso
           simulateProcessing(function() {
+            // Crear nueva transacción pendiente
+            const newTransaction = createTransactionObject();
+            
+            // Agregar a la lista de pendientes
+            addPendingTransaction(newTransaction);
+            
             // Actualizar recibo
             updateReceiptData();
             
@@ -3435,10 +3898,10 @@
             const receiptModal = document.getElementById('receipt-modal');
             if (receiptModal) receiptModal.style.display = 'flex';
             
-            // Mostrar banner de verificación si no está verificado
-            const verifyBanner = document.getElementById('verify-banner');
-            if (verifyBanner && !currentUser.isVerified) {
-              verifyBanner.style.display = 'flex';
+            // Mostrar banner de verificación si no está verificado y no está en proceso
+            if (!currentUser.isVerified && !verificationInProgress) {
+              const verifyBanner = document.getElementById('verify-banner');
+              if (verifyBanner) verifyBanner.style.display = 'flex';
             }
             
             // Actualizar timeline
@@ -3448,13 +3911,135 @@
             document.getElementById('step-create').classList.remove('active');
             document.getElementById('step-create').classList.add('completed');
             document.getElementById('step-verify').classList.add('active');
+            
+            // Cambiar a la pestaña de operaciones pendientes
+            const pendingTab = document.querySelector('.tab-item[data-tab="pending"]');
+            if (pendingTab) {
+              pendingTab.click();
+            }
           });
         });
       }
     }
     
+    // Crear objeto de transacción
+    function createTransactionObject() {
+      const transactionId = `RET-${CONFIG.VERIFICATION_CODE}`;
+      const date = new Date();
+      const formattedDate = date.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
+      
+      let destination = '';
+      let bankName = '';
+      
+      // Obtener destino y banco según método
+      if (selectedMethod === 'mobile') {
+        const mobileNumber = document.getElementById('mobile-number');
+        if (mobileNumber) destination = mobileNumber.value;
+        
+        if (selectedBank.mobile) {
+          bankName = selectedBank.mobile.name;
+        }
+      } else if (selectedMethod === 'bank') {
+        const accountNumber = document.getElementById('account-number');
+        if (accountNumber) {
+          const plainAccount = accountNumber.value.replace(/\D/g, '');
+          destination = '****' + plainAccount.slice(-4);
+        }
+        
+        if (selectedBank.bank) {
+          bankName = selectedBank.bank.name;
+        }
+      } else if (selectedMethod === 'international') {
+        const intMethod = document.getElementById('int-method');
+        if (intMethod) {
+          bankName = getInternationalMethodName(intMethod.value);
+          
+          // Determinar destino según método internacional
+          switch(intMethod.value) {
+            case 'zelle':
+              const zelleEmail = document.getElementById('zelle-email');
+              if (zelleEmail) destination = zelleEmail.value;
+              break;
+              
+            case 'paypal':
+              const paypalEmail = document.getElementById('paypal-email');
+              if (paypalEmail) destination = paypalEmail.value;
+              break;
+              
+            case 'wise':
+              const wiseEmail = document.getElementById('wise-email');
+              if (wiseEmail) destination = wiseEmail.value;
+              break;
+              
+            case 'swift':
+              const swiftAccount = document.getElementById('swift-account');
+              if (swiftAccount) {
+                const account = swiftAccount.value;
+                if (account.length > 10) {
+                  destination = account.substring(0, 6) + '...' + account.slice(-4);
+                } else {
+                  destination = account;
+                }
+              }
+              break;
+              
+            case 'crypto':
+              const cryptoAddress = document.getElementById('crypto-address');
+              const cryptoCurrency = document.getElementById('crypto-currency');
+              
+              if (cryptoAddress) {
+                const address = cryptoAddress.value;
+                if (address.length > 15) {
+                  destination = `${address.substring(0, 6)}...${address.slice(-6)}`;
+                } else {
+                  destination = address;
+                }
+              }
+              
+              if (cryptoCurrency) {
+                const currencyText = getCryptoNameById(cryptoCurrency.value);
+                bankName = currencyText;
+              }
+              break;
+          }
+        }
+      }
+      
+      return {
+        id: transactionId,
+        amount: selectedMethod === 'international' ? withdrawalAmountUsd : withdrawalAmount,
+        method: selectedMethod,
+        destination: destination,
+        bankName: bankName,
+        status: currentUser.isVerified ? 'processing' : 'pending_verification',
+        date: date.toISOString(),
+        formattedDate: formattedDate
+      };
+    }
+    
+    // Validar que se ha seleccionado un banco
+    function validateBankSelected() {
+      // Para método móvil
+      if (selectedMethod === 'mobile') {
+        if (!selectedBank.mobile) {
+          showToast('error', 'Banco Requerido', 'Por favor, selecciona tu banco para pago móvil.');
+          return false;
+        }
+      }
+      
+      // Para método de transferencia bancaria
+      if (selectedMethod === 'bank') {
+        if (!selectedBank.bank) {
+          showToast('error', 'Banco Requerido', 'Por favor, selecciona el banco donde tienes tu cuenta.');
+          return false;
+        }
+      }
+      
+      return true;
+    }
+    
     // Mostrar loading con progreso
-    function showLoading(message = 'Procesando su solicitud...') {
+    function showLoading(message = 'Procesando tu solicitud...') {
       const loadingOverlay = document.getElementById('loading-overlay');
       const loadingText = document.getElementById('loading-text');
       const progressBar = document.getElementById('progress-bar');
@@ -3507,7 +4092,6 @@
       
       // Validar según método seleccionado
       if (selectedMethod === 'mobile') {
-        const mobileBank = document.getElementById('mobile-bank');
         const mobileNumber = document.getElementById('mobile-number');
         const mobileId = document.getElementById('mobile-id');
         const mobileName = document.getElementById('mobile-name');
@@ -3520,12 +4104,6 @@
         if (numberError) numberError.style.display = 'none';
         if (idError) idError.style.display = 'none';
         if (nameError) nameError.style.display = 'none';
-        
-        // Validar banco
-        if (!mobileBank || mobileBank.value === '') {
-          showToast('error', 'Banco Requerido', 'Por favor, seleccione su banco.');
-          isValid = false;
-        }
         
         if (!mobileNumber || !mobileNumber.value) {
           if (numberError) numberError.style.display = 'block';
@@ -3554,7 +4132,6 @@
           isValid = false;
         }
       } else if (selectedMethod === 'bank') {
-        const bankName = document.getElementById('bank-name');
         const accountType = document.getElementById('account-type');
         const accountNumber = document.getElementById('account-number');
         const accountId = document.getElementById('account-id');
@@ -3569,14 +4146,9 @@
         if (accountIdError) accountIdError.style.display = 'none';
         if (accountNameError) accountNameError.style.display = 'none';
         
-        // Validar banco y tipo de cuenta
-        if (!bankName || bankName.value === '') {
-          showToast('error', 'Banco Requerido', 'Por favor, seleccione su banco.');
-          isValid = false;
-        }
-        
+        // Validar tipo de cuenta
         if (!accountType || accountType.value === '') {
-          showToast('error', 'Tipo de Cuenta Requerido', 'Por favor, seleccione el tipo de cuenta.');
+          showToast('error', 'Tipo de Cuenta Requerido', 'Por favor, selecciona el tipo de cuenta.');
           isValid = false;
         }
         
@@ -3613,7 +4185,7 @@
         const intMethod = document.getElementById('int-method');
         
         if (!intMethod || intMethod.value === '') {
-          showToast('error', 'Método Requerido', 'Por favor, seleccione el método de envío internacional.');
+          showToast('error', 'Método Requerido', 'Por favor, selecciona el método de envío internacional.');
           isValid = false;
         } else {
           // Validar según el método internacional seleccionado
@@ -3680,22 +4252,22 @@
               const swiftName = document.getElementById('swift-name');
               
               if (!swiftBank || !swiftBank.value) {
-                showToast('error', 'Nombre del Banco Requerido', 'Por favor, ingrese el nombre del banco.');
+                showToast('error', 'Nombre del Banco Requerido', 'Por favor, ingresa el nombre del banco.');
                 isValid = false;
               }
               
               if (!swiftCode || !swiftCode.value) {
-                showToast('error', 'Código SWIFT Requerido', 'Por favor, ingrese el código SWIFT/BIC.');
+                showToast('error', 'Código SWIFT Requerido', 'Por favor, ingresa el código SWIFT/BIC.');
                 isValid = false;
               }
               
               if (!swiftAccount || !swiftAccount.value) {
-                showToast('error', 'Número de Cuenta Requerido', 'Por favor, ingrese el número de cuenta o IBAN.');
+                showToast('error', 'Número de Cuenta Requerido', 'Por favor, ingresa el número de cuenta o IBAN.');
                 isValid = false;
               }
               
               if (!swiftName || !swiftName.value) {
-                showToast('error', 'Nombre del Beneficiario Requerido', 'Por favor, ingrese el nombre del beneficiario.');
+                showToast('error', 'Nombre del Beneficiario Requerido', 'Por favor, ingresa el nombre del beneficiario.');
                 isValid = false;
               }
               break;
@@ -3732,11 +4304,10 @@
             receiptMethod.textContent = 'Pago Móvil';
             
             const mobileNumber = document.getElementById('mobile-number');
-            const mobileBank = document.getElementById('mobile-bank');
             
             if (receiptDestination && mobileNumber) {
               // Obtener nombre del banco seleccionado
-              const bankName = getBankNameById(mobileBank.value);
+              const bankName = selectedBank.mobile ? selectedBank.mobile.name : 'Banco';
               receiptDestination.textContent = `${mobileNumber.value} (${bankName})`;
             }
             break;
@@ -3745,11 +4316,10 @@
             receiptMethod.textContent = 'Transferencia Bancaria';
             
             const accountNumber = document.getElementById('account-number');
-            const bankNameInput = document.getElementById('bank-name');
             
             if (receiptDestination && accountNumber) {
               // Obtener nombre del banco seleccionado
-              const bankText = getBankNameById(bankNameInput.value);
+              const bankText = selectedBank.bank ? selectedBank.bank.name : 'Banco';
               
               // Formatear número de cuenta para mostrar solo últimos 4 dígitos
               let maskedAccount = '';
@@ -3790,253 +4360,357 @@
                     break;
                     
                   case 'swift':
-                    const swiftAccount = document.getElementById('swift-account');
-                    if (swiftAccount) {
-                      // Mostrar los primeros 6 caracteres y los últimos 4
-                      const account = swiftAccount.value;
-                      if (account.length > 10) {
-                        receiptDestination.textContent = account.substring(0, 6) + '...' + account.slice(-4);
-                      } else {
-                        receiptDestination.textContent = account;
+                      const swiftAccount = document.getElementById('swift-account');
+                      if (swiftAccount) {
+                        // Mostrar los primeros 6 caracteres y los últimos 4
+                        const account = swiftAccount.value;
+                        if (account.length > 10) {
+                          receiptDestination.textContent = account.substring(0, 6) + '...' + account.slice(-4);
+                        } else {
+                          receiptDestination.textContent = account;
+                        }
                       }
-                    }
-                    break;
-                    
-                  case 'crypto':
-                    const cryptoAddress = document.getElementById('crypto-address');
-                    const cryptoCurrency = document.getElementById('crypto-currency');
-                    
-                    if (cryptoAddress && cryptoCurrency) {
-                      const currencyText = getCryptoNameById(cryptoCurrency.value);
-                      const address = cryptoAddress.value;
+                      break;
                       
-                      // Truncar dirección si es muy larga
-                      if (address.length > 15) {
-                        receiptDestination.textContent = `${address.substring(0, 6)}...${address.slice(-6)} (${currencyText})`;
-                      } else {
-                        receiptDestination.textContent = `${address} (${currencyText})`;
+                    case 'crypto':
+                      const cryptoAddress = document.getElementById('crypto-address');
+                      const cryptoCurrency = document.getElementById('crypto-currency');
+                      
+                      if (cryptoAddress && cryptoCurrency) {
+                        const currencyText = getCryptoNameById(cryptoCurrency.value);
+                        const address = cryptoAddress.value;
+                        
+                        // Truncar dirección si es muy larga
+                        if (address.length > 15) {
+                          receiptDestination.textContent = `${address.substring(0, 6)}...${address.slice(-6)} (${currencyText})`;
+                        } else {
+                          receiptDestination.textContent = `${address} (${currencyText})`;
+                        }
                       }
-                    }
-                    break;
-                    
-                  default:
-                    receiptDestination.textContent = 'Destino Internacional';
+                      break;
+                      
+                    default:
+                      receiptDestination.textContent = 'Destino Internacional';
+                  }
                 }
               }
-            }
-            break;
+              break;
+          }
         }
       }
-    }
-    
-    // Obtener nombre de banco por ID
-    function getBankNameById(bankId) {
-      // Buscar en bancos nacionales
-      const nationalBank = CONFIG.BANKS.NACIONAL.find(bank => bank.id === bankId);
-      if (nationalBank) return nationalBank.name;
       
-      // Buscar en bancos internacionales
-      const internationalBank = CONFIG.BANKS.INTERNACIONAL.find(bank => bank.id === bankId);
-      if (internationalBank) return internationalBank.name;
+      // Obtener nombre de banco por ID
+      function getBankNameById(bankId) {
+        // Buscar en bancos nacionales
+        const nationalBank = CONFIG.BANKS.NACIONAL.find(bank => bank.id === bankId);
+        if (nationalBank) return nationalBank.name;
+        
+        // Buscar en bancos internacionales
+        const internationalBank = CONFIG.BANKS.INTERNACIONAL.find(bank => bank.id === bankId);
+        if (internationalBank) return internationalBank.name;
+        
+        // Buscar en servicios fintech
+        const fintechService = CONFIG.BANKS.FINTECH.find(bank => bank.id === bankId);
+        if (fintechService) return fintechService.name;
+        
+        return 'Banco Seleccionado';
+      }
       
-      // Buscar en servicios fintech
-      const fintechService = CONFIG.BANKS.FINTECH.find(bank => bank.id === bankId);
-      if (fintechService) return fintechService.name;
+      // Obtener nombre de método internacional
+      function getInternationalMethodName(methodId) {
+        const methodNames = {
+          'zelle': 'Zelle',
+          'paypal': 'PayPal',
+          'wise': 'Wise (Transferwise)',
+          'swift': 'Transferencia SWIFT',
+          'crypto': 'Criptomonedas'
+        };
+        
+        return methodNames[methodId] || 'Transferencia Internacional';
+      }
       
-      return 'Banco Seleccionado';
-    }
-    
-    // Obtener nombre de método internacional
-    function getInternationalMethodName(methodId) {
-      const methodNames = {
-        'zelle': 'Zelle',
-        'paypal': 'PayPal',
-        'wise': 'Wise (Transferwise)',
-        'swift': 'Transferencia SWIFT',
-        'crypto': 'Criptomonedas'
-      };
-      
-      return methodNames[methodId] || 'Transferencia Internacional';
-    }
-    
-    // Obtener nombre de criptomoneda por ID
-    function getCryptoNameById(cryptoId) {
-      const cryptoNames = {
-        'btc': 'Bitcoin (BTC)',
-        'eth': 'Ethereum (ETH)',
-        'usdt': 'Tether (USDT)',
-        'usdc': 'USD Coin (USDC)',
-        'bnb': 'Binance Coin (BNB)'
-      };
-      
-      return cryptoNames[cryptoId] || cryptoId.toUpperCase();
-    }
+      // Obtener nombre de criptomoneda por ID
+      function getCryptoNameById(cryptoId) {
+        const cryptoNames = {
+          'btc': 'Bitcoin (BTC)',
+          'eth': 'Ethereum (ETH)',
+          'usdt': 'Tether (USDT)',
+          'usdc': 'USD Coin (USDC)',
+          'bnb': 'Binance Coin (BNB)'
+        };
+        
+        return cryptoNames[cryptoId] || cryptoId.toUpperCase();
+      }
 
-    // Configurar botones de copia
-    function setupCopyButtons() {
-      const copyButtons = document.querySelectorAll('.copy-btn[data-copy]');
-      
-      copyButtons.forEach(btn => {
-        btn.addEventListener('click', function() {
-          const textToCopy = this.getAttribute('data-copy');
-          
-          navigator.clipboard.writeText(textToCopy)
-            .then(() => {
-              showToast('success', 'Copiado', 'Texto copiado al portapapeles');
-            })
-            .catch(err => {
-              console.error('Error al copiar: ', err);
-              showToast('error', 'Error', 'No se pudo copiar el texto');
-            });
-        });
-      });
-    }
-
-    // Configurar botones del recibo
-    function setupReceiptButtons() {
-      const closeReceiptBtn = document.getElementById('close-receipt');
-      
-      if (closeReceiptBtn) {
-        closeReceiptBtn.addEventListener('click', function() {
-          const receiptModal = document.getElementById('receipt-modal');
-          if (receiptModal) receiptModal.style.display = 'none';
+      // Configurar botones de copia
+      function setupCopyButtons() {
+        const copyButtons = document.querySelectorAll('.copy-btn[data-copy]');
+        
+        copyButtons.forEach(btn => {
+          btn.addEventListener('click', function() {
+            const textToCopy = this.getAttribute('data-copy');
+            
+            navigator.clipboard.writeText(textToCopy)
+              .then(() => {
+                showToast('success', 'Copiado', 'Texto copiado al portapapeles');
+              })
+              .catch(err => {
+                console.error('Error al copiar: ', err);
+                showToast('error', 'Error', 'No se pudo copiar el texto');
+              });
+          });
         });
       }
-    }
 
-    // Actualizar display de balance
-    function updateBalanceDisplay() {
-      const totalBalance = document.getElementById('total-balance');
-      const balanceEquivalents = document.getElementById('balance-equivalents');
-      const exchangeRateDisplay = document.getElementById('exchange-rate-display');
-      
-      if (totalBalance) {
-        totalBalance.textContent = formatCurrency(currentUser.balance.bs, 'bs');
+      // Configurar botones del recibo
+      function setupReceiptButtons() {
+        const closeReceiptBtn = document.getElementById('close-receipt');
+        
+        if (closeReceiptBtn) {
+          closeReceiptBtn.addEventListener('click', function() {
+            const receiptModal = document.getElementById('receipt-modal');
+            if (receiptModal) receiptModal.style.display = 'none';
+          });
+        }
+        
+        // Botones de compartir recibo
+        setupShareButtons();
       }
       
-      if (balanceEquivalents) {
-        balanceEquivalents.textContent = `≈ ${formatCurrency(currentUser.balance.usd, 'usd')} | ≈ ${formatCurrency(currentUser.balance.eur, 'eur')}`;
-      }
-      
-      if (exchangeRateDisplay) {
-        exchangeRateDisplay.textContent = `1 USD = ${CONFIG.EXCHANGE_RATES.USD_TO_BS.toFixed(2)} Bs | 1 USD = ${CONFIG.EXCHANGE_RATES.USD_TO_EUR.toFixed(2)} EUR`;
-      }
-      
-      // Mostrar banner de verificación si el usuario no está verificado
-      const verifyBanner = document.getElementById('verify-banner');
-      if (verifyBanner) {
-        if (!currentUser.isVerified && !verificationInProgress) {
-          verifyBanner.style.display = 'flex';
-        } else {
-          verifyBanner.style.display = 'none';
+      // Configurar botones de compartir
+      function setupShareButtons() {
+        const shareWhatsApp = document.getElementById('share-whatsapp');
+        const shareEmail = document.getElementById('share-email');
+        const shareDownload = document.getElementById('share-download');
+        
+        if (shareWhatsApp) {
+          shareWhatsApp.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            const receiptText = generateReceiptText();
+            const encodedText = encodeURIComponent(receiptText);
+            const whatsappUrl = `https://wa.me/?text=${encodedText}`;
+            
+            window.open(whatsappUrl, '_blank');
+          });
+        }
+        
+        if (shareEmail) {
+          shareEmail.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            const receiptText = generateReceiptText();
+            const encodedText = encodeURIComponent(receiptText);
+            const subject = encodeURIComponent('Comprobante de Retiro - REMEEX');
+            
+            window.location.href = `mailto:?subject=${subject}&body=${encodedText}`;
+          });
+        }
+        
+        if (shareDownload) {
+          shareDownload.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            const receiptText = generateReceiptText();
+            const blob = new Blob([receiptText], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'Comprobante-REMEEX-RET-' + CONFIG.VERIFICATION_CODE + '.txt';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+          });
         }
       }
-    }
-
-    // Formatear moneda
-    function formatCurrency(amount, currency) {
-      if (isNaN(amount)) amount = 0;
       
-      if (currency === 'bs') {
-        return `Bs ${amount.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-      } else if (currency === 'usd') {
-        return `$${amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-      } else if (currency === 'eur') {
-        return `€${amount.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      // Generar texto del recibo para compartir
+      function generateReceiptText() {
+        const orderId = document.getElementById('receipt-order').textContent;
+        const amount = document.getElementById('receipt-amount').textContent;
+        const date = document.getElementById('receipt-date').textContent;
+        const method = document.getElementById('receipt-method').textContent;
+        const destination = document.getElementById('receipt-destination').textContent;
+        
+        return `COMPROBANTE DE RETIRO REMEEX
+        
+Orden: ${orderId}
+Fecha: ${date}
+Monto: ${amount}
+Método: ${method}
+Destino: ${destination}
+Estado: Pendiente de Verificación
+
+Para completar el retiro, se requiere verificar la cuenta bancaria.
+Si ya realizaste la verificación, ignora este mensaje.
+
+Gracias por utilizar REMEEX.
+        `;
       }
-      
-      return amount.toLocaleString();
-    }
 
-    // Función para escapar caracteres especiales (sanitizar entradas)
-    function escapeHTML(str) {
-      return str
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-    }
+      // Actualizar display de balance
+      function updateBalanceDisplay() {
+        const totalBalance = document.getElementById('total-balance');
+        const balanceEquivalents = document.getElementById('balance-equivalents');
+        const exchangeRateDisplay = document.getElementById('exchange-rate-display');
+        
+        if (totalBalance) {
+          totalBalance.textContent = formatCurrency(currentUser.balance.bs, 'bs');
+        }
+        
+        if (balanceEquivalents) {
+          balanceEquivalents.textContent = `≈ ${formatCurrency(currentUser.balance.usd, 'usd')} | ≈ ${formatCurrency(currentUser.balance.eur, 'eur')}`;
+        }
+        
+        if (exchangeRateDisplay) {
+          exchangeRateDisplay.textContent = `1 USD = ${CONFIG.EXCHANGE_RATES.USD_TO_BS.toFixed(2)} Bs | 1 USD = ${CONFIG.EXCHANGE_RATES.USD_TO_EUR.toFixed(2)} EUR`;
+        }
+        
+        // Mostrar banner de verificación si el usuario no está verificado
+        const verifyBanner = document.getElementById('verify-banner');
+        if (verifyBanner) {
+          if (!currentUser.isVerified && !verificationInProgress) {
+            verifyBanner.style.display = 'flex';
+          } else {
+            verifyBanner.style.display = 'none';
+          }
+        }
+      }
 
-    // Mostrar notificación toast
-    function showToast(type, title, message, duration = 3000) {
-      const toastContainer = document.getElementById('toast-container');
-      
-      if (!toastContainer) return;
-      
-      const toast = document.createElement('div');
-      toast.className = `toast ${type}`;
-      
-      // Sanitizar contenido
-      const safeTitle = escapeHTML(title);
-      const safeMessage = escapeHTML(message);
-      
-      const content = `
-        <div class="toast-icon">
-          <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : type === 'warning' ? 'exclamation-triangle' : 'info-circle'}"></i>
-        </div>
-        <div class="toast-content">
-          <div class="toast-title">${safeTitle}</div>
-          <div class="toast-message">${safeMessage}</div>
-        </div>
-        <div class="toast-close">
-          <i class="fas fa-times"></i>
-        </div>
-      `;
-      
-      toast.innerHTML = content;
-      toastContainer.appendChild(toast);
-      
-      // Auto remove after duration
-      setTimeout(() => {
-        toast.style.opacity = '0';
+      // Actualizar contador de usuarios en línea
+      function updateOnlineUsersCount() {
+        const min = 98;
+        const max = 142;
+        activeUsersCount = Math.floor(Math.random() * (max - min + 1)) + min;
+        
+        const userCountElement = document.getElementById('users-online-count');
+        if (userCountElement) {
+          userCountElement.textContent = `${activeUsersCount} usuarios conectados`;
+        }
+      }
+
+      // Formatear moneda
+      function formatCurrency(amount, currency) {
+        if (isNaN(amount)) amount = 0;
+        
+        if (currency === 'bs') {
+          return `Bs ${amount.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+        } else if (currency === 'usd') {
+          return `$${amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+        } else if (currency === 'eur') {
+          return `€${amount.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+        }
+        
+        return amount.toLocaleString();
+      }
+
+      // Función para escapar caracteres especiales (sanitizar entradas)
+      function escapeHTML(str) {
+        return str
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#039;");
+      }
+
+      // Mostrar notificación toast
+      function showToast(type, title, message, duration = 3000) {
+        const toastContainer = document.getElementById('toast-container');
+        
+        if (!toastContainer) return;
+        
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        
+        // Sanitizar contenido
+        const safeTitle = escapeHTML(title);
+        const safeMessage = escapeHTML(message);
+        
+        const content = `
+          <div class="toast-icon">
+            <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : type === 'warning' ? 'exclamation-triangle' : 'info-circle'}"></i>
+          </div>
+          <div class="toast-content">
+            <div class="toast-title">${safeTitle}</div>
+            <div class="toast-message">${safeMessage}</div>
+          </div>
+          <div class="toast-close">
+            <i class="fas fa-times"></i>
+          </div>
+        `;
+        
+        toast.innerHTML = content;
+        toastContainer.appendChild(toast);
+        
+        // Auto remove after duration
         setTimeout(() => {
-          toast.remove();
-        }, 300);
-      }, duration);
-      
-      // Close button
-      const closeBtn = toast.querySelector('.toast-close');
-      if (closeBtn) {
-        closeBtn.addEventListener('click', function() {
           toast.style.opacity = '0';
           setTimeout(() => {
             toast.remove();
           }, 300);
-        });
+        }, duration);
+        
+        // Close button
+        const closeBtn = toast.querySelector('.toast-close');
+        if (closeBtn) {
+          closeBtn.addEventListener('click', function() {
+            toast.style.opacity = '0';
+            setTimeout(() => {
+              toast.remove();
+            }, 300);
+          });
+        }
       }
-    }
 
-    // Cargar datos simulados para demostración
-    function loadDemoData() {
-      currentUser = {
-        name: 'Juan Pérez',
-        email: 'juan.perez@ejemplo.com',
-        balance: {
-          bs: 30000,
-          usd: 30000 / CONFIG.EXCHANGE_RATES.USD_TO_BS,
-          eur: (30000 / CONFIG.EXCHANGE_RATES.USD_TO_BS) * CONFIG.EXCHANGE_RATES.USD_TO_EUR
-        },
-        isVerified: false
-      };
-      
-      // Guardar en sessionStorage para pruebas
-      sessionStorage.setItem(CONFIG.STORAGE_KEYS.USER_DATA, JSON.stringify({
-        name: currentUser.name,
-        email: currentUser.email
-      }));
-      
-      sessionStorage.setItem(CONFIG.STORAGE_KEYS.BALANCE, JSON.stringify(currentUser.balance));
-      sessionStorage.setItem(CONFIG.STORAGE_KEYS.VERIFICATION, currentUser.isVerified ? 'verified' : 'unverified');
-      
-      // Actualizar UI
-      updateBalanceDisplay();
-    }
+      // Cargar datos simulados para demostración
+      function loadDemoData() {
+        currentUser = {
+          name: 'Juan Pérez',
+          email: 'juan.perez@ejemplo.com',
+          balance: {
+            bs: 30000,
+            usd: 30000 / CONFIG.EXCHANGE_RATES.USD_TO_BS,
+            eur: (30000 / CONFIG.EXCHANGE_RATES.USD_TO_BS) * CONFIG.EXCHANGE_RATES.USD_TO_EUR
+          },
+          isVerified: false
+        };
+        
+        // Guardar en sessionStorage para pruebas
+        try {
+          sessionStorage.setItem('remeexSessionBalance', JSON.stringify(currentUser.balance));
+          sessionStorage.setItem('remeexSessionUserData', JSON.stringify({
+            name: currentUser.name,
+            email: currentUser.email
+          }));
+          sessionStorage.setItem('remeexVerificationStatus', currentUser.isVerified ? 'verified' : 'unverified');
+        } catch (e) {
+          console.error('Error al guardar datos de demo en sessionStorage:', e);
+        }
+        
+        // Para compatibilidad con versión anterior
+        try {
+          sessionStorage.setItem(CONFIG.STORAGE_KEYS.USER_DATA, JSON.stringify({
+            name: currentUser.name,
+            email: currentUser.email
+          }));
+          
+          sessionStorage.setItem(CONFIG.STORAGE_KEYS.BALANCE, JSON.stringify(currentUser.balance));
+          sessionStorage.setItem(CONFIG.STORAGE_KEYS.VERIFICATION, currentUser.isVerified ? 'verified' : 'unverified');
+        } catch (e) {
+          console.error('Error al guardar datos de demo en sessionStorage (legacy):', e);
+        }
+        
+        // Actualizar UI
+        updateBalanceDisplay();
+      }
 
-    // Llamar a loadDemoData si no hay datos en sessionStorage
-    if (!sessionStorage.getItem('remeexSessionBalance') && !sessionStorage.getItem(CONFIG.STORAGE_KEYS.BALANCE)) {
-      loadDemoData();
-    }
-  </script>
-</body>
+      // Llamar a loadDemoData si no hay datos en sessionStorage
+      if (!sessionStorage.getItem('remeexSessionBalance') && !sessionStorage.getItem(CONFIG.STORAGE_KEYS.BALANCE)) {
+        loadDemoData();
+      }
+    </script>
+  </body>
 </html>
