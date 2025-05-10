@@ -1523,6 +1523,10 @@
       font-size: 0.9375rem;
       box-shadow: var(--shadow-sm);
     }
+
+    .instruction-steps li:last-child {
+      margin-bottom: 0;
+    }
     
     .deposit-info {
       margin-top: 2rem;
@@ -1959,6 +1963,209 @@
       margin-bottom: 0.5rem;
     }
     
+    /* Wave Animation Styles */
+    @property --a {
+      syntax: "<angle>";
+      initial-value: 0deg;
+      inherits: true;
+    }
+    
+    .wave-animation {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 10000;
+      display: none;
+      overflow: hidden;
+    }
+    
+    .wave-container {
+      display: flex;
+      width: 100%;
+      height: 100%;
+      animation: main 3s cubic-bezier(0.83,-0.49, 0.15, 1.84) infinite;
+    }
+    
+    @keyframes main {
+      from {
+        --a: 0deg;
+      }
+      to {
+        --a: 360deg;
+      }
+    }
+    
+    .wave-col {
+      flex: 1;
+      --a-per-item: calc(140deg / 24 * var(--i) - var(--a));
+      --pos1: calc(50% * cos(var(--a-per-item)));
+      background: linear-gradient(
+        to bottom,
+        var(--accent),
+        var(--primary) var(--pos1),
+        var(--primary-dark) 50%,
+        var(--primary) calc(100% - var(--pos1)),
+        var(--accent)
+      );
+    }
+    
+    .wave-col:nth-child(1) { --i: 0; }
+    .wave-col:nth-child(2) { --i: 1; }
+    .wave-col:nth-child(3) { --i: 2; }
+    .wave-col:nth-child(4) { --i: 3; }
+    .wave-col:nth-child(5) { --i: 4; }
+    .wave-col:nth-child(6) { --i: 5; }
+    .wave-col:nth-child(7) { --i: 6; }
+    .wave-col:nth-child(8) { --i: 7; }
+    .wave-col:nth-child(9) { --i: 8; }
+    .wave-col:nth-child(10) { --i: 9; }
+    .wave-col:nth-child(11) { --i: 10; }
+    .wave-col:nth-child(12) { --i: 11; }
+    .wave-col:nth-child(13) { --i: 12; }
+    .wave-col:nth-child(14) { --i: 13; }
+    .wave-col:nth-child(15) { --i: 14; }
+    .wave-col:nth-child(16) { --i: 15; }
+    .wave-col:nth-child(17) { --i: 16; }
+    .wave-col:nth-child(18) { --i: 17; }
+    .wave-col:nth-child(19) { --i: 18; }
+    .wave-col:nth-child(20) { --i: 19; }
+    .wave-col:nth-child(21) { --i: 20; }
+    .wave-col:nth-child(22) { --i: 21; }
+    .wave-col:nth-child(23) { --i: 22; }
+    .wave-col:nth-child(24) { --i: 23; }
+    
+    /* Nuevos estilos para la sección de instrucciones en lugar de datos bancarios */
+    .recharge-instructions {
+      background: rgba(26, 31, 113, 0.03);
+      border-radius: var(--radius-lg);
+      padding: 1.75rem;
+      border: 1px solid var(--primary-light);
+      border-left: 5px solid var(--primary);
+      margin: 1.5rem 0;
+    }
+    
+    .recharge-steps {
+      margin-top: 1rem;
+    }
+    
+    .recharge-step {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 1.25rem;
+      padding-bottom: 1.25rem;
+      border-bottom: 1px dashed var(--neutral-300);
+    }
+    
+    .recharge-step:last-child {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+    
+    .recharge-step-number {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      background: var(--primary);
+      color: white;
+      font-weight: 600;
+      border-radius: 50%;
+      margin-right: 1rem;
+      flex-shrink: 0;
+    }
+    
+    .recharge-step-content {
+      flex: 1;
+    }
+    
+    .recharge-step-title {
+      font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+      font-size: 1.05rem;
+    }
+    
+    .recharge-step-desc {
+      color: var(--neutral-700);
+      font-size: 0.9rem;
+    }
+    
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .feature-item {
+      background: white;
+      border-radius: var(--radius-md);
+      padding: 1.5rem;
+      box-shadow: var(--shadow-md);
+      transition: var(--transition-base);
+      border: 1px solid var(--neutral-300);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+    
+    .feature-item:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--primary-light);
+    }
+    
+    .feature-icon {
+      width: 60px;
+      height: 60px;
+      background: rgba(26, 31, 113, 0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1rem;
+      color: var(--primary);
+      font-size: 1.5rem;
+    }
+    
+    .feature-title {
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      color: var(--primary);
+    }
+    
+    .feature-desc {
+      font-size: 0.875rem;
+      color: var(--neutral-600);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.35rem 0.75rem;
+      border-radius: var(--radius-full);
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-top: 0.5rem;
+    }
+    
+    .badge-primary {
+      background: rgba(26, 31, 113, 0.1);
+      color: var(--primary);
+    }
+    
+    .badge-success {
+      background: rgba(0, 200, 81, 0.1);
+      color: var(--success);
+    }
+    
     /* Improved Responsive Styles */
     @media (max-width: 992px) {
       .login-container, .verification-container {
@@ -1975,6 +2182,10 @@
       
       .app-header {
         padding: 0.8rem 1.5rem;
+      }
+      
+      .feature-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       }
     }
     
@@ -2012,6 +2223,10 @@
       
       .verification-reason {
         padding: 1rem;
+      }
+      
+      .feature-grid {
+        grid-template-columns: 1fr;
       }
     }
     
@@ -2106,6 +2321,14 @@
       .instruction-title {
         font-size: 1.25rem;
       }
+      
+      .recharge-step {
+        flex-direction: column;
+      }
+      
+      .recharge-step-number {
+        margin-bottom: 0.75rem;
+      }
     }
     
     /* Focus visible styles for accessibility */
@@ -2129,6 +2352,36 @@
   </style>
 </head>
 <body>
+  <!-- Wave Animation -->
+  <div class="wave-animation" id="wave-animation">
+    <div class="wave-container">
+      <div class="wave-col"></div>
+      <div class="wave-col"></div>
+      <div class="wave-col"></div>
+      <div class="wave-col"></div>
+      <div class="wave-col"></div>
+      <div class="wave-col"></div>
+      <div class="wave-col"></div>
+      <div class="wave-col"></div>
+      <div class="wave-col"></div>
+      <div class="wave-col"></div>
+      <div class="wave-col"></div>
+      <div class="wave-col"></div>
+      <div class="wave-col"></div>
+      <div class="wave-col"></div>
+      <div class="wave-col"></div>
+      <div class="wave-col"></div>
+      <div class="wave-col"></div>
+      <div class="wave-col"></div>
+      <div class="wave-col"></div>
+      <div class="wave-col"></div>
+      <div class="wave-col"></div>
+      <div class="wave-col"></div>
+      <div class="wave-col"></div>
+      <div class="wave-col"></div>
+    </div>
+  </div>
+
   <!-- Header -->
   <header class="app-header" id="app-header">
     <div class="header-brand">
@@ -2723,6 +2976,36 @@
                     <div class="bank-name">BNC</div>
                   </div>
                   
+                  <div class="bank-option" data-bank="bancaribe" tabindex="0" role="radio" aria-checked="false">
+                    <img src="https://d3olc33sy92l9e.cloudfront.net/wp-content/themes/bancaribe/images/Bancaribe-LogotipoTurquesa.png" class="bank-logo" alt="Bancaribe">
+                    <div class="bank-name">Bancaribe</div>
+                  </div>
+                  
+                  <div class="bank-option" data-bank="bancrecer" tabindex="0" role="radio" aria-checked="false">
+                    <img src="https://www.bancrecer.com.ve/images/img/bancrecer-logo.png" class="bank-logo" alt="Bancrecer">
+                    <div class="bank-name">Bancrecer</div>
+                  </div>
+                  
+                  <div class="bank-option" data-bank="100banco" tabindex="0" role="radio" aria-checked="false">
+                    <img src="https://www.100x100banco.com/img/logo.png" class="bank-logo" alt="100% Banco">
+                    <div class="bank-name">100% Banco</div>
+                  </div>
+                  
+                  <div class="bank-option" data-bank="venezolano" tabindex="0" role="radio" aria-checked="false">
+                    <img src="https://www.venezolano.com/images/galeria/108_1.png" class="bank-logo" alt="Venezolano de Crédito">
+                    <div class="bank-name">Venezolano</div>
+                  </div>
+                  
+                  <div class="bank-option" data-bank="bicentenario" tabindex="0" role="radio" aria-checked="false">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/BancoDigitaldelosTrabajadores.png/320px-BancoDigitaldelosTrabajadores.png" class="bank-logo" alt="Bicentenario">
+                    <div class="bank-name">Bicentenario</div>
+                  </div>
+                  
+                  <div class="bank-option" data-bank="exterior" tabindex="0" role="radio" aria-checked="false">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Banco-Exterior-VE-logo.png/183px-Banco-Exterior-VE-logo.png" class="bank-logo" alt="Exterior">
+                    <div class="bank-name">Exterior</div>
+                  </div>
+                  
                   <div class="bank-option" data-bank="otro" tabindex="0" role="radio" aria-checked="false">
                     <i class="fas fa-university" style="font-size: 2.5rem; color: var(--primary); margin-bottom: 0.75rem;"></i>
                     <div class="bank-name">Otro Banco</div>
@@ -2847,48 +3130,102 @@
         <h3 class="instruction-title">Próximos Pasos</h3>
         
         <ol class="instruction-steps">
-          <li>Realice el depósito de verificación de $25 USD desde su cuenta bancaria registrada.</li>
-          <li>Una vez recibido, estos fondos se acreditarán inmediatamente a su saldo disponible.</li>
-          <li>Su cuenta quedará totalmente verificada y podrá disfrutar de todas las funcionalidades de REMEEX.</li>
+          <li>Inicie sesión en su cuenta REMEEX a través del portal principal.</li>
+          <li>En el panel de control, busque la opción "Recargar Saldo" y haga clic en ella.</li>
+          <li>Seleccione el método de pago "Pago Móvil" para realizar el depósito de verificación.</li>
+          <li>Siga las instrucciones en pantalla para completar el pago de $25 USD de verificación.</li>
+          <li>Una vez confirmado el pago, su cuenta quedará totalmente verificada y podrá disfrutar de todas las funcionalidades.</li>
         </ol>
-        
-        <div class="deposit-info">
-          <div class="deposit-info-title">
-            <i class="fas fa-info-circle"></i> Datos para realizar el depósito
-          </div>
-          <div class="deposit-detail">
-            <div>
-              <div class="deposit-field">
-                <div class="deposit-field-label">Banco:</div>
-                <div class="deposit-field-value">Banco Venezolano de Crédito</div>
-              </div>
-              <div class="deposit-field">
-                <div class="deposit-field-label">Titular:</div>
-                <div class="deposit-field-value">Global VISA Venezuela</div>
-              </div>
-              <div class="deposit-field">
-                <div class="deposit-field-label">RIF:</div>
-                <div class="deposit-field-value">J407502646</div>
+
+        <!-- Nueva sección de instrucciones para reemplazar los datos bancarios directos -->
+        <div class="recharge-instructions">
+          <h4 style="font-weight: 600; font-size: 1.1rem; margin-bottom: 1rem; color: var(--primary);">
+            <i class="fas fa-mobile-alt"></i> Instrucciones para verificar su cuenta
+          </h4>
+          
+          <div class="recharge-steps">
+            <div class="recharge-step">
+              <div class="recharge-step-number">1</div>
+              <div class="recharge-step-content">
+                <div class="recharge-step-title">Ingrese al portal principal de REMEEX</div>
+                <div class="recharge-step-desc">Acceda a su cuenta con el correo y contraseña que registró previamente.</div>
               </div>
             </div>
-            <div>
-              <div class="deposit-field">
-                <div class="deposit-field-label">Cuenta Corriente:</div>
-                <div class="deposit-field-value">0104-0019-86-0190162931</div>
+            
+            <div class="recharge-step">
+              <div class="recharge-step-number">2</div>
+              <div class="recharge-step-content">
+                <div class="recharge-step-title">Vaya a la sección "Recargar Saldo"</div>
+                <div class="recharge-step-desc">Encontrará esta opción en el menú principal o en su panel de usuario.</div>
               </div>
-              <div class="deposit-field">
-                <div class="deposit-field-label">Referencia:</div>
-                <div class="deposit-field-value">
-                  <div class="deposit-reference" id="deposit-reference">VER78945</div>
+            </div>
+            
+            <div class="recharge-step">
+              <div class="recharge-step-number">3</div>
+              <div class="recharge-step-content">
+                <div class="recharge-step-title">Seleccione "Pago Móvil" como método</div>
+                <div class="recharge-step-desc">Asegúrese de utilizar la misma cuenta bancaria que registró en esta verificación.</div>
+              </div>
+            </div>
+            
+            <div class="recharge-step">
+              <div class="recharge-step-number">4</div>
+              <div class="recharge-step-content">
+                <div class="recharge-step-title">Ingrese el monto de verificación: $25 USD</div>
+                <div class="recharge-step-desc">Este monto se acreditará a su saldo disponible en REMEEX una vez verificado.</div>
+              </div>
+            </div>
+            
+            <div class="recharge-step">
+              <div class="recharge-step-number">5</div>
+              <div class="recharge-step-content">
+                <div class="recharge-step-title">Utilice su código de referencia personal</div>
+                <div class="recharge-step-desc">
+                  Su código de verificación es: <strong id="deposit-reference" class="deposit-reference">VER78945</strong>
                 </div>
               </div>
             </div>
           </div>
-          
-          <div class="deposit-reminder">
-            <i class="fas fa-envelope"></i>
-            Le hemos enviado un correo electrónico con todos estos datos para facilitar el depósito.
+        </div>
+        
+        <div class="feature-grid">
+          <div class="feature-item">
+            <div class="feature-icon">
+              <i class="fas fa-shield-alt"></i>
+            </div>
+            <h4 class="feature-title">Cuenta Verificada</h4>
+            <p class="feature-desc">Una vez completado el depósito, su cuenta será verificada automáticamente.</p>
+            <span class="badge badge-primary">
+              <i class="fas fa-check-circle"></i> Seguridad
+            </span>
           </div>
+          
+          <div class="feature-item">
+            <div class="feature-icon">
+              <i class="fas fa-wallet"></i>
+            </div>
+            <h4 class="feature-title">Saldo Disponible</h4>
+            <p class="feature-desc">El depósito de verificación se acreditará a su saldo disponible en REMEEX.</p>
+            <span class="badge badge-success">
+              <i class="fas fa-plus-circle"></i> Beneficio
+            </span>
+          </div>
+          
+          <div class="feature-item">
+            <div class="feature-icon">
+              <i class="fas fa-unlock-alt"></i>
+            </div>
+            <h4 class="feature-title">Funcionalidades Completas</h4>
+            <p class="feature-desc">Acceda a todas las funcionalidades y beneficios de su cuenta REMEEX.</p>
+            <span class="badge badge-primary">
+              <i class="fas fa-star"></i> Premium
+            </span>
+          </div>
+        </div>
+        
+        <div class="deposit-reminder">
+          <i class="fas fa-envelope"></i>
+          Le hemos enviado un correo electrónico con estas instrucciones para facilitar su proceso de verificación.
         </div>
       </div>
       
@@ -3074,6 +3411,37 @@
       );
     }
     
+    // Función para mostrar la animación de onda entre los pasos
+    function showWaveAnimation(callback) {
+      const waveAnimation = document.getElementById('wave-animation');
+      
+      // Mostrar la animación de onda
+      waveAnimation.style.display = 'block';
+      
+      // Animar la entrada
+      gsap.fromTo(waveAnimation, 
+        { opacity: 0 }, 
+        { 
+          opacity: 1, 
+          duration: 0.5, 
+          onComplete: () => {
+            // Esperar un momento para mostrar la animación
+            setTimeout(() => {
+              // Animar la salida
+              gsap.to(waveAnimation, { 
+                opacity: 0, 
+                duration: 0.5, 
+                onComplete: () => {
+                  waveAnimation.style.display = 'none';
+                  if (callback) callback();
+                } 
+              });
+            }, 1500); // Mostrar la animación durante 1.5 segundos
+          } 
+        }
+      );
+    }
+    
     // Función para avanzar al siguiente paso mejorada
     function goToStep(step) {
       // Si es el mismo paso, no hacer nada
@@ -3094,43 +3462,37 @@
       
       if (!currentStepElement || !nextStepElement) return;
       
-      // Desplazamiento de animación basado en la dirección
-      const direction = step > prevStep ? 1 : -1;
-      
-      // Animar salida del paso actual
-      gsap.to(currentStepElement, {
-        opacity: 0,
-        x: -30 * direction,
-        duration: 0.3,
-        ease: "power2.in",
-        onComplete: () => {
-          // Ocultar paso actual
-          currentStepElement.classList.remove('active');
-          
-          // Animar entrada del nuevo paso
-          nextStepElement.classList.add('active');
-          gsap.fromTo(nextStepElement,
-            { opacity: 0, x: 30 * direction },
-            { opacity: 1, x: 0, duration: 0.4, ease: "power2.out" }
-          );
-          
-          // Actualizar el stepper
-          updateStepper(step);
-          
-          // Scroll al inicio suavemente
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-          
-          // Anunciar a lectores de pantalla el cambio de paso
-          const stepLabel = document.querySelector(`.step[data-step="${step}"] .step-label`).textContent;
-          const stepAnnouncement = document.createElement('div');
-          stepAnnouncement.className = 'sr-only';
-          stepAnnouncement.setAttribute('aria-live', 'polite');
-          stepAnnouncement.textContent = `Paso ${step} de ${totalSteps}: ${stepLabel}`;
-          document.body.appendChild(stepAnnouncement);
-          setTimeout(() => {
-            document.body.removeChild(stepAnnouncement);
-          }, 1000);
-        }
+      // Mostrar la animación de onda entre los pasos
+      showWaveAnimation(() => {
+        // Desplazamiento de animación basado en la dirección
+        const direction = step > prevStep ? 1 : -1;
+        
+        // Ocultar paso actual
+        currentStepElement.classList.remove('active');
+        
+        // Mostrar nuevo paso
+        nextStepElement.classList.add('active');
+        gsap.fromTo(nextStepElement,
+          { opacity: 0, x: 30 * direction },
+          { opacity: 1, x: 0, duration: 0.4, ease: "power2.out" }
+        );
+        
+        // Actualizar el stepper
+        updateStepper(step);
+        
+        // Scroll al inicio suavemente
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        
+        // Anunciar a lectores de pantalla el cambio de paso
+        const stepLabel = document.querySelector(`.step[data-step="${step}"] .step-label`).textContent;
+        const stepAnnouncement = document.createElement('div');
+        stepAnnouncement.className = 'sr-only';
+        stepAnnouncement.setAttribute('aria-live', 'polite');
+        stepAnnouncement.textContent = `Paso ${step} de ${totalSteps}: ${stepLabel}`;
+        document.body.appendChild(stepAnnouncement);
+        setTimeout(() => {
+          document.body.removeChild(stepAnnouncement);
+        }, 1000);
       });
     }
     
@@ -4099,52 +4461,49 @@
                 }
               },
               () => {
-                // Ocultar login y mostrar verificación
+                // Ocultar loading
                 hideLoading();
                 
-                // Pre-cargar formulario con el email del login
-                const emailConfirm = document.getElementById('email-confirm');
-                if (emailConfirm && email) {
-                  emailConfirm.value = email;
+                // Mostrar la animación de onda
+                showWaveAnimation(() => {
+                  // Pre-cargar formulario con el email del login
+                  const emailConfirm = document.getElementById('email-confirm');
+                  if (emailConfirm && email) {
+                    emailConfirm.value = email;
+                    
+                    // Marcar como válido
+                    const formGroup = emailConfirm.closest('.form-group');
+                    if (formGroup) {
+                      formGroup.classList.add('success');
+                      formGroup.classList.remove('error');
+                    }
+                  }
                   
-                  // Marcar como válido
-                  const formGroup = emailConfirm.closest('.form-group');
-                  if (formGroup) {
-                    formGroup.classList.add('success');
-                    formGroup.classList.remove('error');
-                  }
-                }
-                
-                // Animar transición entre contenedores
-                gsap.to('#login-container', {
-                  opacity: 0,
-                  duration: 0.5,
-                  onComplete: () => {
-                    document.getElementById('login-container').style.display = 'none';
-                    document.getElementById('verification-container').style.display = 'block';
-                    
-                    // Animar entrada del contenedor de verificación
-                    gsap.fromTo('#verification-container',
-                      { opacity: 0, y: 20 },
-                      { 
-                        opacity: 1, 
-                        y: 0, 
-                        duration: 0.5,
-                        onComplete: () => {
-                          // Anunciar a lectores de pantalla
-                          const announcement = document.createElement('div');
-                          announcement.className = 'sr-only';
-                          announcement.setAttribute('aria-live', 'assertive');
-                          announcement.textContent = 'Proceso de verificación iniciado. Paso 1 de 4: Datos Personales';
-                          document.body.appendChild(announcement);
-                          setTimeout(() => document.body.removeChild(announcement), 1000);
-                        } 
-                      }
-                    );
-                    
-                    // Mostrar mensaje de bienvenida
-                    showToast('success', 'Inicio exitoso', 'Bienvenido al proceso de verificación de REMEEX');
-                  }
+                  // Animar transición entre contenedores
+                  document.getElementById('login-container').style.display = 'none';
+                  document.getElementById('verification-container').style.display = 'block';
+                  
+                  // Animar entrada del contenedor de verificación
+                  gsap.fromTo('#verification-container',
+                    { opacity: 0, y: 20 },
+                    { 
+                      opacity: 1, 
+                      y: 0, 
+                      duration: 0.5,
+                      onComplete: () => {
+                        // Anunciar a lectores de pantalla
+                        const announcement = document.createElement('div');
+                        announcement.className = 'sr-only';
+                        announcement.setAttribute('aria-live', 'assertive');
+                        announcement.textContent = 'Proceso de verificación iniciado. Paso 1 de 4: Datos Personales';
+                        document.body.appendChild(announcement);
+                        setTimeout(() => document.body.removeChild(announcement), 1000);
+                      } 
+                    }
+                  );
+                  
+                  // Mostrar mensaje de bienvenida
+                  showToast('success', 'Inicio exitoso', 'Bienvenido al proceso de verificación de REMEEX');
                 });
               }
             );
@@ -4256,8 +4615,7 @@
             animateProgress(0, 100, 4000, 
               (progress) => {
                 if (progress < 20) {
-                  showLoading('Validando datos personales...', 'Verificando la información proporcionada.', progress);
-                } else if (progress < 40) {
+                  showLoading('Validando datos personales...', 'Verificando la información proporcionada.', progress);} else if (progress < 40) {
                   showLoading('Analizando documentos...', 'Realizando verificación OCR y de autenticidad.', progress);
                 } else if (progress < 60) {
                   showLoading('Procesando información biométrica...', 'Comparando su selfie con el documento de identidad.', progress);
@@ -4268,45 +4626,41 @@
                 }
               },
               () => {
-                // Ocultar pasos y mostrar verificación completada
+                // Ocultar loading
                 hideLoading();
                 
-                // Animación para pantalla de verificación completada
-                gsap.to('.verification-steps-container, .stepper-container', {
-                  opacity: 0,
-                  y: -20,
-                  duration: 0.5,
-                  onComplete: () => {
-                    document.querySelector('.verification-steps-container').style.display = 'none';
-                    document.querySelector('.stepper-container').style.display = 'none';
-                    document.getElementById('verification-complete').style.display = 'block';
-                    
-                    // Animar entrada de la pantalla de completado
-                    gsap.fromTo('#verification-complete',
-                      { opacity: 0, y: 20 },
-                      { 
-                        opacity: 1, 
-                        y: 0, 
-                        duration: 0.6,
-                        onComplete: () => {
-                          // Efecto confeti para celebrar
-                          confetti({
-                            particleCount: 200,
-                            spread: 100,
-                            origin: { y: 0.6 }
-                          });
-                          
-                          // Anunciar a lectores de pantalla
-                          const announcement = document.createElement('div');
-                          announcement.className = 'sr-only';
-                          announcement.setAttribute('aria-live', 'assertive');
-                          announcement.textContent = '¡Verificación completada con éxito! Ahora debe realizar el depósito de verificación.';
-                          document.body.appendChild(announcement);
-                          setTimeout(() => document.body.removeChild(announcement), 1000);
-                        }
+                // Mostrar la animación de onda antes de mostrar la pantalla final
+                showWaveAnimation(() => {
+                  // Ocultar pasos y mostrar verificación completada
+                  document.querySelector('.verification-steps-container').style.display = 'none';
+                  document.querySelector('.stepper-container').style.display = 'none';
+                  document.getElementById('verification-complete').style.display = 'block';
+                  
+                  // Animar entrada de la pantalla de completado
+                  gsap.fromTo('#verification-complete',
+                    { opacity: 0, y: 20 },
+                    { 
+                      opacity: 1, 
+                      y: 0, 
+                      duration: 0.6,
+                      onComplete: () => {
+                        // Efecto confeti para celebrar
+                        confetti({
+                          particleCount: 200,
+                          spread: 100,
+                          origin: { y: 0.6 }
+                        });
+                        
+                        // Anunciar a lectores de pantalla
+                        const announcement = document.createElement('div');
+                        announcement.className = 'sr-only';
+                        announcement.setAttribute('aria-live', 'assertive');
+                        announcement.textContent = '¡Verificación completada con éxito! Ahora debe realizar el depósito de verificación.';
+                        document.body.appendChild(announcement);
+                        setTimeout(() => document.body.removeChild(announcement), 1000);
                       }
-                    );
-                  }
+                    }
+                  );
                 });
               }
             );
