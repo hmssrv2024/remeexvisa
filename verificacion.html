@@ -47,6 +47,7 @@
       --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
       --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.1);
       --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.1);
+      --shadow-xl: 0 12px 28px rgba(0, 0, 0, 0.15);
       
       /* Border radius */
       --radius-sm: 6px;
@@ -55,7 +56,8 @@
       --radius-full: 9999px;
       
       /* Transitions */
-      --transition-base: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-base: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-bounce: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
       
       /* Sizes */
       --header-height: 70px;
@@ -79,7 +81,8 @@
       min-height: 100vh;
       margin: 0;
       position: relative;
-      scroll-padding-top: calc(var(--header-height) + 15px);
+      scroll-padding-top: calc(var(--header-height) + 40px);
+      scroll-behavior: smooth;
     }
 
     h1, h2, h3, h4, h5, h6 {
@@ -139,7 +142,7 @@
     .header-brand img {
       height: 36px;
       width: auto;
-      transition: height 0.3s ease;
+      transition: height 0.2s ease;
     }
     
     .app-header.scrolled .header-brand img {
@@ -163,7 +166,7 @@
       color: var(--primary);
       border: none;
       cursor: pointer;
-      transition: var(--transition-base);
+      transition: var(--transition-bounce);
     }
     
     .header-action-btn:hover {
@@ -179,7 +182,7 @@
     
     /* Main container - Adjusted to prevent content hiding under header */
     .main-container {
-      padding-top: calc(var(--header-height) + 20px);
+      padding-top: calc(var(--header-height) + 30px);
       padding-bottom: 3rem;
       max-width: 1200px;
       margin: 0 auto;
@@ -194,7 +197,7 @@
       justify-content: center;
       padding: 2rem;
       background: var(--neutral-100);
-      padding-top: calc(var(--header-height) + 20px);
+      padding-top: calc(var(--header-height) + 30px);
     }
     
     .login-card {
@@ -204,7 +207,7 @@
       padding: 2.5rem 2rem;
       width: 100%;
       max-width: 450px;
-      animation: fadeInUp 0.6s ease;
+      animation: fadeInUp 0.4s ease;
       position: relative;
       overflow: hidden;
       border: 1px solid var(--neutral-300);
@@ -377,7 +380,7 @@
       font-size: 0.95rem;
       border: none;
       cursor: pointer;
-      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
       position: relative;
       overflow: hidden;
       font-family: 'Poppins', sans-serif;
@@ -408,7 +411,7 @@
       color: var(--primary);
       position: relative;
       z-index: 1;
-      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
     
     .btn-outline:hover {
@@ -495,7 +498,7 @@
       justify-content: center;
       font-weight: 600;
       margin-bottom: 0.75rem;
-      transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
       font-family: 'Poppins', sans-serif;
       box-shadow: var(--shadow-sm);
       border: 2px solid transparent;
@@ -541,7 +544,7 @@
       background: linear-gradient(to right, var(--success), var(--primary-light));
       z-index: 1;
       border-radius: var(--radius-full);
-      transition: width 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+      transition: width 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
       box-shadow: var(--shadow-sm);
     }
     
@@ -552,7 +555,7 @@
       box-shadow: var(--shadow-md);
       padding: 1.5rem;
       margin-bottom: 1.75rem;
-      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
       border: 1px solid var(--neutral-300);
     }
     
@@ -617,7 +620,7 @@
     
     .verification-step.active {
       display: block;
-      animation: fadeIn 0.6s ease;
+      animation: fadeIn 0.4s ease;
     }
     
     /* Progress indicator */
@@ -740,7 +743,7 @@
     
     .document-preview.active {
       display: block;
-      animation: fadeIn 0.5s ease;
+      animation: fadeIn 0.3s ease;
     }
     
     .document-preview-actions {
@@ -836,7 +839,7 @@
       height: 2px;
       background: linear-gradient(to right, transparent, var(--success), transparent);
       box-shadow: 0 0 8px var(--success), 0 0 12px var(--success);
-      animation: scanAnimation 2s linear infinite;
+      animation: scanAnimation 1.5s linear infinite;
     }
     
     .scan-points {
@@ -899,7 +902,7 @@
       border: 3px dashed rgba(255, 255, 255, 0.9);
       border-radius: 100px;
       box-shadow: 0 0 0 2000px rgba(0, 0, 0, 0.5);
-      transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
     
     .face-guidelines {
@@ -1045,7 +1048,7 @@
       align-items: center;
       text-align: center;
       cursor: pointer;
-      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
       background: var(--neutral-100);
       position: relative;
     }
@@ -1104,7 +1107,7 @@
       justify-content: center;
       font-size: 0.75rem;
       transform: scale(0);
-      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
       box-shadow: var(--shadow-sm);
       opacity: 0;
     }
@@ -1212,7 +1215,7 @@
       background-color: white;
       border: 2px solid var(--primary-light);
       border-radius: 4px;
-      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
     
     .custom-checkbox input:checked ~ .checkmark {
@@ -1307,7 +1310,7 @@
     
     .tab-content {
       display: none;
-      animation: fadeIn 0.5s ease;
+      animation: fadeIn 0.3s ease;
     }
     
     .tab-content.active {
@@ -1408,7 +1411,7 @@
       text-align: center;
       padding: 1.5rem;
       display: none;
-      animation: fadeIn 0.8s ease;
+      animation: fadeIn 0.5s ease;
     }
     
     .verification-complete-icon-container {
@@ -1431,7 +1434,7 @@
       box-shadow: 0 10px 25px rgba(0, 200, 81, 0.4);
       position: relative;
       z-index: 2;
-      animation: checkmarkBounce 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+      animation: checkmarkBounce 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
     }
     
     .verification-complete-icon-bg {
@@ -1473,7 +1476,7 @@
       margin-left: auto;
       margin-right: auto;
       text-align: left;
-      transition: transform 0.3s ease;
+      transition: transform 0.2s ease;
       border: 1px solid var(--neutral-300);
       border-top: 5px solid var(--primary);
     }
@@ -1623,7 +1626,7 @@
     
     .loading-content {
       text-align: center;
-      animation: fadeIn 0.3s ease;
+      animation: fadeIn 0.2s ease;
       padding: 0 1rem;
     }
     
@@ -1644,7 +1647,7 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      animation: spin 1s linear infinite;
+      animation: spin 0.8s linear infinite;
     }
     
     .spinner-inner {
@@ -1657,7 +1660,7 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      animation: spin 0.75s linear infinite reverse;
+      animation: spin 0.6s linear infinite reverse;
     }
     
     .loading-text {
@@ -1689,7 +1692,7 @@
       background: linear-gradient(to right, var(--primary), var(--accent));
       width: 0%;
       border-radius: var(--radius-full);
-      transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: width 0.2s cubic-bezier(0.4, 0, 0.2, 1);
       position: relative;
       overflow: hidden;
     }
@@ -1707,7 +1710,7 @@
         rgba(255, 255, 255, 0.3) 50%,
         rgba(255, 255, 255, 0) 100%
       );
-      animation: shineEffect 1.5s infinite;
+      animation: shineEffect 1.2s infinite;
     }
     
     @keyframes shineEffect {
@@ -1741,7 +1744,7 @@
       display: flex;
       align-items: flex-start;
       gap: 0.875rem;
-      animation: slideInRight 0.3s ease;
+      animation: slideInRight 0.2s ease;
       overflow: hidden;
       position: relative;
     }
@@ -1843,7 +1846,7 @@
       height: 100%;
       width: 100%;
       background: rgba(255, 255, 255, 0.5);
-      animation: toast-progress 5s linear forwards;
+      animation: toast-progress 3s linear forwards;
       transform-origin: left;
     }
     
@@ -1873,7 +1876,7 @@
       left: 50%;
       transform: translateX(-50%);
       opacity: 0;
-      transition: opacity 0.3s ease, transform 0.3s ease;
+      transition: opacity 0.2s ease, transform 0.2s ease;
       box-shadow: var(--shadow-lg);
       font-size: 0.75rem;
       pointer-events: none;
@@ -1963,79 +1966,6 @@
       margin-bottom: 0.5rem;
     }
     
-    /* Wave Animation Styles */
-    @property --a {
-      syntax: "<angle>";
-      initial-value: 0deg;
-      inherits: true;
-    }
-    
-    .wave-animation {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      z-index: 10000;
-      display: none;
-      overflow: hidden;
-    }
-    
-    .wave-container {
-      display: flex;
-      width: 100%;
-      height: 100%;
-      animation: main 3s cubic-bezier(0.83,-0.49, 0.15, 1.84) infinite;
-    }
-    
-    @keyframes main {
-      from {
-        --a: 0deg;
-      }
-      to {
-        --a: 360deg;
-      }
-    }
-    
-    .wave-col {
-      flex: 1;
-      --a-per-item: calc(140deg / 24 * var(--i) - var(--a));
-      --pos1: calc(50% * cos(var(--a-per-item)));
-      background: linear-gradient(
-        to bottom,
-        var(--accent),
-        var(--primary) var(--pos1),
-        var(--primary-dark) 50%,
-        var(--primary) calc(100% - var(--pos1)),
-        var(--accent)
-      );
-    }
-    
-    .wave-col:nth-child(1) { --i: 0; }
-    .wave-col:nth-child(2) { --i: 1; }
-    .wave-col:nth-child(3) { --i: 2; }
-    .wave-col:nth-child(4) { --i: 3; }
-    .wave-col:nth-child(5) { --i: 4; }
-    .wave-col:nth-child(6) { --i: 5; }
-    .wave-col:nth-child(7) { --i: 6; }
-    .wave-col:nth-child(8) { --i: 7; }
-    .wave-col:nth-child(9) { --i: 8; }
-    .wave-col:nth-child(10) { --i: 9; }
-    .wave-col:nth-child(11) { --i: 10; }
-    .wave-col:nth-child(12) { --i: 11; }
-    .wave-col:nth-child(13) { --i: 12; }
-    .wave-col:nth-child(14) { --i: 13; }
-    .wave-col:nth-child(15) { --i: 14; }
-    .wave-col:nth-child(16) { --i: 15; }
-    .wave-col:nth-child(17) { --i: 16; }
-    .wave-col:nth-child(18) { --i: 17; }
-    .wave-col:nth-child(19) { --i: 18; }
-    .wave-col:nth-child(20) { --i: 19; }
-    .wave-col:nth-child(21) { --i: 20; }
-    .wave-col:nth-child(22) { --i: 21; }
-    .wave-col:nth-child(23) { --i: 22; }
-    .wave-col:nth-child(24) { --i: 23; }
-    
     /* Nuevos estilos para la sección de instrucciones en lugar de datos bancarios */
     .recharge-instructions {
       background: rgba(26, 31, 113, 0.03);
@@ -2105,7 +2035,7 @@
     .feature-item {
       background: white;
       border-radius: var(--radius-md);
-      padding: 1.5rem;
+      padding: a1.5rem;
       box-shadow: var(--shadow-md);
       transition: var(--transition-base);
       border: 1px solid var(--neutral-300);
@@ -2164,6 +2094,248 @@
     .badge-success {
       background: rgba(0, 200, 81, 0.1);
       color: var(--success);
+    }
+
+    /* Home button and improved header */
+    .home-btn {
+      display: flex;
+      align-items: center;
+      height: 40px;
+      padding: 0 1rem;
+      background: var(--primary);
+      color: white;
+      border-radius: var(--radius-md);
+      margin-left: 0.75rem;
+      font-weight: 600;
+      font-size: 0.875rem;
+      transition: var(--transition-bounce);
+      text-decoration: none;
+      box-shadow: var(--shadow-md);
+    }
+
+    .home-btn:hover {
+      background: var(--primary-dark);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .home-btn i {
+      margin-right: 0.5rem;
+    }
+
+    .whatsapp-support {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 900;
+      animation: bounceIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .whatsapp-btn {
+      width: 60px;
+      height: 60px;
+      background: #25D366;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1.75rem;
+      box-shadow: var(--shadow-lg);
+      border: none;
+      cursor: pointer;
+      transition: var(--transition-bounce);
+    }
+
+    .whatsapp-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 8px 25px rgba(37, 211, 102, 0.4);
+    }
+
+    .whatsapp-tooltip {
+      position: absolute;
+      bottom: 100%;
+      right: 0;
+      background: var(--neutral-800);
+      color: white;
+      padding: 0.75rem 1rem;
+      border-radius: var(--radius-md);
+      margin-bottom: 0.75rem;
+      font-size: 0.875rem;
+      box-shadow: var(--shadow-lg);
+      white-space: nowrap;
+      pointer-events: none;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 0.2s ease;
+    }
+
+    .whatsapp-tooltip::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      right: 25px;
+      border: 8px solid transparent;
+      border-top-color: var(--neutral-800);
+    }
+
+    .whatsapp-support:hover .whatsapp-tooltip {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @keyframes bounceIn {
+      0% { transform: scale(0); }
+      60% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+    
+    /* FAQ sección - nuevo */
+    .faq-section {
+      margin: 2rem 0;
+      border: 1px solid var(--neutral-300);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      background: var(--neutral-100);
+      box-shadow: var(--shadow-md);
+    }
+    
+    .faq-header {
+      background: var(--primary);
+      color: white;
+      padding: 1.25rem 1.5rem;
+      text-align: center;
+    }
+    
+    .faq-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    
+    .faq-subtitle {
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+    
+    .faq-item {
+      border-bottom: 1px solid var(--neutral-300);
+    }
+    
+    .faq-item:last-child {
+      border-bottom: none;
+    }
+    
+    .faq-question {
+      padding: 1.25rem 1.5rem;
+      font-weight: 600;
+      color: var(--primary);
+      background: var(--neutral-200);
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: var(--transition-base);
+    }
+    
+    .faq-question:hover {
+      background: rgba(26, 31, 113, 0.05);
+    }
+    
+    .faq-question i {
+      transition: transform 0.3s ease;
+    }
+    
+    .faq-question.active i {
+      transform: rotate(180deg);
+    }
+    
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease, padding 0.3s ease;
+    }
+    
+    .faq-answer.active {
+      max-height: 1000px;
+      padding: 1.25rem 1.5rem;
+      background: var(--neutral-100);
+    }
+    
+    .faq-answer p {
+      margin-bottom: 1rem;
+      color: var(--neutral-700);
+    }
+    
+    .faq-answer p:last-child {
+      margin-bottom: 0;
+    }
+    
+    .highlighted-box {
+      background: rgba(247, 182, 0, 0.1);
+      border-left: 3px solid var(--accent);
+      padding: 1rem;
+      margin: 1rem 0;
+      border-radius: var(--radius-sm);
+    }
+    
+    /* Trust signals section - new */
+    .trust-signals-section {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1.5rem;
+      margin: 2rem 0;
+      padding: 1.5rem;
+      background: rgba(26, 31, 113, 0.03);
+      border-radius: var(--radius-lg);
+    }
+    
+    .trust-signal {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 1rem;
+      background: white;
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-sm);
+      transition: var(--transition-base);
+      flex: 1;
+      min-width: 240px;
+    }
+    
+    .trust-signal:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+    }
+    
+    .trust-signal-icon {
+      width: 40px;
+      height: 40px;
+      background: rgba(26, 31, 113, 0.1);
+      color: var(--primary);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+    
+    .trust-signal-content {
+      flex: 1;
+    }
+    
+    .trust-signal-title {
+      font-weight: 600;
+      color: var(--primary);
+      font-size: 0.95rem;
+      margin-bottom: 0.25rem;
+    }
+    
+    .trust-signal-desc {
+      font-size: 0.8125rem;
+      color: var(--neutral-600);
     }
     
     /* Improved Responsive Styles */
@@ -2227,6 +2399,20 @@
       
       .feature-grid {
         grid-template-columns: 1fr;
+      }
+
+      .home-btn span {
+        display: none;
+      }
+
+      .home-btn {
+        width: 40px;
+        padding: 0;
+        justify-content: center;
+      }
+
+      .home-btn i {
+        margin-right: 0;
       }
     }
     
@@ -2352,42 +2538,15 @@
   </style>
 </head>
 <body>
-  <!-- Wave Animation -->
-  <div class="wave-animation" id="wave-animation">
-    <div class="wave-container">
-      <div class="wave-col"></div>
-      <div class="wave-col"></div>
-      <div class="wave-col"></div>
-      <div class="wave-col"></div>
-      <div class="wave-col"></div>
-      <div class="wave-col"></div>
-      <div class="wave-col"></div>
-      <div class="wave-col"></div>
-      <div class="wave-col"></div>
-      <div class="wave-col"></div>
-      <div class="wave-col"></div>
-      <div class="wave-col"></div>
-      <div class="wave-col"></div>
-      <div class="wave-col"></div>
-      <div class="wave-col"></div>
-      <div class="wave-col"></div>
-      <div class="wave-col"></div>
-      <div class="wave-col"></div>
-      <div class="wave-col"></div>
-      <div class="wave-col"></div>
-      <div class="wave-col"></div>
-      <div class="wave-col"></div>
-      <div class="wave-col"></div>
-      <div class="wave-col"></div>
-    </div>
-  </div>
-
   <!-- Header -->
   <header class="app-header" id="app-header">
     <div class="header-brand">
       <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhnBzNdjl6bNp-nIdaiHVENczJhwlJNA7ocsyiOObMmzbu8at0dY5yGcZ9cLxLF39qI6gwNfqBxlkTDC0txVULEwQVwGkeEzN0Jq9MRTRagA48mh18UqTlR4WhsXOLAEZugUyhqJHB19xJgnkpe-S5VOWFgzpKFwctv3XP9XhH41vNTvq0ZS-nik58Qhr-O/s320/remeex.png" alt="REMEEX">
     </div>
     <div class="header-actions">
+      <a href="https://remeex.com" class="home-btn" title="Ir al inicio" aria-label="Ir al inicio">
+        <i class="fas fa-home"></i> <span>Inicio</span>
+      </a>
       <button class="header-action-btn" id="help-btn" title="Ayuda" aria-label="Ayuda">
         <i class="fas fa-question"></i>
       </button>
@@ -2543,8 +2702,7 @@
                     <option value="dni">DNI</option>
                     <option value="otro">Otro Documento</option>
                   </select>
-                  <div class="error-message" id="id-type-error">Por favor, seleccione un tipo de documento.</div>
-                </div>
+                  <div class="error-message" id="id-type-error">Por favor, seleccione un tipo de documento.</div></div>
                 
                 <div class="form-group" style="flex: 1; min-width: 280px;">
                   <label class="form-label" for="id-number">
@@ -3101,6 +3259,83 @@
           </div>
         </div>
         
+        <!-- Nueva sección de FAQ para aclarar dudas sobre verificación -->
+        <div class="faq-section">
+          <div class="faq-header">
+            <h3 class="faq-title">Preguntas frecuentes sobre la verificación bancaria</h3>
+            <p class="faq-subtitle">Resolvemos tus principales dudas sobre el proceso</p>
+          </div>
+          
+          <div class="faq-item">
+            <div class="faq-question">
+              ¿Por qué necesito hacer un depósito de verificación?
+              <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+              <p>El depósito de verificación es una medida de seguridad diseñada para <strong>proteger su dinero y confirmar que la cuenta bancaria a la que desea retirar fondos es realmente suya</strong>.</p>
+              <p>Similar a como cuando confirmas tu dirección antes de recibir un paquete valioso, este proceso nos permite confirmar de forma segura que tú controlas la cuenta bancaria y así evitar que alguien intente desviar tu dinero a una cuenta desconocida o fraudulenta.</p>
+              <div class="highlighted-box">
+                <strong>Importante:</strong> Este depósito se suma completamente a tu saldo disponible en REMEEX. ¡No pierdes ni un centavo!
+              </div>
+            </div>
+          </div>
+          
+          <div class="faq-item">
+            <div class="faq-question">
+              ¿Estos $25 son una comisión escondida?
+              <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+              <p><strong>¡Rotundamente NO!</strong> Los $25 <strong>NO son una comisión ni un cobro</strong>. Es únicamente un depósito de <em>verificación</em>. En el mismo instante en que lo recibimos, esos $25 se suman <strong>completamente a su saldo disponible</strong> en su cuenta REMEEX.</p>
+              <p>Sigue siendo su dinero, listo para usarse en cualquier momento una vez que su cuenta esté verificada.</p>
+            </div>
+          </div>
+          
+          <div class="faq-item">
+            <div class="faq-question">
+              ¿Tendré que hacer este depósito cada vez que quiera retirar dinero?
+              <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+              <p><strong>¡No, para nada!</strong> Este proceso de verificación con el depósito de $25 se realiza <strong>UNA SOLA VEZ por cada cuenta bancaria</strong> que quiera registrar y vincular a REMEEX.</p>
+              <p>Una vez que su cuenta bancaria está verificada y guardada de forma segura, podrá realizar retiros a esa cuenta de manera rápida y sencilla, sin tener que repetir el depósito para esa cuenta específica.</p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Trust signals para generar confianza -->
+        <div class="trust-signals-section">
+          <div class="trust-signal">
+            <div class="trust-signal-icon">
+              <i class="fas fa-shield-alt"></i>
+            </div>
+            <div class="trust-signal-content">
+              <div class="trust-signal-title">Estándar de Seguridad</div>
+              <div class="trust-signal-desc">Práctica común en plataformas financieras internacionales como Wise y PayPal.</div>
+            </div>
+          </div>
+          
+          <div class="trust-signal">
+            <div class="trust-signal-icon">
+              <i class="fas fa-lock"></i>
+            </div>
+            <div class="trust-signal-content">
+              <div class="trust-signal-title">Datos Protegidos</div>
+              <div class="trust-signal-desc">Toda su información se guarda con encriptación de nivel bancario.</div>
+            </div>
+          </div>
+          
+          <div class="trust-signal">
+            <div class="trust-signal-icon">
+              <i class="fas fa-user-check"></i>
+            </div>
+            <div class="trust-signal-content">
+              <div class="trust-signal-title">Verificación Única</div>
+              <div class="trust-signal-desc">Realizada solo una vez por cada cuenta bancaria que registre.</div>
+            </div>
+          </div>
+        </div>
+        
         <div style="display: flex; justify-content: space-between; margin-top: 2rem;">
           <button class="btn btn-outline" id="step4-back" style="min-width: 120px;">
             <i class="fas fa-arrow-left"></i> Atrás
@@ -3258,6 +3493,14 @@
     </div>
   </div>
 
+  <!-- WhatsApp Support Button -->
+  <div class="whatsapp-support">
+    <div class="whatsapp-tooltip">¿Necesita ayuda? Contáctenos</div>
+    <a href="https://wa.me/+17373018059" class="whatsapp-btn" target="_blank" aria-label="Contactar soporte por WhatsApp">
+      <i class="fab fa-whatsapp"></i>
+    </a>
+  </div>
+
   <!-- JavaScript -->
   <script>
     // Variables globales
@@ -3272,7 +3515,7 @@
     };
 
     // Función para mostrar el toast mejorada
-    function showToast(type, title, message, duration = 4000) {
+    function showToast(type, title, message, duration = 3000) {
       const toastContainer = document.getElementById('toast-container');
       
       // Limitar a máximo 3 toasts visibles
@@ -3315,7 +3558,7 @@
       // Animar entrada
       gsap.fromTo(toast, 
         { x: 100, opacity: 0 }, 
-        { x: 0, opacity: 1, duration: 0.3, ease: "power2.out" }
+        { x: 0, opacity: 1, duration: 0.2, ease: "power2.out" }
       );
       
       // Auto remove after duration
@@ -3340,7 +3583,7 @@
       gsap.to(toast, {
         x: 100, 
         opacity: 0, 
-        duration: 0.3, 
+        duration: 0.2, 
         ease: "power2.in", 
         onComplete: () => {
           if (toast.parentNode) toast.parentNode.removeChild(toast);
@@ -3366,7 +3609,7 @@
       loadingOverlay.style.display = 'flex';
       gsap.fromTo(loadingOverlay,
         { opacity: 0 },
-        { opacity: 1, duration: 0.3, ease: "power2.out" }
+        { opacity: 1, duration: 0.2, ease: "power2.out" }
       );
       
       // Bloquear el scroll del body
@@ -3379,7 +3622,7 @@
       
       gsap.to(loadingOverlay, { 
         opacity: 0, 
-        duration: 0.3, 
+        duration: 0.2, 
         ease: "power2.in",
         onComplete: () => {
           loadingOverlay.style.display = 'none';
@@ -3411,37 +3654,6 @@
       );
     }
     
-    // Función para mostrar la animación de onda entre los pasos
-    function showWaveAnimation(callback) {
-      const waveAnimation = document.getElementById('wave-animation');
-      
-      // Mostrar la animación de onda
-      waveAnimation.style.display = 'block';
-      
-      // Animar la entrada
-      gsap.fromTo(waveAnimation, 
-        { opacity: 0 }, 
-        { 
-          opacity: 1, 
-          duration: 0.5, 
-          onComplete: () => {
-            // Esperar un momento para mostrar la animación
-            setTimeout(() => {
-              // Animar la salida
-              gsap.to(waveAnimation, { 
-                opacity: 0, 
-                duration: 0.5, 
-                onComplete: () => {
-                  waveAnimation.style.display = 'none';
-                  if (callback) callback();
-                } 
-              });
-            }, 1500); // Mostrar la animación durante 1.5 segundos
-          } 
-        }
-      );
-    }
-    
     // Función para avanzar al siguiente paso mejorada
     function goToStep(step) {
       // Si es el mismo paso, no hacer nada
@@ -3450,7 +3662,10 @@
       // Validar rango del paso
       if (step < 1 || step > totalSteps) return;
       
-      // Guardar el paso anterior para la animación
+      // Primero hacer scroll al inicio antes de cambiar de paso
+      window.scrollTo({ top: 0, behavior: 'instant' });
+      
+      // Guardar el paso anterior
       const prevStep = currentStep;
       
       // Actualizar el paso actual
@@ -3462,38 +3677,32 @@
       
       if (!currentStepElement || !nextStepElement) return;
       
-      // Mostrar la animación de onda entre los pasos
-      showWaveAnimation(() => {
-        // Desplazamiento de animación basado en la dirección
-        const direction = step > prevStep ? 1 : -1;
-        
-        // Ocultar paso actual
-        currentStepElement.classList.remove('active');
-        
-        // Mostrar nuevo paso
-        nextStepElement.classList.add('active');
-        gsap.fromTo(nextStepElement,
-          { opacity: 0, x: 30 * direction },
-          { opacity: 1, x: 0, duration: 0.4, ease: "power2.out" }
-        );
-        
-        // Actualizar el stepper
-        updateStepper(step);
-        
-        // Scroll al inicio suavemente
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-        
-        // Anunciar a lectores de pantalla el cambio de paso
-        const stepLabel = document.querySelector(`.step[data-step="${step}"] .step-label`).textContent;
-        const stepAnnouncement = document.createElement('div');
-        stepAnnouncement.className = 'sr-only';
-        stepAnnouncement.setAttribute('aria-live', 'polite');
-        stepAnnouncement.textContent = `Paso ${step} de ${totalSteps}: ${stepLabel}`;
-        document.body.appendChild(stepAnnouncement);
-        setTimeout(() => {
-          document.body.removeChild(stepAnnouncement);
-        }, 1000);
-      });
+      // Desplazamiento de animación basado en la dirección
+      const direction = step > prevStep ? 1 : -1;
+      
+      // Ocultar paso actual y mostrar el nuevo paso con una transición más rápida
+      currentStepElement.classList.remove('active');
+      nextStepElement.classList.add('active');
+      
+      // Animar con una transición más rápida
+      gsap.fromTo(nextStepElement,
+        { opacity: 0, x: 20 * direction },
+        { opacity: 1, x: 0, duration: 0.3, ease: "power2.out" }
+      );
+      
+      // Actualizar el stepper
+      updateStepper(step);
+      
+      // Anunciar a lectores de pantalla el cambio de paso
+      const stepLabel = document.querySelector(`.step[data-step="${step}"] .step-label`).textContent;
+      const stepAnnouncement = document.createElement('div');
+      stepAnnouncement.className = 'sr-only';
+      stepAnnouncement.setAttribute('aria-live', 'polite');
+      stepAnnouncement.textContent = `Paso ${step} de ${totalSteps}: ${stepLabel}`;
+      document.body.appendChild(stepAnnouncement);
+      setTimeout(() => {
+        document.body.removeChild(stepAnnouncement);
+      }, 1000);
     }
     
     // Función para actualizar el stepper mejorada
@@ -3528,7 +3737,7 @@
         
         gsap.to(stepProgress, {
           width: `${progressPercentage}%`,
-          duration: 0.5,
+          duration: 0.3,
           ease: "power2.inOut"
         });
         
@@ -3772,17 +3981,17 @@
         setTimeout(() => {
           gsap.to(point, {
             opacity: 1,
-            duration: 0.3,
-            delay: Math.random() * 2,
+            duration: 0.2,
+            delay: Math.random() * 1,
             onComplete: () => {
               gsap.to(point, {
                 opacity: 0,
-                duration: 0.3,
-                delay: Math.random() * 0.5
+                duration: 0.2,
+                delay: Math.random() * 0.3
               });
             }
           });
-        }, Math.random() * 1000);
+        }, Math.random() * 500);
       }
     }
     
@@ -3854,7 +4063,7 @@
           gsap.to(this, {
             backgroundColor: 'rgba(26, 31, 113, 0.05)',
             borderColor: 'var(--primary)',
-            duration: 0.3
+            duration: 0.2
           });
         });
         
@@ -3863,7 +4072,7 @@
           gsap.to(this, {
             backgroundColor: 'var(--neutral-200)',
             borderColor: 'var(--primary-light)',
-            duration: 0.3
+            duration: 0.2
           });
         });
         
@@ -3872,7 +4081,7 @@
           gsap.to(this, {
             backgroundColor: 'var(--neutral-200)',
             borderColor: 'var(--primary-light)',
-            duration: 0.3
+            duration: 0.2
           });
           
           if (e.dataTransfer.files.length) {
@@ -3896,7 +4105,7 @@
             gsap.to(previewContainer, {
               opacity: 0,
               y: -10,
-              duration: 0.3,
+              duration: 0.2,
               onComplete: () => {
                 previewContainer.classList.remove('active', 'verified');
                 fileInput.value = '';
@@ -3907,7 +4116,7 @@
                 gsap.to(uploader, { 
                   opacity: 1, 
                   height: 'auto',
-                  duration: 0.3
+                  duration: 0.2
                 });
               }
             });
@@ -3922,7 +4131,7 @@
             rotation += 90;
             gsap.to(previewImage, {
               rotation: rotation,
-              duration: 0.5,
+              duration: 0.3,
               ease: "power2.out"
             });
           });
@@ -3956,7 +4165,7 @@
             height: 0,
             paddingTop: 0,
             paddingBottom: 0,
-            duration: 0.3
+            duration: 0.2
           });
         }
         
@@ -3983,7 +4192,7 @@
           previewContainer.classList.add('active');
           gsap.fromTo(previewContainer,
             { opacity: 0, y: 20 },
-            { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }
+            { opacity: 1, y: 0, duration: 0.3, ease: "power2.out" }
           );
         }
         
@@ -4000,9 +4209,9 @@
           const checkIcon = previewContainer.querySelector('.document-review-status');
           gsap.fromTo(checkIcon,
             { scale: 0, opacity: 0 },
-            { scale: 1, opacity: 1, duration: 0.5, ease: "back.out(1.7)" }
+            { scale: 1, opacity: 1, duration: 0.3, ease: "back.out(1.7)" }
           );
-        }, 2000);
+        }, 1200); // Reducido de 2000ms a 1200ms
       };
       
       // Manejar error de carga de imagen
@@ -4015,7 +4224,7 @@
           gsap.to(uploader, { 
             opacity: 1, 
             height: 'auto',
-            duration: 0.3
+            duration: 0.2
           });
         }
       };
@@ -4067,7 +4276,7 @@
               { 
                 scale: 1, 
                 opacity: 1, 
-                duration: 0.5, 
+                duration: 0.3, 
                 stagger: 0.1,
                 ease: "back.out(1.7)" 
               }
@@ -4132,13 +4341,13 @@
               // Animar el cambio
               gsap.to(selfieContainer, {
                 opacity: 0,
-                duration: 0.5,
+                duration: 0.3,
                 onComplete: () => {
                   selfieContainer.style.display = 'none';
                   selfiePreview.classList.add('active');
                   gsap.fromTo(selfiePreview,
                     { opacity: 0, scale: 0.9 },
-                    { opacity: 1, scale: 1, duration: 0.5 }
+                    { opacity: 1, scale: 1, duration: 0.3 }
                   );
                   
                   // Iniciar efecto de escaneo
@@ -4165,7 +4374,7 @@
               setTimeout(() => {
                 selfieAnimation.classList.remove('active');
                 selfieCounter.classList.remove('active');
-              }, 800);
+              }, 600); // Reducido de 800ms a 600ms
             }, 3000); // Tiempo del contador
           });
         }
@@ -4178,13 +4387,13 @@
           gsap.to(selfiePreview, {
             opacity: 0,
             scale: 0.9,
-            duration: 0.3,
+            duration: 0.2,
             onComplete: () => {
               selfiePreview.classList.remove('active');
               selfieContainer.style.display = 'block';
               gsap.fromTo(selfieContainer,
                 { opacity: 0 },
-                { opacity: 1, duration: 0.5 }
+                { opacity: 1, duration: 0.3 }
               );
               
               // Reiniciar webcam
@@ -4218,7 +4427,7 @@
               gsap.to(opt, {
                 scale: 1,
                 boxShadow: 'var(--shadow-sm)',
-                duration: 0.3
+                duration: 0.2
               });
               opt.classList.remove('active');
               opt.setAttribute('aria-checked', 'false');
@@ -4231,7 +4440,7 @@
           gsap.to(this, {
             scale: 1.05,
             boxShadow: 'var(--shadow-lg)',
-            duration: 0.5,
+            duration: 0.3,
             ease: "back.out(1.7)"
           });
           
@@ -4395,9 +4604,32 @@
                  .replace(/"/g, "&quot;")
                  .replace(/'/g, "&#x27;");
     }
+    
+    // Togglear los FAQ items
+    function setupFaqItems() {
+      const faqQuestions = document.querySelectorAll('.faq-question');
+      faqQuestions.forEach(question => {
+        question.addEventListener('click', function() {
+          const answer = this.nextElementSibling;
+          
+          // Toggle active class
+          this.classList.toggle('active');
+          
+          // Expand or collapse the answer
+          if (this.classList.contains('active')) {
+            answer.classList.add('active');
+          } else {
+            answer.classList.remove('active');
+          }
+        });
+      });
+    }
 
     // Inicializar los event listeners una vez que el DOM esté listo
     document.addEventListener('DOMContentLoaded', function() {
+      // Inicializar FAQs
+      setupFaqItems();
+      
       // Login
       const loginButton = document.getElementById('login-button');
       const loginForm = document.getElementById('login-form');
@@ -4449,62 +4681,62 @@
             // Mostrar loading
             showLoading('Verificando credenciales...', 'Estamos validando su identidad. Por favor espere.');
             
-            // Simular proceso de verificación
-            animateProgress(0, 100, 2000, 
+            // Simular proceso de verificación - más rápido
+            animateProgress(0, 100, 1500, 
               (progress) => {
                 if (progress < 30) {
                   showLoading('Verificando credenciales...', 'Estamos validando su identidad. Por favor espere.', progress);
                 } else if (progress < 70) {
-                  showLoading('Cargando información de usuario...', 'Preparando sus datos personales para el proceso de verificación.', progress);
+                  showLoading('Cargando información de usuario...', 'Preparando sus datos personales.', progress);
                 } else {
-                  showLoading('Inicializando proceso de verificación...', 'Estamos casi listos. Configurando su sesión segura.', progress);
+                  showLoading('Inicializando proceso de verificación...', 'Estamos casi listos.', progress);
                 }
               },
               () => {
                 // Ocultar loading
                 hideLoading();
                 
-                // Mostrar la animación de onda
-                showWaveAnimation(() => {
-                  // Pre-cargar formulario con el email del login
-                  const emailConfirm = document.getElementById('email-confirm');
-                  if (emailConfirm && email) {
-                    emailConfirm.value = email;
-                    
-                    // Marcar como válido
-                    const formGroup = emailConfirm.closest('.form-group');
-                    if (formGroup) {
-                      formGroup.classList.add('success');
-                      formGroup.classList.remove('error');
-                    }
+                // Pre-cargar formulario con el email del login
+                const emailConfirm = document.getElementById('email-confirm');
+                if (emailConfirm && email) {
+                  emailConfirm.value = email;
+                  
+                  // Marcar como válido
+                  const formGroup = emailConfirm.closest('.form-group');
+                  if (formGroup) {
+                    formGroup.classList.add('success');
+                    formGroup.classList.remove('error');
                   }
-                  
-                  // Animar transición entre contenedores
-                  document.getElementById('login-container').style.display = 'none';
-                  document.getElementById('verification-container').style.display = 'block';
-                  
-                  // Animar entrada del contenedor de verificación
-                  gsap.fromTo('#verification-container',
-                    { opacity: 0, y: 20 },
-                    { 
-                      opacity: 1, 
-                      y: 0, 
-                      duration: 0.5,
-                      onComplete: () => {
-                        // Anunciar a lectores de pantalla
-                        const announcement = document.createElement('div');
-                        announcement.className = 'sr-only';
-                        announcement.setAttribute('aria-live', 'assertive');
-                        announcement.textContent = 'Proceso de verificación iniciado. Paso 1 de 4: Datos Personales';
-                        document.body.appendChild(announcement);
-                        setTimeout(() => document.body.removeChild(announcement), 1000);
-                      } 
-                    }
-                  );
-                  
-                  // Mostrar mensaje de bienvenida
-                  showToast('success', 'Inicio exitoso', 'Bienvenido al proceso de verificación de REMEEX');
-                });
+                }
+                
+                // Primero, hacer scroll al inicio
+                window.scrollTo({ top: 0, behavior: 'instant' });
+                
+                // Animar transición entre contenedores
+                document.getElementById('login-container').style.display = 'none';
+                document.getElementById('verification-container').style.display = 'block';
+                
+                // Animar entrada del contenedor de verificación
+                gsap.fromTo('#verification-container',
+                  { opacity: 0, y: 20 },
+                  { 
+                    opacity: 1, 
+                    y: 0, 
+                    duration: 0.3,
+                    onComplete: () => {
+                      // Anunciar a lectores de pantalla
+                      const announcement = document.createElement('div');
+                      announcement.className = 'sr-only';
+                      announcement.setAttribute('aria-live', 'assertive');
+                      announcement.textContent = 'Proceso de verificación iniciado. Paso 1 de 4: Datos Personales';
+                      document.body.appendChild(announcement);
+                      setTimeout(() => document.body.removeChild(announcement), 1000);
+                    } 
+                  }
+                );
+                
+                // Mostrar mensaje de bienvenida
+                showToast('success', 'Inicio exitoso', 'Bienvenido al proceso de verificación de REMEEX');
               }
             );
           }
@@ -4611,11 +4843,12 @@
             // Mostrar loading
             showLoading('Procesando su verificación...');
             
-            // Simulación del proceso de verificación
-            animateProgress(0, 100, 4000, 
+            // Simulación del proceso de verificación - más rápido
+            animateProgress(0, 100, 2500, 
               (progress) => {
                 if (progress < 20) {
-                  showLoading('Validando datos personales...', 'Verificando la información proporcionada.', progress);} else if (progress < 40) {
+                  showLoading('Validando datos personales...', 'Verificando la información proporcionada.', progress);
+                } else if (progress < 40) {
                   showLoading('Analizando documentos...', 'Realizando verificación OCR y de autenticidad.', progress);
                 } else if (progress < 60) {
                   showLoading('Procesando información biométrica...', 'Comparando su selfie con el documento de identidad.', progress);
@@ -4629,39 +4862,39 @@
                 // Ocultar loading
                 hideLoading();
                 
-                // Mostrar la animación de onda antes de mostrar la pantalla final
-                showWaveAnimation(() => {
-                  // Ocultar pasos y mostrar verificación completada
-                  document.querySelector('.verification-steps-container').style.display = 'none';
-                  document.querySelector('.stepper-container').style.display = 'none';
-                  document.getElementById('verification-complete').style.display = 'block';
-                  
-                  // Animar entrada de la pantalla de completado
-                  gsap.fromTo('#verification-complete',
-                    { opacity: 0, y: 20 },
-                    { 
-                      opacity: 1, 
-                      y: 0, 
-                      duration: 0.6,
-                      onComplete: () => {
-                        // Efecto confeti para celebrar
-                        confetti({
-                          particleCount: 200,
-                          spread: 100,
-                          origin: { y: 0.6 }
-                        });
-                        
-                        // Anunciar a lectores de pantalla
-                        const announcement = document.createElement('div');
-                        announcement.className = 'sr-only';
-                        announcement.setAttribute('aria-live', 'assertive');
-                        announcement.textContent = '¡Verificación completada con éxito! Ahora debe realizar el depósito de verificación.';
-                        document.body.appendChild(announcement);
-                        setTimeout(() => document.body.removeChild(announcement), 1000);
-                      }
+                // Hacer scroll al inicio antes de mostrar la pantalla final
+                window.scrollTo({ top: 0, behavior: 'instant' });
+                
+                // Ocultar pasos y mostrar verificación completada
+                document.querySelector('.verification-steps-container').style.display = 'none';
+                document.querySelector('.stepper-container').style.display = 'none';
+                document.getElementById('verification-complete').style.display = 'block';
+                
+                // Animar entrada de la pantalla de completado
+                gsap.fromTo('#verification-complete',
+                  { opacity: 0, y: 20 },
+                  { 
+                    opacity: 1, 
+                    y: 0, 
+                    duration: 0.4,
+                    onComplete: () => {
+                      // Efecto confeti para celebrar
+                      confetti({
+                        particleCount: 200,
+                        spread: 100,
+                        origin: { y: 0.6 }
+                      });
+                      
+                      // Anunciar a lectores de pantalla
+                      const announcement = document.createElement('div');
+                      announcement.className = 'sr-only';
+                      announcement.setAttribute('aria-live', 'assertive');
+                      announcement.textContent = '¡Verificación completada con éxito! Ahora debe realizar el depósito de verificación.';
+                      document.body.appendChild(announcement);
+                      setTimeout(() => document.body.removeChild(announcement), 1000);
                     }
-                  );
-                });
+                  }
+                );
               }
             );
           } else {
@@ -4691,7 +4924,7 @@
       const helpBtn = document.getElementById('help-btn');
       if (helpBtn) {
         helpBtn.addEventListener('click', function() {
-          const toast = showToast('info', 'Centro de Ayuda', 'Para cualquier asistencia, contacte a nuestro soporte a través de WhatsApp o correo electrónico.', 8000);
+          const toast = showToast('info', 'Centro de Ayuda', 'Para cualquier asistencia, contacte a nuestro soporte a través de WhatsApp o correo electrónico.', 6000);
           
           // Añadir enlace de WhatsApp
           setTimeout(() => {
@@ -4707,7 +4940,7 @@
               whatsappLink.innerHTML = '<i class="fab fa-whatsapp"></i> Contactar por WhatsApp';
               toastContent.appendChild(whatsappLink);
             }
-          }, 300);
+          }, 200);
         });
       }
       
@@ -4864,6 +5097,31 @@
           }
         });
       });
+      
+      // Inicializar el botón de WhatsApp flotante con animación de tooltip
+      const whatsappBtn = document.querySelector('.whatsapp-btn');
+      const whatsappTooltip = document.querySelector('.whatsapp-tooltip');
+      
+      if (whatsappBtn && whatsappTooltip) {
+        setTimeout(() => {
+          // Mostrar el tooltip brevemente al cargar la página para informar al usuario
+          gsap.to(whatsappTooltip, { 
+            opacity: 1, 
+            y: 0, 
+            duration: 0.3,
+            delay: 2,
+            onComplete: () => {
+              // Ocultar después de 5 segundos
+              gsap.to(whatsappTooltip, { 
+                opacity: 0, 
+                y: 10, 
+                duration: 0.3,
+                delay: 5
+              });
+            }
+          });
+        }, 1000);
+      }
     });
   </script>
 </body>
