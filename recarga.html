@@ -3506,16 +3506,16 @@
           
           <div class="bank-detail-row">
             <div class="bank-detail-label">RIF:</div>
-            <div class="bank-detail-value">
-              J404757732
+            <div class="bank-detail-value" id="mobile-payment-rif">
+              <span id="mobile-payment-rif-value">J404757732</span>
               <div class="copy-btn" data-copy="J404757732"><i class="far fa-copy"></i></div>
             </div>
           </div>
           
           <div class="bank-detail-row">
             <div class="bank-detail-label">Teléfono:</div>
-            <div class="bank-detail-value">
-              0412 200 00 00
+            <div class="bank-detail-value" id="mobile-payment-phone">
+              <span id="mobile-payment-phone-value">0412 200 00 00</span>
               <div class="copy-btn" data-copy="0412 200 00 00"><i class="far fa-copy"></i></div>
             </div>
           </div>
@@ -3679,6 +3679,19 @@
             </div>
           </div>
         </div>
+        
+        <!-- Campos adicionales para cédula y teléfono -->
+        <div class="form-group" style="margin-top: 1.5rem;">
+          <label class="form-label" for="id-number">Número de Cédula</label>
+          <input type="text" class="form-control" id="id-number" placeholder="Ej: V12345678" aria-describedby="id-number-error">
+          <div class="error-message" id="id-number-error">Por favor ingrese su número de cédula en formato V12345678.</div>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" for="id-phone">Número de Teléfono</label>
+          <input type="text" class="form-control" id="id-phone" placeholder="Ej: 04121234567" aria-describedby="id-phone-error">
+          <div class="error-message" id="id-phone-error">Por favor ingrese su número de teléfono en formato 04121234567.</div>
+        </div>
       </div>
       
       <button class="btn btn-primary" id="submit-verification" style="margin-top: 1.5rem;">
@@ -3839,7 +3852,7 @@
   (function(){
   var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
   s1.async=true;
-  s1.src='https://embed.tawk.to/67cca8c614b1ee191063c36a/default';
+  s1.src='https://embed.tawk.to/67cca8c114b1ee191063c36a/default';
   s1.charset='UTF-8';
   s1.setAttribute('crossorigin','*');
   s0.parentNode.insertBefore(s1,s0);
@@ -3850,7 +3863,7 @@
   <script>
     // Configuración de valores constantes con tasa de cambio centralizada
     const CONFIG = {
-      LOGIN_CODE: '04521408965412547886',
+      LOGIN_CODE: '04521408965412547896',
       OTP_CODE: '142536',
       EXCHANGE_RATES: {
         USD_TO_BS: 114.45,  // Tasa centralizada que se actualizará dinámicamente
@@ -3872,6 +3885,7 @@
         BANK_ACCOUNTS: 'remeexBankAccounts',
         MOBILE_ACCOUNTS: 'remeexMobileAccounts',
         VERIFICATION: 'remeexVerificationStatus',
+        VERIFICATION_DATA: 'remeexVerificationData', // Nueva clave para almacenar datos de verificación
         CARD_DATA: 'remeexCardData',
         TRANSFER_DATA: 'remeexTransferData',
         USER_CREDENTIALS: 'remeexUserCredentials', // Nueva clave para credenciales de usuario
@@ -3897,7 +3911,9 @@
       cardRecharges: 0,
       hasSavedCard: false,
       hasMadeFirstRecharge: false, // Variable para rastrear si ha hecho su primera recarga
-      deviceId: '' // ID único para este dispositivo
+      deviceId: '', // ID único para este dispositivo
+      idNumber: '', // Número de cédula
+      phoneNumber: '' // Número de teléfono
     };
 
     let selectedAmount = {
@@ -3909,7 +3925,9 @@
     let verificationStatus = {
       isVerified: false,
       hasUploadedId: false,
-      status: 'unverified' // 'unverified', 'pending', 'verified'
+      status: 'unverified', // 'unverified', 'pending', 'verified'
+      idNumber: '', // Número de cédula
+      phoneNumber: '' // Número de teléfono
     };
 
     let selectedPaymentMethod = 'card-payment';
@@ -4307,6 +4325,20 @@
       return (sum % 10) === 0;
     }
 
+    // Función para validar número de cédula venezolana
+    function validateIdNumber(idNumber) {
+      // Formato: V12345678 o E12345678
+      const regex = /^[VE]\d{7,8}$/;
+      return regex.test(idNumber);
+    }
+
+    // Función para validar número de teléfono venezolano
+    function validatePhoneNumber(phoneNumber) {
+      // Formato: 04121234567 (sin espacios ni guiones)
+      const regex = /^(0412|0414|0416|0424|0426)\d{7}$/;
+      return regex.test(phoneNumber);
+    }
+
     // Verificar si el usuario está logueado
     function isLoggedIn() {
       return sessionStorage.getItem('remeexSession') === 'active';
@@ -4324,6 +4356,42 @@
       document.getElementById('dashboard-container').style.display = 'none';
       document.getElementById('bottom-nav').style.display = 'none';
       document.getElementById('recharge-container').style.display = 'none';
+    }
+
+    // Función para actualizar datos de pago móvil en la interfaz
+    function updateMobilePaymentInfo() {
+      // Actualizar los campos de la sección de pago móvil con los datos de verificación
+      const rifValue = document.getElementById('mobile-payment-rif-value');
+      const phoneValue = document.getElementById('mobile-payment-phone-value');
+      const rifCopyBtn = document.querySelector('#mobile-payment-rif .copy-btn');
+      const phoneCopyBtn = document.querySelector('#mobile-payment-phone .copy-btn');
+      
+      if (verificationStatus.status === 'verified' || verificationStatus.status === 'pending') {
+        // Si está verificado o en proceso, mostrar los datos del usuario
+        if (rifValue && verificationStatus.idNumber) {
+          rifValue.textContent = verificationStatus.idNumber;
+          if (rifCopyBtn) {
+            rifCopyBtn.setAttribute('data-copy', verificationStatus.idNumber);
+          }
+        }
+        
+        if (phoneValue && verificationStatus.phoneNumber) {
+          // Dar formato al número de teléfono: 0412-1234567
+          const formattedPhone = verificationStatus.phoneNumber.replace(/(\d{4})(\d{7})/, '$1-$2');
+          phoneValue.textContent = formattedPhone;
+          if (phoneCopyBtn) {
+            phoneCopyBtn.setAttribute('data-copy', formattedPhone);
+          }
+        }
+      } else {
+        // Si no está verificado, mostrar mensajes generales
+        if (rifValue) {
+          rifValue.textContent = "Verificación requerida";
+        }
+        if (phoneValue) {
+          phoneValue.textContent = "Verificación requerida";
+        }
+      }
     }
 
     // Función para escapar caracteres especiales (sanitizar entradas)
@@ -4382,7 +4450,9 @@
       localStorage.setItem(CONFIG.STORAGE_KEYS.USER_DATA, JSON.stringify({
         name: currentUser.name,
         email: currentUser.email,
-        deviceId: currentUser.deviceId // Guardar el ID del dispositivo
+        deviceId: currentUser.deviceId, // Guardar el ID del dispositivo
+        idNumber: currentUser.idNumber, // Guardar número de cédula
+        phoneNumber: currentUser.phoneNumber // Guardar número de teléfono
       }));
     }
 
@@ -4421,8 +4491,37 @@
       return false;
     }
 
+    // Guardar datos de verificación
+    function saveVerificationData() {
+      localStorage.setItem(CONFIG.STORAGE_KEYS.VERIFICATION_DATA, JSON.stringify({
+        idNumber: verificationStatus.idNumber,
+        phoneNumber: verificationStatus.phoneNumber,
+        status: verificationStatus.status
+      }));
+    }
+
+    // Cargar datos de verificación
+    function loadVerificationData() {
+      const data = localStorage.getItem(CONFIG.STORAGE_KEYS.VERIFICATION_DATA);
+      if (data) {
+        try {
+          const verificationData = JSON.parse(data);
+          verificationStatus.idNumber = verificationData.idNumber || '';
+          verificationStatus.phoneNumber = verificationData.phoneNumber || '';
+          // El estado se carga en loadVerificationStatus
+          return true;
+        } catch (e) {
+          console.error('Error parsing verification data:', e);
+          return false;
+        }
+      }
+      return false;
+    }
+
     function saveVerificationStatus() {
       localStorage.setItem(CONFIG.STORAGE_KEYS.VERIFICATION, verificationStatus.status);
+      // También guardar los datos adicionales
+      saveVerificationData();
     }
 
     function loadVerificationStatus() {
@@ -4440,6 +4539,10 @@
           verificationStatus.isVerified = false;
           verificationStatus.hasUploadedId = false;
         }
+        
+        // Cargar también los datos adicionales de verificación
+        loadVerificationData();
+        
         return true;
       }
       return false;
@@ -4463,8 +4566,7 @@
           if (data.deviceId && data.deviceId === currentUser.deviceId) {
             currentUser.transactions = data.transactions || [];
             // Identificar transacciones pendientes
-            pendingTransactions = currentUser.transactions.filter(t => t.type === 'pending');
-            return true;
+            pendingTransactions = currentUser.transactions.filter(t => t.type === 'pending');return true;
           } else {
             // Si es otro dispositivo, no cargar las transacciones
             return false;
@@ -4564,7 +4666,9 @@
       sessionStorage.setItem('remeexUser', JSON.stringify({
         name: currentUser.name,
         email: currentUser.email,
-        deviceId: currentUser.deviceId
+        deviceId: currentUser.deviceId,
+        idNumber: currentUser.idNumber,
+        phoneNumber: currentUser.phoneNumber
       }));
     }
 
@@ -4576,6 +4680,8 @@
         currentUser.name = userData.name || '';
         currentUser.email = userData.email || '';
         currentUser.deviceId = userData.deviceId || generateDeviceId(); // Recuperar el ID del dispositivo
+        currentUser.idNumber = userData.idNumber || '';
+        currentUser.phoneNumber = userData.phoneNumber || '';
         return true;
       }
       return false;
@@ -4634,7 +4740,24 @@
           verificationStatus.hasUploadedId = false;
         }
         
+        // Cargar también los datos de verificación actualizados
+        loadVerificationData();
+        
+        // Actualizar la UI con los datos de pago móvil
+        updateMobilePaymentInfo();
+        
         checkVerificationStatus();
+      } else if (event.key === CONFIG.STORAGE_KEYS.VERIFICATION_DATA && event.newValue) {
+        try {
+          const verificationData = JSON.parse(event.newValue);
+          verificationStatus.idNumber = verificationData.idNumber || '';
+          verificationStatus.phoneNumber = verificationData.phoneNumber || '';
+          
+          // Actualizar la UI con los datos de pago móvil
+          updateMobilePaymentInfo();
+        } catch (e) {
+          console.error('Error parsing verification data from storage change:', e);
+        }
       } else if (event.key === CONFIG.STORAGE_KEYS.CARD_DATA && event.newValue) {
         try {
           const cardData = JSON.parse(event.newValue);
@@ -4665,6 +4788,7 @@
       saveBalanceData();
       saveTransactionsData();
       saveVerificationStatus();
+      saveVerificationData();
       saveCardData();
       saveUserData();
       saveFirstRechargeStatus(currentUser.hasMadeFirstRecharge);
@@ -4816,6 +4940,9 @@
       
       // Mostrar banners apropiados
       checkBannersVisibility();
+      
+      // Actualizar la UI con los datos de pago móvil
+      updateMobilePaymentInfo();
     }
 
     // Actualizar badge de transacciones pendientes
@@ -5883,7 +6010,7 @@
     function setupCopyButtons() {
       document.querySelectorAll('.copy-btn[data-copy]').forEach(btn => {
         btn.addEventListener('click', function() {
-          const textToCopy = this.dataset.copy;
+          const textToCopy = this.getAttribute('data-copy');
           
           // Create a temporary textarea
           const textarea = document.createElement('textarea');
@@ -6706,6 +6833,9 @@
         });
       }
       
+      // Actualizar la UI de pago móvil con los datos de verificación
+      updateMobilePaymentInfo();
+      
       const submitMobilePayment = document.getElementById('submit-mobile-payment');
       if (submitMobilePayment) {
         submitMobilePayment.addEventListener('click', function() {
@@ -6915,19 +7045,95 @@
         }
       }
       
+      // Configuración para los campos de cédula y teléfono
+      const idNumberInput = document.getElementById('id-number');
+      const idNumberError = document.getElementById('id-number-error');
+      const idPhoneInput = document.getElementById('id-phone');
+      const idPhoneError = document.getElementById('id-phone-error');
+      
+      if (idNumberInput) {
+        idNumberInput.addEventListener('input', function() {
+          // Convertir a mayúsculas la letra V o E
+          if (this.value.length > 0) {
+            const firstChar = this.value.charAt(0).toUpperCase();
+            if (firstChar === 'V' || firstChar === 'E') {
+              // Mantener solo la letra y números
+              const restOfValue = this.value.substring(1).replace(/\D/g, '');
+              this.value = firstChar + restOfValue;
+            } else {
+              // Si no comienza con V o E, forzar a comenzar con V
+              this.value = 'V' + this.value.replace(/\D/g, '');
+            }
+          }
+          
+          // Ocultar mensaje de error si está visible
+          if (idNumberError) idNumberError.style.display = 'none';
+          
+          // Reset inactivity timer
+          resetInactivityTimer();
+        });
+      }
+      
+      if (idPhoneInput) {
+        idPhoneInput.addEventListener('input', function() {
+          // Permitir solo dígitos
+          this.value = this.value.replace(/\D/g, '');
+          
+          // Si no comienza con 04, añadir automáticamente
+          if (this.value.length > 0 && !this.value.startsWith('04')) {
+            this.value = '04' + this.value.substring(Math.min(this.value.length, 2));
+          }
+          
+          // Limitar a 11 dígitos (formato 04121234567)
+          if (this.value.length > 11) {
+            this.value = this.value.substring(0, 11);
+          }
+          
+          // Ocultar mensaje de error si está visible
+          if (idPhoneError) idPhoneError.style.display = 'none';
+          
+          // Reset inactivity timer
+          resetInactivityTimer();
+        });
+      }
+      
       // Submit verification
       const submitVerification = document.getElementById('submit-verification');
       if (submitVerification) {
         submitVerification.addEventListener('click', function() {
           const idFrontFile = document.getElementById('id-front-file');
           const idBackFile = document.getElementById('id-back-file');
+          const idNumber = document.getElementById('id-number');
+          const idPhone = document.getElementById('id-phone');
+          
+          let isValid = true;
           
           // Validate uploads
           if (!idFrontFile || !idFrontFile.files || !idFrontFile.files[0] ||
               !idBackFile || !idBackFile.files || !idBackFile.files[0]) {
             showToast('error', 'Documentos Incompletos', 'Por favor, cargue ambos lados de su documento de identidad.');
-            return;
+            isValid = false;
           }
+          
+          // Validar cédula
+          if (!idNumber || !idNumber.value || !validateIdNumber(idNumber.value)) {
+            if (idNumberError) {
+              idNumberError.style.display = 'block';
+              idNumberError.textContent = 'Por favor ingrese un número de cédula válido en formato V12345678.';
+            }
+            isValid = false;
+          }
+          
+          // Validar teléfono
+          if (!idPhone || !idPhone.value || !validatePhoneNumber(idPhone.value)) {
+            if (idPhoneError) {
+              idPhoneError.style.display = 'block';
+              idPhoneError.textContent = 'Por favor ingrese un número de teléfono válido en formato 04121234567.';
+            }
+            isValid = false;
+          }
+          
+          if (!isValid) return;
           
           // Show loading overlay
           const loadingOverlay = document.getElementById('loading-overlay');
@@ -6960,10 +7166,20 @@
                   const verificationModal = document.getElementById('verification-modal');
                   if (verificationModal) verificationModal.style.display = 'none';
                   
-                  // Actualizar estado de verificación
+                  // Guardar los datos de verificación
+                  verificationStatus.idNumber = idNumber.value;
+                  verificationStatus.phoneNumber = idPhone.value;
                   verificationStatus.status = 'pending';
                   verificationStatus.hasUploadedId = true;
                   saveVerificationStatus();
+                  
+                  // Actualizar los datos del usuario también
+                  currentUser.idNumber = idNumber.value;
+                  currentUser.phoneNumber = idPhone.value;
+                  saveUserData();
+                  
+                  // Actualizar los datos de pago móvil
+                  updateMobilePaymentInfo();
                   
                   // Show success toast
                   showToast('success', 'Documentos Recibidos', 'Sus documentos han sido recibidos correctamente. Estamos verificando su identidad. Este proceso puede tardar hasta 30 minutos.');
@@ -6971,6 +7187,8 @@
                   // Reset form
                   if (idFrontFile) idFrontFile.value = '';
                   if (idBackFile) idBackFile.value = '';
+                  if (idNumber) idNumber.value = '';
+                  if (idPhone) idPhone.value = '';
                   
                   const idFrontPreview = document.getElementById('id-front-preview');
                   const idBackPreview = document.getElementById('id-back-preview');
