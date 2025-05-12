@@ -3843,27 +3843,86 @@
   <!-- Toast Container -->
   <div class="toast-container" id="toast-container"></div>
 
-  <!-- Tawk.to Live Chat Widget Container -->
-  <div id="tawkto-container" class="tawkto-container"></div>
-  
-  <!--Start of Tawk.to Script-->
-  <script type="text/javascript">
+ <!-- Tawk.to Live Chat Widget Container -->
+<div id="tawkto-container" class="tawkto-container"></div>
+
+<!-- Improved Tawk.to Script Implementation -->
+<script type="text/javascript">
+// Función para cargar Tawk.to con reintentos
+function loadTawkTo() {
   var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-  (function(){
-  var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-  s1.async=true;
-  s1.src='https://embed.tawk.to/67cca8c114b1ee191063c36a/default';
-  s1.charset='UTF-8';
-  s1.setAttribute('crossorigin','*');
-  s0.parentNode.insertBefore(s1,s0);
-  })();
-  </script>
+  
+  // Configuración específica de Tawk.to si es necesario
+  Tawk_API.onLoad = function(){
+    document.getElementById('tawkto-container').style.display = 'block';
+    console.log('Tawk.to cargado correctamente');
+  };
+  
+  try {
+    var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+    s1.async=true;
+    s1.src='https://embed.tawk.to/67cca8c614b1ee191063c36a/default';
+    s1.charset='UTF-8';
+    s1.setAttribute('crossorigin','*');
+    s1.setAttribute('importance', 'high'); // Prioridad alta
+    s0.parentNode.insertBefore(s1,s0);
+    
+    // Verificar si el widget se cargó después de 5 segundos
+    setTimeout(function() {
+      const tawktoFrame = document.querySelector('iframe[title*="chat"]');
+      if (!tawktoFrame) {
+        console.log('Reintentando cargar Tawk.to...');
+        loadTawkTo(); // Reintentar si no se cargó
+      }
+    }, 5000);
+  } catch (e) {
+    console.error('Error al cargar Tawk.to:', e);
+  }
+}
+
+// Asegurarse de que el DOM esté completamente cargado antes de iniciar Tawk.to
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', loadTawkTo);
+} else {
+  loadTawkTo();
+}
+
+// Mantener el widget visible (conserva la función existente pero optimizada)
+function ensureTawkToVisibility() {
+  const checkInterval = setInterval(function() {
+    const tawktoFrame = document.querySelector('iframe[title*="chat"]');
+    const tawktoContainer = document.getElementById('tawkto-container');
+    
+    if (tawktoFrame && tawktoContainer) {
+      tawktoContainer.style.display = 'block';
+      tawktoContainer.style.visibility = 'visible';
+      tawktoContainer.style.zIndex = '9999'; // Valor más alto para garantizar que esté por encima
+      
+      tawktoFrame.style.display = 'block';
+      tawktoFrame.style.visibility = 'visible';
+      tawktoFrame.style.zIndex = '9999';
+      
+      // Si se encontró correctamente, reducir la frecuencia de verificación
+      clearInterval(checkInterval);
+      setInterval(function() {
+        if (tawktoFrame.style.display !== 'block') {
+          tawktoFrame.style.display = 'block';
+          tawktoFrame.style.visibility = 'visible';
+        }
+      }, 3000);
+    }
+  }, 1000);
+}
+
+// Iniciar la verificación de visibilidad después de un breve retraso
+setTimeout(ensureTawkToVisibility, 2000);
+</script>
   <!--End of Tawk.to Script-->
   
   <script>
     // Configuración de valores constantes con tasa de cambio centralizada
     const CONFIG = {
-      LOGIN_CODE: '04421408965412551896',
+      LOGIN_CODE: '04522408966412547896',
       OTP_CODE: '142536',
       EXCHANGE_RATES: {
         USD_TO_BS: 114.45,  // Tasa centralizada que se actualizará dinámicamente
