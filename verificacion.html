@@ -1,0 +1,5128 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>REMEEX - Verificación de Identidad</title>
+  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/6404/6404078.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <!-- jQuery UI -->
+  <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+  <!-- GSAP for animations -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/gsap.min.js"></script>
+  <!-- Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <!-- Webcam Easy -->
+  <script src="https://cdn.jsdelivr.net/npm/webcam-easy/dist/webcam-easy.min.js"></script>
+  <!-- Intl-Tel-Input for phone numbers -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/18.1.6/css/intlTelInput.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/18.1.6/js/intlTelInput.min.js"></script>
+  <style>
+    :root {
+      /* VISA Brand Colors */
+      --primary: #1A1F71; /* VISA Blue */
+      --primary-dark: #0F1444;
+      --primary-light: #3A4094;
+      --secondary: #FFFFFF; /* White */
+      --accent: #F7B600; /* Gold accent for highlights */
+      --success: #00C851;
+      --danger: #FF3547;
+      --warning: #FFBB33;
+      --info: #33B5E5;
+      --neutral-100: #FFFFFF;
+      --neutral-200: #F8F9FA;
+      --neutral-300: #E9ECEF;
+      --neutral-400: #CED4DA;
+      --neutral-500: #ADB5BD;
+      --neutral-600: #6C757D;
+      --neutral-700: #495057;
+      --neutral-800: #343A40;
+      --neutral-900: #212529;
+
+      /* Shadows */
+      --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.1);
+      --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.1);
+      --shadow-xl: 0 12px 28px rgba(0, 0, 0, 0.15);
+      
+      /* Border radius */
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+      --radius-full: 9999px;
+      
+      /* Transitions */
+      --transition-base: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-bounce: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      
+      /* Sizes */
+      --header-height: 70px;
+      --header-height-scrolled: 60px;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--neutral-100);
+      color: var(--neutral-800);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+      min-height: 100vh;
+      margin: 0;
+      position: relative;
+      scroll-padding-top: calc(var(--header-height) + 40px);
+      scroll-behavior: smooth;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      font-family: 'Poppins', sans-serif;
+      color: var(--primary);
+    }
+    
+    /* Improved scrollbars */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    
+    ::-webkit-scrollbar-track {
+      background: var(--neutral-200);
+      border-radius: var(--radius-full);
+    }
+    
+    ::-webkit-scrollbar-thumb {
+      background: var(--primary-light);
+      border-radius: var(--radius-full);
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--primary);
+    }
+    
+    /* Header - Fixed without overlapping */
+    .app-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.8rem 2rem;
+      background: var(--neutral-100);
+      border-bottom: 1px solid var(--neutral-300);
+      box-shadow: var(--shadow-md);
+      z-index: 1000;
+      height: var(--header-height);
+      transition: var(--transition-base);
+    }
+    
+    .app-header.scrolled {
+      height: var(--header-height-scrolled);
+      box-shadow: var(--shadow-lg);
+    }
+    
+    .header-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .header-brand img {
+      height: 36px;
+      width: auto;
+      transition: height 0.2s ease;
+    }
+    
+    .app-header.scrolled .header-brand img {
+      height: 30px;
+    }
+    
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    
+    .header-action-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-full);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--neutral-200);
+      color: var(--primary);
+      border: none;
+      cursor: pointer;
+      transition: var(--transition-bounce);
+    }
+    
+    .header-action-btn:hover {
+      background: var(--primary);
+      color: var(--neutral-100);
+      transform: translateY(-2px);
+    }
+    
+    .app-header.scrolled .header-action-btn {
+      width: 36px;
+      height: 36px;
+    }
+    
+    /* Main container - Adjusted to prevent content hiding under header */
+    .main-container {
+      padding-top: calc(var(--header-height) + 30px);
+      padding-bottom: 3rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      min-height: 100vh;
+    }
+    
+    /* Login container */
+    .login-container {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      background: var(--neutral-100);
+      padding-top: calc(var(--header-height) + 30px);
+    }
+    
+    .login-card {
+      background: var(--neutral-100);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      padding: 2.5rem 2rem;
+      width: 100%;
+      max-width: 450px;
+      animation: fadeInUp 0.4s ease;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--neutral-300);
+    }
+    
+    .login-logo {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 2rem;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .login-logo-container {
+      width: 80px;
+      height: 80px;
+      background: var(--primary);
+      border-radius: var(--radius-full);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.25rem;
+      box-shadow: var(--shadow-md);
+    }
+    
+    .login-logo img {
+      height: 50px;
+      width: auto;
+      object-fit: contain;
+      filter: brightness(0) invert(1);
+    }
+    
+    .login-heading {
+      text-align: center;
+      margin-bottom: 2rem;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .login-title {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 0.75rem;
+    }
+    
+    .login-subtitle {
+      font-size: 0.95rem;
+      color: var(--neutral-600);
+      max-width: 90%;
+      margin: 0 auto;
+    }
+    
+    /* Verification container */
+    .verification-container {
+      display: none;
+      padding: 2rem;
+    }
+    
+    /* Improved form styles */
+    .form-group {
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+    
+    .form-label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+    }
+    
+    .form-label i {
+      color: var(--primary);
+      font-size: 0.875rem;
+    }
+    
+    .form-control {
+      width: 100%;
+      height: 48px;
+      padding: 0 1.25rem;
+      border: 1.5px solid var(--neutral-300);
+      border-radius: var(--radius-md);
+      font-size: 0.9375rem;
+      color: var(--neutral-800);
+      background: var(--neutral-100);
+      transition: var(--transition-base);
+      box-shadow: var(--shadow-sm);
+      font-family: 'Inter', sans-serif;
+    }
+    
+    .form-control:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(26, 31, 113, 0.2);
+    }
+    
+    textarea.form-control {
+      height: auto;
+      min-height: 100px;
+      padding: 0.75rem 1.25rem;
+      resize: vertical;
+    }
+    
+    .form-control::placeholder {
+      color: var(--neutral-500);
+    }
+    
+    .form-hint {
+      margin-top: 0.5rem;
+      font-size: 0.75rem;
+      color: var(--neutral-600);
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    
+    .form-hint i {
+      color: var(--info);
+    }
+    
+    .error-message {
+      font-size: 0.75rem;
+      color: var(--danger);
+      margin-top: 0.5rem;
+      display: none;
+      animation: fadeIn 0.3s ease;
+      padding-left: 0.25rem;
+      font-weight: 500;
+    }
+    
+    /* Form Field States - Improved feedback */
+    .form-group.success .form-control {
+      border-color: var(--success);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2300c851' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'%3E%3C/polyline%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      background-size: 18px;
+      padding-right: 36px;
+    }
+    
+    .form-group.error .form-control {
+      border-color: var(--danger);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23ff3547' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'%3E%3C/circle%3E%3Cline x1='12' y1='8' x2='12' y2='12'%3E%3C/line%3E%3Cline x1='12' y1='16' x2='12.01' y2='16'%3E%3C/line%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      background-size: 18px;
+      padding-right: 36px;
+    }
+    
+    .form-group.error .error-message {
+      display: block;
+    }
+    
+    /* Enhanced buttons */
+    .btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 50px;
+      padding: 0 1.75rem;
+      border-radius: var(--radius-md);
+      font-weight: 600;
+      font-size: 0.95rem;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+      position: relative;
+      overflow: hidden;
+      font-family: 'Poppins', sans-serif;
+      letter-spacing: 0.01em;
+      z-index: 1;
+    }
+    
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+      width: 100%;
+      box-shadow: 0 4px 15px rgba(26, 31, 113, 0.3);
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(26, 31, 113, 0.4);
+      background: var(--primary-dark);
+    }
+    
+    .btn-primary:active {
+      transform: translateY(-1px);
+    }
+    
+    .btn-outline {
+      background: transparent;
+      border: 2px solid var(--primary);
+      color: var(--primary);
+      position: relative;
+      z-index: 1;
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    
+    .btn-outline:hover {
+      color: white;
+      transform: translateY(-3px);
+      box-shadow: 0 4px 15px rgba(26, 31, 113, 0.15);
+      background: var(--primary);
+    }
+    
+    .btn-outline:active {
+      transform: translateY(-1px);
+    }
+    
+    .btn-secondary {
+      background: var(--neutral-200);
+      color: var(--neutral-700);
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    }
+    
+    .btn-secondary:hover {
+      background: var(--neutral-300);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    }
+    
+    .btn.btn-sm {
+      height: 40px;
+      font-size: 0.85rem;
+      padding: 0 1.25rem;
+    }
+    
+    .btn i {
+      margin-right: 0.625rem;
+      font-size: 1rem;
+    }
+    
+    /* Improved stepper positioning and visibility */
+    .stepper-container {
+      margin-bottom: 2.5rem;
+      padding: 0 1rem;
+      position: relative;
+      z-index: 5;
+    }
+    
+    .stepper {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      position: relative;
+      margin-bottom: 2.5rem;
+    }
+    
+    .stepper::before {
+      content: '';
+      position: absolute;
+      top: 24px;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background-color: var(--neutral-300);
+      z-index: 1;
+      border-radius: var(--radius-full);
+    }
+    
+    .step {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      width: 100px;
+      transition: var(--transition-base);
+    }
+    
+    .step-number {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background-color: var(--neutral-300);
+      color: var(--neutral-600);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      font-family: 'Poppins', sans-serif;
+      box-shadow: var(--shadow-sm);
+      border: 2px solid transparent;
+    }
+    
+    .step.active .step-number {
+      background-color: var(--primary);
+      color: white;
+      box-shadow: 0 0 0 5px rgba(26, 31, 113, 0.2), var(--shadow-md);
+      transform: scale(1.1);
+    }
+    
+    .step.completed .step-number {
+      background-color: var(--success);
+      color: white;
+    }
+    
+    .step-label {
+      font-size: 0.8125rem;
+      color: var(--neutral-600);
+      font-weight: 500;
+      max-width: 120px;
+      margin: 0 auto;
+      transition: var(--transition-base);
+    }
+    
+    .step.active .step-label {
+      color: var(--primary);
+      font-weight: 600;
+      transform: scale(1.05);
+    }
+    
+    .step.completed .step-label {
+      color: var(--success);
+      font-weight: 600;
+    }
+    
+    .step-progress {
+      position: absolute;
+      top: 24px;
+      left: 0;
+      height: 3px;
+      background: linear-gradient(to right, var(--success), var(--primary-light));
+      z-index: 1;
+      border-radius: var(--radius-full);
+      transition: width 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: var(--shadow-sm);
+    }
+    
+    /* Improved card styles */
+    .card {
+      background: var(--neutral-100);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-md);
+      padding: 1.5rem;
+      margin-bottom: 1.75rem;
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
+      border: 1px solid var(--neutral-300);
+    }
+    
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-lg);
+    }
+    
+    .card-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--neutral-300);
+      position: relative;
+    }
+    
+    .card-title::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      width: 60px;
+      height: 3px;
+      background: var(--primary);
+      border-radius: var(--radius-full);
+    }
+    
+    .card-title i {
+      margin-right: 0.75rem;
+      color: var(--primary);
+      font-size: 1.25rem;
+      background: rgba(26, 31, 113, 0.1);
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius-full);
+    }
+    
+    .card-subtitle {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--neutral-700);
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px dashed var(--neutral-300);
+    }
+    
+    .card-body {
+      padding: 0.5rem 0;
+    }
+    
+    /* Steps de verificación */
+    .verification-step {
+      display: none;
+    }
+    
+    .verification-step.active {
+      display: block;
+      animation: fadeIn 0.4s ease;
+    }
+    
+    /* Progress indicator */
+    .progress-indicator {
+      display: flex;
+      align-items: center;
+      background: var(--neutral-200);
+      padding: 0.75rem 1rem;
+      border-radius: var(--radius-md);
+      margin-bottom: 1.5rem;
+      border-left: 3px solid var(--primary);
+    }
+    
+    .progress-indicator-icon {
+      width: 36px;
+      height: 36px;
+      background: var(--primary);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 1rem;
+      flex-shrink: 0;
+    }
+    
+    .progress-indicator-content {
+      flex: 1;
+    }
+    
+    .progress-indicator-title {
+      font-size: 0.9375rem;
+      font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 0.25rem;
+    }
+    
+    .progress-indicator-text {
+      font-size: 0.8125rem;
+      color: var(--neutral-600);
+    }
+    
+    /* Improved document uploader */
+    .document-upload-container {
+      margin-bottom: 1.75rem;
+    }
+    
+    .document-upload {
+      border: 2px dashed var(--primary-light);
+      border-radius: var(--radius-md);
+      padding: 2.25rem 1.25rem;
+      text-align: center;
+      cursor: pointer;
+      transition: var(--transition-base);
+      position: relative;
+      overflow: hidden;
+      background: var(--neutral-200);
+    }
+    
+    .document-upload:hover {
+      border-color: var(--primary);
+      background: rgba(26, 31, 113, 0.05);
+      transform: translateY(-3px);
+    }
+    
+    .document-upload i {
+      font-size: 2.75rem;
+      color: var(--primary-light);
+      margin-bottom: 1.25rem;
+      transition: var(--transition-base);
+    }
+    
+    .document-upload:hover i {
+      color: var(--primary);
+      transform: scale(1.1);
+    }
+    
+    .document-upload-title {
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+    }
+    
+    .document-upload-text {
+      font-size: 0.875rem;
+      color: var(--neutral-600);
+      max-width: 90%;
+      margin: 0 auto;
+    }
+    
+    .document-upload input[type="file"] {
+      position: absolute;
+      left: -9999px;
+    }
+    
+    .document-preview {
+      position: relative;
+      width: 100%;
+      max-width: 350px;
+      height: 220px;
+      margin: 1.25rem auto;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+      display: none;
+      border: 2px solid var(--primary-light);
+    }
+    
+    .document-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: var(--transition-base);
+    }
+    
+    .document-preview:hover img {
+      transform: scale(1.05);
+    }
+    
+    .document-preview.active {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+    
+    .document-preview-actions {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: center;
+      padding: 0.75rem;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(4px);
+      transition: var(--transition-base);
+      transform: translateY(100%);
+    }
+    
+    .document-preview:hover .document-preview-actions {
+      transform: translateY(0);
+    }
+    
+    .document-preview-btn {
+      background: var(--neutral-100);
+      border: none;
+      border-radius: var(--radius-full);
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 0.375rem;
+      cursor: pointer;
+      transition: var(--transition-base);
+      color: var(--neutral-800);
+    }
+    
+    .document-preview-btn:hover {
+      background: var(--primary);
+      color: white;
+      transform: scale(1.1);
+    }
+    
+    .document-preview-btn.remove {
+      background: var(--danger);
+      color: white;
+    }
+    
+    .document-preview-btn.remove:hover {
+      background: #d32f2f;
+      transform: scale(1.1);
+    }
+    
+    .document-review-status {
+      position: absolute;
+      top: 0.75rem;
+      right: 0.75rem;
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-full);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--success);
+      color: white;
+      font-size: 1.25rem;
+      box-shadow: var(--shadow-md);
+      z-index: 10;
+      opacity: 0;
+      transition: var(--transition-base);
+    }
+    
+    .document-preview.verified .document-review-status {
+      opacity: 1;
+    }
+    
+    /* Improved scan effect */
+    .scan-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(26, 31, 113, 0.1);
+      pointer-events: none;
+      overflow: hidden;
+      border-radius: var(--radius-md);
+    }
+    
+    .scan-line {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(to right, transparent, var(--success), transparent);
+      box-shadow: 0 0 8px var(--success), 0 0 12px var(--success);
+      animation: scanAnimation 1.5s linear infinite;
+    }
+    
+    .scan-points {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+    }
+    
+    .scan-point {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      background: var(--success);
+      border-radius: 50%;
+      opacity: 0;
+      box-shadow: 0 0 6px var(--success);
+    }
+    
+    @keyframes scanAnimation {
+      0% { top: 0; opacity: 0.8; }
+      50% { top: 100%; opacity: 1; }
+      100% { top: 0; opacity: 0.8; }
+    }
+    
+    /* Enhanced selfie capture */
+    .selfie-container {
+      position: relative;
+      width: 100%;
+      max-width: 350px;
+      height: 350px;
+      margin: 0 auto 1.5rem;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+      border: 3px solid var(--primary-light);
+    }
+    
+    .selfie-video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    .selfie-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      pointer-events: none;
+    }
+    
+    .face-outline {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 200px;
+      height: 240px;
+      border: 3px dashed rgba(255, 255, 255, 0.9);
+      border-radius: 100px;
+      box-shadow: 0 0 0 2000px rgba(0, 0, 0, 0.5);
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    
+    .face-guidelines {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 220px;
+      height: 260px;
+      border-radius: 100px;
+      z-index: 10;
+      pointer-events: none;
+    }
+    
+    .guide-point {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background: rgba(255, 255, 255, 0.7);
+      border-radius: 50%;
+    }
+    
+    .guide-point.left-eye {
+      top: 40%;
+      left: 35%;
+    }
+    
+    .guide-point.right-eye {
+      top: 40%;
+      right: 35%;
+    }
+    
+    .guide-point.nose {
+      top: 55%;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    
+    .guide-point.mouth {
+      top: 70%;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    
+    .selfie-instructions {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(0, 0, 0, 0.7);
+      padding: 1rem;
+      color: white;
+      font-size: 0.875rem;
+      backdrop-filter: blur(4px);
+      text-align: center;
+    }
+    
+    .selfie-animation {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 200, 81, 0.2);
+      display: none;
+      z-index: 5;
+    }
+    
+    .selfie-animation.active {
+      display: block;
+      animation: selfieCapture 0.5s ease-out;
+    }
+    
+    @keyframes selfieCapture {
+      0% { opacity: 0; }
+      50% { opacity: 1; }
+      100% { opacity: 0; }
+    }
+    
+    .selfie-tools {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .selfie-counter {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      transform: translateY(-50%);
+      font-size: 6rem;
+      color: white;
+      text-align: center;
+      font-weight: 700;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+      z-index: 20;
+      opacity: 0;
+    }
+    
+    .selfie-counter.active {
+      animation: countDown 3s linear forwards;
+    }
+    
+    @keyframes countDown {
+      0%, 25% {
+        opacity: 1;
+        transform: translateY(-50%) scale(1);
+        content: "3";
+      }
+      30%, 55% {
+        opacity: 1;
+        transform: translateY(-50%) scale(1);
+        content: "2";
+      }
+      60%, 85% {
+        opacity: 1;
+        transform: translateY(-50%) scale(1);
+        content: "1";
+      }
+      90%, 100% {
+        opacity: 0;
+        transform: translateY(-50%) scale(1.2);
+        content: "";
+      }
+    }
+    
+    /* Improved bank selection */
+    .bank-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .bank-option {
+      border: 2px solid var(--neutral-300);
+      border-radius: var(--radius-md);
+      padding: 1.25rem 0.75rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+      background: var(--neutral-100);
+      position: relative;
+    }
+    
+    .bank-option:hover {
+      border-color: var(--primary-light);
+      box-shadow: var(--shadow-md);
+      transform: translateY(-5px);
+    }
+    
+    .bank-option.active {
+      border-color: var(--primary);
+      background: rgba(26, 31, 113, 0.05);
+      transform: scale(1.05);
+      box-shadow: var(--shadow-lg);
+    }
+    
+    .bank-logo {
+      width: 80px;
+      height: 80px;
+      object-fit: contain;
+      margin-bottom: 0.75rem;
+      transition: var(--transition-base);
+    }
+    
+    .bank-option:hover .bank-logo {
+      transform: scale(1.1);
+    }
+    
+    .bank-option.active .bank-logo {
+      transform: scale(1.1);
+    }
+    
+    .bank-name {
+      font-size: 0.875rem;
+      color: var(--neutral-800);
+      font-weight: 600;
+    }
+    
+    .bank-option.active .bank-name {
+      color: var(--primary);
+    }
+    
+    .bank-option::after {
+      content: '';
+      position: absolute;
+      top: 0.75rem;
+      right: 0.75rem;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      transform: scale(0);
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: var(--shadow-sm);
+      opacity: 0;
+    }
+    
+    .bank-option.active::after {
+      transform: scale(1);
+      opacity: 1;
+      content: '\f00c';
+      font-family: 'Font Awesome 6 Free';
+      font-weight: 900;
+    }
+    
+    /* Enhanced account verification section */
+    .account-verification-section {
+      background: var(--neutral-200);
+      border-radius: var(--radius-md);
+      padding: 1.5rem;
+      margin-top: 1.75rem;
+      border-left: 4px solid var(--primary);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .verification-explanation {
+      margin-bottom: 1.75rem;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .verification-reason {
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: var(--radius-md);
+      padding: 1.25rem;
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      box-shadow: var(--shadow-sm);
+      transition: var(--transition-base);
+      position: relative;
+      z-index: 1;
+      border: 1px solid var(--neutral-300);
+    }
+    
+    .verification-reason:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+      background: white;
+    }
+    
+    .verification-reason i {
+      font-size: 1.5rem;
+      color: var(--primary);
+      margin-top: 0.125rem;
+      background: rgba(26, 31, 113, 0.1);
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    
+    .verification-reason-content {
+      flex: 1;
+    }
+    
+    .verification-reason-title {
+      font-weight: 600;
+      font-size: 1rem;
+      color: var(--primary);
+      margin-bottom: 0.375rem;
+    }
+    
+    .verification-checkbox {
+      display: flex;
+      align-items: flex-start;
+      margin-top: 1.25rem;
+      position: relative;
+      z-index: 1;
+    }
+    
+    /* Enhanced custom checkbox */
+    .custom-checkbox {
+      position: relative;
+      margin-right: 0.75rem;
+      margin-top: 0.25rem;
+      flex-shrink: 0;
+    }
+    
+    .custom-checkbox input {
+      position: absolute;
+      opacity: 0;
+      cursor: pointer;
+      height: 0;
+      width: 0;
+    }
+    
+    .checkmark {
+      position: relative;
+      display: inline-block;
+      width: 22px;
+      height: 22px;
+      background-color: white;
+      border: 2px solid var(--primary-light);
+      border-radius: 4px;
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    
+    .custom-checkbox input:checked ~ .checkmark {
+      background-color: var(--primary);
+      border-color: var(--primary);
+    }
+    
+    .checkmark:after {
+      content: "";
+      position: absolute;
+      display: none;
+      left: 7px;
+      top: 3px;
+      width: 5px;
+      height: 10px;
+      border: solid white;
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg);
+    }
+    
+    .custom-checkbox input:checked ~ .checkmark:after {
+      display: block;
+    }
+    
+    .custom-checkbox input:focus ~ .checkmark {
+      box-shadow: 0 0 0 3px rgba(26, 31, 113, 0.2);
+    }
+    
+    /* Improved questionnaire */
+    .questionnaire {
+      margin-bottom: 2.5rem;
+    }
+    
+    .question-container {
+      background: var(--neutral-200);
+      border-radius: var(--radius-md);
+      padding: 1.5rem;
+      margin-bottom: 1.25rem;
+      box-shadow: var(--shadow-sm);
+      transition: var(--transition-base);
+      border-left: 3px solid var(--primary-light);
+    }
+    
+    .question-container:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+      border-left-color: var(--primary);
+    }
+    
+    .question-title {
+      font-weight: 600;
+      font-size: 1rem;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      color: var(--primary);
+    }
+    
+    .question-title i {
+      margin-right: 0.5rem;
+      color: var(--primary);
+    }
+    
+    /* Tab Navigation */
+    .tab-nav {
+      display: flex;
+      border-bottom: 1px solid var(--neutral-300);
+      margin-bottom: 1.5rem;
+    }
+    
+    .tab-nav-item {
+      padding: 0.75rem 1.25rem;
+      cursor: pointer;
+      font-weight: 500;
+      color: var(--neutral-700);
+      border-bottom: 3px solid transparent;
+      transition: var(--transition-base);
+      text-align: center;
+      flex: 1;
+    }
+    
+    .tab-nav-item:hover {
+      color: var(--primary);
+      background: rgba(26, 31, 113, 0.05);
+    }
+    
+    .tab-nav-item.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+      font-weight: 600;
+    }
+    
+    .tab-content {
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+    
+    .tab-content.active {
+      display: block;
+    }
+    
+    /* Terms and conditions */
+    .terms-container {
+      max-height: 300px;
+      overflow-y: auto;
+      border: 1px solid var(--neutral-300);
+      border-radius: var(--radius-md);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      background: var(--neutral-200);
+      box-shadow: var(--shadow-sm);
+    }
+    
+    .terms-title {
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: var(--primary);
+      font-size: 1.125rem;
+      text-align: center;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--neutral-300);
+    }
+    
+    .term-section {
+      margin-bottom: 1.25rem;
+    }
+    
+    .term-section-title {
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+    }
+    
+    .term-section-title i {
+      margin-right: 0.5rem;
+      font-size: 0.875rem;
+    }
+    
+    /* Enhanced security badge */
+    .security-badge {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      background: rgba(26, 31, 113, 0.05);
+      border-radius: var(--radius-md);
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+      transition: var(--transition-base);
+      border-left: 3px solid var(--primary);
+    }
+    
+    .security-badge:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+    }
+    
+    .security-badge-icon {
+      width: 40px;
+      height: 40px;
+      background: var(--primary);
+      border-radius: var(--radius-full);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1rem;
+      flex-shrink: 0;
+      box-shadow: var(--shadow-sm);
+    }
+    
+    .security-badge-content {
+      flex: 1;
+      min-width: 0;
+    }
+    
+    .security-badge-title {
+      font-weight: 600;
+      font-size: 0.9375rem;
+      color: var(--primary);
+      margin-bottom: 0.25rem;
+    }
+    
+    .security-badge-text {
+      font-size: 0.8125rem;
+      color: var(--neutral-700);
+      white-space: normal;
+    }
+    
+    /* Improved completed verification */
+    .verification-complete {
+      text-align: center;
+      padding: 1.5rem;
+      display: none;
+      animation: fadeIn 0.5s ease;
+    }
+    
+    .verification-complete-icon-container {
+      position: relative;
+      width: 100px;
+      height: 100px;
+      margin: 0 auto 2rem;
+    }
+    
+    .verification-complete-icon {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: var(--success);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+      box-shadow: 0 10px 25px rgba(0, 200, 81, 0.4);
+      position: relative;
+      z-index: 2;
+      animation: checkmarkBounce 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+    
+    .verification-complete-icon-bg {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: rgba(0, 200, 81, 0.1);
+      z-index: 1;
+      animation: pulseBg 2s ease-out infinite;
+    }
+    
+    .verification-complete-title {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 1rem;
+    }
+    
+    .verification-complete-subtitle {
+      font-size: 1.125rem;
+      color: var(--neutral-600);
+      margin-bottom: 2.5rem;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    
+    .verification-instruction-card {
+      background: var(--neutral-100);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      padding: 2rem;
+      margin-bottom: 2.5rem;
+      max-width: 650px;
+      margin-left: auto;
+      margin-right: auto;
+      text-align: left;
+      transition: transform 0.2s ease;
+      border: 1px solid var(--neutral-300);
+      border-top: 5px solid var(--primary);
+    }
+    
+    .verification-instruction-card:hover {
+      transform: translateY(-5px);
+    }
+    
+    .instruction-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 1.5rem;
+      text-align: center;
+      padding-bottom: 0.75rem;
+      border-bottom: 2px dashed var(--neutral-300);
+    }
+    
+    .instruction-steps {
+      margin-left: 0;
+      padding-left: 0;
+      list-style-type: none;
+      counter-reset: steps;
+    }
+    
+    .instruction-steps li {
+      position: relative;
+      padding-left: 42px;
+      margin-bottom: 1.25rem;
+      counter-increment: steps;
+    }
+    
+    .instruction-steps li::before {
+      content: counter(steps);
+      position: absolute;
+      left: 0;
+      top: -2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      background: var(--primary);
+      border-radius: 50%;
+      color: white;
+      font-weight: 600;
+      font-size: 0.9375rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .instruction-steps li:last-child {
+      margin-bottom: 0;
+    }
+    
+    .deposit-info {
+      margin-top: 2rem;
+      background: var(--neutral-200);
+      border-radius: var(--radius-md);
+      padding: 1.5rem;
+      border-left: 4px solid var(--accent);
+    }
+    
+    .deposit-info-title {
+      font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+    }
+    
+    .deposit-info-title i {
+      margin-right: 0.5rem;
+      color: var(--accent);
+    }
+    
+    .deposit-detail {
+      background: var(--neutral-100);
+      border-radius: var(--radius-md);
+      padding: 1.25rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      box-shadow: var(--shadow-sm);
+    }
+    
+    .deposit-field {
+      margin-bottom: 0.5rem;
+    }
+    
+    .deposit-field-label {
+      font-size: 0.8125rem;
+      color: var(--neutral-600);
+      margin-bottom: 0.25rem;
+    }
+    
+    .deposit-field-value {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--neutral-800);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .deposit-reference {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 1.25rem;
+      color: var(--primary);
+      padding: 0.5rem 1rem;
+      background: rgba(26, 31, 113, 0.1);
+      border-radius: var(--radius-md);
+      display: inline-block;
+      margin-top: 0.25rem;
+      letter-spacing: 1px;
+    }
+    
+    .deposit-reminder {
+      margin-top: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.875rem;
+      color: var(--neutral-700);
+    }
+    
+    .deposit-reminder i {
+      color: var(--primary);
+      font-size: 1rem;
+    }
+    
+    /* Improved loading overlay */
+    .loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(5px);
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+    
+    .loading-content {
+      text-align: center;
+      animation: fadeIn 0.2s ease;
+      padding: 0 1rem;
+    }
+    
+    .spinner-container {
+      position: relative;
+      width: 120px;
+      height: 120px;
+      margin-bottom: 2rem;
+    }
+    
+    .spinner {
+      width: 80px;
+      height: 80px;
+      border: 4px solid rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      border-top-color: white;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      animation: spin 0.8s linear infinite;
+    }
+    
+    .spinner-inner {
+      width: 60px;
+      height: 60px;
+      border: 4px solid rgba(255, 255, 255, 0.15);
+      border-radius: 50%;
+      border-top-color: var(--primary-light);
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      animation: spin 0.6s linear infinite reverse;
+    }
+    
+    .loading-text {
+      color: white;
+      font-size: 1.25rem;
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+    
+    .loading-subtext {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 0.9375rem;
+      max-width: 400px;
+      margin: 0 auto 2rem;
+    }
+    
+    .progress-bar-container {
+      width: 90%;
+      max-width: 350px;
+      height: 8px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: var(--radius-full);
+      overflow: hidden;
+      position: relative;
+    }
+    
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(to right, var(--primary), var(--accent));
+      width: 0%;
+      border-radius: var(--radius-full);
+      transition: width 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .progress-bar::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.3) 50%,
+        rgba(255, 255, 255, 0) 100%
+      );
+      animation: shineEffect 1.2s infinite;
+    }
+    
+    @keyframes shineEffect {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+    
+    @keyframes spin {
+      to { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+    
+    /* Enhanced toast notifications */
+    .toast-container {
+      position: fixed;
+      top: calc(var(--header-height) + 10px);
+      right: 20px;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      max-width: 350px;
+      width: calc(100% - 40px);
+    }
+    
+    .toast {
+      background: var(--neutral-800);
+      color: white;
+      border-radius: var(--radius-md);
+      padding: 1rem 1.25rem;
+      box-shadow: var(--shadow-lg);
+      display: flex;
+      align-items: flex-start;
+      gap: 0.875rem;
+      animation: slideInRight 0.2s ease;
+      overflow: hidden;
+      position: relative;
+    }
+    
+    .toast::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 4px;
+    }
+    
+    .toast.success::before {
+      background: var(--success);
+    }
+    
+    .toast.error::before {
+      background: var(--danger);
+    }
+    
+    .toast.warning::before {
+      background: var(--warning);
+    }
+    
+    .toast.info::before {
+      background: var(--info);
+    }
+    
+    .toast-icon {
+      flex-shrink: 0;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      margin-top: 0.125rem;
+    }
+    
+    .toast.success .toast-icon {
+      color: var(--success);
+    }
+    
+    .toast.error .toast-icon {
+      color: var(--danger);
+    }
+    
+    .toast.warning .toast-icon {
+      color: var(--warning);
+    }
+    
+    .toast.info .toast-icon {
+      color: var(--info);
+    }
+    
+    .toast-content {
+      flex: 1;
+      min-width: 0;
+    }
+    
+    .toast-title {
+      font-weight: 600;
+      font-size: 0.9375rem;
+      margin-bottom: 0.25rem;
+    }
+    
+    .toast-message {
+      font-size: 0.8125rem;
+      opacity: 0.9;
+      word-wrap: break-word;
+    }
+    
+    .toast-close {
+      color: var(--neutral-400);
+      cursor: pointer;
+      transition: var(--transition-base);
+      flex-shrink: 0;
+      font-size: 0.875rem;
+      margin-top: 0.125rem;
+    }
+    
+    .toast-close:hover {
+      color: white;
+    }
+    
+    .toast-progress {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: rgba(255, 255, 255, 0.2);
+    }
+    
+    .toast-progress::before {
+      content: '';
+      position: absolute;
+      height: 100%;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.5);
+      animation: toast-progress 3s linear forwards;
+      transform-origin: left;
+    }
+    
+    @keyframes toast-progress {
+      0% { transform: scaleX(1); }
+      100% { transform: scaleX(0); }
+    }
+    
+    /* Tooltip - Enhanced */
+    .tooltip {
+      position: relative;
+      display: inline-block;
+      cursor: help;
+    }
+    
+    .tooltip .tooltip-text {
+      visibility: hidden;
+      width: 200px;
+      background-color: var(--neutral-800);
+      color: white;
+      text-align: center;
+      border-radius: var(--radius-md);
+      padding: 0.75rem;
+      position: absolute;
+      z-index: 100;
+      bottom: 125%;
+      left: 50%;
+      transform: translateX(-50%);
+      opacity: 0;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      box-shadow: var(--shadow-lg);
+      font-size: 0.75rem;
+      pointer-events: none;
+    }
+    
+    .tooltip .tooltip-text::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      margin-left: -5px;
+      border-width: 5px;
+      border-style: solid;
+      border-color: var(--neutral-800) transparent transparent transparent;
+    }
+    
+    .tooltip:hover .tooltip-text {
+      visibility: visible;
+      opacity: 1;
+      transform: translateX(-50%) translateY(-5px);
+    }
+    
+    /* Help icons */
+    .help-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--primary-light);
+      color: white;
+      font-size: 0.625rem;
+      margin-left: 0.375rem;
+      cursor: help;
+      transition: var(--transition-base);
+    }
+    
+    .help-icon:hover {
+      background: var(--primary);
+      transform: scale(1.1);
+    }
+    
+    /* Input with country code - enhanced */
+    .iti {
+      width: 100% !important;
+    }
+    
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    @keyframes slideInRight {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    
+    @keyframes fadeOut {
+      from { opacity: 1; }
+      to { opacity: 0; visibility: hidden; }
+    }
+    
+    @keyframes checkmarkBounce {
+      0% { transform: scale(0); }
+      60% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+    
+    @keyframes pulseBg {
+      0% { transform: translate(-50%, -50%) scale(1); opacity: 0.5; }
+      50% { transform: translate(-50%, -50%) scale(1.3); opacity: 0.3; }
+      100% { transform: translate(-50%, -50%) scale(1); opacity: 0.5; }
+    }
+    
+    /* Row layout for form fields */
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    /* Nuevos estilos para la sección de instrucciones en lugar de datos bancarios */
+    .recharge-instructions {
+      background: rgba(26, 31, 113, 0.03);
+      border-radius: var(--radius-lg);
+      padding: 1.75rem;
+      border: 1px solid var(--primary-light);
+      border-left: 5px solid var(--primary);
+      margin: 1.5rem 0;
+    }
+    
+    .recharge-steps {
+      margin-top: 1rem;
+    }
+    
+    .recharge-step {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 1.25rem;
+      padding-bottom: 1.25rem;
+      border-bottom: 1px dashed var(--neutral-300);
+    }
+    
+    .recharge-step:last-child {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+    
+    .recharge-step-number {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      background: var(--primary);
+      color: white;
+      font-weight: 600;
+      border-radius: 50%;
+      margin-right: 1rem;
+      flex-shrink: 0;
+    }
+    
+    .recharge-step-content {
+      flex: 1;
+    }
+    
+    .recharge-step-title {
+      font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+      font-size: 1.05rem;
+    }
+    
+    .recharge-step-desc {
+      color: var(--neutral-700);
+      font-size: 0.9rem;
+    }
+    
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .feature-item {
+      background: white;
+      border-radius: var(--radius-md);
+      padding: a1.5rem;
+      box-shadow: var(--shadow-md);
+      transition: var(--transition-base);
+      border: 1px solid var(--neutral-300);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+    
+    .feature-item:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--primary-light);
+    }
+    
+    .feature-icon {
+      width: 60px;
+      height: 60px;
+      background: rgba(26, 31, 113, 0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1rem;
+      color: var(--primary);
+      font-size: 1.5rem;
+    }
+    
+    .feature-title {
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      color: var(--primary);
+    }
+    
+    .feature-desc {
+      font-size: 0.875rem;
+      color: var(--neutral-600);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.35rem 0.75rem;
+      border-radius: var(--radius-full);
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-top: 0.5rem;
+    }
+    
+    .badge-primary {
+      background: rgba(26, 31, 113, 0.1);
+      color: var(--primary);
+    }
+    
+    .badge-success {
+      background: rgba(0, 200, 81, 0.1);
+      color: var(--success);
+    }
+
+    /* Home button and improved header */
+    .home-btn {
+      display: flex;
+      align-items: center;
+      height: 40px;
+      padding: 0 1rem;
+      background: var(--primary);
+      color: white;
+      border-radius: var(--radius-md);
+      margin-left: 0.75rem;
+      font-weight: 600;
+      font-size: 0.875rem;
+      transition: var(--transition-bounce);
+      text-decoration: none;
+      box-shadow: var(--shadow-md);
+    }
+
+    .home-btn:hover {
+      background: var(--primary-dark);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .home-btn i {
+      margin-right: 0.5rem;
+    }
+
+    .whatsapp-support {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 900;
+      animation: bounceIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .whatsapp-btn {
+      width: 60px;
+      height: 60px;
+      background: #25D366;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1.75rem;
+      box-shadow: var(--shadow-lg);
+      border: none;
+      cursor: pointer;
+      transition: var(--transition-bounce);
+    }
+
+    .whatsapp-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 8px 25px rgba(37, 211, 102, 0.4);
+    }
+
+    .whatsapp-tooltip {
+      position: absolute;
+      bottom: 100%;
+      right: 0;
+      background: var(--neutral-800);
+      color: white;
+      padding: 0.75rem 1rem;
+      border-radius: var(--radius-md);
+      margin-bottom: 0.75rem;
+      font-size: 0.875rem;
+      box-shadow: var(--shadow-lg);
+      white-space: nowrap;
+      pointer-events: none;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 0.2s ease;
+    }
+
+    .whatsapp-tooltip::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      right: 25px;
+      border: 8px solid transparent;
+      border-top-color: var(--neutral-800);
+    }
+
+    .whatsapp-support:hover .whatsapp-tooltip {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @keyframes bounceIn {
+      0% { transform: scale(0); }
+      60% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+    
+    /* FAQ sección - nuevo */
+    .faq-section {
+      margin: 2rem 0;
+      border: 1px solid var(--neutral-300);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      background: var(--neutral-100);
+      box-shadow: var(--shadow-md);
+    }
+    
+    .faq-header {
+      background: var(--primary);
+      color: white;
+      padding: 1.25rem 1.5rem;
+      text-align: center;
+    }
+    
+    .faq-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    
+    .faq-subtitle {
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+    
+    .faq-item {
+      border-bottom: 1px solid var(--neutral-300);
+    }
+    
+    .faq-item:last-child {
+      border-bottom: none;
+    }
+    
+    .faq-question {
+      padding: 1.25rem 1.5rem;
+      font-weight: 600;
+      color: var(--primary);
+      background: var(--neutral-200);
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: var(--transition-base);
+    }
+    
+    .faq-question:hover {
+      background: rgba(26, 31, 113, 0.05);
+    }
+    
+    .faq-question i {
+      transition: transform 0.3s ease;
+    }
+    
+    .faq-question.active i {
+      transform: rotate(180deg);
+    }
+    
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease, padding 0.3s ease;
+    }
+    
+    .faq-answer.active {
+      max-height: 1000px;
+      padding: 1.25rem 1.5rem;
+      background: var(--neutral-100);
+    }
+    
+    .faq-answer p {
+      margin-bottom: 1rem;
+      color: var(--neutral-700);
+    }
+    
+    .faq-answer p:last-child {
+      margin-bottom: 0;
+    }
+    
+    .highlighted-box {
+      background: rgba(247, 182, 0, 0.1);
+      border-left: 3px solid var(--accent);
+      padding: 1rem;
+      margin: 1rem 0;
+      border-radius: var(--radius-sm);
+    }
+    
+    /* Trust signals section - new */
+    .trust-signals-section {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1.5rem;
+      margin: 2rem 0;
+      padding: 1.5rem;
+      background: rgba(26, 31, 113, 0.03);
+      border-radius: var(--radius-lg);
+    }
+    
+    .trust-signal {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 1rem;
+      background: white;
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-sm);
+      transition: var(--transition-base);
+      flex: 1;
+      min-width: 240px;
+    }
+    
+    .trust-signal:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+    }
+    
+    .trust-signal-icon {
+      width: 40px;
+      height: 40px;
+      background: rgba(26, 31, 113, 0.1);
+      color: var(--primary);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+    
+    .trust-signal-content {
+      flex: 1;
+    }
+    
+    .trust-signal-title {
+      font-weight: 600;
+      color: var(--primary);
+      font-size: 0.95rem;
+      margin-bottom: 0.25rem;
+    }
+    
+    .trust-signal-desc {
+      font-size: 0.8125rem;
+      color: var(--neutral-600);
+    }
+    
+    /* Improved Responsive Styles */
+    @media (max-width: 992px) {
+      .login-container, .verification-container {
+        padding: 1.5rem;
+      }
+      
+      .login-card {
+        padding: 2rem 1.5rem;
+      }
+      
+      .step-label {
+        font-size: 0.75rem;
+      }
+      
+      .app-header {
+        padding: 0.8rem 1.5rem;
+      }
+      
+      .feature-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .stepper {
+        margin-bottom: 1.5rem;
+      }
+      
+      .step {
+        width: 80px;
+      }
+      
+      .step-number {
+        width: 40px;
+        height: 40px;
+        font-size: 0.9rem;
+      }
+      
+      .step-label {
+        font-size: 0.6875rem;
+        max-width: 80px;
+      }
+      
+      .bank-grid {
+        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      }
+      
+      .selfie-container {
+        height: 300px;
+      }
+      
+      .deposit-detail {
+        grid-template-columns: 1fr;
+      }
+      
+      .verification-reason {
+        padding: 1rem;
+      }
+      
+      .feature-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .home-btn span {
+        display: none;
+      }
+
+      .home-btn {
+        width: 40px;
+        padding: 0;
+        justify-content: center;
+      }
+
+      .home-btn i {
+        margin-right: 0;
+      }
+    }
+    
+    @media (max-width: 576px) {
+      .app-header {
+        padding: 0.75rem 1rem;
+      }
+      
+      .header-brand img {
+        height: 30px;
+      }
+      
+      .stepper {
+        margin-bottom: 1rem;
+      }
+      
+      .step {
+        width: 65px;
+      }
+      
+      .step-number {
+        width: 36px;
+        height: 36px;
+        font-size: 0.8rem;
+      }
+      
+      .step-label {
+        font-size: 0.625rem;
+        max-width: 70px;
+      }
+      
+      .document-preview {
+        height: 180px;
+      }
+      
+      .selfie-container {
+        height: 280px;
+      }
+      
+      .bank-grid {
+        grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+        gap: 0.75rem;
+      }
+      
+      .verification-reason {
+        flex-direction: column;
+        padding: 1rem;
+      }
+      
+      .verification-reason i {
+        margin-bottom: 0.5rem;
+      }
+      
+      .btn {
+        height: 44px;
+        font-size: 0.875rem;
+      }
+      
+      .document-upload {
+        padding: 1.5rem 1rem;
+      }
+      
+      .document-upload i {
+        font-size: 2.25rem;
+        margin-bottom: 1rem;
+      }
+      
+      .document-upload-title {
+        font-size: 1rem;
+      }
+      
+      .document-upload-text {
+        font-size: 0.75rem;
+      }
+      
+      .card-title {
+        font-size: 1.125rem;
+      }
+      
+      .card-subtitle {
+        font-size: 0.9375rem;
+      }
+      
+      .verification-complete-title {
+        font-size: 1.5rem;
+      }
+      
+      .verification-complete-subtitle {
+        font-size: 0.9375rem;
+      }
+      
+      .instruction-title {
+        font-size: 1.25rem;
+      }
+      
+      .recharge-step {
+        flex-direction: column;
+      }
+      
+      .recharge-step-number {
+        margin-bottom: 0.75rem;
+      }
+    }
+    
+    /* Focus visible styles for accessibility */
+    :focus-visible {
+      outline: 3px solid var(--primary-light);
+      outline-offset: 2px;
+    }
+    
+    /* Screen reader only class */
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border-width: 0;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="app-header" id="app-header">
+    <div class="header-brand">
+      <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhnBzNdjl6bNp-nIdaiHVENczJhwlJNA7ocsyiOObMmzbu8at0dY5yGcZ9cLxLF39qI6gwNfqBxlkTDC0txVULEwQVwGkeEzN0Jq9MRTRagA48mh18UqTlR4WhsXOLAEZugUyhqJHB19xJgnkpe-S5VOWFgzpKFwctv3XP9XhH41vNTvq0ZS-nik58Qhr-O/s320/remeex.png" alt="REMEEX">
+    </div>
+    <div class="header-actions">
+      <a href="https://remeex.com" class="home-btn" title="Ir al inicio" aria-label="Ir al inicio">
+        <i class="fas fa-home"></i> <span>Inicio</span>
+      </a>
+      <button class="header-action-btn" id="help-btn" title="Ayuda" aria-label="Ayuda">
+        <i class="fas fa-question"></i>
+      </button>
+      <button class="header-action-btn" id="language-btn" title="Idioma" aria-label="Cambiar idioma">
+        <i class="fas fa-globe"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- Login Container -->
+  <div class="login-container" id="login-container">
+    <div class="login-card">
+      <div class="login-logo">
+        <div class="login-logo-container">
+          <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhnBzNdjl6bNp-nIdaiHVENczJhwlJNA7ocsyiOObMmzbu8at0dY5yGcZ9cLxLF39qI6gwNfqBxlkTDC0txVULEwQVwGkeEzN0Jq9MRTRagA48mh18UqTlR4WhsXOLAEZugUyhqJHB19xJgnkpe-S5VOWFgzpKFwctv3XP9XhH41vNTvq0ZS-nik58Qhr-O/s320/remeex.png" alt="REMEEX">
+        </div>
+      </div>
+      
+      <div class="login-heading">
+        <h1 class="login-title">Verificación de Identidad</h1>
+        <p class="login-subtitle">Complete el proceso KYC para activar su tarjeta REMEEX y disfrutar de todos los beneficios</p>
+      </div>
+      
+      <div class="security-badge">
+        <div class="security-badge-icon">
+          <i class="fas fa-shield-alt"></i>
+        </div>
+        <div class="security-badge-content">
+          <div class="security-badge-title">Conexión segura</div>
+          <div class="security-badge-text">Sus datos están protegidos con cifrado de nivel bancario SSL 256-bit</div>
+        </div>
+      </div>
+      
+      <form id="login-form" novalidate>
+        <div class="form-group">
+          <label class="form-label" for="login-email">
+            <i class="fas fa-envelope"></i> Correo Electrónico
+          </label>
+          <input type="email" class="form-control" id="login-email" placeholder="ejemplo@correo.com" autocomplete="email" aria-describedby="email-error" required>
+          <div class="error-message" id="email-error">Por favor, introduzca un correo electrónico válido.</div>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" for="login-code">
+            <i class="fas fa-key"></i> Clave de Verificación
+          </label>
+          <input type="password" class="form-control" id="login-code" placeholder="Enviada a su correo o SMS" aria-describedby="code-error" required>
+          <div class="error-message" id="code-error">La clave de verificación no es válida.</div>
+          <div class="form-hint">
+            <i class="fas fa-info-circle"></i> 
+            La clave de verificación fue enviada al correo o número de teléfono registrado.
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <button type="button" class="btn btn-primary" id="login-button">
+            <i class="fas fa-sign-in-alt"></i> Iniciar Verificación
+          </button>
+        </div>
+      </form>
+      
+      <div style="text-align: center; margin-top: 1.5rem;">
+        <p style="font-size: 0.875rem; color: var(--neutral-600); margin-bottom: 0.75rem;">
+          ¿Necesita ayuda con su verificación?
+        </p>
+        <a href="https://wa.me/+17373018059" class="btn btn-outline" target="_blank" style="display: inline-flex; max-width: 250px; margin: 0 auto;">
+          <i class="fab fa-whatsapp"></i> Contactar Soporte
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Verification Container -->
+  <div class="main-container verification-container" id="verification-container">
+    <!-- Stepper de Verificación -->
+    <div class="stepper-container">
+      <div class="stepper">
+        <div class="step-progress" id="step-progress"></div>
+        <div class="step active" data-step="1">
+          <div class="step-number">1</div>
+          <div class="step-label">Datos Personales</div>
+        </div>
+        
+        <div class="step" data-step="2">
+          <div class="step-number">2</div>
+          <div class="step-label">Documentos de Identidad</div>
+        </div>
+        
+        <div class="step" data-step="3">
+          <div class="step-number">3</div>
+          <div class="step-label">Biometría</div>
+        </div>
+        
+        <div class="step" data-step="4">
+          <div class="step-number">4</div>
+          <div class="step-label">Validación Bancaria</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pasos de Verificación -->
+    <div class="verification-steps-container">
+      <!-- Paso 1: Datos Personales -->
+      <div class="verification-step active" id="step1">
+        <div class="progress-indicator">
+          <div class="progress-indicator-icon">
+            <i class="fas fa-user"></i>
+          </div>
+          <div class="progress-indicator-content">
+            <div class="progress-indicator-title">Información Personal</div>
+            <div class="progress-indicator-text">Proporcione su información personal para comenzar el proceso de verificación.</div>
+          </div>
+        </div>
+        
+        <div class="card">
+          <div class="card-title">
+            <i class="fas fa-user-circle"></i> Datos Personales
+          </div>
+          
+          <div class="card-body">
+            <form id="personal-info-form" novalidate>
+              <div class="row">
+                <div class="form-group" style="flex: 1; min-width: 280px;">
+                  <label class="form-label" for="full-name">
+                    <i class="fas fa-user"></i> Nombre Completo
+                    <span class="tooltip">
+                      <span class="help-icon">?</span>
+                      <span class="tooltip-text">Ingrese su nombre exactamente como aparece en su documento de identidad.</span>
+                    </span>
+                  </label>
+                  <input type="text" class="form-control" id="full-name" placeholder="Tal como aparece en su documento de identidad" aria-describedby="name-error" required autocomplete="name">
+                  <div class="error-message" id="name-error">Por favor, introduzca su nombre completo.</div>
+                </div>
+                
+                <div class="form-group" style="flex: 1; min-width: 280px;">
+                  <label class="form-label" for="birth-date">
+                    <i class="fas fa-calendar-alt"></i> Fecha de Nacimiento
+                  </label>
+                  <input type="date" class="form-control" id="birth-date" aria-describedby="birth-date-error" required>
+                  <div class="error-message" id="birth-date-error">Por favor, introduzca una fecha de nacimiento válida.</div>
+                </div>
+              </div>
+              
+              <div class="row">
+                <div class="form-group" style="flex: 1; min-width: 280px;">
+                  <label class="form-label" for="id-type">
+                    <i class="fas fa-id-card"></i> Tipo de Documento
+                  </label>
+                  <select class="form-control" id="id-type" required>
+                    <option value="" selected disabled>Seleccione una opción</option>
+                    <option value="cedula">Cédula de Identidad</option>
+                    <option value="pasaporte">Pasaporte</option>
+                    <option value="dni">DNI</option>
+                    <option value="otro">Otro Documento</option>
+                  </select>
+                  <div class="error-message" id="id-type-error">Por favor, seleccione un tipo de documento.</div></div>
+                
+                <div class="form-group" style="flex: 1; min-width: 280px;">
+                  <label class="form-label" for="id-number">
+                    <i class="fas fa-fingerprint"></i> Número de Documento
+                  </label>
+                  <input type="text" class="form-control" id="id-number" placeholder="Ej: V-12345678" aria-describedby="id-number-error" required>
+                  <div class="error-message" id="id-number-error">Por favor, introduzca un número de documento válido.</div>
+                </div>
+              </div>
+              
+              <div class="row">
+                <div class="form-group" style="flex: 1; min-width: 280px;">
+                  <label class="form-label" for="nationality">
+                    <i class="fas fa-flag"></i> Nacionalidad
+                  </label>
+                  <select class="form-control" id="nationality" required>
+                    <option value="" selected disabled>Seleccione una opción</option>
+                    <option value="VE">Venezuela</option>
+                    <option value="CO">Colombia</option>
+                    <option value="US">Estados Unidos</option>
+                    <option value="ES">España</option>
+                    <option value="MX">México</option>
+                    <option value="AR">Argentina</option>
+                    <option value="CL">Chile</option>
+                    <option value="PE">Perú</option>
+                    <option value="other">Otro</option>
+                  </select>
+                  <div class="error-message" id="nationality-error">Por favor, seleccione su nacionalidad.</div>
+                </div>
+                
+                <div class="form-group" style="flex: 1; min-width: 280px;">
+                  <label class="form-label" for="phone">
+                    <i class="fas fa-phone-alt"></i> Número de Teléfono
+                  </label>
+                  <input type="tel" class="form-control" id="phone" placeholder="+58 412 1234567" aria-describedby="phone-error" required autocomplete="tel">
+                  <div class="error-message" id="phone-error">Por favor, introduzca un número de teléfono válido.</div>
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label" for="email-confirm">
+                  <i class="fas fa-envelope"></i> Correo Electrónico
+                </label>
+                <input type="email" class="form-control" id="email-confirm" placeholder="ejemplo@correo.com" aria-describedby="email-confirm-error" required autocomplete="email">
+                <div class="error-message" id="email-confirm-error">Por favor, introduzca un correo electrónico válido.</div>
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label" for="address">
+                  <i class="fas fa-home"></i> Dirección de Residencia
+                </label>
+                <textarea class="form-control" id="address" style="height: auto; min-height: 100px;" placeholder="Dirección completa donde reside actualmente" aria-describedby="address-error" required autocomplete="street-address"></textarea>
+                <div class="error-message" id="address-error">Por favor, introduzca su dirección completa.</div>
+              </div>
+            </form>
+          </div>
+        </div>
+        
+        <div style="display: flex; justify-content: flex-end;">
+          <button class="btn btn-primary" id="step1-next" style="width: auto; min-width: 200px;">
+            Continuar <i class="fas fa-arrow-right" style="margin-left: 0.5rem; margin-right: 0;"></i>
+          </button>
+        </div>
+      </div>
+      
+      <!-- Paso 2: Documentos de Identidad -->
+      <div class="verification-step" id="step2">
+        <div class="progress-indicator">
+          <div class="progress-indicator-icon">
+            <i class="fas fa-id-card"></i>
+          </div>
+          <div class="progress-indicator-content">
+            <div class="progress-indicator-title">Documentos de Identidad</div>
+            <div class="progress-indicator-text">Necesitamos verificar su identidad a través de sus documentos oficiales.</div>
+          </div>
+        </div>
+        
+        <div class="card">
+          <div class="card-title">
+            <i class="fas fa-id-card"></i> Documentos de Identidad
+          </div>
+          
+          <div class="card-body">
+            <p style="margin-bottom: 1.5rem; color: var(--neutral-700);">
+              Por favor, suba imágenes claras de su documento de identidad. Asegúrese de que toda la información sea legible.
+            </p>
+            
+            <div class="tab-nav" id="document-tabs">
+              <div class="tab-nav-item active" data-tab="personal-id">Documento de identidad</div>
+              <div class="tab-nav-item" data-tab="additional-docs">Documentos adicionales</div>
+            </div>
+            
+            <div class="tab-content active" id="personal-id-tab">
+              <!-- Documento Cara Frontal -->
+              <div class="document-upload-container">
+                <h3 class="card-subtitle">
+                  <i class="fas fa-id-card"></i> Cara frontal del documento
+                </h3>
+                
+                <div class="document-upload" id="front-id-upload">
+                  <i class="fas fa-upload"></i>
+                  <h3 class="document-upload-title">Suba la cara frontal</h3>
+                  <p class="document-upload-text">Haga clic aquí o arrastre la imagen. Formatos aceptados: JPG, PNG o PDF.</p>
+                  <input type="file" id="front-id-file" accept="image/*,.pdf" aria-label="Subir imagen frontal del documento">
+                </div>
+                
+                <div class="document-preview" id="front-id-preview">
+                  <img id="front-id-image" src="#" alt="Vista previa documento frontal">
+                  <div class="scan-overlay">
+                    <div class="scan-line"></div>
+                    <div class="scan-points" id="front-scan-points"></div>
+                  </div>
+                  <div class="document-review-status">
+                    <i class="fas fa-check"></i>
+                  </div>
+                  <div class="document-preview-actions">
+                    <button class="document-preview-btn" id="zoom-front" title="Ampliar" aria-label="Ampliar imagen">
+                      <i class="fas fa-search-plus"></i>
+                    </button>
+                    <button class="document-preview-btn" id="rotate-front" title="Rotar" aria-label="Rotar imagen">
+                      <i class="fas fa-sync-alt"></i>
+                    </button>
+                    <button class="document-preview-btn remove" id="remove-front" title="Eliminar" aria-label="Eliminar imagen">
+                      <i class="fas fa-trash-alt"></i>
+                    </button>
+                  </div>
+                </div>
+                
+                <div class="error-message" id="front-id-error">Por favor, suba la cara frontal de su documento.</div>
+              </div>
+              
+              <!-- Documento Cara Posterior -->
+              <div class="document-upload-container">
+                <h3 class="card-subtitle">
+                  <i class="fas fa-id-card"></i> Cara posterior del documento
+                </h3>
+                
+                <div class="document-upload" id="back-id-upload">
+                  <i class="fas fa-upload"></i>
+                  <h3 class="document-upload-title">Suba la cara posterior</h3>
+                  <p class="document-upload-text">Haga clic aquí o arrastre la imagen. Formatos aceptados: JPG, PNG o PDF.</p>
+                  <input type="file" id="back-id-file" accept="image/*,.pdf" aria-label="Subir imagen posterior del documento">
+                </div>
+                
+                <div class="document-preview" id="back-id-preview">
+                  <img id="back-id-image" src="#" alt="Vista previa documento posterior">
+                  <div class="scan-overlay">
+                    <div class="scan-line"></div>
+                    <div class="scan-points" id="back-scan-points"></div>
+                  </div>
+                  <div class="document-review-status">
+                    <i class="fas fa-check"></i>
+                  </div>
+                  <div class="document-preview-actions">
+                    <button class="document-preview-btn" id="zoom-back" title="Ampliar" aria-label="Ampliar imagen">
+                      <i class="fas fa-search-plus"></i>
+                    </button>
+                    <button class="document-preview-btn" id="rotate-back" title="Rotar" aria-label="Rotar imagen">
+                      <i class="fas fa-sync-alt"></i>
+                    </button>
+                    <button class="document-preview-btn remove" id="remove-back" title="Eliminar" aria-label="Eliminar imagen">
+                      <i class="fas fa-trash-alt"></i>
+                    </button>
+                  </div>
+                </div>
+                
+                <div class="error-message" id="back-id-error">Por favor, suba la cara posterior de su documento.</div>
+              </div>
+              
+              <div class="form-hint" style="margin-top: 1rem;">
+                <i class="fas fa-info-circle"></i> 
+                Asegúrese de que su documento sea visible en su totalidad y que la información sea legible.
+              </div>
+            </div>
+            
+            <div class="tab-content" id="additional-docs-tab">
+              <div class="document-upload-container">
+                <h3 class="card-subtitle">
+                  <i class="fas fa-file-alt"></i> Comprobante de domicilio
+                  <span class="tooltip">
+                    <span class="help-icon">?</span>
+                    <span class="tooltip-text">Puede ser una factura de servicios (luz, agua, gas, internet) a su nombre con fecha reciente (menos de 3 meses).</span>
+                  </span>
+                </h3>
+                
+                <div class="document-upload" id="address-doc-upload">
+                  <i class="fas fa-file-upload"></i>
+                  <h3 class="document-upload-title">Suba su comprobante de domicilio</h3>
+                  <p class="document-upload-text">Factura de servicios, extracto bancario, etc. (Opcional)</p>
+                  <input type="file" id="address-doc-file" accept="image/*,.pdf" aria-label="Subir comprobante de domicilio">
+                </div>
+                
+                <div class="document-preview" id="address-doc-preview">
+                  <img id="address-doc-image" src="#" alt="Vista previa comprobante de domicilio">
+                  <div class="scan-overlay">
+                    <div class="scan-line"></div>
+                    <div class="scan-points" id="address-scan-points"></div>
+                  </div>
+                  <div class="document-review-status">
+                    <i class="fas fa-check"></i>
+                  </div>
+                  <div class="document-preview-actions">
+                    <button class="document-preview-btn" id="zoom-address" title="Ampliar" aria-label="Ampliar imagen">
+                      <i class="fas fa-search-plus"></i>
+                    </button>
+                    <button class="document-preview-btn" id="rotate-address" title="Rotar" aria-label="Rotar imagen">
+                      <i class="fas fa-sync-alt"></i>
+                    </button>
+                    <button class="document-preview-btn remove" id="remove-address" title="Eliminar" aria-label="Eliminar imagen">
+                      <i class="fas fa-trash-alt"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="document-upload-container">
+                <h3 class="card-subtitle">
+                  <i class="fas fa-file-invoice-dollar"></i> Comprobante de ingresos
+                  <span class="tooltip">
+                    <span class="help-icon">?</span>
+                    <span class="tooltip-text">Estado de cuenta bancario, recibo de nómina o declaración de impuestos reciente.</span>
+                  </span>
+                </h3>
+                
+                <div class="document-upload" id="income-doc-upload">
+                  <i class="fas fa-file-upload"></i>
+                  <h3 class="document-upload-title">Suba su comprobante de ingresos</h3>
+                  <p class="document-upload-text">Recibo de nómina, extracto bancario, etc. (Opcional)</p>
+                  <input type="file" id="income-doc-file" accept="image/*,.pdf" aria-label="Subir comprobante de ingresos">
+                </div>
+                
+                <div class="document-preview" id="income-doc-preview">
+                  <img id="income-doc-image" src="#" alt="Vista previa comprobante de ingresos">
+                  <div class="scan-overlay">
+                    <div class="scan-line"></div>
+                    <div class="scan-points" id="income-scan-points"></div>
+                  </div>
+                  <div class="document-review-status">
+                    <i class="fas fa-check"></i>
+                  </div>
+                  <div class="document-preview-actions">
+                    <button class="document-preview-btn" id="zoom-income" title="Ampliar" aria-label="Ampliar imagen">
+                      <i class="fas fa-search-plus"></i>
+                    </button>
+                    <button class="document-preview-btn" id="rotate-income" title="Rotar" aria-label="Rotar imagen">
+                      <i class="fas fa-sync-alt"></i>
+                    </button>
+                    <button class="document-preview-btn remove" id="remove-income" title="Eliminar" aria-label="Eliminar imagen">
+                      <i class="fas fa-trash-alt"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="form-hint" style="margin-top: 1rem;">
+                <i class="fas fa-info-circle"></i>
+                Los documentos adicionales ayudan a acelerar su proceso de verificación y aumentan los límites de transacción.
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="security-badge" style="margin-top: 1.5rem;">
+          <div class="security-badge-icon">
+            <i class="fas fa-shield-alt"></i>
+          </div>
+          <div class="security-badge-content">
+            <div class="security-badge-title">Sus documentos están seguros</div>
+            <div class="security-badge-text">Todos los documentos son encriptados y almacenados de manera segura. Cumplimos con estándares internacionales de protección de datos.</div>
+          </div>
+        </div>
+        
+        <div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+          <button class="btn btn-outline" id="step2-back" style="min-width: 120px;">
+            <i class="fas fa-arrow-left"></i> Atrás
+          </button>
+          <button class="btn btn-primary" id="step2-next" style="min-width: 180px;">
+            Continuar <i class="fas fa-arrow-right" style="margin-left: 0.5rem; margin-right: 0;"></i>
+          </button>
+        </div>
+      </div>
+      
+      <!-- Paso 3: Biometría -->
+      <div class="verification-step" id="step3">
+        <div class="progress-indicator">
+          <div class="progress-indicator-icon">
+            <i class="fas fa-user-check"></i>
+          </div>
+          <div class="progress-indicator-content">
+            <div class="progress-indicator-title">Verificación Biométrica</div>
+            <div class="progress-indicator-text">Necesitamos verificar que usted es el titular del documento mediante una selfie.</div>
+          </div>
+        </div>
+        
+        <div class="card">
+          <div class="card-title">
+            <i class="fas fa-camera"></i> Verificación Facial
+          </div>
+          
+          <div class="card-body">
+            <p style="margin-bottom: 1.5rem; color: var(--neutral-700);">
+              Necesitamos tomar una selfie para verificar que usted es el titular del documento de identidad proporcionado.
+            </p>
+            
+            <!-- Instrucciones selfie -->
+            <div class="security-badge" style="background: rgba(0, 200, 81, 0.05); border-left-color: var(--success);">
+              <div class="security-badge-icon" style="background: var(--success);">
+                <i class="fas fa-check-circle"></i>
+              </div>
+              <div class="security-badge-content">
+                <div class="security-badge-title">Consejos para una buena selfie</div>
+                <div class="security-badge-text">Asegúrese de estar en un lugar bien iluminado, mire directamente a la cámara y no use accesorios que cubran su rostro.</div>
+              </div>
+            </div>
+            
+            <!-- Captura de Selfie -->
+            <div class="form-group">
+              <div class="selfie-container" id="selfie-container">
+                <video id="webcam" class="selfie-video" autoplay playsinline></video>
+                <div class="selfie-overlay">
+                  <div class="face-outline"></div>
+                  <div class="face-guidelines">
+                    <div class="guide-point left-eye"></div>
+                    <div class="guide-point right-eye"></div>
+                    <div class="guide-point nose"></div>
+                    <div class="guide-point mouth"></div>
+                  </div>
+                </div>
+                <div class="selfie-instructions">
+                  Centre su rostro en el óvalo y mantenga la cabeza quieta
+                </div>
+                <div class="selfie-animation" id="selfie-animation"></div>
+                <div class="selfie-counter" id="selfie-counter">3</div>
+              </div>
+              
+              <div class="selfie-tools">
+                <button class="btn btn-secondary" id="switch-camera" style="flex: 1;" aria-label="Cambiar entre cámara frontal y trasera">
+                  <i class="fas fa-sync-alt"></i> Cambiar cámara
+                </button>
+                <button class="btn btn-primary" id="take-selfie" style="flex: 2;" aria-label="Capturar selfie">
+                  <i class="fas fa-camera"></i> Tomar selfie
+                </button>
+              </div>
+              
+              <div class="document-preview" id="selfie-preview">
+                <img id="selfie-image" src="#" alt="Vista previa selfie">
+                <div class="scan-overlay">
+                  <div class="scan-line"></div>
+                  <div class="scan-points" id="selfie-scan-points"></div>
+                </div>
+                <div class="document-preview-actions">
+                  <button class="document-preview-btn remove" id="remove-selfie" title="Eliminar" aria-label="Eliminar selfie">
+                    <i class="fas fa-trash-alt"></i>
+                  </button>
+                </div>
+              </div>
+              
+              <div class="error-message" id="selfie-error">Por favor, tome una selfie para continuar.</div>
+            </div>
+          </div>
+        </div>
+        
+        <div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+          <button class="btn btn-outline" id="step3-back" style="min-width: 120px;">
+            <i class="fas fa-arrow-left"></i> Atrás
+          </button>
+          <button class="btn btn-primary" id="step3-next" style="min-width: 180px;">
+            Continuar <i class="fas fa-arrow-right" style="margin-left: 0.5rem; margin-right: 0;"></i>
+          </button>
+        </div>
+      </div>
+      
+      <!-- Paso 4: Validación Bancaria -->
+      <div class="verification-step" id="step4">
+        <div class="progress-indicator">
+          <div class="progress-indicator-icon">
+            <i class="fas fa-university"></i>
+          </div>
+          <div class="progress-indicator-content">
+            <div class="progress-indicator-title">Información Bancaria</div>
+            <div class="progress-indicator-text">Proporcione sus datos bancarios para completar transferencias y pagos.</div>
+          </div>
+        </div>
+        
+        <div class="card">
+          <div class="card-title">
+            <i class="fas fa-university"></i> Información Bancaria
+          </div>
+          
+          <div class="card-body">
+            <p style="margin-bottom: 1.5rem; color: var(--neutral-700);">
+              Seleccione su banco principal y proporcione los datos de su cuenta para transacciones y verificación.
+            </p>
+            
+            <!-- Selección de Banco -->
+            <form id="bank-info-form" novalidate>
+              <div class="form-group">
+                <label class="form-label">
+                  <i class="fas fa-landmark"></i> Banco Principal
+                  <span class="tooltip">
+                    <span class="help-icon">?</span>
+                    <span class="tooltip-text">Seleccione el banco desde el cual realizará la mayoría de sus operaciones.</span>
+                  </span>
+                </label>
+                <div class="bank-grid" id="bank-grid" role="radiogroup" aria-label="Selección de banco">
+                  <!-- Bancos populares -->
+                  <div class="bank-option" data-bank="banesco" tabindex="0" role="radio" aria-checked="false">
+                    <img src="https://www.banesco.com/wp-content/uploads/2020/11/Isotipo.png" class="bank-logo" alt="Banesco">
+                    <div class="bank-name">Banesco</div>
+                  </div>
+                  
+                  <div class="bank-option" data-bank="provincial" tabindex="0" role="radio" aria-checked="false">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/d/d4/BBVAprovinciallogo.svg" class="bank-logo" alt="Provincial">
+                    <div class="bank-name">Provincial</div>
+                  </div>
+                  
+                  <div class="bank-option" data-bank="mercantil" tabindex="0" role="radio" aria-checked="false">
+                    <img src="https://files.socialgest.net/mybio/5f529398b36f8_1599247256.png" class="bank-logo" alt="Mercantil">
+                    <div class="bank-name">Mercantil</div>
+                  </div>
+                  
+                  <div class="bank-option" data-bank="venezuela" tabindex="0" role="radio" aria-checked="false">
+                    <img src="https://www.bancodevenezuela.com/wp-content/uploads/2023/03/logonuevo.png" class="bank-logo" alt="Banco de Venezuela">
+                    <div class="bank-name">Venezuela</div>
+                  </div>
+                  
+                  <div class="bank-option" data-bank="bnc" tabindex="0" role="radio" aria-checked="false">
+                    <img src="https://www.bncenlinea.com/images/default-source/misc/BNCLogo_rebrand.png" class="bank-logo" alt="BNC">
+                    <div class="bank-name">BNC</div>
+                  </div>
+                  
+                  <div class="bank-option" data-bank="bancaribe" tabindex="0" role="radio" aria-checked="false">
+                    <img src="https://d3olc33sy92l9e.cloudfront.net/wp-content/themes/bancaribe/images/Bancaribe-LogotipoTurquesa.png" class="bank-logo" alt="Bancaribe">
+                    <div class="bank-name">Bancaribe</div>
+                  </div>
+                  
+                  <div class="bank-option" data-bank="bancrecer" tabindex="0" role="radio" aria-checked="false">
+                    <img src="https://www.bancrecer.com.ve/images/img/bancrecer-logo.png" class="bank-logo" alt="Bancrecer">
+                    <div class="bank-name">Bancrecer</div>
+                  </div>
+                  
+                  <div class="bank-option" data-bank="100banco" tabindex="0" role="radio" aria-checked="false">
+                    <img src="https://www.100x100banco.com/img/logo.png" class="bank-logo" alt="100% Banco">
+                    <div class="bank-name">100% Banco</div>
+                  </div>
+                  
+                  <div class="bank-option" data-bank="venezolano" tabindex="0" role="radio" aria-checked="false">
+                    <img src="https://www.venezolano.com/images/galeria/108_1.png" class="bank-logo" alt="Venezolano de Crédito">
+                    <div class="bank-name">Venezolano</div>
+                  </div>
+                  
+                  <div class="bank-option" data-bank="bicentenario" tabindex="0" role="radio" aria-checked="false">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/BancoDigitaldelosTrabajadores.png/320px-BancoDigitaldelosTrabajadores.png" class="bank-logo" alt="Bicentenario">
+                    <div class="bank-name">Bicentenario</div>
+                  </div>
+                  
+                  <div class="bank-option" data-bank="exterior" tabindex="0" role="radio" aria-checked="false">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Banco-Exterior-VE-logo.png/183px-Banco-Exterior-VE-logo.png" class="bank-logo" alt="Exterior">
+                    <div class="bank-name">Exterior</div>
+                  </div>
+                  
+                  <div class="bank-option" data-bank="otro" tabindex="0" role="radio" aria-checked="false">
+                    <i class="fas fa-university" style="font-size: 2.5rem; color: var(--primary); margin-bottom: 0.75rem;"></i>
+                    <div class="bank-name">Otro Banco</div>
+                  </div>
+                </div>
+                
+                <div class="error-message" id="bank-error">Por favor, seleccione un banco.</div>
+              </div>
+              
+              <!-- Formulario de Cuenta Bancaria -->
+              <div class="row" style="display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 1.5rem;">
+                <div class="form-group" style="flex: 1; min-width: 280px;">
+                  <label class="form-label" for="account-type">
+                    <i class="fas fa-wallet"></i> Tipo de Cuenta
+                  </label>
+                  <select class="form-control" id="account-type" required>
+                    <option value="" selected disabled>Seleccione una opción</option>
+                    <option value="ahorro">Cuenta de Ahorro</option>
+                    <option value="corriente">Cuenta Corriente</option>
+                  </select>
+                  <div class="error-message" id="account-type-error">Por favor, seleccione el tipo de cuenta.</div>
+                </div>
+                
+                <div class="form-group" style="flex: 1; min-width: 280px;">
+                  <label class="form-label" for="account-number">
+                    <i class="fas fa-credit-card"></i> Número de Cuenta
+                  </label>
+                  <input type="text" class="form-control" id="account-number" placeholder="Ej: 0134-0000-00-0000000000" aria-describedby="account-number-error" required>
+                  <div class="error-message" id="account-number-error">Por favor, introduzca un número de cuenta válido.</div>
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label" for="account-holder">
+                  <i class="fas fa-user"></i> Titular de la Cuenta
+                </label>
+                <input type="text" class="form-control" id="account-holder" placeholder="Nombre completo del titular de la cuenta" aria-describedby="account-holder-error" required>
+                <div class="error-message" id="account-holder-error">Por favor, introduzca el nombre del titular de la cuenta.</div>
+                <div class="form-hint">
+                  <i class="fas fa-info-circle"></i>
+                  El titular de la cuenta debe coincidir con el nombre en su documento de identidad.
+                </div>
+              </div>
+              
+              <!-- Sección de Verificación de Cuenta -->
+              <div class="account-verification-section">
+                <h3 style="font-size: 1.25rem; font-weight: 600; color: var(--primary); margin-bottom: 1rem;">
+                  <i class="fas fa-shield-alt"></i> Verificación de Titularidad de Cuenta
+                </h3>
+                
+                <div class="verification-explanation">
+                  <p style="font-size: 0.9375rem; margin-bottom: 1.25rem; color: var(--neutral-700);">
+                    Para garantizar la seguridad de sus fondos y verificar que usted es el titular de la cuenta bancaria, necesitará realizar un pequeño depósito de verificación.
+                  </p>
+                  
+                  <div class="verification-reason">
+                    <i class="fas fa-shield-alt"></i>
+                    <div class="verification-reason-content">
+                      <div class="verification-reason-title">Para su Seguridad</div>
+                      <p style="font-size: 0.875rem; color: var(--neutral-700);">Este depósito confirma que la cuenta bancaria es realmente suya y evita fraudes. Es una práctica estándar internacional de verificación KYC/AML.</p>
+                    </div>
+                  </div>
+                  
+                  <div class="verification-reason">
+                    <i class="fas fa-money-bill-wave"></i>
+                    <div class="verification-reason-content">
+                      <div class="verification-reason-title">No es una Comisión</div>
+                      <p style="font-size: 0.875rem; color: var(--neutral-700);">El depósito de $25 USD se suma íntegramente a su saldo disponible en REMEEX. ¡Sigue siendo su dinero!</p>
+                    </div>
+                  </div>
+                  
+                  <div class="verification-reason">
+                    <i class="fas fa-check-circle"></i>
+                    <div class="verification-reason-content">
+                      <div class="verification-reason-title">Una Sola Vez</div>
+                      <p style="font-size: 0.875rem; color: var(--neutral-700);">Solo necesita realizar este depósito una vez para cada cuenta bancaria que quiera registrar. La verificación es permanente.</p>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="verification-checkbox">
+                  <label class="custom-checkbox">
+                    <input type="checkbox" id="verification-agreement" required>
+                    <span class="checkmark"></span>
+                  </label>
+                  <label for="verification-agreement" style="font-size: 0.9375rem; color: var(--neutral-800);">
+                    Entiendo que debo realizar un depósito de verificación de $25 USD desde mi cuenta bancaria a REMEEX para completar el proceso de verificación y que este monto se sumará a mi saldo disponible.
+                  </label>
+                </div>
+                <div class="error-message" id="verification-agreement-error">Debe aceptar realizar el depósito de verificación.</div>
+              </div>
+            </form>
+          </div>
+        </div>
+        
+        <!-- Nueva sección de FAQ para aclarar dudas sobre verificación -->
+        <div class="faq-section">
+          <div class="faq-header">
+            <h3 class="faq-title">Preguntas frecuentes sobre la verificación bancaria</h3>
+            <p class="faq-subtitle">Resolvemos tus principales dudas sobre el proceso</p>
+          </div>
+          
+          <div class="faq-item">
+            <div class="faq-question">
+              ¿Por qué necesito hacer un depósito de verificación?
+              <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+              <p>El depósito de verificación es una medida de seguridad diseñada para <strong>proteger su dinero y confirmar que la cuenta bancaria a la que desea retirar fondos es realmente suya</strong>.</p>
+              <p>Similar a como cuando confirmas tu dirección antes de recibir un paquete valioso, este proceso nos permite confirmar de forma segura que tú controlas la cuenta bancaria y así evitar que alguien intente desviar tu dinero a una cuenta desconocida o fraudulenta.</p>
+              <div class="highlighted-box">
+                <strong>Importante:</strong> Este depósito se suma completamente a tu saldo disponible en REMEEX. ¡No pierdes ni un centavo!
+              </div>
+            </div>
+          </div>
+          
+          <div class="faq-item">
+            <div class="faq-question">
+              ¿Estos $25 son una comisión escondida?
+              <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+              <p><strong>¡Rotundamente NO!</strong> Los $25 <strong>NO son una comisión ni un cobro</strong>. Es únicamente un depósito de <em>verificación</em>. En el mismo instante en que lo recibimos, esos $25 se suman <strong>completamente a su saldo disponible</strong> en su cuenta REMEEX.</p>
+              <p>Sigue siendo su dinero, listo para usarse en cualquier momento una vez que su cuenta esté verificada.</p>
+            </div>
+          </div>
+          
+          <div class="faq-item">
+            <div class="faq-question">
+              ¿Tendré que hacer este depósito cada vez que quiera retirar dinero?
+              <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+              <p><strong>¡No, para nada!</strong> Este proceso de verificación con el depósito de $25 se realiza <strong>UNA SOLA VEZ por cada cuenta bancaria</strong> que quiera registrar y vincular a REMEEX.</p>
+              <p>Una vez que su cuenta bancaria está verificada y guardada de forma segura, podrá realizar retiros a esa cuenta de manera rápida y sencilla, sin tener que repetir el depósito para esa cuenta específica.</p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Trust signals para generar confianza -->
+        <div class="trust-signals-section">
+          <div class="trust-signal">
+            <div class="trust-signal-icon">
+              <i class="fas fa-shield-alt"></i>
+            </div>
+            <div class="trust-signal-content">
+              <div class="trust-signal-title">Estándar de Seguridad</div>
+              <div class="trust-signal-desc">Práctica común en plataformas financieras internacionales como Wise y PayPal.</div>
+            </div>
+          </div>
+          
+          <div class="trust-signal">
+            <div class="trust-signal-icon">
+              <i class="fas fa-lock"></i>
+            </div>
+            <div class="trust-signal-content">
+              <div class="trust-signal-title">Datos Protegidos</div>
+              <div class="trust-signal-desc">Toda su información se guarda con encriptación de nivel bancario.</div>
+            </div>
+          </div>
+          
+          <div class="trust-signal">
+            <div class="trust-signal-icon">
+              <i class="fas fa-user-check"></i>
+            </div>
+            <div class="trust-signal-content">
+              <div class="trust-signal-title">Verificación Única</div>
+              <div class="trust-signal-desc">Realizada solo una vez por cada cuenta bancaria que registre.</div>
+            </div>
+          </div>
+        </div>
+        
+        <div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+          <button class="btn btn-outline" id="step4-back" style="min-width: 120px;">
+            <i class="fas fa-arrow-left"></i> Atrás
+          </button>
+          <button class="btn btn-primary" id="complete-verification" style="min-width: 180px;">
+            <i class="fas fa-check-circle"></i> Completar Verificación
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Verificación Completada -->
+    <div class="verification-complete" id="verification-complete">
+      <div class="verification-complete-icon-container">
+        <div class="verification-complete-icon-bg"></div>
+        <div class="verification-complete-icon">
+          <i class="fas fa-check"></i>
+        </div>
+      </div>
+      
+      <div class="verification-complete-title">¡Verificación en Proceso!</div>
+      <div class="verification-complete-subtitle">
+        Hemos recibido toda su información correctamente. Ahora solo falta un pequeño paso para activar su cuenta REMEEX.
+      </div>
+      
+      <div class="verification-instruction-card">
+        <h3 class="instruction-title">Próximos Pasos</h3>
+        
+        <ol class="instruction-steps">
+          <li>Inicie sesión en su cuenta REMEEX a través del portal principal.</li>
+          <li>En el panel de control, busque la opción "Recargar Saldo" y haga clic en ella.</li>
+          <li>Seleccione el método de pago "Pago Móvil" para realizar el depósito de verificación.</li>
+          <li>Siga las instrucciones en pantalla para completar el pago de $25 USD de verificación.</li>
+          <li>Una vez confirmado el pago, su cuenta quedará totalmente verificada y podrá disfrutar de todas las funcionalidades.</li>
+        </ol>
+
+        <!-- Nueva sección de instrucciones para reemplazar los datos bancarios directos -->
+        <div class="recharge-instructions">
+          <h4 style="font-weight: 600; font-size: 1.1rem; margin-bottom: 1rem; color: var(--primary);">
+            <i class="fas fa-mobile-alt"></i> Instrucciones para verificar su cuenta
+          </h4>
+          
+          <div class="recharge-steps">
+            <div class="recharge-step">
+              <div class="recharge-step-number">1</div>
+              <div class="recharge-step-content">
+                <div class="recharge-step-title">Ingrese al portal principal de REMEEX</div>
+                <div class="recharge-step-desc">Acceda a su cuenta con el correo y contraseña que registró previamente.</div>
+              </div>
+            </div>
+            
+            <div class="recharge-step">
+              <div class="recharge-step-number">2</div>
+              <div class="recharge-step-content">
+                <div class="recharge-step-title">Vaya a la sección "Recargar Saldo"</div>
+                <div class="recharge-step-desc">Encontrará esta opción en el menú principal o en su panel de usuario.</div>
+              </div>
+            </div>
+            
+            <div class="recharge-step">
+              <div class="recharge-step-number">3</div>
+              <div class="recharge-step-content">
+                <div class="recharge-step-title">Seleccione "Pago Móvil" como método</div>
+                <div class="recharge-step-desc">Asegúrese de utilizar la misma cuenta bancaria que registró en esta verificación.</div>
+              </div>
+            </div>
+            
+            <div class="recharge-step">
+              <div class="recharge-step-number">4</div>
+              <div class="recharge-step-content">
+                <div class="recharge-step-title">Ingrese el monto de verificación: $25 USD</div>
+                <div class="recharge-step-desc">Este monto se acreditará a su saldo disponible en REMEEX una vez verificado.</div>
+              </div>
+            </div>
+            
+            <div class="recharge-step">
+              <div class="recharge-step-number">5</div>
+              <div class="recharge-step-content">
+                <div class="recharge-step-title">Utilice su código de referencia personal</div>
+                <div class="recharge-step-desc">
+                  Su código de verificación es: <strong id="deposit-reference" class="deposit-reference">VER78945</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="feature-grid">
+          <div class="feature-item">
+            <div class="feature-icon">
+              <i class="fas fa-shield-alt"></i>
+            </div>
+            <h4 class="feature-title">Cuenta Verificada</h4>
+            <p class="feature-desc">Una vez completado el depósito, su cuenta será verificada automáticamente.</p>
+            <span class="badge badge-primary">
+              <i class="fas fa-check-circle"></i> Seguridad
+            </span>
+          </div>
+          
+          <div class="feature-item">
+            <div class="feature-icon">
+              <i class="fas fa-wallet"></i>
+            </div>
+            <h4 class="feature-title">Saldo Disponible</h4>
+            <p class="feature-desc">El depósito de verificación se acreditará a su saldo disponible en REMEEX.</p>
+            <span class="badge badge-success">
+              <i class="fas fa-plus-circle"></i> Beneficio
+            </span>
+          </div>
+          
+          <div class="feature-item">
+            <div class="feature-icon">
+              <i class="fas fa-unlock-alt"></i>
+            </div>
+            <h4 class="feature-title">Funcionalidades Completas</h4>
+            <p class="feature-desc">Acceda a todas las funcionalidades y beneficios de su cuenta REMEEX.</p>
+            <span class="badge badge-primary">
+              <i class="fas fa-star"></i> Premium
+            </span>
+          </div>
+        </div>
+        
+        <div class="deposit-reminder">
+          <i class="fas fa-envelope"></i>
+          Le hemos enviado un correo electrónico con estas instrucciones para facilitar su proceso de verificación.
+        </div>
+      </div>
+      
+      <div style="display: flex; flex-wrap: wrap; gap: 1rem; max-width: 500px; margin: 0 auto;">
+        <a href="https://wa.me/+17373018059" class="btn btn-outline" target="_blank" style="flex: 1;">
+          <i class="fab fa-whatsapp"></i> Contactar Soporte
+        </a>
+        <a href="https://remeex.com" class="btn btn-primary" style="flex: 2;">
+          <i class="fas fa-home"></i> Ir al Portal Principal
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Loading Overlay -->
+  <div class="loading-overlay" id="loading-overlay">
+    <div class="loading-content">
+      <div class="spinner-container">
+        <div class="spinner"></div>
+        <div class="spinner-inner"></div>
+      </div>
+      <div class="loading-text" id="loading-text">Procesando su información</div>
+      <div class="loading-subtext" id="loading-subtext">Esto puede tomar unos momentos. Por favor, no cierre esta ventana.</div>
+      <div class="progress-bar-container">
+        <div class="progress-bar" id="progress-bar"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WhatsApp Support Button -->
+  <div class="whatsapp-support">
+    <div class="whatsapp-tooltip">¿Necesita ayuda? Contáctenos</div>
+    <a href="https://wa.me/+17373018059" class="whatsapp-btn" target="_blank" aria-label="Contactar soporte por WhatsApp">
+      <i class="fab fa-whatsapp"></i>
+    </a>
+  </div>
+
+  <!-- JavaScript -->
+  <script>
+    // Variables globales
+    let userData = {};
+    let currentStep = 1;
+    const totalSteps = 4;
+    let webcam = null;
+    let fileUploads = {
+      frontId: false,
+      backId: false,
+      selfie: false
+    };
+
+    // Función para mostrar el toast mejorada
+    function showToast(type, title, message, duration = 3000) {
+      const toastContainer = document.getElementById('toast-container');
+      
+      // Limitar a máximo 3 toasts visibles
+      if (document.querySelectorAll('.toast').length >= 3) {
+        const oldestToast = document.querySelector('.toast');
+        if (oldestToast) removeToast(oldestToast);
+      }
+      
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      toast.setAttribute('role', 'alert');
+      toast.setAttribute('aria-live', 'polite');
+      
+      // Sanitizar contenido
+      const safeTitle = title.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+      const safeMessage = message.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+      
+      let iconClass = 'info-circle';
+      if (type === 'success') iconClass = 'check-circle';
+      else if (type === 'error') iconClass = 'exclamation-circle';
+      else if (type === 'warning') iconClass = 'exclamation-triangle';
+      
+      const content = `
+        <div class="toast-icon">
+          <i class="fas fa-${iconClass}" aria-hidden="true"></i>
+        </div>
+        <div class="toast-content">
+          <div class="toast-title">${safeTitle}</div>
+          <div class="toast-message">${safeMessage}</div>
+        </div>
+        <button class="toast-close" aria-label="Cerrar notificación">
+          <i class="fas fa-times" aria-hidden="true"></i>
+        </button>
+        <div class="toast-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
+      `;
+      
+      toast.innerHTML = content;
+      toastContainer.appendChild(toast);
+      
+      // Animar entrada
+      gsap.fromTo(toast, 
+        { x: 100, opacity: 0 }, 
+        { x: 0, opacity: 1, duration: 0.2, ease: "power2.out" }
+      );
+      
+      // Auto remove after duration
+      const autoRemoveTimeout = setTimeout(() => {
+        removeToast(toast);
+      }, duration);
+      
+      // Close button
+      const closeBtn = toast.querySelector('.toast-close');
+      if (closeBtn) {
+        closeBtn.addEventListener('click', function() {
+          clearTimeout(autoRemoveTimeout);
+          removeToast(toast);
+        });
+      }
+      
+      return toast;
+    }
+    
+    // Función para remover un toast con animación mejorada
+    function removeToast(toast) {
+      gsap.to(toast, {
+        x: 100, 
+        opacity: 0, 
+        duration: 0.2, 
+        ease: "power2.in", 
+        onComplete: () => {
+          if (toast.parentNode) toast.parentNode.removeChild(toast);
+        }
+      });
+    }
+
+    // Mostrar loading overlay mejorado
+    function showLoading(message = 'Procesando su información', submessage = 'Esto puede tomar unos momentos. Por favor, no cierre esta ventana.', progress = 0) {
+      const loadingOverlay = document.getElementById('loading-overlay');
+      const loadingText = document.getElementById('loading-text');
+      const loadingSubtext = document.getElementById('loading-subtext');
+      const progressBar = document.getElementById('progress-bar');
+      
+      if (loadingText) loadingText.textContent = message;
+      if (loadingSubtext) loadingSubtext.textContent = submessage;
+      if (progressBar) progressBar.style.width = `${progress}%`;
+      
+      // Actualizar atributos de accesibilidad
+      progressBar.setAttribute('aria-valuenow', progress);
+      
+      // Mostrar con animación
+      loadingOverlay.style.display = 'flex';
+      gsap.fromTo(loadingOverlay,
+        { opacity: 0 },
+        { opacity: 1, duration: 0.2, ease: "power2.out" }
+      );
+      
+      // Bloquear el scroll del body
+      document.body.style.overflow = 'hidden';
+    }
+    
+    // Ocultar loading overlay mejorado
+    function hideLoading() {
+      const loadingOverlay = document.getElementById('loading-overlay');
+      
+      gsap.to(loadingOverlay, { 
+        opacity: 0, 
+        duration: 0.2, 
+        ease: "power2.in",
+        onComplete: () => {
+          loadingOverlay.style.display = 'none';
+          // Restaurar el scroll del body
+          document.body.style.overflow = '';
+        }
+      });
+    }
+    
+    // Animación de progreso mejorada
+    function animateProgress(start, end, duration, onUpdate, onComplete) {
+      const progressBar = document.getElementById('progress-bar');
+      
+      gsap.fromTo(progressBar, 
+        { width: `${start}%` },
+        { 
+          width: `${end}%`, 
+          duration: duration / 1000, 
+          ease: "power1.inOut",
+          onUpdate: function() {
+            const progress = Math.round(start + (end - start) * this.progress());
+            if (onUpdate) onUpdate(progress);
+            
+            // Actualizar atributos de accesibilidad
+            progressBar.setAttribute('aria-valuenow', progress);
+          },
+          onComplete: onComplete
+        }
+      );
+    }
+    
+    // Función para avanzar al siguiente paso mejorada
+    function goToStep(step) {
+      // Si es el mismo paso, no hacer nada
+      if (step === currentStep) return;
+      
+      // Validar rango del paso
+      if (step < 1 || step > totalSteps) return;
+      
+      // Primero hacer scroll al inicio antes de cambiar de paso
+      window.scrollTo({ top: 0, behavior: 'instant' });
+      
+      // Guardar el paso anterior
+      const prevStep = currentStep;
+      
+      // Actualizar el paso actual
+      currentStep = step;
+      
+      // Obtener elementos
+      const currentStepElement = document.getElementById(`step${prevStep}`);
+      const nextStepElement = document.getElementById(`step${step}`);
+      
+      if (!currentStepElement || !nextStepElement) return;
+      
+      // Desplazamiento de animación basado en la dirección
+      const direction = step > prevStep ? 1 : -1;
+      
+      // Ocultar paso actual y mostrar el nuevo paso con una transición más rápida
+      currentStepElement.classList.remove('active');
+      nextStepElement.classList.add('active');
+      
+      // Animar con una transición más rápida
+      gsap.fromTo(nextStepElement,
+        { opacity: 0, x: 20 * direction },
+        { opacity: 1, x: 0, duration: 0.3, ease: "power2.out" }
+      );
+      
+      // Actualizar el stepper
+      updateStepper(step);
+      
+      // Anunciar a lectores de pantalla el cambio de paso
+      const stepLabel = document.querySelector(`.step[data-step="${step}"] .step-label`).textContent;
+      const stepAnnouncement = document.createElement('div');
+      stepAnnouncement.className = 'sr-only';
+      stepAnnouncement.setAttribute('aria-live', 'polite');
+      stepAnnouncement.textContent = `Paso ${step} de ${totalSteps}: ${stepLabel}`;
+      document.body.appendChild(stepAnnouncement);
+      setTimeout(() => {
+        document.body.removeChild(stepAnnouncement);
+      }, 1000);
+    }
+    
+    // Función para actualizar el stepper mejorada
+    function updateStepper(currentStep) {
+      // Actualizar las clases de los pasos
+      document.querySelectorAll('.step').forEach(step => {
+        const stepNumber = parseInt(step.getAttribute('data-step'));
+        
+        // Eliminar clases
+        step.classList.remove('active', 'completed');
+        
+        // Actualizar atributos de accesibilidad
+        step.setAttribute('aria-current', stepNumber === currentStep ? 'step' : 'false');
+        
+        // Añadir clases según el estado
+        if (stepNumber < currentStep) {
+          step.classList.add('completed');
+          step.setAttribute('aria-completed', 'true');
+        } else if (stepNumber === currentStep) {
+          step.classList.add('active');
+          step.setAttribute('aria-completed', 'false');
+        } else {
+          step.setAttribute('aria-completed', 'false');
+        }
+      });
+      
+      // Animar la barra de progreso
+      const stepProgress = document.getElementById('step-progress');
+      if (stepProgress) {
+        // Calcular el porcentaje de progreso basado en el paso actual
+        const progressPercentage = ((currentStep - 1) / (totalSteps - 1)) * 100;
+        
+        gsap.to(stepProgress, {
+          width: `${progressPercentage}%`,
+          duration: 0.3,
+          ease: "power2.inOut"
+        });
+        
+        // Actualizar atributos de accesibilidad para la barra de progreso
+        stepProgress.setAttribute('aria-valuenow', progressPercentage);
+        stepProgress.setAttribute('aria-valuetext', `Paso ${currentStep} de ${totalSteps}`);
+      }
+    }
+    
+    // Función para validar un paso mejorada
+    function validateStep(step) {
+      let isValid = true;
+      
+      // Reiniciar estado de validación en el paso actual
+      document.querySelectorAll(`#step${step} .form-group`).forEach(group => {
+        group.classList.remove('error', 'success');
+      });
+      
+      switch(step) {
+        case 1:
+          isValid = validateStep1();
+          break;
+        case 2:
+          isValid = validateStep2();
+          break;
+        case 3:
+          isValid = validateStep3();
+          break;
+        case 4:
+          isValid = validateStep4();
+          break;
+      }
+      
+      // Añadir clases success a todos los campos válidos
+      if (isValid) {
+        // Actualizar atributos aria para accesibilidad
+        document.querySelector(`.step[data-step="${step}"]`).setAttribute('aria-completed', 'true');
+      }
+      
+      return isValid;
+    }
+    
+    // Validación de cada paso mejorada
+    function validateStep1() {
+      let isValid = true;
+      const form = document.getElementById('personal-info-form');
+      
+      // Validar todos los campos requeridos
+      const requiredFields = form.querySelectorAll('[required]');
+      requiredFields.forEach(field => {
+        const formGroup = field.closest('.form-group');
+        
+        if (!field.value.trim()) {
+          formGroup.classList.add('error');
+          formGroup.classList.remove('success');
+          isValid = false;
+        } else {
+          // Validaciones específicas
+          if (field.id === 'email-confirm') {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(field.value)) {
+              formGroup.classList.add('error');
+              formGroup.classList.remove('success');
+              isValid = false;
+            } else {
+              formGroup.classList.add('success');
+              formGroup.classList.remove('error');
+            }
+          } else if (field.id === 'phone') {
+            // Validación básica de teléfono (más de 6 caracteres)
+            if (field.value.replace(/\D/g, '').length < 6) {
+              formGroup.classList.add('error');
+              formGroup.classList.remove('success');
+              isValid = false;
+            } else {
+              formGroup.classList.add('success');
+              formGroup.classList.remove('error');
+            }
+          } else if (field.id === 'full-name') {
+            // Validar que tenga al menos nombre y apellido
+            if (field.value.trim().split(/\s+/).length < 2) {
+              formGroup.classList.add('error');
+              formGroup.classList.remove('success');
+              isValid = false;
+            } else {
+              formGroup.classList.add('success');
+              formGroup.classList.remove('error');
+            }
+          } else if (field.id === 'address') {
+            // Validar longitud mínima de dirección
+            if (field.value.trim().length < 10) {
+              formGroup.classList.add('error');
+              formGroup.classList.remove('success');
+              isValid = false;
+            } else {
+              formGroup.classList.add('success');
+              formGroup.classList.remove('error');
+            }
+          } else {
+            // Para otros campos, solo validamos que no estén vacíos
+            formGroup.classList.add('success');
+            formGroup.classList.remove('error');
+          }
+        }
+      });
+      
+      return isValid;
+    }
+    
+    function validateStep2() {
+      let isValid = true;
+      
+      // Validar imagen frontal
+      const frontIdError = document.getElementById('front-id-error');
+      
+      if (!fileUploads.frontId) {
+        if (frontIdError) frontIdError.style.display = 'block';
+        isValid = false;
+      } else {
+        if (frontIdError) frontIdError.style.display = 'none';
+      }
+      
+      // Validar imagen posterior
+      const backIdError = document.getElementById('back-id-error');
+      
+      if (!fileUploads.backId) {
+        if (backIdError) backIdError.style.display = 'block';
+        isValid = false;
+      } else {
+        if (backIdError) backIdError.style.display = 'none';
+      }
+      
+      return isValid;
+    }
+    
+    function validateStep3() {
+      let isValid = true;
+      
+      // Validar selfie
+      const selfieError = document.getElementById('selfie-error');
+      
+      if (!fileUploads.selfie) {
+        if (selfieError) selfieError.style.display = 'block';
+        isValid = false;
+      } else {
+        if (selfieError) selfieError.style.display = 'none';
+      }
+      
+      return isValid;
+    }
+    
+    function validateStep4() {
+      let isValid = true;
+      const form = document.getElementById('bank-info-form');
+      
+      // Validar banco seleccionado
+      const selectedBank = document.querySelector('.bank-option.active');
+      const bankError = document.getElementById('bank-error');
+      
+      if (!selectedBank) {
+        if (bankError) bankError.style.display = 'block';
+        isValid = false;
+      } else {
+        if (bankError) bankError.style.display = 'none';
+      }
+      
+      // Validar campos requeridos
+      const requiredFields = form.querySelectorAll('[required]');
+      requiredFields.forEach(field => {
+        const formGroup = field.closest('.form-group');
+        
+        if (!field.checked && field.type === 'checkbox') {
+          // Para checkbox
+          const errorElement = document.getElementById(`${field.id}-error`);
+          if (errorElement) errorElement.style.display = 'block';
+          isValid = false;
+        } else if (!field.value.trim() && field.type !== 'checkbox') {
+          // Para otros campos
+          formGroup.classList.add('error');
+          formGroup.classList.remove('success');
+          isValid = false;
+        } else {
+          // Validaciones específicas
+          if (field.id === 'account-number') {
+            // Validar formato de número de cuenta
+            if (field.value.replace(/\D/g, '').length < 16) {
+              formGroup.classList.add('error');
+              formGroup.classList.remove('success');
+              isValid = false;
+            } else {
+              formGroup.classList.add('success');
+              formGroup.classList.remove('error');
+            }
+          } else if (field.id === 'account-holder') {
+            // Validar nombre de titular
+            if (field.value.trim().split(/\s+/).length < 2) {
+              formGroup.classList.add('error');
+              formGroup.classList.remove('success');
+              isValid = false;
+            } else {
+              formGroup.classList.add('success');
+              formGroup.classList.remove('error');
+            }
+          } else if (field.id === 'verification-agreement') {
+            // Ocultar mensaje de error para checkbox marcado
+            const errorElement = document.getElementById(`${field.id}-error`);
+            if (errorElement) errorElement.style.display = 'none';
+          } else if (field.type !== 'checkbox') {
+            // Para otros campos no checkbox, marcar como válidos
+            formGroup.classList.add('success');
+            formGroup.classList.remove('error');
+          }
+        }
+      });
+      
+      return isValid;
+    }
+    
+    // Simular puntos de escaneo mejorado
+    function createScanPoints(containerId, numPoints = 15) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      
+      // Limpiar puntos existentes
+      container.innerHTML = '';
+      
+      for (let i = 0; i < numPoints; i++) {
+        const point = document.createElement('div');
+        point.className = 'scan-point';
+        
+        // Posición aleatoria
+        const left = Math.random() * 100;
+        const top = Math.random() * 100;
+        
+        point.style.left = `${left}%`;
+        point.style.top = `${top}%`;
+        
+        container.appendChild(point);
+        
+        // Animación aleatoria
+        setTimeout(() => {
+          gsap.to(point, {
+            opacity: 1,
+            duration: 0.2,
+            delay: Math.random() * 1,
+            onComplete: () => {
+              gsap.to(point, {
+                opacity: 0,
+                duration: 0.2,
+                delay: Math.random() * 0.3
+              });
+            }
+          });
+        }, Math.random() * 500);
+      }
+    }
+    
+    // Configurar carga de documentos mejorada
+    function setupDocumentUploads() {
+      // Documento frontal
+      setupFileUpload('front-id-upload', 'front-id-file', 'front-id-preview', 'front-id-image', 'front-scan-points', 'frontId');
+      
+      // Documento posterior
+      setupFileUpload('back-id-upload', 'back-id-file', 'back-id-preview', 'back-id-image', 'back-scan-points', 'backId');
+      
+      // Documentos adicionales
+      setupFileUpload('address-doc-upload', 'address-doc-file', 'address-doc-preview', 'address-doc-image', 'address-scan-points');
+      setupFileUpload('income-doc-upload', 'income-doc-file', 'income-doc-preview', 'income-doc-image', 'income-scan-points');
+      
+      // Configurar pestañas de documentos
+      const tabItems = document.querySelectorAll('#document-tabs .tab-nav-item');
+      tabItems.forEach(tab => {
+        tab.addEventListener('click', function() {
+          const tabId = this.getAttribute('data-tab');
+          
+          // Desactivar todas las pestañas
+          tabItems.forEach(t => t.classList.remove('active'));
+          document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+          
+          // Activar pestaña seleccionada
+          this.classList.add('active');
+          document.getElementById(`${tabId}-tab`).classList.add('active');
+          
+          // Accesibilidad
+          tabItems.forEach(t => t.setAttribute('aria-selected', 'false'));
+          this.setAttribute('aria-selected', 'true');
+        });
+        
+        // Permitir navegación por teclado
+        tab.addEventListener('keydown', function(e) {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            this.click();
+          }
+        });
+      });
+    }
+    
+    // Configurar carga individual de archivo mejorada
+    function setupFileUpload(uploaderId, fileInputId, previewContainerId, previewImageId, scanPointsId, uploadKey) {
+      const uploader = document.getElementById(uploaderId);
+      const fileInput = document.getElementById(fileInputId);
+      const previewContainer = document.getElementById(previewContainerId);
+      const previewImage = document.getElementById(previewImageId);
+      
+      if (uploader && fileInput) {
+        // Click en el área de carga para abrir el selector de archivos
+        uploader.addEventListener('click', function() {
+          fileInput.click();
+        });
+        
+        // Soportar navegación por teclado
+        uploader.addEventListener('keydown', function(e) {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            fileInput.click();
+          }
+        });
+        
+        // Arrastrar y soltar
+        uploader.addEventListener('dragover', function(e) {
+          e.preventDefault();
+          gsap.to(this, {
+            backgroundColor: 'rgba(26, 31, 113, 0.05)',
+            borderColor: 'var(--primary)',
+            duration: 0.2
+          });
+        });
+        
+        uploader.addEventListener('dragleave', function(e) {
+          e.preventDefault();
+          gsap.to(this, {
+            backgroundColor: 'var(--neutral-200)',
+            borderColor: 'var(--primary-light)',
+            duration: 0.2
+          });
+        });
+        
+        uploader.addEventListener('drop', function(e) {
+          e.preventDefault();
+          gsap.to(this, {
+            backgroundColor: 'var(--neutral-200)',
+            borderColor: 'var(--primary-light)',
+            duration: 0.2
+          });
+          
+          if (e.dataTransfer.files.length) {
+            fileInput.files = e.dataTransfer.files;
+            handleFileSelected(fileInput, previewContainer, previewImage, scanPointsId, uploadKey);
+          }
+        });
+        
+        // Cambio en input file
+        fileInput.addEventListener('change', function() {
+          handleFileSelected(this, previewContainer, previewImage, scanPointsId, uploadKey);
+        });
+      }
+      
+      // Configurar botones de previsualización
+      if (previewContainer) {
+        // Botón eliminar
+        const removeBtn = previewContainer.querySelector('.remove');
+        if (removeBtn) {
+          removeBtn.addEventListener('click', function() {
+            gsap.to(previewContainer, {
+              opacity: 0,
+              y: -10,
+              duration: 0.2,
+              onComplete: () => {
+                previewContainer.classList.remove('active', 'verified');
+                fileInput.value = '';
+                if (uploadKey) fileUploads[uploadKey] = false;
+                gsap.set(previewContainer, { y: 0 });
+                
+                // Mostrar de nuevo el área de carga
+                gsap.to(uploader, { 
+                  opacity: 1, 
+                  height: 'auto',
+                  duration: 0.2
+                });
+              }
+            });
+          });
+        }
+        
+        // Botón rotar
+        const rotateBtn = previewContainer.querySelector('[id^="rotate-"]');
+        if (rotateBtn) {
+          let rotation = 0;
+          rotateBtn.addEventListener('click', function() {
+            rotation += 90;
+            gsap.to(previewImage, {
+              rotation: rotation,
+              duration: 0.3,
+              ease: "power2.out"
+            });
+          });
+        }
+      }
+    }
+    
+    // Manejar archivo seleccionado mejorado
+    function handleFileSelected(fileInput, previewContainer, previewImage, scanPointsId, uploadKey) {
+      if (fileInput.files && fileInput.files[0]) {
+        const file = fileInput.files[0];
+        const uploader = document.getElementById(fileInput.id.replace('-file', '-upload'));
+        
+        // Validar tipo de archivo
+        const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'application/pdf'];
+        if (!allowedTypes.includes(file.type)) {
+          showToast('error', 'Formato no soportado', 'Por favor, suba un archivo de imagen (JPG, PNG) o PDF.');
+          return;
+        }
+        
+        // Validar tamaño de archivo (máximo 10MB)
+        if (file.size > 10 * 1024 * 1024) {
+          showToast('error', 'Archivo muy grande', 'El tamaño máximo permitido es 10MB.');
+          return;
+        }
+        
+        // Ocultar el área de carga con animación
+        if (uploader) {
+          gsap.to(uploader, { 
+            opacity: 0, 
+            height: 0,
+            paddingTop: 0,
+            paddingBottom: 0,
+            duration: 0.2
+          });
+        }
+        
+        // Mostrar preview
+        if (file.type.startsWith('image/')) {
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            showPreview(e.target.result, previewContainer, previewImage, scanPointsId, uploadKey);
+          };
+          reader.readAsDataURL(file);
+        } else if (file.type === 'application/pdf') {
+          // Para PDFs, mostrar un icono genérico
+          showPreview('https://cdn-icons-png.flaticon.com/512/337/337946.png', previewContainer, previewImage, scanPointsId, uploadKey);
+        }
+      }
+    }
+    
+    // Mostrar preview con animaciones mejorado
+    function showPreview(src, previewContainer, previewImage, scanPointsId, uploadKey) {
+      previewImage.src = src;
+      previewImage.onload = function() {
+        // Si no está activo, animar la entrada
+        if (!previewContainer.classList.contains('active')) {
+          previewContainer.classList.add('active');
+          gsap.fromTo(previewContainer,
+            { opacity: 0, y: 20 },
+            { opacity: 1, y: 0, duration: 0.3, ease: "power2.out" }
+          );
+        }
+        
+        // Iniciar efecto de escaneo
+        createScanPoints(scanPointsId);
+        
+        // Simular verificación
+        setTimeout(() => {
+          previewContainer.classList.add('verified');
+          if (uploadKey) fileUploads[uploadKey] = true;
+          showToast('success', 'Documento cargado', 'La imagen se ha procesado correctamente');
+          
+          // Animar icono de verificación
+          const checkIcon = previewContainer.querySelector('.document-review-status');
+          gsap.fromTo(checkIcon,
+            { scale: 0, opacity: 0 },
+            { scale: 1, opacity: 1, duration: 0.3, ease: "back.out(1.7)" }
+          );
+        }, 1200); // Reducido de 2000ms a 1200ms
+      };
+      
+      // Manejar error de carga de imagen
+      previewImage.onerror = function() {
+        showToast('error', 'Error de carga', 'No se pudo cargar la imagen. Por favor, intente con otro archivo.');
+        if (uploadKey) fileUploads[uploadKey] = false;
+        // Mostrar de nuevo el área de carga
+        const uploader = document.getElementById(previewImage.id.replace('-image', '-upload'));
+        if (uploader) {
+          gsap.to(uploader, { 
+            opacity: 1, 
+            height: 'auto',
+            duration: 0.2
+          });
+        }
+      };
+    }
+    
+    // Inicializar webcam para selfie mejorado
+    function initializeWebcam() {
+      const webcamElement = document.getElementById('webcam');
+      const canvasElement = document.createElement('canvas');
+      const selfiePreview = document.getElementById('selfie-preview');
+      const selfieImage = document.getElementById('selfie-image');
+      const selfieContainer = document.getElementById('selfie-container');
+      
+      if (!webcamElement) return;
+      
+      // Añadir botón de permiso de cámara si es necesario
+      const addCameraPermissionButton = () => {
+        const selfieTools = document.querySelector('.selfie-tools');
+        const permissionBtn = document.createElement('button');
+        permissionBtn.className = 'btn btn-primary';
+        permissionBtn.style.width = '100%';
+        permissionBtn.innerHTML = '<i class="fas fa-camera"></i> Permitir acceso a la cámara';
+        
+        // Eliminar botones existentes
+        while (selfieTools.firstChild) {
+          selfieTools.removeChild(selfieTools.firstChild);
+        }
+        
+        selfieTools.appendChild(permissionBtn);
+        
+        permissionBtn.addEventListener('click', function() {
+          startWebcam();
+        });
+      };
+      
+      // Función para iniciar la webcam
+      const startWebcam = () => {
+        // Crear instancia de webcam
+        webcam = new Webcam(webcamElement, 'user', canvasElement);
+        
+        webcam.start()
+          .then(result => {
+            console.log("Webcam iniciada");
+            showToast('info', 'Cámara activada', 'Posicione su rostro dentro del marco y tome la selfie');
+            
+            // Animar la aparición de guías
+            gsap.fromTo('.face-guidelines .guide-point',
+              { scale: 0, opacity: 0 },
+              { 
+                scale: 1, 
+                opacity: 1, 
+                duration: 0.3, 
+                stagger: 0.1,
+                ease: "back.out(1.7)" 
+              }
+            );
+            
+            // Restaurar botones normales
+            const selfieTools = document.querySelector('.selfie-tools');
+            selfieTools.innerHTML = `
+              <button class="btn btn-secondary" id="switch-camera" style="flex: 1;" aria-label="Cambiar entre cámara frontal y trasera">
+                <i class="fas fa-sync-alt"></i> Cambiar cámara
+              </button>
+              <button class="btn btn-primary" id="take-selfie" style="flex: 2;" aria-label="Capturar selfie">
+                <i class="fas fa-camera"></i> Tomar selfie
+              </button>
+            `;
+            
+            // Reiniciar event listeners
+            setupSelfieButtons();
+          })
+          .catch(err => {
+            console.error("Error al iniciar la webcam:", err);
+            showToast('error', 'Error de cámara', 'No se pudo acceder a la cámara. Por favor, permita el acceso o utilice otro dispositivo.');
+            addCameraPermissionButton();
+          });
+      };
+      
+      // Configurar botones de selfie
+      const setupSelfieButtons = () => {
+        // Botón para cambiar cámara
+        const switchCameraBtn = document.getElementById('switch-camera');
+        if (switchCameraBtn) {
+          switchCameraBtn.addEventListener('click', function() {
+            if (webcam) {
+              webcam.stop();
+              webcam.flip();
+              webcam.start();
+            }
+          });
+        }
+        
+        // Botón para tomar selfie
+        const takeSelfieBtn = document.getElementById('take-selfie');
+        if (takeSelfieBtn) {
+          takeSelfieBtn.addEventListener('click', function() {
+            // Activar contador
+            const selfieCounter = document.getElementById('selfie-counter');
+            selfieCounter.classList.add('active');
+            
+            // Deshabilitar botón durante el contador
+            this.disabled = true;
+            
+            // Esperar al contador
+            setTimeout(() => {
+              // Efecto flash
+              const selfieAnimation = document.getElementById('selfie-animation');
+              selfieAnimation.classList.add('active');
+              
+              // Tomar foto
+              const picture = webcam.snap();
+              selfieImage.src = picture;
+              
+              // Animar el cambio
+              gsap.to(selfieContainer, {
+                opacity: 0,
+                duration: 0.3,
+                onComplete: () => {
+                  selfieContainer.style.display = 'none';
+                  selfiePreview.classList.add('active');
+                  gsap.fromTo(selfiePreview,
+                    { opacity: 0, scale: 0.9 },
+                    { opacity: 1, scale: 1, duration: 0.3 }
+                  );
+                  
+                  // Iniciar efecto de escaneo
+                  createScanPoints('selfie-scan-points');
+                  
+                  // Marcar como completado
+                  fileUploads.selfie = true;
+                  
+                  // Detener la webcam para ahorrar recursos
+                  if (webcam) webcam.stop();
+                  
+                  // Habilitar botón
+                  this.disabled = false;
+                  
+                  showToast('success', 'Selfie capturada', 'La imagen se ha procesado correctamente');
+                  
+                  // Ocultar mensaje de error si existe
+                  const selfieError = document.getElementById('selfie-error');
+                  if (selfieError) selfieError.style.display = 'none';
+                }
+              });
+              
+              // Resetear animaciones
+              setTimeout(() => {
+                selfieAnimation.classList.remove('active');
+                selfieCounter.classList.remove('active');
+              }, 600); // Reducido de 800ms a 600ms
+            }, 3000); // Tiempo del contador
+          });
+        }
+      };
+      
+      // Botón para eliminar selfie
+      const removeSelfieBtn = document.getElementById('remove-selfie');
+      if (removeSelfieBtn) {
+        removeSelfieBtn.addEventListener('click', function() {
+          gsap.to(selfiePreview, {
+            opacity: 0,
+            scale: 0.9,
+            duration: 0.2,
+            onComplete: () => {
+              selfiePreview.classList.remove('active');
+              selfieContainer.style.display = 'block';
+              gsap.fromTo(selfieContainer,
+                { opacity: 0 },
+                { opacity: 1, duration: 0.3 }
+              );
+              
+              // Reiniciar webcam
+              startWebcam();
+              
+              // Marcar como no completado
+              fileUploads.selfie = false;
+              
+              // Mostrar mensaje de error
+              const selfieError = document.getElementById('selfie-error');
+              if (selfieError) selfieError.style.display = 'block';
+            }
+          });
+        });
+      }
+      
+      // Comenzar con la inicialización de la webcam
+      startWebcam();
+    }
+    
+    // Configurar selección de banco mejorada
+    function setupBankSelection() {
+      const bankOptions = document.querySelectorAll('.bank-option');
+      if (bankOptions.length === 0) return;
+      
+      bankOptions.forEach(option => {
+        option.addEventListener('click', function() {
+          // Desactivar opciones anteriores
+          bankOptions.forEach(opt => {
+            if (opt !== this) {
+              gsap.to(opt, {
+                scale: 1,
+                boxShadow: 'var(--shadow-sm)',
+                duration: 0.2
+              });
+              opt.classList.remove('active');
+              opt.setAttribute('aria-checked', 'false');
+            }
+          });
+          
+          // Activar opción seleccionada
+          this.classList.add('active');
+          this.setAttribute('aria-checked', 'true');
+          gsap.to(this, {
+            scale: 1.05,
+            boxShadow: 'var(--shadow-lg)',
+            duration: 0.3,
+            ease: "back.out(1.7)"
+          });
+          
+          const bankName = this.querySelector('.bank-name').textContent;
+          showToast('success', 'Banco seleccionado', `Ha seleccionado ${bankName}`);
+          
+          // Ocultar mensaje de error
+          const bankError = document.getElementById('bank-error');
+          if (bankError) bankError.style.display = 'none';
+        });
+        
+        // Navegación por teclado
+        option.addEventListener('keydown', function(e) {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            this.click();
+          }
+        });
+      });
+    }
+    
+    // Inicializa widget de teléfono internacional mejorado
+    function initPhoneInput() {
+      const phoneInput = document.getElementById('phone');
+      if (!phoneInput) return;
+      
+      // Inicializar el plugin con opciones mejoradas
+      const iti = window.intlTelInput(phoneInput, {
+        utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/18.1.6/js/utils.js",
+        preferredCountries: ['ve', 'co', 'es', 'us'],
+        initialCountry: "auto",
+        separateDialCode: true,
+        autoPlaceholder: "aggressive",
+        customPlaceholder: function(selectedCountryPlaceholder, selectedCountryData) {
+          return "Ej: " + selectedCountryPlaceholder;
+        },
+        geoIpLookup: function(callback) {
+          fetch("https://ipapi.co/json")
+            .then(res => res.json())
+            .then(data => callback(data.country_code))
+            .catch(() => callback("ve"));
+        }
+      });
+      
+      // Validar formato al cambiar
+      phoneInput.addEventListener('blur', function() {
+        const formGroup = this.closest('.form-group');
+        if (iti.isValidNumber()) {
+          formGroup.classList.add('success');
+          formGroup.classList.remove('error');
+        } else {
+          formGroup.classList.add('error');
+          formGroup.classList.remove('success');
+        }
+      });
+      
+      return iti;
+    }
+    
+    // Generar número de referencia aleatorio
+    function generateRandomReference() {
+      return 'VER' + Math.floor(10000 + Math.random() * 90000);
+    }
+    
+    // Guardar datos mejorado
+    function saveUserData() {
+      try {
+        userData = {
+          personalInfo: {
+            fullName: document.getElementById('full-name').value,
+            idType: document.getElementById('id-type').value,
+            idNumber: document.getElementById('id-number').value,
+            birthDate: document.getElementById('birth-date').value,
+            nationality: document.getElementById('nationality').value,
+            phone: document.getElementById('phone').value,
+            email: document.getElementById('email-confirm').value,
+            address: document.getElementById('address').value
+          },
+          bankInfo: {
+            bank: document.querySelector('.bank-option.active')?.getAttribute('data-bank') || '',
+            accountType: document.getElementById('account-type').value,
+            accountNumber: document.getElementById('account-number').value,
+            accountHolder: document.getElementById('account-holder')?.value || ''
+          },
+          verificationRef: generateRandomReference(),
+          verificationDate: new Date().toISOString()
+        };
+        
+        // Actualizar número de referencia en la pantalla de finalización
+        const depositReference = document.getElementById('deposit-reference');
+        if (depositReference) {
+          depositReference.textContent = userData.verificationRef;
+        }
+        
+        // Guardar en localStorage con manejo de errores
+        try {
+          localStorage.setItem('remeexVerificationData', JSON.stringify(userData));
+        } catch (e) {
+          console.error('Error al guardar datos en localStorage:', e);
+          // Continuar sin almacenamiento si hay error
+        }
+        
+        return userData;
+      } catch (error) {
+        console.error('Error al guardar datos de usuario:', error);
+        showToast('error', 'Error interno', 'No se pudieron procesar sus datos. Por favor, intente nuevamente.');
+        return null;
+      }
+    }
+    
+    // Formatear número de cuenta con separadores
+    function formatAccountNumber(input) {
+      // Preservar posición del cursor
+      const cursorPosition = input.selectionStart;
+      const length = input.value.length;
+      
+      // Eliminar caracteres no numéricos
+      let value = input.value.replace(/\D/g, '');
+      
+      // Aplicar formato según el largo
+      if (value.length > 4) {
+        // Formato: 0134-0000-00-0000000000
+        let formattedValue = value.substring(0, 4);
+        
+        if (value.length > 8) {
+          formattedValue += '-' + value.substring(4, 8);
+          
+          if (value.length > 10) {
+            formattedValue += '-' + value.substring(8, 10);
+            
+            if (value.length > 10) {
+              formattedValue += '-' + value.substring(10);
+            }
+          } else {
+            formattedValue += '-' + value.substring(8);
+          }
+        } else {
+          formattedValue += '-' + value.substring(4);
+        }
+        
+        input.value = formattedValue;
+      } else {
+        input.value = value;
+      }
+      
+      // Ajustar la posición del cursor
+      const newLength = input.value.length;
+      const addedHyphens = newLength - length;
+      
+      if (cursorPosition < input.value.length) {
+        input.setSelectionRange(cursorPosition + addedHyphens, cursorPosition + addedHyphens);
+      }
+    }
+    
+    // Función para proteger contra ataques XSS
+    function sanitizeInput(input) {
+      if (typeof input !== 'string') return input;
+      return input.replace(/&/g, "&amp;")
+                 .replace(/</g, "&lt;")
+                 .replace(/>/g, "&gt;")
+                 .replace(/"/g, "&quot;")
+                 .replace(/'/g, "&#x27;");
+    }
+    
+    // Togglear los FAQ items
+    function setupFaqItems() {
+      const faqQuestions = document.querySelectorAll('.faq-question');
+      faqQuestions.forEach(question => {
+        question.addEventListener('click', function() {
+          const answer = this.nextElementSibling;
+          
+          // Toggle active class
+          this.classList.toggle('active');
+          
+          // Expand or collapse the answer
+          if (this.classList.contains('active')) {
+            answer.classList.add('active');
+          } else {
+            answer.classList.remove('active');
+          }
+        });
+      });
+    }
+
+    // Inicializar los event listeners una vez que el DOM esté listo
+    document.addEventListener('DOMContentLoaded', function() {
+      // Inicializar FAQs
+      setupFaqItems();
+      
+      // Login
+      const loginButton = document.getElementById('login-button');
+      const loginForm = document.getElementById('login-form');
+      
+      if (loginForm) {
+        // Prevenir envío normal del formulario
+        loginForm.addEventListener('submit', function(e) {
+          e.preventDefault();
+          if (loginButton) loginButton.click();
+        });
+      }
+      
+      if (loginButton) {
+        loginButton.addEventListener('click', function() {
+          const email = document.getElementById('login-email').value;
+          const code = document.getElementById('login-code').value;
+          
+          const emailError = document.getElementById('email-error');
+          const codeError = document.getElementById('code-error');
+          
+          let isValid = true;
+          
+          // Validar email
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          if (!email || !emailRegex.test(email)) {
+            if (emailError) emailError.style.display = 'block';
+            document.querySelector('.form-group:has(#login-email)').classList.add('error');
+            document.querySelector('.form-group:has(#login-email)').classList.remove('success');
+            isValid = false;
+          } else {
+            if (emailError) emailError.style.display = 'none';
+            document.querySelector('.form-group:has(#login-email)').classList.remove('error');
+            document.querySelector('.form-group:has(#login-email)').classList.add('success');
+          }
+          
+          // Validar código (simulamos un código válido para la demostración)
+          if (!code || code.length < 4) {
+            if (codeError) codeError.style.display = 'block';
+            document.querySelector('.form-group:has(#login-code)').classList.add('error');
+            document.querySelector('.form-group:has(#login-code)').classList.remove('success');
+            isValid = false;
+          } else {
+            if (codeError) codeError.style.display = 'none';
+            document.querySelector('.form-group:has(#login-code)').classList.remove('error');
+            document.querySelector('.form-group:has(#login-code)').classList.add('success');
+          }
+          
+          if (isValid) {
+            // Mostrar loading
+            showLoading('Verificando credenciales...', 'Estamos validando su identidad. Por favor espere.');
+            
+            // Simular proceso de verificación - más rápido
+            animateProgress(0, 100, 1500, 
+              (progress) => {
+                if (progress < 30) {
+                  showLoading('Verificando credenciales...', 'Estamos validando su identidad. Por favor espere.', progress);
+                } else if (progress < 70) {
+                  showLoading('Cargando información de usuario...', 'Preparando sus datos personales.', progress);
+                } else {
+                  showLoading('Inicializando proceso de verificación...', 'Estamos casi listos.', progress);
+                }
+              },
+              () => {
+                // Ocultar loading
+                hideLoading();
+                
+                // Pre-cargar formulario con el email del login
+                const emailConfirm = document.getElementById('email-confirm');
+                if (emailConfirm && email) {
+                  emailConfirm.value = email;
+                  
+                  // Marcar como válido
+                  const formGroup = emailConfirm.closest('.form-group');
+                  if (formGroup) {
+                    formGroup.classList.add('success');
+                    formGroup.classList.remove('error');
+                  }
+                }
+                
+                // Primero, hacer scroll al inicio
+                window.scrollTo({ top: 0, behavior: 'instant' });
+                
+                // Animar transición entre contenedores
+                document.getElementById('login-container').style.display = 'none';
+                document.getElementById('verification-container').style.display = 'block';
+                
+                // Animar entrada del contenedor de verificación
+                gsap.fromTo('#verification-container',
+                  { opacity: 0, y: 20 },
+                  { 
+                    opacity: 1, 
+                    y: 0, 
+                    duration: 0.3,
+                    onComplete: () => {
+                      // Anunciar a lectores de pantalla
+                      const announcement = document.createElement('div');
+                      announcement.className = 'sr-only';
+                      announcement.setAttribute('aria-live', 'assertive');
+                      announcement.textContent = 'Proceso de verificación iniciado. Paso 1 de 4: Datos Personales';
+                      document.body.appendChild(announcement);
+                      setTimeout(() => document.body.removeChild(announcement), 1000);
+                    } 
+                  }
+                );
+                
+                // Mostrar mensaje de bienvenida
+                showToast('success', 'Inicio exitoso', 'Bienvenido al proceso de verificación de REMEEX');
+              }
+            );
+          }
+        });
+      }
+      
+      // Inicializar teléfono internacional
+      initPhoneInput();
+      
+      // Navegación entre pasos
+      // Paso 1 -> 2
+      const step1Next = document.getElementById('step1-next');
+      if (step1Next) {
+        step1Next.addEventListener('click', function() {
+          if (validateStep(1)) {
+            goToStep(2);
+            // Inicializar carga de documentos
+            setupDocumentUploads();
+          } else {
+            showToast('error', 'Campos incompletos', 'Por favor, complete todos los campos obligatorios correctamente');
+            
+            // Enfocar el primer campo con error
+            const firstErrorField = document.querySelector('#step1 .form-group.error input, #step1 .form-group.error select, #step1 .form-group.error textarea');
+            if (firstErrorField) {
+              firstErrorField.focus();
+              firstErrorField.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+          }
+        });
+      }
+      
+      // Paso 2 -> 1
+      const step2Back = document.getElementById('step2-back');
+      if (step2Back) {
+        step2Back.addEventListener('click', function() {
+          goToStep(1);
+        });
+      }
+      
+      // Paso 2 -> 3
+      const step2Next = document.getElementById('step2-next');
+      if (step2Next) {
+        step2Next.addEventListener('click', function() {
+          if (validateStep(2)) {
+            goToStep(3);
+            
+            // Inicializar cámara para selfie
+            initializeWebcam();
+          } else {
+            showToast('error', 'Documentos requeridos', 'Por favor, suba las imágenes de su documento de identidad');
+          }
+        });
+      }
+      
+      // Paso 3 -> 2
+      const step3Back = document.getElementById('step3-back');
+      if (step3Back) {
+        step3Back.addEventListener('click', function() {
+          // Detener webcam si está activa
+          if (webcam) {
+            webcam.stop();
+          }
+          goToStep(2);
+        });
+      }
+      
+      // Paso 3 -> 4
+      const step3Next = document.getElementById('step3-next');
+      if (step3Next) {
+        step3Next.addEventListener('click', function() {
+          if (validateStep(3)) {
+            goToStep(4);
+            // Inicializar selección de banco
+            setupBankSelection();
+          } else {
+            showToast('error', 'Verificación biométrica incompleta', 'Por favor, complete la selfie');
+          }
+        });
+      }
+      
+      // Paso 4 -> 3
+      const step4Back = document.getElementById('step4-back');
+      if (step4Back) {
+        step4Back.addEventListener('click', function() {
+          goToStep(3);
+          // Reiniciar webcam
+          initializeWebcam();
+        });
+      }
+      
+      // Completar verificación
+      const completeVerification = document.getElementById('complete-verification');
+      if (completeVerification) {
+        completeVerification.addEventListener('click', function() {
+          if (validateStep(4)) {
+            // Guardar datos
+            const savedData = saveUserData();
+            
+            if (!savedData) {
+              showToast('error', 'Error al guardar', 'No se pudieron procesar sus datos. Por favor, intente nuevamente.');
+              return;
+            }
+            
+            // Mostrar loading
+            showLoading('Procesando su verificación...');
+            
+            // Simulación del proceso de verificación - más rápido
+            animateProgress(0, 100, 2500, 
+              (progress) => {
+                if (progress < 20) {
+                  showLoading('Validando datos personales...', 'Verificando la información proporcionada.', progress);
+                } else if (progress < 40) {
+                  showLoading('Analizando documentos...', 'Realizando verificación OCR y de autenticidad.', progress);
+                } else if (progress < 60) {
+                  showLoading('Procesando información biométrica...', 'Comparando su selfie con el documento de identidad.', progress);
+                } else if (progress < 80) {
+                  showLoading('Validando información bancaria...', 'Verificando su cuenta bancaria.', progress);
+                } else {
+                  showLoading('Finalizando proceso de verificación...', 'Preparando su cuenta REMEEX.', progress);
+                }
+              },
+              () => {
+                // Ocultar loading
+                hideLoading();
+                
+                // Hacer scroll al inicio antes de mostrar la pantalla final
+                window.scrollTo({ top: 0, behavior: 'instant' });
+                
+                // Ocultar pasos y mostrar verificación completada
+                document.querySelector('.verification-steps-container').style.display = 'none';
+                document.querySelector('.stepper-container').style.display = 'none';
+                document.getElementById('verification-complete').style.display = 'block';
+                
+                // Animar entrada de la pantalla de completado
+                gsap.fromTo('#verification-complete',
+                  { opacity: 0, y: 20 },
+                  { 
+                    opacity: 1, 
+                    y: 0, 
+                    duration: 0.4,
+                    onComplete: () => {
+                      // Efecto confeti para celebrar
+                      confetti({
+                        particleCount: 200,
+                        spread: 100,
+                        origin: { y: 0.6 }
+                      });
+                      
+                      // Anunciar a lectores de pantalla
+                      const announcement = document.createElement('div');
+                      announcement.className = 'sr-only';
+                      announcement.setAttribute('aria-live', 'assertive');
+                      announcement.textContent = '¡Verificación completada con éxito! Ahora debe realizar el depósito de verificación.';
+                      document.body.appendChild(announcement);
+                      setTimeout(() => document.body.removeChild(announcement), 1000);
+                    }
+                  }
+                );
+              }
+            );
+          } else {
+            showToast('error', 'Información bancaria incompleta', 'Por favor, complete todos los campos requeridos');
+            
+            // Enfocar el primer campo con error
+            const firstErrorField = document.querySelector('#step4 .form-group.error input, #step4 .form-group.error select');
+            if (firstErrorField) {
+              firstErrorField.focus();
+              firstErrorField.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+          }
+        });
+      }
+      
+      // Eventos para el Header
+      window.addEventListener('scroll', function() {
+        const header = document.getElementById('app-header');
+        if (window.scrollY > 30) {
+          header.classList.add('scrolled');
+        } else {
+          header.classList.remove('scrolled');
+        }
+      });
+      
+      // Botón de ayuda en el header
+      const helpBtn = document.getElementById('help-btn');
+      if (helpBtn) {
+        helpBtn.addEventListener('click', function() {
+          const toast = showToast('info', 'Centro de Ayuda', 'Para cualquier asistencia, contacte a nuestro soporte a través de WhatsApp o correo electrónico.', 6000);
+          
+          // Añadir enlace de WhatsApp
+          setTimeout(() => {
+            const toastContent = toast.querySelector('.toast-content');
+            if (toastContent) {
+              const whatsappLink = document.createElement('a');
+              whatsappLink.href = 'https://wa.me/+17373018059';
+              whatsappLink.target = '_blank';
+              whatsappLink.style.color = 'white';
+              whatsappLink.style.textDecoration = 'underline';
+              whatsappLink.style.display = 'inline-block';
+              whatsappLink.style.marginTop = '0.5rem';
+              whatsappLink.innerHTML = '<i class="fab fa-whatsapp"></i> Contactar por WhatsApp';
+              toastContent.appendChild(whatsappLink);
+            }
+          }, 200);
+        });
+      }
+      
+      // Botón de idioma en el header
+      const languageBtn = document.getElementById('language-btn');
+      if (languageBtn) {
+        languageBtn.addEventListener('click', function() {
+          showToast('info', 'Idioma', 'Actualmente solo disponible en español. Más idiomas próximamente.');
+        });
+      }
+      
+      // Formateo automático del número de cuenta
+      const accountNumberInput = document.getElementById('account-number');
+      if (accountNumberInput) {
+        accountNumberInput.addEventListener('input', function() {
+          formatAccountNumber(this);
+        });
+      }
+      
+      // Validaciones en tiempo real para mostrar estados de éxito/error
+      const formInputs = document.querySelectorAll('.form-control');
+      formInputs.forEach(input => {
+        input.addEventListener('blur', function() {
+          const formGroup = this.closest('.form-group');
+          if (!formGroup) return;
+          
+          // Eliminar clases de estado previas
+          formGroup.classList.remove('success', 'error');
+          
+          // Validar según el tipo de campo
+          if (this.value.trim() === '') {
+            // Campo vacío y es requerido
+            if (this.hasAttribute('required')) {
+              formGroup.classList.add('error');
+            }
+          } else {
+            // Validaciones específicas por tipo de campo
+            switch(this.id) {
+              case 'email-confirm':
+              case 'login-email':
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (emailRegex.test(this.value)) {
+                  formGroup.classList.add('success');
+                } else {
+                  formGroup.classList.add('error');
+                }
+                break;
+                
+              case 'phone':
+                // Validación básica de teléfono
+                if (this.value.replace(/\D/g, '').length >= 7) {
+                  formGroup.classList.add('success');
+                } else {
+                  formGroup.classList.add('error');
+                }
+                break;
+                
+              case 'full-name':
+              case 'account-holder':
+                // Nombre con al menos dos palabras
+                if (this.value.trim().split(/\s+/).length >= 2 && this.value.length >= 5) {
+                  formGroup.classList.add('success');
+                } else {
+                  formGroup.classList.add('error');
+                }
+                break;
+                
+              case 'address':
+                // Dirección con longitud mínima
+                if (this.value.length >= 10) {
+                  formGroup.classList.add('success');
+                } else {
+                  formGroup.classList.add('error');
+                }
+                break;
+                
+              case 'account-number':
+                // Número de cuenta con formato correcto
+                if (this.value.replace(/\D/g, '').length >= 16) {
+                  formGroup.classList.add('success');
+                } else {
+                  formGroup.classList.add('error');
+                }
+                break;
+                
+              default:
+                // Validación genérica
+                if (this.value.trim() !== '') {
+                  formGroup.classList.add('success');
+                }
+            }
+          }
+        });
+        
+        // Validación en tiempo real al escribir (para ciertos campos)
+        if (['login-email', 'email-confirm', 'account-number'].includes(input.id)) {
+          input.addEventListener('input', function() {
+            // Solo validar email y número de cuenta mientras se escribe
+            const formGroup = this.closest('.form-group');
+            
+            if (['login-email', 'email-confirm'].includes(this.id)) {
+              const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+              if (this.value.trim() !== '' && emailRegex.test(this.value)) {
+                formGroup.classList.add('success');
+                formGroup.classList.remove('error');
+              }
+            } else if (this.id === 'account-number') {
+              if (this.value.replace(/\D/g, '').length >= 16) {
+                formGroup.classList.add('success');
+                formGroup.classList.remove('error');
+              }
+            }
+          });
+        }
+        
+        // Añadir support para detectar autollenado
+        input.addEventListener('animationstart', function(e) {
+          if (e.animationName === 'autofill') {
+            const formGroup = this.closest('.form-group');
+            formGroup.classList.add('success');
+          }
+        });
+      });
+      
+      // Validación de checkboxes
+      const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+      checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+          const errorMessage = document.getElementById(`${this.id}-error`);
+          if (errorMessage) {
+            errorMessage.style.display = this.checked ? 'none' : 'block';
+          }
+        });
+      });
+      
+      // Submit de formularios por Enter
+      const forms = document.querySelectorAll('form');
+      forms.forEach(form => {
+        form.addEventListener('keypress', function(e) {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            
+            // Identificar el botón de siguiente según el formulario
+            let nextButton = null;
+            if (form.id === 'login-form') {
+              nextButton = document.getElementById('login-button');
+            } else if (form.id === 'personal-info-form') {
+              nextButton = document.getElementById('step1-next');
+            } else if (form.id === 'bank-info-form') {
+              nextButton = document.getElementById('complete-verification');
+            }
+            
+            if (nextButton) nextButton.click();
+          }
+        });
+      });
+      
+      // Inicializar el botón de WhatsApp flotante con animación de tooltip
+      const whatsappBtn = document.querySelector('.whatsapp-btn');
+      const whatsappTooltip = document.querySelector('.whatsapp-tooltip');
+      
+      if (whatsappBtn && whatsappTooltip) {
+        setTimeout(() => {
+          // Mostrar el tooltip brevemente al cargar la página para informar al usuario
+          gsap.to(whatsappTooltip, { 
+            opacity: 1, 
+            y: 0, 
+            duration: 0.3,
+            delay: 2,
+            onComplete: () => {
+              // Ocultar después de 5 segundos
+              gsap.to(whatsappTooltip, { 
+                opacity: 0, 
+                y: 10, 
+                duration: 0.3,
+                delay: 5
+              });
+            }
+          });
+        }, 1000);
+      }
+    });
+  </script>
+</body>
+</html>
