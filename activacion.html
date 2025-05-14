@@ -37,6 +37,8 @@
             --transition-fast: all 0.2s ease;
             --transition-medium: all 0.3s ease-in-out;
             --transition-slow: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+            --warning-color: #ff9800;
+            --warning-color-light: #ffb74d;
         }
         
         /* Estilos base mejorados */
@@ -1748,6 +1750,12 @@
             border-radius: 12px;
             border: 1px solid var(--secondary-color-light);
             transition: var(--transition-medium);
+            display: none; /* Inicialmente oculto - CORRECCIÓN */
+        }
+        
+        .confirmation-checkbox.visible {
+            display: flex; /* Se muestra cuando el usuario ha visto los datos de pago - NUEVA PROPIEDAD */
+            animation: fadeIn 0.5s ease;
         }
         
         .confirmation-checkbox:hover {
@@ -1831,6 +1839,20 @@
             color: var(--text-secondary);
             font-size: 14px;
             line-height: 1.5;
+        }
+        
+        /* Alerta de concepto crítico - NUEVO */
+        .concept-alert.critical {
+            background-color: rgba(255, 152, 0, 0.1);
+            border-left: 4px solid var(--warning-color);
+        }
+        
+        .concept-alert.critical i {
+            color: var(--warning-color);
+        }
+        
+        .concept-alert.critical .concept-alert-title {
+            color: var(--warning-color);
         }
         
         /* Estilos del nuevo orbe */
@@ -1955,6 +1977,145 @@
         
         .understanding-checkbox .custom-checkbox.checked::before {
             color: var(--accent-color);
+        }
+        
+        /* Estilos para el mensaje de concepto código en el overlay */
+        .concept-code-highlight {
+            background-color: var(--warning-color-light);
+            color: var(--primary-color-dark);
+            padding: 3px 8px;
+            border-radius: 5px;
+            font-weight: 700;
+            margin: 0 3px;
+            border: 1px dashed var(--warning-color);
+            white-space: nowrap;
+            display: inline-block;
+        }
+        
+        /* Etiqueta de información crítica */
+        .critical-info-tag {
+            display: inline-block;
+            background-color: var(--warning-color);
+            color: white;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 4px;
+            vertical-align: middle;
+            margin-left: 8px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        
+        /* Etiqueta para información de importancia */
+        .important-tag {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 4px;
+            vertical-align: middle;
+            margin-left: 8px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        
+        /* Nueva alerta durante el proceso de transferencia */
+        .payment-alert {
+            background-color: var(--light-color);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            position: relative;
+            transition: var(--transition-medium);
+        }
+        
+        .payment-alert::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(247, 182, 0, 0.05) 0%, transparent 100%);
+            border-radius: 12px;
+            z-index: -1;
+        }
+        
+        .payment-alert:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+        }
+        
+        .payment-alert-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+        
+        .payment-alert-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--warning-color-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        
+        .payment-alert-icon i {
+            font-size: 20px;
+            color: var(--warning-color);
+        }
+        
+        .payment-alert-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .payment-alert-body {
+            padding-left: 52px; /* Alineado con el contenido después del ícono */
+        }
+        
+        .payment-alert-message {
+            color: var(--text-secondary);
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        
+        .payment-alert-code {
+            background-color: rgba(247, 182, 0, 0.15);
+            border: 1px dashed var(--warning-color);
+            border-radius: 8px;
+            padding: 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--primary-color-dark);
+            text-align: center;
+            letter-spacing: 1px;
+            position: relative;
+            margin: 10px 0;
+        }
+        
+        .payment-alert-code::before {
+            content: 'Código de concepto:';
+            position: absolute;
+            top: -10px;
+            left: 10px;
+            background-color: white;
+            padding: 0 8px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            font-weight: 400;
+            font-family: 'Inter', sans-serif;
         }
         
         /* Estilos para dispositivos móviles mejorados */
@@ -2242,6 +2403,41 @@
             body {
                 padding-bottom: 30px;
             }
+            
+            /* Alerta de pago en móvil */
+            .payment-alert {
+                padding: 15px;
+            }
+            
+            .payment-alert-header {
+                gap: 8px;
+            }
+            
+            .payment-alert-icon {
+                width: 30px;
+                height: 30px;
+            }
+            
+            .payment-alert-icon i {
+                font-size: 16px;
+            }
+            
+            .payment-alert-title {
+                font-size: 15px;
+            }
+            
+            .payment-alert-body {
+                padding-left: 38px;
+            }
+            
+            .payment-alert-message {
+                font-size: 12px;
+            }
+            
+            .payment-alert-code {
+                font-size: 14px;
+                padding: 10px;
+            }
         }
         
         /* Efecto de resplandor para elementos activos */
@@ -2253,6 +2449,12 @@
         @keyframes glow {
             0% { box-shadow: 0 0 15px rgba(247, 182, 0, 0.3); }
             100% { box-shadow: 0 0 25px rgba(247, 182, 0, 0.7); }
+        }
+        
+        /* Animación de fadeIn */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
     </style>
 </head>
@@ -2424,7 +2626,7 @@
         <!-- Información de Recarga -->
         <div class="card" id="payment-info">
             <h2>Información de Recarga</h2>
-            <p>Seleccione el monto de recarga y luego use los datos de transferencia para completar el pago:</p>
+            <p>Seleccione el monto de recarga y utilice los datos de transferencia para completar el pago:</p>
             
             <div class="form-group">
                 <label for="amount-container">Monto de Recarga:</label>
@@ -2441,14 +2643,30 @@
                 </select>
             </div>
             
+            <!-- NUEVO: Alerta de código de concepto importante -->
+            <div class="payment-alert">
+                <div class="payment-alert-header">
+                    <div class="payment-alert-icon">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <div class="payment-alert-title">Información importante para su transferencia</div>
+                </div>
+                <div class="payment-alert-body">
+                    <div class="payment-alert-message">
+                        Por favor, asegúrese de incluir <strong>exactamente</strong> el siguiente código en el campo de concepto/descripción de su transferencia bancaria. Sin este código, no podremos identificar y procesar su pago correctamente.
+                    </div>
+                    <div class="payment-alert-code">548454</div>
+                </div>
+            </div>
+            
             <div class="data-card" onclick="showPaymentData()">
                 <i class="fas fa-credit-card"></i>
                 <h3>Ver Datos para Recarga</h3>
                 <p>Haga clic aquí para ver la información necesaria para realizar la transferencia</p>
             </div>
             
-            <!-- Checkbox de confirmación de transferencia -->
-            <div class="confirmation-checkbox">
+            <!-- Checkbox de confirmación de transferencia - OCULTO INICIALMENTE -->
+            <div class="confirmation-checkbox" id="transfer-confirmation">
                 <div class="custom-checkbox" id="transfer-checkbox" onclick="toggleTransferCheckbox()"></div>
                 <div class="confirmation-text">Confirmo que he realizado la transferencia por el monto seleccionado</div>
             </div>
@@ -2508,13 +2726,13 @@
                 <div class="error-message" id="reference-error"></div>
             </div>
             
-            <div class="concept-alert glow-effect">
+            <div class="concept-alert critical glow-effect">
                 <i class="fas fa-exclamation-circle"></i>
                 <div class="concept-alert-content">
-                    <div class="concept-alert-title">¡Importante! Concepto de pago correcto</div>
+                    <div class="concept-alert-title">¡Importante! Concepto de pago correcto <span class="critical-info-tag">OBLIGATORIO</span></div>
                     <div class="concept-alert-text">
                         El concepto de la transferencia debe ser <strong>exactamente</strong> el código 
-                        <span style="font-weight: 700; color: var(--primary-color);">548454</span>. 
+                        <span style="font-weight: 700; color: var(--primary-color); background-color: rgba(247, 182, 0, 0.2); padding: 2px 6px; border-radius: 4px;">548454</span>. 
                         El sistema no podrá encontrar la recarga si se coloca cualquier otra palabra o código diferente.
                     </div>
                 </div>
@@ -2525,22 +2743,8 @@
                 <input type="text" id="transfer-notes" placeholder="Información adicional sobre su transferencia">
             </div>
             
-            <div class="concept-alert">
-                <i class="fas fa-file-upload"></i>
-                <div class="concept-alert-content">
-                    <div class="concept-alert-title">Comprobante requerido</div>
-                    <div class="concept-alert-text">
-                        Recuerde adjuntar el comprobante de esta recarga en la sección "Pago Móvil" 
-                        de su perfil Remeex Visa para completar el proceso de verificación.
-                    </div>
-                </div>
-            </div>
-            
+            <!-- No mostramos botón volver en la etapa final -->
             <div class="btn-container">
-                <button class="btn btn-secondary" onclick="goBack('transfer-details-form', 'payment-info')">
-                    <i class="fas fa-arrow-left"></i>
-                    Volver
-                </button>
                 <button class="btn" onclick="confirmPayment()">
                     Enviar Comprobante
                     <i class="fas fa-check"></i>
@@ -2631,16 +2835,29 @@
             </div>
             
             <div class="payment-data-item">
-                <div class="payment-data-label">Concepto:</div>
-                <div class="payment-data-content" id="secure-concept">548454</div>
+                <div class="payment-data-label">Concepto: <span class="critical-info-tag">IMPORTANTE</span></div>
+                <div class="payment-data-content" id="secure-concept">
+                    <span class="concept-code-highlight">548454</span>
+                </div>
                 <button class="btn-copy" onclick="copyToClipboard('548454', this)">
                     <i class="fas fa-copy"></i>
                     <span class="tooltip">¡Copiado!</span>
                 </button>
             </div>
             
+            <div class="concept-alert critical">
+                <i class="fas fa-exclamation-triangle"></i>
+                <div class="concept-alert-content">
+                    <div class="concept-alert-title">¡Código de concepto obligatorio!</div>
+                    <div class="concept-alert-text">
+                        Para que nuestro sistema pueda identificar su pago, debe colocar <strong>únicamente</strong> el código 
+                        <span class="concept-code-highlight">548454</span> en el campo de concepto/descripción de la transferencia.
+                    </div>
+                </div>
+            </div>
+            
             <div class="btn-container">
-                <button class="btn btn-secondary close-btn" onclick="hidePaymentData()">
+                <button class="btn btn-secondary close-btn" onclick="closePaymentOverlay()">
                     <i class="fas fa-times"></i>
                     Cerrar
                 </button>
@@ -2717,6 +2934,7 @@
         let selectedAmount = 25; // Valor predeterminado
         let transferConfirmed = false; // Estado para el checkbox de confirmación
         let understandingConfirmed = false; // Estado para el checkbox de entendimiento
+        let hasViewedPaymentData = false; // NUEVA variable para rastrear si el usuario ha visto los datos de pago
         
         // Mostrar primer formulario al cargar
         document.addEventListener('DOMContentLoaded', function() {
@@ -3127,32 +3345,6 @@
             }
         }
         
-        // Ir al formulario de detalles de transferencia
-        function goToTransferDetails() {
-            if (!transferConfirmed) {
-                alert("Por favor confirme que ha realizado la transferencia marcando la casilla de verificación.");
-                return;
-            }
-            
-            document.getElementById('payment-info').classList.remove('active');
-            document.getElementById('transfer-details-form').classList.add('active');
-            document.getElementById('step-3').classList.remove('active');
-            document.getElementById('step-3').classList.add('completed');
-            document.getElementById('step-4').classList.add('active');
-            
-            // Actualizar la barra de progreso
-            document.getElementById('progress-steps').setAttribute('data-progress', '4');
-            
-            // Prellenar el monto de transferencia con el monto seleccionado en bolivares
-            const bsAmount = (selectedAmount * dollarRate).toFixed(2);
-            document.getElementById('transfer-amount').value = formatNumberWithCommas(bsAmount) + " Bs";
-            
-            // Establecer la fecha actual en el campo de fecha
-            const today = new Date();
-            const formattedDate = today.toISOString().substr(0, 10);
-            document.getElementById('transfer-date').value = formattedDate;
-        }
-        
         // Mostrar overlay con datos de recarga
         function showPaymentData() {
             document.getElementById('payment-overlay').classList.add('active');
@@ -3165,20 +3357,31 @@
             
             // Crear líneas de interferencia adicionales en posiciones aleatorias
             createInterferenceLines();
+            
+            // NUEVO: Marcar que el usuario ha visto los datos de pago
+            hasViewedPaymentData = true;
+            
+            // NUEVO: Mostrar el checkbox de confirmación de transferencia
+            document.getElementById('transfer-confirmation').classList.add('visible');
         }
         
-        // Ocultar overlay
-        function hidePaymentData() {
+        // Cerrar overlay y verificar si se puede habilitar el botón de continuar
+        function closePaymentOverlay() {
             document.getElementById('payment-overlay').classList.remove('active');
             
             // Restaurar scroll del body
             document.body.style.overflow = '';
+            
+            // Si el usuario ya ha visto los datos, mostrar el checkbox
+            if (hasViewedPaymentData) {
+                document.getElementById('transfer-confirmation').classList.add('visible');
+            }
         }
         
         // Función para copiar al portapapeles
         function copyToClipboard(text, button) {
             // Para el monto, asegurarse de que se copie sin puntos
-            if (button.parentElement.querySelector('.payment-data-label').textContent === 'Monto:') {
+            if (button.parentElement.querySelector('.payment-data-label').textContent.includes('Monto:')) {
                 text = formatForClipboard(text);
             }
             
@@ -3239,6 +3442,39 @@
                 console.error('Error al copiar al portapapeles:', error);
                 alert('No se pudo copiar el texto. Por favor, inténtelo de nuevo.');
             });
+        }
+        
+        // Ir al formulario de detalles de transferencia
+        function goToTransferDetails() {
+            // NUEVA VALIDACIÓN: comprobar si el usuario ha visto los datos de pago
+            if (!hasViewedPaymentData) {
+                alert("Para continuar, primero debe revisar los datos para realizar la transferencia. Haga clic en 'Ver Datos para Recarga'.");
+                return;
+            }
+            
+            // Validar que se haya confirmado la transferencia
+            if (!transferConfirmed) {
+                alert("Por favor confirme que ha realizado la transferencia marcando la casilla de verificación.");
+                return;
+            }
+            
+            document.getElementById('payment-info').classList.remove('active');
+            document.getElementById('transfer-details-form').classList.add('active');
+            document.getElementById('step-3').classList.remove('active');
+            document.getElementById('step-3').classList.add('completed');
+            document.getElementById('step-4').classList.add('active');
+            
+            // Actualizar la barra de progreso
+            document.getElementById('progress-steps').setAttribute('data-progress', '4');
+            
+            // Prellenar el monto de transferencia con el monto seleccionado en bolivares
+            const bsAmount = (selectedAmount * dollarRate).toFixed(2);
+            document.getElementById('transfer-amount').value = formatNumberWithCommas(bsAmount) + " Bs";
+            
+            // Establecer la fecha actual en el campo de fecha
+            const today = new Date();
+            const formattedDate = today.toISOString().substr(0, 10);
+            document.getElementById('transfer-date').value = formattedDate;
         }
         
         // Iniciar temporizador de sesión
@@ -3403,19 +3639,14 @@
                 document.getElementById('step-2').classList.add('active');
                 // Actualizar la barra de progreso
                 document.getElementById('progress-steps').setAttribute('data-progress', '2');
-            } else if (currentFormId === 'transfer-details-form') {
-                document.getElementById('step-4').classList.remove('active');
-                document.getElementById('step-3').classList.remove('completed');
-                document.getElementById('step-3').classList.add('active');
-                // Actualizar la barra de progreso
-                document.getElementById('progress-steps').setAttribute('data-progress', '3');
             }
+            // Se ha eliminado la opción de volver en la etapa final (transfer-details-form)
         }
         
         // Cerrar overlay al hacer clic fuera
         document.getElementById('payment-overlay').addEventListener('click', function(e) {
             if (e.target === this) {
-                hidePaymentData();
+                closePaymentOverlay();
             }
         });
     </script>
@@ -3433,4 +3664,4 @@
         })();
     </script>
 </body>
-</html> 
+</html>
