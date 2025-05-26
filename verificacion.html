@@ -10,11 +10,10 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.11.4/dist/gsap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-  <script async src="https://tally.so/widgets/embed.js"></script>
 
   <style>
     :root {
-      /* Modern banking color palette 2025 */
+      /* Modern banking color palette 2025 - Consistent with recarga.html */
       --primary: #1a1f71;
       --primary-dark: #0c1045;
       --primary-light: #3244b6;
@@ -66,14 +65,6 @@
       /* Animations */
       --animation-bounce: cubic-bezier(0.175, 0.885, 0.32, 1.275);
       --animation-smooth: cubic-bezier(0.4, 0, 0.2, 1);
-
-      /* Sizing (reduced 20%) */
-      --container-max-width: 640px; /* was 800px */
-      --card-padding: 1.2rem; /* was 1.5rem */
-      --step-size: 32px; /* was 40px */
-      --button-height: 38px; /* was 48px */
-      --input-height: 38px; /* was 48px */
-      --camera-size: 280px; /* was 350px */
     }
 
     * {
@@ -86,11 +77,11 @@
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       background: var(--neutral-200);
       color: var(--neutral-900);
-      line-height: 1.5;
+      line-height: 1.6;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
       overflow-x: hidden;
-      font-size: 14px; /* Reduced from 16px */
+      font-size: 16px;
     }
 
     /* Header */
@@ -102,35 +93,35 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0.5rem 0.8rem; /* Reduced */
+      padding: 0.75rem 1rem;
       background: var(--gradient-card);
       border-bottom: 1px solid var(--neutral-300);
       box-shadow: var(--shadow-sm);
       z-index: 1000;
-      height: 48px; /* Reduced from 60px */
-      backdrop-filter: blur(8px);
+      height: 60px;
+      backdrop-filter: blur(10px);
     }
 
     .header-brand {
       display: flex;
       align-items: center;
-      gap: 0.4rem;
+      gap: 0.5rem;
     }
 
     .header-brand img {
-      height: 26px; /* Reduced from 32px */
+      height: 32px;
       width: auto;
     }
 
     .header-actions {
       display: flex;
       align-items: center;
-      gap: 0.4rem;
+      gap: 0.5rem;
     }
 
     .header-action-btn {
-      width: 30px; /* Reduced from 36px */
-      height: 30px;
+      width: 36px;
+      height: 36px;
       border-radius: var(--radius-full);
       display: flex;
       align-items: center;
@@ -141,7 +132,7 @@
       cursor: pointer;
       transition: var(--transition-base);
       text-decoration: none;
-      font-size: 0.85rem;
+      font-size: 1rem;
     }
 
     .header-action-btn:hover {
@@ -152,18 +143,18 @@
 
     /* Main Container */
     .verification-container {
-      padding-top: 58px; /* Adjusted for smaller header */
-      padding-bottom: 1.6rem;
+      padding-top: 70px;
+      padding-bottom: 2rem;
       min-height: 100vh;
-      max-width: var(--container-max-width);
+      max-width: 900px;
       margin: 0 auto;
-      padding-left: 0.8rem;
-      padding-right: 0.8rem;
+      padding-left: 1rem;
+      padding-right: 1rem;
     }
 
     /* Progress Steps */
     .progress-container {
-      margin-bottom: 1.6rem;
+      margin-bottom: 2rem;
     }
 
     .progress-steps {
@@ -171,7 +162,7 @@
       justify-content: space-between;
       align-items: center;
       position: relative;
-      margin-bottom: 1.2rem;
+      margin-bottom: 1.5rem;
     }
 
     .progress-line {
@@ -179,7 +170,7 @@
       top: 50%;
       left: 0;
       right: 0;
-      height: 2px;
+      height: 3px;
       background: var(--neutral-300);
       z-index: 1;
       border-radius: var(--radius-full);
@@ -189,7 +180,7 @@
       height: 100%;
       background: var(--gradient-primary);
       width: 0%;
-      transition: width 0.6s var(--animation-smooth);
+      transition: width 0.8s var(--animation-smooth);
       border-radius: var(--radius-full);
     }
 
@@ -201,25 +192,26 @@
       align-items: center;
       text-align: center;
       background: var(--gradient-card);
-      padding: 0.4rem;
-      border-radius: var(--radius-lg);
-      box-shadow: var(--shadow-xs);
+      padding: 0.75rem;
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-md);
+      min-width: 80px;
     }
 
     .step-circle {
-      width: var(--step-size);
-      height: var(--step-size);
+      width: 48px;
+      height: 48px;
       border-radius: 50%;
       background: var(--neutral-300);
-      border: 2px solid var(--neutral-300);
+      border: 3px solid var(--neutral-300);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-weight: 600;
-      font-size: 0.8rem;
+      font-weight: 700;
+      font-size: 1rem;
       color: var(--neutral-600);
-      margin-bottom: 0.4rem;
-      transition: all 0.3s var(--animation-bounce);
+      margin-bottom: 0.5rem;
+      transition: all 0.4s var(--animation-bounce);
     }
 
     .step-circle.active {
@@ -227,107 +219,110 @@
       border-color: var(--primary);
       color: white;
       transform: scale(1.1);
-      box-shadow: 0 0 0 3px rgba(26, 31, 113, 0.2);
+      box-shadow: 0 0 0 4px rgba(26, 31, 113, 0.2);
     }
 
     .step-circle.completed {
       background: var(--gradient-success);
       border-color: var(--success);
       color: white;
+      transform: scale(1.05);
     }
 
     .step-label {
-      font-size: 0.7rem;
-      font-weight: 500;
+      font-size: 0.8rem;
+      font-weight: 600;
       color: var(--neutral-600);
-      max-width: 64px; /* Reduced */
-      line-height: 1.2;
+      max-width: 80px;
+      line-height: 1.3;
     }
 
     .step-label.active {
       color: var(--primary);
-      font-weight: 600;
+      font-weight: 700;
     }
 
     .step-label.completed {
       color: var(--success);
+      font-weight: 600;
     }
 
     /* Cards */
     .card {
       background: var(--gradient-card);
-      border-radius: var(--radius-xl);
+      border-radius: var(--radius-2xl);
       box-shadow: var(--shadow-banking);
       overflow: hidden;
-      margin-bottom: 1.2rem;
-      border: 1px solid rgba(255, 255, 255, 0.5);
+      margin-bottom: 1.5rem;
+      border: 1px solid rgba(255, 255, 255, 0.6);
       transition: transform 0.3s var(--animation-smooth), box-shadow 0.3s var(--animation-smooth);
-      backdrop-filter: blur(8px);
+      backdrop-filter: blur(10px);
     }
 
     .card:hover {
-      transform: translateY(-2px);
+      transform: translateY(-3px);
       box-shadow: var(--shadow-xl);
     }
 
     .card-header {
-      padding: var(--card-padding);
+      padding: 1.5rem;
       border-bottom: 1px solid var(--neutral-300);
       background: var(--gradient-overlay);
     }
 
     .card-title {
-      font-size: 1.1rem; /* Reduced */
+      font-size: 1.25rem;
       font-weight: 700;
       color: var(--neutral-900);
       display: flex;
       align-items: center;
-      gap: 0.6rem;
+      gap: 0.75rem;
+      margin-bottom: 0.5rem;
     }
 
     .card-title i {
       color: var(--primary);
-      font-size: 1.2rem;
+      font-size: 1.5rem;
     }
 
     .card-subtitle {
-      font-size: 0.8rem;
+      font-size: 0.9rem;
       color: var(--neutral-600);
-      margin-top: 0.4rem;
+      line-height: 1.5;
     }
 
     .card-body {
-      padding: var(--card-padding);
+      padding: 1.5rem;
     }
 
     /* Form Elements */
     .form-group {
-      margin-bottom: 1rem;
+      margin-bottom: 1.25rem;
     }
 
     .form-label {
       display: block;
-      font-size: 0.75rem;
+      font-size: 0.85rem;
       font-weight: 600;
       color: var(--neutral-700);
-      margin-bottom: 0.4rem;
+      margin-bottom: 0.5rem;
       display: flex;
       align-items: center;
-      gap: 0.4rem;
+      gap: 0.5rem;
     }
 
     .form-label i {
       color: var(--primary);
-      font-size: 0.9rem;
+      font-size: 1rem;
     }
 
     .form-control {
       width: 100%;
-      height: var(--input-height);
-      padding: 0 0.8rem;
-      border: 1.5px solid var(--neutral-400);
+      height: 48px;
+      padding: 0 1rem;
+      border: 2px solid var(--neutral-400);
       border-radius: var(--radius-lg);
-      font-size: 0.8rem;
+      font-size: 0.9rem;
       color: var(--neutral-900);
       background: var(--neutral-100);
       transition: var(--transition-base);
@@ -337,7 +332,7 @@
     .form-control:focus {
       outline: none;
       border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(26, 31, 113, 0.1);
+      box-shadow: 0 0 0 4px rgba(26, 31, 113, 0.1);
       background: var(--neutral-50);
     }
 
@@ -356,27 +351,27 @@
     }
 
     textarea.form-control {
-      height: 80px; /* Reduced */
-      padding: 0.6rem 0.8rem;
+      height: 100px;
+      padding: 0.75rem 1rem;
       resize: vertical;
-      line-height: 1.4;
+      line-height: 1.5;
     }
 
     .form-row {
       display: flex;
-      gap: 0.8rem;
+      gap: 1rem;
       flex-wrap: wrap;
     }
 
     .form-col {
       flex: 1;
-      min-width: 200px; /* Reduced */
+      min-width: 250px;
     }
 
     .error-message {
-      font-size: 0.7rem;
+      font-size: 0.8rem;
       color: var(--danger);
-      margin-top: 0.4rem;
+      margin-top: 0.5rem;
       display: none;
       animation: fadeIn 0.3s ease;
     }
@@ -384,16 +379,16 @@
     /* Bank Selection */
     .bank-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); /* Reduced */
-      gap: 0.8rem;
-      margin-bottom: 1rem;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
     }
 
     .bank-option {
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 0.8rem;
+      padding: 1rem;
       border: 2px solid var(--neutral-300);
       border-radius: var(--radius-lg);
       cursor: pointer;
@@ -404,55 +399,55 @@
 
     .bank-option:hover {
       border-color: var(--primary-light);
-      transform: translateY(-2px);
+      transform: translateY(-3px);
       box-shadow: var(--shadow-md);
     }
 
     .bank-option.selected {
       border-color: var(--primary);
       background: rgba(26, 31, 113, 0.05);
-      box-shadow: 0 0 0 2px rgba(26, 31, 113, 0.2);
+      box-shadow: 0 0 0 3px rgba(26, 31, 113, 0.2);
     }
 
     .bank-logo {
-      width: 40px; /* Reduced */
-      height: 40px;
+      width: 48px;
+      height: 48px;
       object-fit: contain;
-      margin-bottom: 0.4rem;
+      margin-bottom: 0.5rem;
       border-radius: var(--radius-sm);
     }
 
     .bank-name {
-      font-size: 0.65rem;
-      font-weight: 500;
+      font-size: 0.8rem;
+      font-weight: 600;
       color: var(--neutral-700);
-      line-height: 1.2;
+      line-height: 1.3;
     }
 
     .selected-bank-info {
       display: none;
       background: var(--gradient-overlay);
       border-radius: var(--radius-lg);
-      padding: 0.8rem;
-      margin: 0.8rem 0;
-      border-left: 3px solid var(--primary);
+      padding: 1rem;
+      margin: 1rem 0;
+      border-left: 4px solid var(--primary);
     }
 
     .selected-bank-info.active {
       display: block;
-      animation: slideUp 0.3s ease;
+      animation: slideUp 0.4s ease;
     }
 
     .selected-bank-display {
       display: flex;
       align-items: center;
-      gap: 0.6rem;
-      margin-bottom: 0.8rem;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
     }
 
     .selected-bank-logo {
-      width: 32px;
-      height: 32px;
+      width: 40px;
+      height: 40px;
       object-fit: contain;
       border-radius: var(--radius-sm);
     }
@@ -460,7 +455,7 @@
     .selected-bank-name {
       font-weight: 600;
       color: var(--neutral-800);
-      font-size: 0.85rem;
+      font-size: 1rem;
     }
 
     /* Account Type Toggle */
@@ -468,20 +463,20 @@
       display: flex;
       background: var(--neutral-200);
       border-radius: var(--radius-lg);
-      padding: 0.2rem;
-      margin-bottom: 0.8rem;
+      padding: 0.25rem;
+      margin-bottom: 1rem;
     }
 
     .account-type-option {
       flex: 1;
-      padding: 0.5rem 0.8rem;
+      padding: 0.75rem 1rem;
       border: none;
       background: transparent;
       border-radius: var(--radius-md);
       cursor: pointer;
       transition: var(--transition-base);
-      font-size: 0.75rem;
-      font-weight: 500;
+      font-size: 0.85rem;
+      font-weight: 600;
       color: var(--neutral-600);
     }
 
@@ -495,18 +490,18 @@
     .pago-movil-toggle {
       display: flex;
       align-items: center;
-      gap: 0.6rem;
-      padding: 0.8rem;
+      gap: 0.75rem;
+      padding: 1rem;
       background: var(--neutral-100);
       border-radius: var(--radius-lg);
-      border: 1px solid var(--neutral-300);
-      margin-bottom: 0.8rem;
+      border: 2px solid var(--neutral-300);
+      margin-bottom: 1rem;
     }
 
     .toggle-switch {
       position: relative;
-      width: 40px; /* Reduced */
-      height: 20px;
+      width: 48px;
+      height: 24px;
       background: var(--neutral-400);
       border-radius: var(--radius-full);
       cursor: pointer;
@@ -520,8 +515,8 @@
     .toggle-switch::after {
       content: '';
       position: absolute;
-      width: 16px;
-      height: 16px;
+      width: 20px;
+      height: 20px;
       background: white;
       border-radius: 50%;
       top: 2px;
@@ -531,18 +526,18 @@
     }
 
     .toggle-switch.active::after {
-      left: 22px;
+      left: 26px;
     }
 
     .toggle-label {
-      font-size: 0.8rem;
-      font-weight: 500;
+      font-size: 0.9rem;
+      font-weight: 600;
       color: var(--neutral-700);
     }
 
     .pago-movil-fields {
       display: none;
-      animation: slideDown 0.3s ease;
+      animation: slideDown 0.4s ease;
     }
 
     .pago-movil-fields.active {
@@ -554,9 +549,9 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      height: var(--button-height);
-      padding: 0 1.2rem;
-      font-size: 0.8rem;
+      height: 48px;
+      padding: 0 1.5rem;
+      font-size: 0.9rem;
       font-weight: 600;
       border-radius: var(--radius-lg);
       border: none;
@@ -569,8 +564,8 @@
     }
 
     .btn i {
-      margin-right: 0.4rem;
-      font-size: 0.9rem;
+      margin-right: 0.5rem;
+      font-size: 1rem;
     }
 
     .btn-primary {
@@ -580,20 +575,20 @@
     }
 
     .btn-primary:hover {
-      transform: translateY(-1px);
+      transform: translateY(-2px);
       box-shadow: 0 8px 25px rgba(26, 31, 113, 0.3);
     }
 
     .btn-outline {
       background: transparent;
-      border: 1.5px solid var(--primary);
+      border: 2px solid var(--primary);
       color: var(--primary);
     }
 
     .btn-outline:hover {
       background: var(--primary);
       color: white;
-      transform: translateY(-1px);
+      transform: translateY(-2px);
     }
 
     .btn-success {
@@ -603,7 +598,7 @@
     }
 
     .btn-success:hover {
-      transform: translateY(-1px);
+      transform: translateY(-2px);
       box-shadow: 0 6px 20px rgba(0, 211, 77, 0.4);
     }
 
@@ -623,13 +618,13 @@
     /* Camera Container */
     .camera-container {
       position: relative;
-      max-width: var(--camera-size);
-      height: var(--camera-size);
-      margin: 0 auto 1.2rem;
-      border-radius: var(--radius-xl);
+      max-width: 400px;
+      height: 400px;
+      margin: 0 auto 1.5rem;
+      border-radius: var(--radius-2xl);
       overflow: hidden;
       background: var(--neutral-800);
-      border: 2px solid var(--primary);
+      border: 3px solid var(--primary);
       box-shadow: var(--shadow-banking);
     }
 
@@ -653,9 +648,9 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      width: 150px; /* Reduced */
-      height: 180px; /* Reduced */
-      border: 2px dashed rgba(255, 255, 255, 0.8);
+      width: 180px;
+      height: 220px;
+      border: 3px dashed rgba(255, 255, 255, 0.8);
       border-radius: 50%;
       box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.5);
     }
@@ -667,10 +662,11 @@
       right: 0;
       background: rgba(0, 0, 0, 0.8);
       color: white;
-      padding: 0.8rem;
+      padding: 1rem;
       text-align: center;
-      font-size: 0.75rem;
+      font-size: 0.85rem;
       backdrop-filter: blur(5px);
+      font-weight: 500;
     }
 
     .camera-countdown {
@@ -678,7 +674,7 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      font-size: 4rem; /* Reduced */
+      font-size: 5rem;
       font-weight: 700;
       color: white;
       text-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
@@ -694,19 +690,19 @@
     /* Camera Controls */
     .camera-controls {
       display: flex;
-      gap: 0.8rem;
+      gap: 1rem;
       justify-content: center;
-      margin-bottom: 1.2rem;
+      margin-bottom: 1.5rem;
     }
 
     .camera-btn {
-      width: 48px; /* Reduced */
-      height: 48px;
+      width: 56px;
+      height: 56px;
       border-radius: 50%;
-      border: 2px solid var(--primary);
+      border: 3px solid var(--primary);
       background: var(--primary);
       color: white;
-      font-size: 1.2rem;
+      font-size: 1.5rem;
       cursor: pointer;
       transition: all 0.3s var(--animation-bounce);
       display: flex;
@@ -720,8 +716,8 @@
     }
 
     .camera-btn.capture {
-      width: 64px; /* Reduced */
-      height: 64px;
+      width: 72px;
+      height: 72px;
       background: var(--danger);
       border-color: var(--danger);
     }
@@ -730,22 +726,22 @@
     .selfie-preview {
       display: none;
       position: relative;
-      max-width: 240px; /* Reduced */
-      margin: 0.8rem auto;
+      max-width: 300px;
+      margin: 1rem auto;
       border-radius: var(--radius-lg);
       overflow: hidden;
       box-shadow: var(--shadow-lg);
-      border: 2px solid var(--success);
+      border: 3px solid var(--success);
     }
 
     .selfie-preview.active {
       display: block;
-      animation: slideUp 0.4s ease;
+      animation: slideUp 0.5s ease;
     }
 
     .selfie-preview img {
       width: 100%;
-      height: 160px; /* Reduced */
+      height: 200px;
       object-fit: cover;
     }
 
@@ -755,7 +751,7 @@
       left: 0;
       right: 0;
       background: linear-gradient(transparent, rgba(0,0,0,0.7));
-      padding: 0.8rem;
+      padding: 1rem;
       transform: translateY(100%);
       transition: transform 0.3s ease;
     }
@@ -766,13 +762,13 @@
 
     .preview-actions {
       display: flex;
-      gap: 0.4rem;
+      gap: 0.5rem;
       justify-content: center;
     }
 
     .preview-btn {
-      width: 30px; /* Reduced */
-      height: 30px;
+      width: 36px;
+      height: 36px;
       border-radius: 50%;
       border: none;
       cursor: pointer;
@@ -780,7 +776,7 @@
       align-items: center;
       justify-content: center;
       transition: var(--transition-base);
-      font-size: 0.8rem;
+      font-size: 1rem;
     }
 
     .preview-btn.remove {
@@ -796,12 +792,12 @@
     .status-message {
       display: flex;
       align-items: flex-start;
-      gap: 0.6rem;
-      padding: 0.8rem;
+      gap: 0.75rem;
+      padding: 1rem;
       border-radius: var(--radius-lg);
-      margin-bottom: 1.2rem;
-      border-left: 3px solid;
-      font-size: 0.8rem;
+      margin-bottom: 1.5rem;
+      border-left: 4px solid;
+      font-size: 0.9rem;
     }
 
     .status-message.success {
@@ -829,7 +825,7 @@
     }
 
     .status-icon {
-      font-size: 1.1rem;
+      font-size: 1.25rem;
       flex-shrink: 0;
       margin-top: 0.1rem;
     }
@@ -839,15 +835,15 @@
     }
 
     .status-title {
-      font-weight: 600;
-      margin-bottom: 0.2rem;
-      font-size: 0.8rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+      font-size: 0.9rem;
     }
 
     .status-text {
-      font-size: 0.75rem;
+      font-size: 0.85rem;
       opacity: 0.9;
-      line-height: 1.4;
+      line-height: 1.5;
     }
 
     /* Navigation */
@@ -855,9 +851,9 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 0.8rem;
-      margin-top: 1.6rem;
-      padding-top: 1.2rem;
+      gap: 1rem;
+      margin-top: 2rem;
+      padding-top: 1.5rem;
       border-top: 1px solid var(--neutral-300);
     }
 
@@ -868,103 +864,185 @@
 
     .step-content.active {
       display: block;
-      animation: fadeIn 0.5s ease;
+      animation: fadeIn 0.6s ease;
     }
 
     /* Completion Screen */
     .completion-screen {
       text-align: center;
-      padding: 1.6rem 0;
+      padding: 2rem 0;
     }
 
     .completion-icon {
-      width: 80px; /* Reduced */
-      height: 80px;
+      width: 100px;
+      height: 100px;
       border-radius: 50%;
       background: var(--gradient-success);
       color: white;
-      font-size: 2.4rem;
+      font-size: 3rem;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin: 0 auto 1.6rem;
+      margin: 0 auto 2rem;
       box-shadow: 0 0 30px rgba(0, 211, 77, 0.4);
-      animation: checkmarkScale 0.6s var(--animation-bounce);
+      animation: checkmarkScale 0.8s var(--animation-bounce);
     }
 
     .completion-title {
-      font-size: 1.6rem; /* Reduced */
+      font-size: 2rem;
       font-weight: 700;
       color: var(--neutral-900);
-      margin-bottom: 0.8rem;
+      margin-bottom: 1rem;
     }
 
     .completion-subtitle {
-      font-size: 0.9rem;
+      font-size: 1rem;
       color: var(--neutral-600);
-      margin-bottom: 1.6rem;
-      max-width: 400px; /* Reduced */
+      margin-bottom: 2rem;
+      max-width: 500px;
       margin-left: auto;
       margin-right: auto;
+      line-height: 1.6;
+    }
+
+    /* SECCIÓN CRÍTICA: Tally Form Container - COMPLETAMENTE REDISEÑADA */
+    .tally-section {
+      background: var(--gradient-primary);
+      border-radius: var(--radius-2xl);
+      padding: 2rem;
+      margin: 2rem 0;
+      color: white;
+      box-shadow: var(--shadow-banking);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .tally-section::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+      animation: rotate 20s linear infinite;
+    }
+
+    .tally-header {
+      text-align: center;
+      margin-bottom: 2rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .tally-icon {
+      width: 80px;
+      height: 80px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      margin: 0 auto 1rem;
+      backdrop-filter: blur(10px);
+    }
+
+    .tally-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+    }
+
+    .tally-subtitle {
+      font-size: 1rem;
+      opacity: 0.9;
       line-height: 1.5;
     }
 
-    /* Tally iframe container */
     .tally-container {
       width: 100%;
-      height: 480px; /* Reduced */
+      min-height: 600px;
       border-radius: var(--radius-xl);
       overflow: hidden;
-      box-shadow: var(--shadow-banking);
-      border: 1px solid var(--neutral-300);
-      margin: 0.8rem 0;
+      box-shadow: var(--shadow-xl);
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      margin: 1.5rem 0;
+      background: white;
+      position: relative;
+      z-index: 2;
     }
 
     .tally-container iframe {
       width: 100%;
-      height: 100%;
+      height: 600px;
       border: none;
+      background: white;
+    }
+
+    /* Indicador de completado del formulario Tally */
+    .tally-completion-indicator {
+      display: none;
+      background: var(--gradient-success);
+      color: white;
+      padding: 1rem;
+      border-radius: var(--radius-lg);
+      margin: 1rem 0;
+      text-align: center;
+      font-weight: 600;
+      font-size: 1rem;
+      animation: slideUp 0.4s ease;
+      box-shadow: var(--shadow-md);
+    }
+
+    .tally-completion-indicator.active {
+      display: block;
+    }
+
+    .tally-completion-indicator i {
+      margin-right: 0.5rem;
+      font-size: 1.2rem;
     }
 
     /* Already Completed Screen */
     .already-completed {
       text-align: center;
-      padding: 2.4rem 0.8rem;
+      padding: 3rem 1rem;
     }
 
     .already-completed-icon {
-      width: 64px; /* Reduced */
-      height: 64px;
+      width: 80px;
+      height: 80px;
       border-radius: 50%;
       background: linear-gradient(135deg, var(--warning) 0%, #f59e0b 100%);
       color: white;
-      font-size: 2rem;
+      font-size: 2.5rem;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin: 0 auto 1.2rem;
+      margin: 0 auto 1.5rem;
       box-shadow: 0 0 25px rgba(255, 173, 51, 0.4);
     }
 
     .already-completed-title {
-      font-size: 1.4rem; /* Reduced */
+      font-size: 1.75rem;
       font-weight: 700;
       color: var(--neutral-900);
-      margin-bottom: 0.8rem;
+      margin-bottom: 1rem;
     }
 
     .already-completed-text {
-      font-size: 0.85rem;
+      font-size: 1rem;
       color: var(--neutral-600);
-      margin-bottom: 1.6rem;
+      margin-bottom: 2rem;
       line-height: 1.6;
     }
 
     .verification-details {
       background: var(--neutral-200);
       border-radius: var(--radius-lg);
-      padding: 1.2rem;
-      margin: 1.6rem 0;
+      padding: 1.5rem;
+      margin: 2rem 0;
       text-align: left;
     }
 
@@ -972,9 +1050,9 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 0.6rem 0;
+      padding: 0.75rem 0;
       border-bottom: 1px solid var(--neutral-300);
-      font-size: 0.8rem;
+      font-size: 0.9rem;
     }
 
     .detail-row:last-child {
@@ -988,6 +1066,7 @@
 
     .detail-value {
       color: var(--neutral-900);
+      font-weight: 500;
     }
 
     /* Loading Overlay */
@@ -1007,48 +1086,48 @@
     }
 
     .spinner {
-      width: 40px; /* Reduced */
-      height: 40px;
-      border: 3px solid rgba(255, 255, 255, 0.2);
+      width: 50px;
+      height: 50px;
+      border: 4px solid rgba(255, 255, 255, 0.2);
       border-radius: 50%;
       border-top-color: white;
       animation: spin 1s linear infinite;
-      margin-bottom: 1.2rem;
+      margin-bottom: 1.5rem;
     }
 
     .loading-text {
       color: white;
-      font-size: 0.9rem;
+      font-size: 1.1rem;
       font-weight: 500;
       text-align: center;
-      max-width: 240px; /* Reduced */
+      max-width: 300px;
     }
 
     /* Toast Notifications */
     .toast-container {
       position: fixed;
-      top: 64px; /* Adjusted for smaller header */
-      right: 0.8rem;
+      top: 80px;
+      right: 1rem;
       z-index: 9999;
       display: flex;
       flex-direction: column;
-      gap: 0.6rem;
+      gap: 0.75rem;
     }
 
     .toast {
       background: var(--neutral-900);
       color: white;
       border-radius: var(--radius-lg);
-      padding: 0.8rem;
-      min-width: 224px; /* Reduced */
-      max-width: 280px;
+      padding: 1rem;
+      min-width: 300px;
+      max-width: 400px;
       box-shadow: var(--shadow-xl);
       display: flex;
       align-items: flex-start;
-      gap: 0.6rem;
+      gap: 0.75rem;
       animation: slideInRight 0.3s ease, fadeOut 0.3s ease 4s forwards;
-      border-left: 3px solid;
-      font-size: 0.8rem;
+      border-left: 4px solid;
+      font-size: 0.9rem;
     }
 
     .toast.success { border-color: var(--success); }
@@ -1058,7 +1137,7 @@
 
     .toast-icon {
       flex-shrink: 0;
-      font-size: 1rem;
+      font-size: 1.1rem;
     }
 
     .toast-content {
@@ -1067,12 +1146,12 @@
 
     .toast-title {
       font-weight: 600;
-      font-size: 0.8rem;
-      margin-bottom: 0.2rem;
+      font-size: 0.9rem;
+      margin-bottom: 0.25rem;
     }
 
     .toast-message {
-      font-size: 0.7rem;
+      font-size: 0.8rem;
       opacity: 0.9;
     }
 
@@ -1081,7 +1160,7 @@
       cursor: pointer;
       transition: var(--transition-base);
       flex-shrink: 0;
-      font-size: 0.9rem;
+      font-size: 1rem;
     }
 
     .toast-close:hover {
@@ -1091,8 +1170,8 @@
     /* Responsive Design */
     @media (max-width: 768px) {
       .verification-container {
-        padding-left: 0.6rem;
-        padding-right: 0.6rem;
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
       }
 
       .form-row {
@@ -1104,63 +1183,70 @@
       }
 
       .progress-steps {
-        margin: 0 -0.4rem 1.2rem;
+        margin: 0 -0.5rem 1.5rem;
         overflow-x: auto;
-        padding-bottom: 0.4rem;
+        padding-bottom: 0.5rem;
       }
 
       .progress-step {
         flex-shrink: 0;
-        margin: 0 0.2rem;
-        padding: 0.3rem;
+        margin: 0 0.25rem;
+        padding: 0.5rem;
+        min-width: 70px;
+      }
+
+      .step-circle {
+        width: 40px;
+        height: 40px;
+        font-size: 0.9rem;
       }
 
       .step-label {
-        font-size: 0.6rem;
-        max-width: 56px;
+        font-size: 0.7rem;
+        max-width: 70px;
       }
 
       .bank-grid {
-        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-        gap: 0.6rem;
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 0.75rem;
       }
 
       .bank-option {
-        padding: 0.6rem;
+        padding: 0.75rem;
       }
 
       .bank-logo {
-        width: 32px;
-        height: 32px;
+        width: 40px;
+        height: 40px;
       }
 
       .bank-name {
-        font-size: 0.6rem;
+        font-size: 0.75rem;
       }
 
       .camera-container {
-        height: 240px; /* Further reduced for mobile */
+        height: 300px;
       }
 
       .face-guide {
-        width: 120px;
-        height: 150px;
+        width: 140px;
+        height: 170px;
       }
 
       .camera-btn {
-        width: 40px;
-        height: 40px;
-        font-size: 1rem;
+        width: 48px;
+        height: 48px;
+        font-size: 1.2rem;
       }
 
       .camera-btn.capture {
-        width: 56px;
-        height: 56px;
+        width: 64px;
+        height: 64px;
       }
 
       .navigation {
         flex-direction: column;
-        gap: 0.8rem;
+        gap: 1rem;
       }
 
       .navigation .btn {
@@ -1168,49 +1254,65 @@
       }
 
       .toast-container {
-        right: 0.6rem;
-        left: 0.6rem;
+        right: 0.75rem;
+        left: 0.75rem;
       }
 
       .toast {
         min-width: auto;
       }
+
+      .tally-section {
+        padding: 1.5rem;
+      }
+
+      .tally-container {
+        min-height: 500px;
+      }
+
+      .tally-container iframe {
+        height: 500px;
+      }
     }
 
     @media (max-width: 480px) {
       .card-body {
-        padding: 0.8rem;
+        padding: 1rem;
       }
 
       .card-header {
-        padding: 0.8rem;
+        padding: 1rem;
       }
 
       .card-title {
-        font-size: 1rem;
+        font-size: 1.1rem;
       }
 
       .bank-grid {
-        grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
       }
 
       .camera-container {
-        height: 200px;
+        height: 250px;
       }
 
       .tally-container {
-        height: 400px;
+        min-height: 450px;
+      }
+
+      .tally-container iframe {
+        height: 450px;
       }
     }
 
     /* Animations */
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(8px); }
+      from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
     @keyframes slideUp {
-      from { opacity: 0; transform: translateY(16px); }
+      from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
@@ -1246,22 +1348,9 @@
       to { opacity: 0; visibility: hidden; }
     }
 
-    /* Tally Form Completion Detection */
-    .tally-completion-indicator {
-      display: none;
-      background: var(--gradient-success);
-      color: white;
-      padding: 0.8rem;
-      border-radius: var(--radius-lg);
-      margin: 0.8rem 0;
-      text-align: center;
-      font-weight: 600;
-      font-size: 0.8rem;
-      animation: slideUp 0.3s ease;
-    }
-
-    .tally-completion-indicator.active {
-      display: block;
+    @keyframes rotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
     }
   </style>
 </head>
@@ -1356,7 +1445,7 @@
               Información Personal
             </h2>
             <p class="card-subtitle">
-              Ingrese sus datos personales tal como aparecen en su documento de identidad
+              Ingrese sus datos personales tal como aparecen en su documento de identidad oficial
             </p>
           </div>
           <div class="card-body">
@@ -1485,7 +1574,7 @@
         <div class="navigation">
           <div></div>
           <button class="btn btn-primary" id="next-step-1">
-            Continuar <i class="fas fa-arrow-right" style="margin-left: 0.4rem; margin-right: 0;"></i>
+            Continuar <i class="fas fa-arrow-right" style="margin-left: 0.5rem; margin-right: 0;"></i>
           </button>
         </div>
       </div>
@@ -1508,9 +1597,9 @@
                 <i class="fas fa-shield-alt"></i>
               </div>
               <div class="status-content">
-                <div class="status-title">Importante</div>
+                <div class="status-title">Información Importante</div>
                 <div class="status-text">
-                  La cuenta bancaria debe estar a su nombre y coincidir con los datos de identidad proporcionados.
+                  La cuenta bancaria debe estar a su nombre y coincidir exactamente con los datos de identidad proporcionados.
                 </div>
               </div>
             </div>
@@ -1593,7 +1682,7 @@
             <i class="fas fa-arrow-left"></i> Anterior
           </button>
           <button class="btn btn-primary" id="next-step-2" disabled>
-            Continuar <i class="fas fa-arrow-right" style="margin-left: 0.4rem; margin-right: 0;"></i>
+            Continuar <i class="fas fa-arrow-right" style="margin-left: 0.5rem; margin-right: 0;"></i>
           </button>
         </div>
       </div>
@@ -1616,8 +1705,8 @@
                 <i class="fas fa-camera"></i>
               </div>
               <div class="status-content">
-                <div class="status-title">Cámara activada</div>
-                <div class="status-text">Posicione su rostro dentro del marco y mantenga la cabeza quieta</div>
+                <div class="status-title">Cámara Activada</div>
+                <div class="status-text">Posicione su rostro dentro del marco y mantenga la cabeza quieta durante la captura</div>
               </div>
             </div>
 
@@ -1662,7 +1751,7 @@
               <div class="status-content">
                 <div class="status-title">Privacidad y Seguridad</div>
                 <div class="status-text">
-                  Su foto biométrica se utiliza únicamente para verificación de identidad y se maneja con los más altos estándares de seguridad.
+                  Su foto biométrica se utiliza únicamente para verificación de identidad y se maneja con los más altos estándares de seguridad y privacidad.
                 </div>
               </div>
             </div>
@@ -1674,7 +1763,7 @@
             <i class="fas fa-arrow-left"></i> Anterior
           </button>
           <button class="btn btn-primary" id="next-step-3" disabled>
-            Continuar <i class="fas fa-arrow-right" style="margin-left: 0.4rem; margin-right: 0;"></i>
+            Continuar <i class="fas fa-arrow-right" style="margin-left: 0.5rem; margin-right: 0;"></i>
           </button>
         </div>
       </div>
@@ -1688,7 +1777,7 @@
               Verificación Final
             </h2>
             <p class="card-subtitle">
-              Complete el formulario final para completar su verificación de identidad
+              Complete el formulario final para finalizar su proceso de verificación de identidad
             </p>
           </div>
           <div class="card-body">
@@ -1705,20 +1794,34 @@
               </div>
             </div>
 
-            <div class="tally-container">
-              <iframe id="tally-iframe"
-                      data-tally-src="https://tally.so/r/mRaxZP?transparentBackground=1" 
-                      width="100%" 
-                      height="100%" 
-                      frameborder="0" 
-                      marginheight="0" 
-                      marginwidth="0" 
-                      title="Verificación Final">
-              </iframe>
-            </div>
+            <!-- SECCIÓN CRÍTICA: Tally Form - COMPLETAMENTE REDISEÑADA -->
+            <div class="tally-section">
+              <div class="tally-header">
+                <div class="tally-icon">
+                  <i class="fas fa-clipboard-check"></i>
+                </div>
+                <h3 class="tally-title">¡Último Paso!</h3>
+                <p class="tally-subtitle">
+                  Complete este formulario final para activar completamente su cuenta REMEEX. 
+                  Es necesario completarlo para procesar su verificación.
+                </p>
+              </div>
 
-            <div class="tally-completion-indicator" id="tally-completion-indicator">
-              <i class="fas fa-check-circle"></i> Formulario completado correctamente
+              <div class="tally-container">
+                <iframe id="tally-iframe"
+                        data-tally-src="https://tally.so/r/mRaxZP?transparentBackground=1" 
+                        width="100%" 
+                        height="600" 
+                        frameborder="0" 
+                        marginheight="0" 
+                        marginwidth="0" 
+                        title="Formulario Final de Verificación">
+                </iframe>
+              </div>
+
+              <div class="tally-completion-indicator" id="tally-completion-indicator">
+                <i class="fas fa-check-circle"></i> Formulario completado correctamente - ¡Ya puede finalizar!
+              </div>
             </div>
 
             <div class="status-message info">
@@ -1831,6 +1934,9 @@
       populateBankGrid();
       initializeCamera();
       setupTallyListener();
+      
+      // Smooth scroll for better UX
+      document.documentElement.style.scrollBehavior = 'smooth';
     });
 
     // Check if verification already completed
@@ -1949,6 +2055,12 @@
       const bankOption = document.querySelector(`[data-bank-id="${bank.id}"]`);
       if (bankOption) {
         bankOption.classList.add('selected');
+        
+        // Animate selection
+        gsap.fromTo(bankOption, 
+          { scale: 1 }, 
+          { scale: 1.05, duration: 0.2, yoyo: true, repeat: 1 }
+        );
       }
       
       selectedBank = bank;
@@ -2061,6 +2173,14 @@
       
       const nextBtn = document.getElementById('next-step-2');
       nextBtn.disabled = !isValid;
+      
+      if (isValid) {
+        nextBtn.classList.remove('btn-outline');
+        nextBtn.classList.add('btn-primary');
+      } else {
+        nextBtn.classList.remove('btn-primary');
+        nextBtn.classList.add('btn-outline');
+      }
     }
 
     // Validate individual field
@@ -2110,18 +2230,23 @@
           break;
       }
 
-      // Update field appearance
+      // Update field appearance with animation
       const errorElement = document.getElementById(field.id + '-error');
       if (isValid) {
         field.classList.remove('error');
         field.classList.add('success');
-        if (errorElement) errorElement.style.display = 'none';
+        if (errorElement) {
+          gsap.to(errorElement, { opacity: 0, duration: 0.3, onComplete: () => {
+            errorElement.style.display = 'none';
+          }});
+        }
       } else {
         field.classList.remove('success');
         field.classList.add('error');
         if (errorElement) {
           errorElement.textContent = errorMessage;
           errorElement.style.display = 'block';
+          gsap.fromTo(errorElement, { opacity: 0 }, { opacity: 1, duration: 0.3 });
         }
       }
 
@@ -2133,7 +2258,11 @@
       const field = event.target;
       field.classList.remove('error');
       const errorElement = document.getElementById(field.id + '-error');
-      if (errorElement) errorElement.style.display = 'none';
+      if (errorElement) {
+        gsap.to(errorElement, { opacity: 0, duration: 0.3, onComplete: () => {
+          errorElement.style.display = 'none';
+        }});
+      }
     }
 
     // Validation helpers
@@ -2171,8 +2300,8 @@
         const constraints = {
           video: {
             facingMode: facingMode,
-            width: { ideal: 480 }, // Reduced resolution
-            height: { ideal: 360 }
+            width: { ideal: 640 },
+            height: { ideal: 480 }
           }
         };
         
@@ -2181,6 +2310,7 @@
         video.srcObject = cameraStream;
         
         document.getElementById('camera-ready').style.display = 'flex';
+        gsap.fromTo('#camera-ready', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5 });
         showToast('success', 'Cámara activada', 'La cámara está lista para tomar la foto');
       } catch (error) {
         console.error('Error accessing camera:', error);
@@ -2210,15 +2340,24 @@
       
       const imageData = canvas.toDataURL('image/jpeg', 0.8);
       
-      // Show countdown
+      // Show countdown with better animation
       const countdown = document.getElementById('camera-countdown');
       countdown.classList.add('active');
       
       let count = 3;
       countdown.textContent = count;
+      
+      // Animated countdown
       const countInterval = setInterval(() => {
         count--;
         countdown.textContent = count;
+        
+        // Scale animation for each count
+        gsap.fromTo(countdown, 
+          { scale: 1.5, opacity: 0 }, 
+          { scale: 1, opacity: 1, duration: 0.5, ease: "power2.out" }
+        );
+        
         if (count <= 0) {
           clearInterval(countInterval);
           countdown.classList.remove('active');
@@ -2239,6 +2378,13 @@
           updateNextButtonState();
           
           showToast('success', 'Foto capturada', 'Su selfie ha sido capturada correctamente');
+          
+          // Confetti effect
+          confetti({
+            particleCount: 100,
+            spread: 70,
+            origin: { y: 0.6 }
+          });
         }
       }, 1000);
     }
@@ -2280,31 +2426,271 @@
       if (currentStep === 3) {
         const nextBtn = document.getElementById('next-step-3');
         nextBtn.disabled = !hasSelfie;
+        
+        if (hasSelfie) {
+          nextBtn.classList.remove('btn-outline');
+          nextBtn.classList.add('btn-primary');
+          gsap.fromTo(nextBtn, 
+            { scale: 1 }, 
+            { scale: 1.05, duration: 0.3, yoyo: true, repeat: 1 }
+          );
+        } else {
+          nextBtn.classList.remove('btn-primary');
+          nextBtn.classList.add('btn-outline');
+        }
       }
     }
 
-    // Setup Tally listener
+    // SOLUCIÓN CRÍTICA: Setup Tally listener - COMPLETAMENTE REDISEÑADO
     function setupTallyListener() {
-      // Listen for Tally form submission
-      window.addEventListener('message', function(event) {
-        if (event.data && event.data.type === 'tally.form.submitted') {
-          tallyCompleted = true;
-          document.getElementById('tally-completion-indicator').classList.add('active');
-          document.getElementById('complete-verification').disabled = false;
-          showToast('success', 'Formulario completado', 'Ya puede finalizar su verificación');
-        }
-      });
-
-      // Load Tally iframe when step 4 is reached
+      // Cargar iframe inmediatamente cuando llegue al paso 4
       const iframe = document.getElementById('tally-iframe');
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting && !iframe.src) {
-            iframe.src = iframe.dataset.tallySrc;
+      
+      // Función para cargar el iframe de Tally
+      function loadTallyIframe() {
+        if (iframe && !iframe.src) {
+          iframe.src = iframe.dataset.tallySrc;
+          console.log('Tally iframe cargado');
+        }
+      }
+
+      // Función mejorada para detectar completado del formulario
+      function detectTallyCompletion() {
+        // Múltiples métodos de detección para mayor confiabilidad
+        
+        // Método 1: Event listener para mensajes del iframe
+        window.addEventListener('message', function(event) {
+          console.log('Mensaje recibido:', event.data);
+          
+          // Detectar diferentes tipos de eventos de Tally
+          if (event.data && (
+            event.data.type === 'tally.form.submitted' ||
+            event.data.includes('submitted') ||
+            event.data.includes('complete') ||
+            event.data.includes('success')
+          )) {
+            markTallyAsCompleted();
+          }
+        });
+
+        // Método 2: Observador de cambios en el iframe
+        if (iframe) {
+          const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+              if (mutation.type === 'attributes' && mutation.attributeName === 'src') {
+                // Si el src cambia, podría indicar una redirección tras completar
+                setTimeout(checkIframeContent, 2000);
+              }
+            });
+          });
+          
+          observer.observe(iframe, { attributes: true });
+        }
+
+        // Método 3: Verificación periódica del contenido del iframe
+        let checkInterval = setInterval(checkIframeContent, 3000);
+        
+        function checkIframeContent() {
+          try {
+            if (iframe && iframe.contentWindow) {
+              // Intentar acceder al contenido del iframe
+              const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+              
+              if (iframeDoc) {
+                // Buscar indicadores de formulario completado
+                const thankYouElements = iframeDoc.querySelectorAll(
+                  '[data-testid="thank-you"], .thank-you, .success, .completed, .submitted'
+                );
+                
+                const submitButtons = iframeDoc.querySelectorAll('button[type="submit"]');
+                const isSubmitDisabled = Array.from(submitButtons).some(btn => btn.disabled);
+                
+                if (thankYouElements.length > 0 || isSubmitDisabled) {
+                  markTallyAsCompleted();
+                  clearInterval(checkInterval);
+                }
+              }
+            }
+          } catch (e) {
+            // Error de CORS esperado, usar métodos alternativos
+            console.log('CORS detectado, usando métodos alternativos');
+          }
+        }
+
+        // Método 4: Detector de scroll - si el usuario ha scrolleado mucho, probablemente completó
+        let maxScroll = 0;
+        iframe.addEventListener('load', function() {
+          setTimeout(() => {
+            try {
+              iframe.contentWindow.addEventListener('scroll', function() {
+                const scrollTop = iframe.contentWindow.pageYOffset || iframe.contentDocument.documentElement.scrollTop;
+                maxScroll = Math.max(maxScroll, scrollTop);
+                
+                // Si ha scrolleado significativamente y luego regresa arriba, probablemente completó
+                if (maxScroll > 500 && scrollTop < 100) {
+                  setTimeout(() => {
+                    if (!tallyCompleted) {
+                      showTallyConfirmationDialog();
+                    }
+                  }, 2000);
+                }
+              });
+            } catch (e) {
+              console.log('No se puede acceder al scroll del iframe');
+            }
+          }, 1000);
+        });
+
+        // Método 5: Botón manual para casos donde la detección automática falla
+        addManualCompletionButton();
+      }
+
+      // Función para mostrar diálogo de confirmación
+      function showTallyConfirmationDialog() {
+        const confirmDialog = document.createElement('div');
+        confirmDialog.className = 'tally-confirmation-dialog';
+        confirmDialog.innerHTML = `
+          <div class="confirmation-content">
+            <div class="confirmation-icon">
+              <i class="fas fa-question-circle"></i>
+            </div>
+            <h3>¿Completó el formulario?</h3>
+            <p>Parece que ha interactuado con el formulario. ¿Ya lo completó exitosamente?</p>
+            <div class="confirmation-buttons">
+              <button class="btn btn-success" onclick="confirmTallyCompletion()">
+                <i class="fas fa-check"></i> Sí, lo completé
+              </button>
+              <button class="btn btn-outline" onclick="dismissTallyConfirmation()">
+                No, aún no
+              </button>
+            </div>
+          </div>
+        `;
+        
+        // Estilos para el diálogo
+        confirmDialog.style.cssText = `
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: rgba(0, 0, 0, 0.8);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 10000;
+          backdrop-filter: blur(5px);
+        `;
+        
+        const content = confirmDialog.querySelector('.confirmation-content');
+        content.style.cssText = `
+          background: white;
+          padding: 2rem;
+          border-radius: 16px;
+          text-align: center;
+          max-width: 400px;
+          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        `;
+        
+        document.body.appendChild(confirmDialog);
+        
+        // Funciones globales para los botones
+        window.confirmTallyCompletion = function() {
+          markTallyAsCompleted();
+          document.body.removeChild(confirmDialog);
+        };
+        
+        window.dismissTallyConfirmation = function() {
+          document.body.removeChild(confirmDialog);
+        };
+      }
+
+      // Función para añadir botón manual
+      function addManualCompletionButton() {
+        const manualButton = document.createElement('button');
+        manualButton.className = 'btn btn-outline manual-completion-btn';
+        manualButton.innerHTML = '<i class="fas fa-check-circle"></i> Ya completé el formulario';
+        manualButton.style.cssText = `
+          margin-top: 1rem;
+          width: 100%;
+          border-color: var(--success);
+          color: var(--success);
+        `;
+        
+        manualButton.addEventListener('click', function() {
+          markTallyAsCompleted();
+          this.style.display = 'none';
+        });
+        
+        // Insertar después del iframe
+        const tallyContainer = document.querySelector('.tally-container');
+        if (tallyContainer && tallyContainer.parentNode) {
+          tallyContainer.parentNode.insertBefore(manualButton, tallyContainer.nextSibling);
+        }
+      }
+
+      // Función para marcar Tally como completado
+      function markTallyAsCompleted() {
+        if (!tallyCompleted) {
+          tallyCompleted = true;
+          
+          // Mostrar indicador de completado
+          const completionIndicator = document.getElementById('tally-completion-indicator');
+          if (completionIndicator) {
+            completionIndicator.classList.add('active');
+            gsap.fromTo(completionIndicator, 
+              { opacity: 0, y: 20 }, 
+              { opacity: 1, y: 0, duration: 0.5 }
+            );
+          }
+          
+          // Habilitar botón de completar verificación
+          const completeBtn = document.getElementById('complete-verification');
+          if (completeBtn) {
+            completeBtn.disabled = false;
+            completeBtn.classList.remove('btn-outline');
+            completeBtn.classList.add('btn-success');
+            
+            // Animación del botón
+            gsap.fromTo(completeBtn, 
+              { scale: 1 }, 
+              { scale: 1.05, duration: 0.3, yoyo: true, repeat: 1 }
+            );
+          }
+          
+          // Ocultar botón manual si existe
+          const manualBtn = document.querySelector('.manual-completion-btn');
+          if (manualBtn) {
+            manualBtn.style.display = 'none';
+          }
+          
+          // Mostrar toast de éxito
+          showToast('success', 'Formulario Completado', 'Ya puede finalizar su verificación', 5000);
+          
+          // Scroll suave al botón de completar
+          setTimeout(() => {
+            completeBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }, 1000);
+        }
+      }
+
+      // Inicializar la detección cuando se carga el paso 4
+      const step4Observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+          if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+            const step4 = document.getElementById('step-4');
+            if (step4 && step4.classList.contains('active')) {
+              loadTallyIframe();
+              setTimeout(detectTallyCompletion, 2000);
+            }
           }
         });
       });
-      observer.observe(iframe);
+      
+      const step4Element = document.getElementById('step-4');
+      if (step4Element) {
+        step4Observer.observe(step4Element, { attributes: true });
+      }
     }
 
     // Validate and proceed to next step
@@ -2346,7 +2732,10 @@
         showToast('error', 'Campos incompletos', 'Por favor complete todos los campos correctamente');
         // Focus first error field
         const firstError = document.querySelector('.form-control.error');
-        if (firstError) firstError.focus();
+        if (firstError) {
+          firstError.focus();
+          firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
       }
       
       return isValid;
@@ -2426,32 +2815,41 @@
     function goToStep(step) {
       if (step < 1 || step > totalSteps) return;
       
-      // Hide current step
-      document.querySelector('.step-content.active').classList.remove('active');
-      
-      // Show target step
-      document.getElementById(`step-${step}`).classList.add('active');
+      // Hide current step with animation
+      const currentStepEl = document.querySelector('.step-content.active');
+      if (currentStepEl) {
+        gsap.to(currentStepEl, {
+          opacity: 0,
+          y: -20,
+          duration: 0.3,
+          onComplete: () => {
+            currentStepEl.classList.remove('active');
+            
+            // Show target step
+            const targetStepEl = document.getElementById(`step-${step}`);
+            if (targetStepEl) {
+              targetStepEl.classList.add('active');
+              gsap.fromTo(targetStepEl, 
+                { opacity: 0, y: 20 }, 
+                { opacity: 1, y: 0, duration: 0.5 }
+              );
+            }
+          }
+        });
+      }
       
       // Update progress
       updateProgress(step);
       
       currentStep = step;
       
-      // Scroll to top
+      // Scroll to top smoothly
       window.scrollTo({ top: 0, behavior: 'smooth' });
-
-      // Load Tally iframe when reaching step 4
-      if (step === 4) {
-        const iframe = document.getElementById('tally-iframe');
-        if (!iframe.src) {
-          iframe.src = iframe.dataset.tallySrc;
-        }
-      }
     }
 
     // Update progress indicator
     function updateProgress(step) {
-      // Update circles
+      // Update circles with animations
       for (let i = 1; i <= totalSteps; i++) {
         const circle = document.getElementById(`step-circle-${i}`);
         const label = circle.parentElement.querySelector('.step-label');
@@ -2462,12 +2860,21 @@
           circle.innerHTML = '<i class="fas fa-check"></i>';
           label.classList.add('completed');
           label.classList.remove('active');
+          
+          // Animation for completed steps
+          gsap.to(circle, { scale: 1.05, duration: 0.3, yoyo: true, repeat: 1 });
         } else if (i === step) {
           circle.classList.add('active');
           circle.classList.remove('completed');
           circle.textContent = i;
           label.classList.add('active');
           label.classList.remove('completed');
+          
+          // Animation for active step
+          gsap.fromTo(circle, 
+            { scale: 1 }, 
+            { scale: 1.1, duration: 0.4, yoyo: true, repeat: 1 }
+          );
         } else {
           circle.classList.remove('active', 'completed');
           circle.textContent = i;
@@ -2475,73 +2882,164 @@
         }
       }
       
-      // Update progress bar
+      // Update progress bar with animation
       const progressPercentage = ((step - 1) / (totalSteps - 1)) * 100;
-      document.getElementById('progress-fill').style.width = `${progressPercentage}%`;
+      gsap.to('#progress-fill', { 
+        width: `${progressPercentage}%`, 
+        duration: 0.8, 
+        ease: "power2.out" 
+      });
     }
 
     // Complete verification
     function completeVerification() {
       if (!tallyCompleted) {
-        showToast('warning', 'Formulario pendiente', 'Por favor complete el formulario de Tally antes de continuar');
+        showToast('warning', 'Formulario pendiente', 'Por favor complete el formulario antes de continuar');
+        
+        // Scroll al formulario
+        const tallySection = document.querySelector('.tally-section');
+        if (tallySection) {
+          tallySection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
         return;
       }
 
       showLoading('Finalizando verificación...');
       
-      // Simulate processing delay
-      setTimeout(() => {
-        // Mark as completed
-        verificationData.completionDate = new Date().toISOString();
-        verificationData.status = 'completed';
-        
-        // Save final data
-        localStorage.setItem(CONFIG.STORAGE_KEYS.VERIFICATION_DATA, JSON.stringify(verificationData));
-        localStorage.setItem(CONFIG.STORAGE_KEYS.VERIFICATION_STATUS, 'completed');
-        
-        // Stop camera if active
-        if (cameraStream) {
-          cameraStream.getTracks().forEach(track => track.stop());
+      // Simulate processing delay with progress animation
+      const progressSteps = [
+        { progress: 20, text: 'Validando información personal...', delay: 800 },
+        { progress: 40, text: 'Verificando datos bancarios...', delay: 1000 },
+        { progress: 60, text: 'Procesando biometría...', delay: 800 },
+        { progress: 80, text: 'Completando formulario final...', delay: 600 },
+        { progress: 100, text: 'Finalizando verificación...', delay: 800 }
+      ];
+
+      let currentProgress = 0;
+      
+      function processStep(index) {
+        if (index >= progressSteps.length) {
+          // Proceso completado
+          setTimeout(() => {
+            completeVerificationProcess();
+          }, 500);
+          return;
         }
+
+        const step = progressSteps[index];
+        updateLoadingProgress(step.progress, step.text);
         
-        hideLoading();
-        
-        // Show completion screen
-        document.querySelector('.step-content.active').classList.remove('active');
-        document.getElementById('completion').classList.add('active');
-        updateProgress(totalSteps + 1);
-        
-        // Confetti effect
+        setTimeout(() => {
+          processStep(index + 1);
+        }, step.delay);
+      }
+
+      processStep(0);
+    }
+
+    function completeVerificationProcess() {
+      // Mark as completed
+      verificationData.completionDate = new Date().toISOString();
+      verificationData.status = 'completed';
+      
+      // Save final data
+      localStorage.setItem(CONFIG.STORAGE_KEYS.VERIFICATION_DATA, JSON.stringify(verificationData));
+      localStorage.setItem(CONFIG.STORAGE_KEYS.VERIFICATION_STATUS, 'completed');
+      
+      // Stop camera if active
+      if (cameraStream) {
+        cameraStream.getTracks().forEach(track => track.stop());
+      }
+      
+      hideLoading();
+      
+      // Show completion screen with animation
+      const currentStepEl = document.querySelector('.step-content.active');
+      if (currentStepEl) {
+        gsap.to(currentStepEl, {
+          opacity: 0,
+          scale: 0.95,
+          duration: 0.5,
+          onComplete: () => {
+            currentStepEl.classList.remove('active');
+            
+            const completionEl = document.getElementById('completion');
+            if (completionEl) {
+              completionEl.classList.add('active');
+              gsap.fromTo(completionEl, 
+                { opacity: 0, scale: 0.95 }, 
+                { opacity: 1, scale: 1, duration: 0.6 }
+              );
+            }
+          }
+        });
+      }
+      
+      updateProgress(totalSteps + 1);
+      
+      // Confetti effect with better timing
+      setTimeout(() => {
         confetti({
-          particleCount: 100,
-          spread: 70,
-          origin: { y: 0.6 }
+          particleCount: 150,
+          spread: 80,
+          origin: { y: 0.6 },
+          colors: ['#1a1f71', '#00d34d', '#f7b600']
         });
         
-        showToast('success', '¡Verificación completada!', 'Su información ha sido enviada correctamente');
-        
-        // Send analytics event (optional)
-        if (typeof gtag !== 'undefined') {
-          gtag('event', 'verification_completed', {
-            'event_category': 'user_verification',
-            'event_label': 'identity_verification'
+        // Second burst
+        setTimeout(() => {
+          confetti({
+            particleCount: 100,
+            spread: 60,
+            origin: { y: 0.7 },
+            colors: ['#1a1f71', '#00d34d', '#f7b600']
           });
-        }
-      }, 2000);
+        }, 300);
+      }, 800);
+      
+      showToast('success', '¡Verificación completada!', 'Su información ha sido enviada correctamente');
     }
 
     // Utility functions
     function showLoading(text = 'Cargando...') {
-      document.getElementById('loading-text').textContent = text;
-      document.getElementById('loading-overlay').style.display = 'flex';
+      const loadingOverlay = document.getElementById('loading-overlay');
+      const loadingText = document.getElementById('loading-text');
+      
+      if (loadingText) loadingText.textContent = text;
+      if (loadingOverlay) {
+        loadingOverlay.style.display = 'flex';
+        gsap.fromTo(loadingOverlay, { opacity: 0 }, { opacity: 1, duration: 0.3 });
+      }
     }
 
     function hideLoading() {
-      document.getElementById('loading-overlay').style.display = 'none';
+      const loadingOverlay = document.getElementById('loading-overlay');
+      if (loadingOverlay) {
+        gsap.to(loadingOverlay, {
+          opacity: 0,
+          duration: 0.3,
+          onComplete: () => {
+            loadingOverlay.style.display = 'none';
+          }
+        });
+      }
     }
 
-    function showToast(type, title, message) {
-      const container = document.getElementById('toast-container');
+    function updateLoadingProgress(progress, text) {
+      const loadingText = document.getElementById('loading-text');
+      if (loadingText) loadingText.textContent = text;
+      
+      // Si hay una barra de progreso, actualizarla
+      const progressBar = document.querySelector('.progress-bar');
+      if (progressBar) {
+        gsap.to(progressBar, { width: `${progress}%`, duration: 0.5 });
+      }
+    }
+
+    function showToast(type, title, message, duration = 4000) {
+      const toastContainer = document.getElementById('toast-container');
+      if (!toastContainer) return;
+      
       const toast = document.createElement('div');
       toast.className = `toast ${type}`;
       
@@ -2555,38 +3053,69 @@
           <i class="fas ${iconClass}"></i>
         </div>
         <div class="toast-content">
-          <div class="toast-title">${title}</div>
-          <div class="toast-message">${message}</div>
+          <div class="toast-title">${escapeHTML(title)}</div>
+          <div class="toast-message">${escapeHTML(message)}</div>
         </div>
         <div class="toast-close">
           <i class="fas fa-times"></i>
         </div>
       `;
       
-      container.appendChild(toast);
+      toastContainer.appendChild(toast);
+      
+      // Animate in
+      gsap.fromTo(toast, 
+        { x: 100, opacity: 0 }, 
+        { x: 0, opacity: 1, duration: 0.4, ease: "power2.out" }
+      );
+      
+      // Auto remove after duration
+      setTimeout(() => {
+        gsap.to(toast, {
+          x: 100,
+          opacity: 0,
+          duration: 0.3,
+          onComplete: () => {
+            if (toast.parentElement) {
+              toast.remove();
+            }
+          }
+        });
+      }, duration);
       
       // Close button
-      toast.querySelector('.toast-close').addEventListener('click', () => {
-        toast.remove();
-      });
-      
-      // Auto remove after 5 seconds
-      setTimeout(() => {
-        if (toast.parentElement) {
-          toast.remove();
-        }
-      }, 5000);
+      const closeBtn = toast.querySelector('.toast-close');
+      if (closeBtn) {
+        closeBtn.addEventListener('click', function() {
+          gsap.to(toast, {
+            x: 100,
+            opacity: 0,
+            duration: 0.3,
+            onComplete: () => {
+              if (toast.parentElement) {
+                toast.remove();
+              }
+            }
+          });
+        });
+      }
+    }
+
+    // Escape HTML to prevent XSS
+    function escapeHTML(str) {
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
     }
 
     // Enhanced form validation with better UX
     function enhancedValidation() {
       // Real-time validation for account number format
       document.getElementById('account-number').addEventListener('input', function(e) {
-        let value = e.target.value.replace(/\D/g, ''); // Remove non-digits
-        if (value.length > 20) value = value.substring(0, 20); // Limit to 20 digits
+        let value = e.target.value.replace(/\D/g, '');
+        if (value.length > 20) value = value.substring(0, 20);
         e.target.value = value;
         
-        // Visual feedback for account number length
         if (value.length >= 15 && value.length <= 20) {
           e.target.classList.add('success');
           e.target.classList.remove('error');
@@ -2645,26 +3174,7 @@
     // Initialize enhanced validation
     enhancedValidation();
 
-    // Performance optimization - Lazy load bank logos
-    function lazyLoadBankLogos() {
-      const bankOptions = document.querySelectorAll('.bank-logo');
-      const imageObserver = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            const img = entry.target;
-            img.src = img.dataset.src || img.src;
-            img.classList.remove('lazy');
-            observer.unobserve(img);
-          }
-        });
-      });
-
-      bankOptions.forEach(img => {
-        imageObserver.observe(img);
-      });
-    }
-
-    // Accessibility improvements
+    // Setup accessibility features
     function setupAccessibility() {
       // Add ARIA labels
       document.querySelectorAll('.form-control').forEach(input => {
@@ -2689,71 +3199,10 @@
           }
         });
       });
-
-      // Announce form errors to screen readers
-      const announceError = (message) => {
-        const announcement = document.createElement('div');
-        announcement.setAttribute('aria-live', 'polite');
-        announcement.setAttribute('aria-atomic', 'true');
-        announcement.className = 'sr-only';
-        announcement.textContent = message;
-        document.body.appendChild(announcement);
-        setTimeout(() => announcement.remove(), 1000);
-      };
-
-      // Enhanced error handling with announcements
-      const originalShowToast = showToast;
-      window.showToast = function(type, title, message) {
-        originalShowToast(type, title, message);
-        if (type === 'error') {
-          announceError(`Error: ${title}. ${message}`);
-        }
-      };
     }
 
-    // Setup accessibility features
+    // Initialize accessibility features
     setupAccessibility();
-
-    // Auto-save functionality
-    function setupAutoSave() {
-      let autoSaveTimeout;
-      
-      document.querySelectorAll('.form-control').forEach(input => {
-        input.addEventListener('input', () => {
-          clearTimeout(autoSaveTimeout);
-          autoSaveTimeout = setTimeout(() => {
-            if (currentStep === 1) {
-              saveStepData(1);
-            } else if (currentStep === 2) {
-              saveStepData(2);
-            }
-          }, 2000);
-        });
-      });
-    }
-
-    // Initialize auto-save
-    setupAutoSave();
-
-    // Error recovery
-    function setupErrorRecovery() {
-      window.addEventListener('error', (e) => {
-        console.error('Application error:', e);
-        showToast('error', 'Error inesperado', 'Ha ocurrido un error. Por favor, recargue la página si persiste.');
-      });
-
-      // Network status monitoring
-      window.addEventListener('online', () => {
-        showToast('success', 'Conexión restaurada', 'La conexión a internet se ha restablecido');
-      });
-
-      window.addEventListener('offline', () => {
-        showToast('warning', 'Sin conexión', 'Se ha perdido la conexión a internet. Sus datos se guardarán localmente.');
-      });
-    }
-
-    // Initialize error recovery
-    setupErrorRecovery();
 
     // Cleanup on page unload
     window.addEventListener('beforeunload', (e) => {
@@ -2775,76 +3224,37 @@
       }
     });
 
-    // Initialize lazy loading after page load
-    window.addEventListener('load', () => {
-      lazyLoadBankLogos();
-    });
-
-    // Debug mode (only in development)
-    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-      window.REMEEX_DEBUG = {
-        getCurrentStep: () => currentStep,
-        getVerificationData: () => verificationData,
-        getBankingData: () => bankingData,
-        getSelectedBank: () => selectedBank,
-        skipToStep: (step) => goToStep(step),
-        clearData: () => {
-          localStorage.removeItem(CONFIG.STORAGE_KEYS.VERIFICATION_DATA);
-          localStorage.removeItem(CONFIG.STORAGE_KEYS.VERIFICATION_STATUS);
-          localStorage.removeItem(CONFIG.STORAGE_KEYS.VERIFICATION_BANKING);
-          localStorage.removeItem(CONFIG.STORAGE_KEYS.VERIFICATION_BIOMETRIC);
-          location.reload();
-        }
-      };
-      console.log('REMEEX Debug mode enabled. Use REMEEX_DEBUG object for debugging.');
-    }
-
-    // Performance monitoring
-    function trackPerformance() {
-      if ('performance' in window && 'mark' in performance) {
-        performance.mark('verification-start');
-        
-        window.addEventListener('load', () => {
-          performance.mark('verification-loaded');
-          performance.measure('verification-load-time', 'verification-start', 'verification-loaded');
-          
-          const loadTime = performance.getEntriesByName('verification-load-time')[0];
-          if (loadTime && loadTime.duration > 3000) {
-            console.warn('Verification page loaded slowly:', loadTime.duration + 'ms');
-          }
-        });
-      }
-    }
-
-    // Initialize performance tracking
-    trackPerformance();
-
-    // Progressive enhancement for older browsers
-    function checkBrowserSupport() {
-      const features = {
-        camera: 'mediaDevices' in navigator && 'getUserMedia' in navigator.mediaDevices,
-        localStorage: 'localStorage' in window,
-        fetch: 'fetch' in window,
-        promises: 'Promise' in window
-      };
-
-      const unsupportedFeatures = Object.keys(features).filter(key => !features[key]);
-      
-      if (unsupportedFeatures.length > 0) {
-        showToast('warning', 'Navegador no compatible', 
-          'Su navegador no soporta todas las funciones. Por favor, actualice su navegador para una mejor experiencia.');
-      }
-
-      return Object.values(features).every(Boolean);
-    }
-
-    // Initialize browser support check
-    const browserSupported = checkBrowserSupport();
-    if (!browserSupported) {
-      console.warn('Browser support issues detected');
-    }
-
     console.log('REMEEX Verification System initialized successfully');
+  </script>
+
+  <!-- Improved Tawk.to Script Implementation -->
+  <script type="text/javascript">
+    // Función para cargar Tawk.to con mejores controles
+    function loadTawkTo() {
+      var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+      
+      Tawk_API.onLoad = function(){
+        console.log('Tawk.to cargado correctamente');
+      };
+      
+      try {
+        var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+        s1.async=true;
+        s1.src='https://embed.tawk.to/67cca8c614b1ee191063c36a/default';
+        s1.charset='UTF-8';
+        s1.setAttribute('crossorigin','*');
+        s0.parentNode.insertBefore(s1,s0);
+      } catch (e) {
+        console.error('Error al cargar Tawk.to:', e);
+      }
+    }
+
+    // Cargar Tawk.to cuando el DOM esté listo
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', loadTawkTo);
+    } else {
+      loadTawkTo();
+    }
   </script>
 </body>
 </html>
