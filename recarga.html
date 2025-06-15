@@ -522,9 +522,14 @@
       background: var(--primary-light);
       color: white;
     }
-    
+
     .transaction-icon.pending {
       background: var(--warning);
+      color: white;
+    }
+
+    .transaction-icon.rejected {
+      background: var(--danger);
       color: white;
     }
     
@@ -566,6 +571,11 @@
     .transaction-badge.processing {
       background: rgba(0, 149, 255, 0.15);
       color: var(--info);
+    }
+
+    .transaction-badge.rejected {
+      background: rgba(255, 77, 77, 0.15);
+      color: var(--danger);
     }
     
     .transaction-details {
@@ -611,9 +621,13 @@
     .transaction-amount.withdraw {
       color: var(--danger);
     }
-    
+
     .transaction-amount.pending {
       color: var(--warning);
+    }
+
+    .transaction-amount.rejected {
+      color: var(--danger);
     }
     
     /* Navigation Bar */
@@ -1199,6 +1213,42 @@
       margin-top: 0.5rem;
       display: none;
     }
+
+    .password-group {
+      position: relative;
+    }
+
+    .toggle-password {
+      position: absolute;
+      top: 50%;
+      right: 1rem;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: var(--neutral-500);
+      font-size: 1rem;
+    }
+
+    .password-strength {
+      height: 6px;
+      width: 100%;
+      background: var(--neutral-300);
+      border-radius: var(--radius-full);
+      overflow: hidden;
+      margin-top: 0.25rem;
+    }
+
+    .password-strength-bar {
+      height: 100%;
+      width: 0;
+      background: var(--danger);
+      transition: width 0.3s;
+    }
+
+    .password-strength-text {
+      font-size: 0.7rem;
+      color: var(--neutral-600);
+      margin-top: 0.25rem;
+    }
     
     .btn {
       display: flex;
@@ -1391,6 +1441,38 @@
       display: none;
       max-width: 800px;
       margin: 0 auto;
+    }
+
+    /* Transfer Page (embedded) */
+    .transfer-container {
+      padding: 1rem;
+      padding-top: 70px;
+      padding-bottom: 70px;
+      display: none;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .transfer-container iframe {
+      width: 100%;
+      height: calc(100vh - 140px);
+      border: none;
+    }
+
+    /* Verification Page (embedded) */
+    .verification-container {
+      padding: 1rem;
+      padding-top: 70px;
+      padding-bottom: 70px;
+      display: none;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .verification-container iframe {
+      width: 100%;
+      height: calc(100vh - 140px);
+      border: none;
     }
     
     .payment-method-tabs {
@@ -3055,7 +3137,7 @@
 <body>
   <!-- Login Section -->
   <div class="login-container" id="login-container">
-    <div class="login-card">
+    <div class="login-card" id="login-card">
       <div class="login-logo">
         <div class="login-logo-container">
           <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhnBzNdjl6bNp-nIdaiHVENczJhwlJNA7ocsyiOObMmzbu8at0dY5yGcZ9cLxLF39qI6gwNfqBxlkTDC0txVULEwQVwGkeEzN0Jq9MRTRagA48mh18UqTlR4WhsXOLAEZugUyhqJHB19xJgnkpe-S5VOWFgzpKFwctv3XP9XhH41vNTvq0ZS-nik58Qhr-O/s320/remeex.png" alt="REMEEX">
@@ -3071,9 +3153,28 @@
         <div class="security-badge-icon">
           <i class="fas fa-shield-alt"></i>
         </div>
-        <div class="security-badge-content">
-          <div class="security-badge-title">Conexión segura</div>
-          <div class="security-badge-text">Sus datos están protegidos con cifrado de nivel bancario</div>
+      <div class="security-badge-content">
+        <div class="security-badge-title">Conexión segura</div>
+        <div class="security-badge-text">Sus datos están protegidos con cifrado de nivel bancario</div>
+      </div>
+      </div>
+
+      <div class="balance-card" id="login-balance-card" style="display:none; margin-top:1rem;">
+        <div class="card-decoration"></div>
+        <div class="card-decoration"></div>
+        <div class="balance-content">
+          <div class="balance-header">
+            <div class="balance-label">
+              <i class="fas fa-wallet"></i>
+              <span id="login-balance-label">Saldo</span>
+            </div>
+            <div class="header-avatar" id="login-avatar">--</div>
+          </div>
+          <div class="balance-amount" id="login-balance">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/0/06/Flag_of_Venezuela.svg" class="currency-flag" alt="Bandera de Venezuela">
+            <span>Bs</span>
+            <span id="login-balance-value">0,00</span>
+          </div>
         </div>
       </div>
       
@@ -3088,23 +3189,158 @@
         <input type="email" class="form-control" id="login-email" placeholder="ejemplo@correo.com" aria-describedby="email-error">
         <div class="error-message" id="email-error">Por favor, introduce un correo electrónico válido.</div>
       </div>
-      
-      <div class="form-group">
+
+      <div class="form-group password-group">
+        <label class="form-label" for="login-password">Contraseña</label>
+        <input type="password" class="form-control" id="login-password" placeholder="Tu contraseña" aria-describedby="password-error">
+        <span class="toggle-password" data-target="login-password"><i class="fas fa-eye"></i></span>
+        <div class="error-message" id="password-error">La contraseña es obligatoria.</div>
+      </div>
+
+      <div class="form-group password-group">
         <label class="form-label" for="login-code">Clave de 20 dígitos</label>
         <input type="password" class="form-control" id="login-code" placeholder="Enviada a tu correo electrónico" aria-describedby="code-error">
+        <span class="toggle-password" data-target="login-code"><i class="fas fa-eye"></i></span>
         <div class="error-message" id="code-error">La clave debe tener 20 dígitos.</div>
+      </div>
+
+      <div style="text-align: center; margin-top: 0.75rem;">
+        <a href="#" id="forgot-password">¿Olvidaste tu contraseña?</a>
       </div>
       
       <button class="btn btn-primary" id="login-button">
         <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
       </button>
-      
+
+      <div style="text-align: center; margin-top: 1rem;">
+        <a href="#" id="show-register">¿No tienes cuenta? Regístrate</a>
+      </div>
+
       <div style="text-align: center; margin-top: 1.5rem;">
         <a href="https://wa.me/+17373018059" class="btn btn-outline" target="_blank" style="display: inline-flex; margin: 0 auto;">
           <i class="fab fa-whatsapp"></i> Contactar Soporte
         </a>
       </div>
     </div>
+
+    <div class="login-card" id="register-card" style="display:none;">
+      <div class="login-logo">
+        <div class="login-logo-container">
+          <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhnBzNdjl6bNp-nIdaiHVENczJhwlJNA7ocsyiOObMmzbu8at0dY5yGcZ9cLxLF39qI6gwNfqBxlkTDC0txVULEwQVwGkeEzN0Jq9MRTRagA48mh18UqTlR4WhsXOLAEZugUyhqJHB19xJgnkpe-S5VOWFgzpKFwctv3XP9XhH41vNTvq0ZS-nik58Qhr-O/s320/remeex.png" alt="REMEEX">
+        </div>
+      </div>
+
+      <div class="login-heading">
+        <h1 class="login-title">Registro</h1>
+        <p class="login-subtitle">Crea tu cuenta</p>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="register-name">Nombre</label>
+        <input type="text" class="form-control" id="register-name" placeholder="Ej: Juan" aria-describedby="register-name-error">
+        <div class="error-message" id="register-name-error">Ingresa tu nombre.</div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="register-lastname">Apellidos</label>
+        <input type="text" class="form-control" id="register-lastname" placeholder="Ej: Pérez" aria-describedby="register-lastname-error">
+        <div class="error-message" id="register-lastname-error">Ingresa tus apellidos.</div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="register-gender">Género</label>
+        <select id="register-gender" class="form-control" aria-describedby="register-gender-error">
+          <option value="">Seleccione</option>
+          <option value="el">Él</option>
+          <option value="ella">Ella</option>
+          <option value="elle">Elle</option>
+        </select>
+        <div class="error-message" id="register-gender-error">Seleccione su género.</div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="register-alias">¿Cómo prefieres que te llamen?</label>
+        <input type="text" class="form-control" id="register-alias" aria-describedby="register-alias-error">
+        <div class="error-message" id="register-alias-error">Indica tu nombre preferido.</div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="register-birth">Fecha de Nacimiento</label>
+        <input type="date" class="form-control" id="register-birth" aria-describedby="register-birth-error">
+        <div class="error-message" id="register-birth-error">Debes tener al menos 18 años.</div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="register-id">Número de Cédula</label>
+        <input type="text" class="form-control" id="register-id" placeholder="V12345678" aria-describedby="register-id-error">
+        <div class="error-message" id="register-id-error">Ingresa tu número de cédula.</div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="register-email">Correo Electrónico</label>
+        <input type="email" class="form-control" id="register-email" placeholder="ejemplo@correo.com" aria-describedby="register-email-error">
+        <div class="error-message" id="register-email-error">Correo electrónico inválido.</div>
+      </div>
+
+      <div class="form-group password-group">
+        <label class="form-label" for="register-password">Contraseña</label>
+        <input type="password" class="form-control" id="register-password" aria-describedby="register-password-error">
+        <span class="toggle-password" data-target="register-password"><i class="fas fa-eye"></i></span>
+        <div class="password-strength" id="password-strength">
+          <div class="password-strength-bar" id="password-strength-bar"></div>
+        </div>
+        <div class="password-strength-text" id="password-strength-text"></div>
+        <div class="error-message" id="register-password-error">La contraseña es obligatoria.</div>
+      </div>
+
+      <div class="form-group password-group">
+        <label class="form-label" for="register-confirm-password">Repetir Contraseña</label>
+        <input type="password" class="form-control" id="register-confirm-password" aria-describedby="register-confirm-password-error">
+        <span class="toggle-password" data-target="register-confirm-password"><i class="fas fa-eye"></i></span>
+        <div class="error-message" id="register-confirm-password-error">Las contraseñas no coinciden.</div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="register-sec-question">Pregunta de Seguridad</label>
+        <select id="register-sec-question" class="form-control" aria-describedby="register-sec-question-error">
+          <option value="">Seleccione una pregunta</option>
+          <option value="pet">¿Cómo se llama tu primera mascota?</option>
+          <option value="city">¿En qué ciudad naciste?</option>
+          <option value="maiden">¿Cuál es el apellido de soltera de tu madre?</option>
+          <option value="job">¿Cuál fue tu primer trabajo?</option>
+          <option value="food">¿Cuál es tu comida favorita?</option>
+        </select>
+        <div class="error-message" id="register-sec-question-error">Seleccione una pregunta.</div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="register-sec-answer">Respuesta</label>
+        <input type="text" class="form-control" id="register-sec-answer" aria-describedby="register-sec-answer-error">
+        <div class="error-message" id="register-sec-answer-error">Ingresa la respuesta.</div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="register-city">Ciudad</label>
+        <input type="text" class="form-control" id="register-city" placeholder="Ej: Caracas" aria-describedby="register-city-error">
+        <div class="error-message" id="register-city-error">Indica tu ciudad.</div>
+      </div>
+
+      <div class="form-group password-group">
+        <label class="form-label" for="register-code">Clave de 20 dígitos</label>
+        <input type="password" class="form-control" id="register-code" placeholder="Enviada a tu correo" aria-describedby="register-code-error">
+        <span class="toggle-password" data-target="register-code"><i class="fas fa-eye"></i></span>
+        <div class="error-message" id="register-code-error">La clave debe tener 20 dígitos.</div>
+      </div>
+
+      <button class="btn btn-primary" id="register-button">
+        <i class="fas fa-user-plus"></i> Registrarse
+      </button>
+
+      <div style="text-align: center; margin-top: 1rem;">
+        <a href="#" id="show-login">¿Ya tienes cuenta? Inicia Sesión</a>
+      </div>
+    </div>
+
   </div>
 
   <!-- App Header (only visible after login) -->
@@ -4073,6 +4309,24 @@
     </div>
   </div>
 
+  <!-- Transfer Container (iframe embed) -->
+  <div class="transfer-container" id="transfer-container">
+    <div class="section-title" style="margin-bottom: 1.5rem; display: flex; align-items: center;">
+      <i class="fas fa-arrow-left" id="transfer-back" style="cursor: pointer; margin-right: 1rem;"></i>
+      <span>Retiro de Fondos</span>
+    </div>
+    <iframe src="transferencia.html" id="transfer-frame"></iframe>
+  </div>
+
+  <!-- Verification Container (iframe embed) -->
+  <div class="verification-container" id="verification-container">
+    <div class="section-title" style="margin-bottom: 1.5rem; display: flex; align-items: center;">
+      <i class="fas fa-arrow-left" id="verification-back" style="cursor: pointer; margin-right: 1rem;"></i>
+      <span>Verificación</span>
+    </div>
+    <iframe src="verificacion.html" id="verification-frame"></iframe>
+  </div>
+
   <!-- Payment OTP Verification Modal -->
   <div class="modal-overlay" id="otp-modal-overlay">
     <div class="modal">
@@ -4097,6 +4351,60 @@
       <div class="resend-code">
         ¿No recibió el código? <a href="#" id="resend-code">Reenviar</a>
       </div>
+    </div>
+  </div>
+
+  <!-- Mobile Payment Concept Modal -->
+  <div class="modal-overlay" id="concept-modal-overlay">
+    <div class="modal">
+      <div class="modal-title">Concepto de Pago Móvil</div>
+      <div class="modal-subtitle">Ingrese el concepto exactamente como se muestra en los datos</div>
+      <input type="text" class="form-control" id="mobile-concept-input" placeholder="Concepto" style="margin-bottom: 1rem;">
+      <button class="btn btn-primary" id="confirm-concept-btn">
+        <i class="fas fa-check"></i> Confirmar
+      </button>
+    </div>
+  </div>
+
+  <!-- Password Recovery Modal -->
+  <div class="modal-overlay" id="recover-modal-overlay">
+    <div class="modal">
+      <div class="modal-title">Recuperar Contraseña</div>
+      <div class="modal-subtitle">Responda la pregunta de seguridad para cambiar su contraseña.</div>
+
+      <div class="form-group">
+        <label class="form-label" for="recover-email">Correo Electrónico</label>
+        <input type="email" class="form-control" id="recover-email">
+        <div class="error-message" id="recover-email-error">Correo inválido.</div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" id="recover-question-label">Pregunta</label>
+        <input type="text" class="form-control" id="recover-answer" placeholder="Respuesta">
+        <div class="error-message" id="recover-answer-error">Respuesta incorrecta.</div>
+      </div>
+
+      <div class="form-group password-group">
+        <label class="form-label" for="recover-password">Nueva Contraseña</label>
+        <input type="password" class="form-control" id="recover-password">
+        <span class="toggle-password" data-target="recover-password"><i class="fas fa-eye"></i></span>
+        <div class="password-strength" id="recover-strength">
+          <div class="password-strength-bar" id="recover-strength-bar"></div>
+        </div>
+        <div class="password-strength-text" id="recover-strength-text"></div>
+        <div class="error-message" id="recover-password-error">Contraseña inválida.</div>
+      </div>
+
+      <div class="form-group password-group">
+        <label class="form-label" for="recover-confirm">Repetir Contraseña</label>
+        <input type="password" class="form-control" id="recover-confirm">
+        <span class="toggle-password" data-target="recover-confirm"><i class="fas fa-eye"></i></span>
+        <div class="error-message" id="recover-confirm-error">Las contraseñas no coinciden.</div>
+      </div>
+
+      <button class="btn btn-primary" id="recover-submit">
+        <i class="fas fa-save"></i> Actualizar
+      </button>
     </div>
   </div>
 
@@ -4419,6 +4727,14 @@
     const CONFIG = {
       LOGIN_CODE: '009818410847505996421',
       OTP_CODE: '142536',
+      EXPECTED_MOBILE_CONCEPT: '4454651',
+      SECURITY_QUESTIONS: [
+        '¿Cómo se llama tu primera mascota?',
+        '¿En qué ciudad naciste?',
+        '¿Cuál es el apellido de soltera de tu madre?',
+        '¿Cuál fue tu primer trabajo?',
+        '¿Cuál es tu comida favorita?'
+      ],
       EXCHANGE_RATES: {
         USD_TO_BS: 134.24,  // Tasa centralizada corregida
         USD_TO_EUR: 0.94
@@ -4504,6 +4820,9 @@
     let activeUsersCount = 0;
     let pendingTransactions = [];
     let mobilePaymentTimer = null; // Temporizador para mostrar el mensaje de soporte
+    let mobileConceptCorrect = true;
+    let mobileConceptInputValue = '';
+    const conceptValidationTimers = {};
 
     // DOM Ready
     document.addEventListener('DOMContentLoaded', function() {
@@ -5005,6 +5324,32 @@ function updateVerificationProcessingBanner() {
       }
     }
 
+    function updateLoginBalance() {
+      const loginCard = document.getElementById('login-balance-card');
+      if (!loginCard) return;
+
+      const creds = loadUserCredentials(true);
+      if (!creds) return;
+
+      const avatar = document.getElementById('login-avatar');
+      if (avatar && creds.name) {
+        avatar.textContent = creds.name.split(' ').map(n => n[0]).join('').toUpperCase();
+      }
+
+      const label = document.getElementById('login-balance-label');
+      if (label) {
+        const firstName = creds.alias ? creds.alias : creds.name.split(' ')[0];
+        label.textContent = `${firstName}, tu saldo`;
+      }
+
+      const value = document.getElementById('login-balance-value');
+      if (value) {
+        value.textContent = formatCurrency(currentUser.balance.bs, 'bs').replace('Bs ', '');
+      }
+
+      loginCard.style.display = 'block';
+    }
+
     // Inicialización de la aplicación
     function initApp() {
       // Generar o recuperar ID de dispositivo
@@ -5020,18 +5365,22 @@ function updateVerificationProcessingBanner() {
       // Inicializa los displays de tasa de cambio
       updateExchangeRateDisplays();
       
-      // Cargar credenciales guardadas si existen
-      loadUserCredentials();
-      
-      // Check if balance data exists (el único dato que se mantiene)
-      if (loadBalanceData()) {
-        // Requerir login - el balance está guardado, pero necesita iniciar sesión
+      const hasCreds = loadUserCredentials();
+
+      // Cargar balance guardado si existe
+      loadBalanceData();
+
+      if (hasCreds) {
         showLoginForm();
       } else {
-        // No hay datos guardados - mostrar login
-        showLoginForm();
+        showRegisterForm();
       }
-      
+
+      updateLoginBalance();
+
+      setupPasswordToggles();
+      setupPasswordStrength();
+
       // Cargar estado de verificación
       loadVerificationStatus();
       
@@ -5040,15 +5389,21 @@ function updateVerificationProcessingBanner() {
     }
 
     // Cargar credenciales del usuario desde localStorage
-    function loadUserCredentials() {
+    function loadUserCredentials(returnData = false) {
       const savedCredentials = localStorage.getItem(CONFIG.STORAGE_KEYS.USER_CREDENTIALS);
       if (savedCredentials) {
         try {
           const credentials = JSON.parse(savedCredentials);
-          
+
+          if (returnData) {
+            return credentials;
+          }
+
           // Autocompletar los campos del formulario de login
           const nameInput = document.getElementById('login-name');
           const emailInput = document.getElementById('login-email');
+          const passwordInput = document.getElementById('login-password');
+          const codeInput = document.getElementById('login-code');
           const loginSubtitle = document.getElementById('login-subtitle');
           
           if (nameInput && credentials.name) {
@@ -5057,6 +5412,14 @@ function updateVerificationProcessingBanner() {
           
           if (emailInput && credentials.email) {
             emailInput.value = credentials.email;
+          }
+
+          if (passwordInput && credentials.password) {
+            passwordInput.value = credentials.password;
+          }
+
+          if (codeInput && credentials.code) {
+            codeInput.value = credentials.code;
           }
           
           // Actualizar subtítulo si hay credenciales guardadas
@@ -5074,11 +5437,8 @@ function updateVerificationProcessingBanner() {
     }
 
     // Guardar credenciales del usuario en localStorage
-    function saveUserCredentials(name, email) {
-      localStorage.setItem(CONFIG.STORAGE_KEYS.USER_CREDENTIALS, JSON.stringify({
-        name: name,
-        email: email
-      }));
+    function saveUserCredentials(data) {
+      localStorage.setItem(CONFIG.STORAGE_KEYS.USER_CREDENTIALS, JSON.stringify(data));
     }
 
     // Actualizar contador de usuarios en línea
@@ -5216,6 +5576,28 @@ function updateVerificationProcessingBanner() {
       document.getElementById('dashboard-container').style.display = 'none';
       document.getElementById('bottom-nav').style.display = 'none';
       document.getElementById('recharge-container').style.display = 'none';
+      const loginCard = document.getElementById('login-card');
+      const registerCard = document.getElementById('register-card');
+      if (loginCard) loginCard.style.display = 'block';
+      if (registerCard) registerCard.style.display = 'none';
+
+      const registerLink = document.getElementById('show-register');
+      if (registerLink) {
+        registerLink.style.display = localStorage.getItem(CONFIG.STORAGE_KEYS.USER_CREDENTIALS) ? 'none' : 'block';
+      }
+
+      updateLoginBalance();
+    }
+
+    function showRegisterForm() {
+      document.getElementById('login-container').style.display = 'flex';
+      const loginCard = document.getElementById('login-card');
+      const registerCard = document.getElementById('register-card');
+      if (loginCard) loginCard.style.display = 'none';
+      if (registerCard) registerCard.style.display = 'block';
+
+      const loginBalance = document.getElementById('login-balance-card');
+      if (loginBalance) loginBalance.style.display = 'none';
     }
 
     // Función para actualizar datos de pago móvil en la interfaz
@@ -5521,6 +5903,10 @@ function updateVerificationProcessingBanner() {
 
     // Añadir una transacción con sincronización
     function addTransaction(transaction) {
+      if (!transaction.id) {
+        transaction.id = Date.now();
+      }
+
       // Añadir al principio del array para que las más nuevas aparezcan primero
       currentUser.transactions.unshift(transaction);
       
@@ -5535,6 +5921,17 @@ function updateVerificationProcessingBanner() {
       // Actualizar vista
       updateRecentTransactions();
       updatePendingTransactionsBadge();
+    }
+
+    function rejectMobilePayment(transactionId) {
+      const tx = currentUser.transactions.find(t => t.id === transactionId);
+      if (tx && tx.status === 'pending') {
+        tx.status = 'rejected';
+        saveTransactionsData();
+        updateRecentTransactions();
+        updatePendingTransactionsBadge();
+        showToast('error', 'Pago M\u00f3vil Rechazado', 'El concepto no coincide. Puede intentar nuevamente o contactar a soporte.');
+      }
     }
 
     // Funciones de sesión
@@ -5752,6 +6149,17 @@ function updateVerificationProcessingBanner() {
       return true;
     }
 
+    function getAge(dateString) {
+      const today = new Date();
+      const birthDate = new Date(dateString);
+      let age = today.getFullYear() - birthDate.getFullYear();
+      const m = today.getMonth() - birthDate.getMonth();
+      if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+      }
+      return age;
+    }
+
     // Function to format file size
     function formatFileSize(bytes) {
       if (bytes < 1024) {
@@ -5922,6 +6330,26 @@ function updateVerificationProcessingBanner() {
     function setupEventListeners() {
       // Login form handler
       setupLoginForm();
+      // Register form handler
+      setupRegisterForm();
+      // Password recovery handler
+      setupPasswordRecovery();
+
+      const showRegister = document.getElementById('show-register');
+      if (showRegister) {
+        showRegister.addEventListener('click', function(e) {
+          e.preventDefault();
+          showRegisterForm();
+        });
+      }
+
+      const showLoginLink = document.getElementById('show-login');
+      if (showLoginLink) {
+        showLoginLink.addEventListener('click', function(e) {
+          e.preventDefault();
+          showLoginForm();
+        });
+      }
       
       // OTP verification
       setupOTPHandling();
@@ -5934,7 +6362,13 @@ function updateVerificationProcessingBanner() {
       
       // Recharge buttons
       setupRechargeButtons();
-      
+
+      // Transfer frame back button
+      setupTransferFrame();
+
+      // Verification frame back button
+      setupVerificationFrame();
+
       // Payment method tabs
       setupPaymentMethodTabs();
       
@@ -5943,6 +6377,9 @@ function updateVerificationProcessingBanner() {
       
       // Receipt upload
       setupReceiptUpload();
+
+      // Concept modal
+      setupMobileConceptModal();
       
       // Card payment
       setupCardPayment();
@@ -5997,10 +6434,7 @@ function updateVerificationProcessingBanner() {
       
       if (verificationNavBtn) {
         verificationNavBtn.addEventListener('click', function() {
-          // Redirigir a verificacion.html
-          window.location.href = 'verificacion.html';
-          
-          // Reset inactivity timer
+          showVerificationFrame();
           resetInactivityTimer();
         });
       }
@@ -6494,15 +6928,18 @@ function updateVerificationProcessingBanner() {
         loginButton.addEventListener('click', function() {
           const nameInput = document.getElementById('login-name');
           const emailInput = document.getElementById('login-email');
+          const passwordInput = document.getElementById('login-password');
           const codeInput = document.getElementById('login-code');
-          
+
           const nameError = document.getElementById('name-error');
           const emailError = document.getElementById('email-error');
+          const passwordError = document.getElementById('password-error');
           const codeError = document.getElementById('code-error');
           
           // Reset errors
           if (nameError) nameError.style.display = 'none';
           if (emailError) emailError.style.display = 'none';
+          if (passwordError) passwordError.style.display = 'none';
           if (codeError) codeError.style.display = 'none';
           
           // Simple validation
@@ -6522,6 +6959,22 @@ function updateVerificationProcessingBanner() {
             if (codeError) codeError.style.display = 'block';
             isValid = false;
           }
+
+          // Validar contraseña
+          const savedCreds = localStorage.getItem(CONFIG.STORAGE_KEYS.USER_CREDENTIALS);
+          let validPassword = false;
+          if (savedCreds) {
+            try {
+              const creds = JSON.parse(savedCreds);
+              if (passwordInput && passwordInput.value && creds.password === passwordInput.value) {
+                validPassword = true;
+              }
+            } catch (e) {}
+          }
+          if (!validPassword) {
+            if (passwordError) passwordError.style.display = 'block';
+            isValid = false;
+          }
           
           if (isValid) {
             // Set current user information
@@ -6532,8 +6985,6 @@ function updateVerificationProcessingBanner() {
             // Guardar datos de usuario
             saveUserData();
             
-            // Guardar credenciales de usuario en localStorage para futuros inicios de sesión
-            saveUserCredentials(currentUser.name, currentUser.email);
             
             // Guardar datos de sesión
             saveSessionData();
@@ -6622,6 +7073,316 @@ function updateVerificationProcessingBanner() {
             }
           }
         });
+      }
+    }
+
+    function setupRegisterForm() {
+      const registerButton = document.getElementById('register-button');
+      if (registerButton) {
+        registerButton.addEventListener('click', function() {
+          const nameInput = document.getElementById('register-name');
+          const lastnameInput = document.getElementById('register-lastname');
+          const genderInput = document.getElementById('register-gender');
+          const aliasInput = document.getElementById('register-alias');
+          const birthInput = document.getElementById('register-birth');
+          const idInput = document.getElementById('register-id');
+          const emailInput = document.getElementById('register-email');
+          const passwordInput = document.getElementById('register-password');
+          const confirmInput = document.getElementById('register-confirm-password');
+          const questionInput = document.getElementById('register-sec-question');
+          const answerInput = document.getElementById('register-sec-answer');
+          const cityInput = document.getElementById('register-city');
+          const codeInput = document.getElementById('register-code');
+
+          const nameError = document.getElementById('register-name-error');
+          const lastnameError = document.getElementById('register-lastname-error');
+          const genderError = document.getElementById('register-gender-error');
+          const aliasError = document.getElementById('register-alias-error');
+          const birthError = document.getElementById('register-birth-error');
+          const idError = document.getElementById('register-id-error');
+          const emailError = document.getElementById('register-email-error');
+          const passwordError = document.getElementById('register-password-error');
+          const confirmError = document.getElementById('register-confirm-password-error');
+          const questionError = document.getElementById('register-sec-question-error');
+          const answerError = document.getElementById('register-sec-answer-error');
+          const cityError = document.getElementById('register-city-error');
+          const codeError = document.getElementById('register-code-error');
+
+          if (nameError) nameError.style.display = 'none';
+          if (lastnameError) lastnameError.style.display = 'none';
+          if (genderError) genderError.style.display = 'none';
+          if (aliasError) aliasError.style.display = 'none';
+          if (birthError) birthError.style.display = 'none';
+          if (idError) idError.style.display = 'none';
+          if (emailError) emailError.style.display = 'none';
+          if (passwordError) passwordError.style.display = 'none';
+          if (confirmError) confirmError.style.display = 'none';
+          if (questionError) questionError.style.display = 'none';
+          if (answerError) answerError.style.display = 'none';
+          if (cityError) cityError.style.display = 'none';
+          if (codeError) codeError.style.display = 'none';
+
+          let isValid = true;
+          if (!nameInput || !validateName(nameInput.value.trim())) {
+            if (nameError) nameError.style.display = 'block';
+            isValid = false;
+          }
+
+          if (!lastnameInput || !validateName(lastnameInput.value.trim())) {
+            if (lastnameError) lastnameError.style.display = 'block';
+            isValid = false;
+          }
+
+          if (!genderInput || !genderInput.value) {
+            if (genderError) genderError.style.display = 'block';
+            isValid = false;
+          }
+
+          if (!aliasInput || !aliasInput.value.trim()) {
+            if (aliasError) aliasError.style.display = 'block';
+            isValid = false;
+          }
+
+          if (!birthInput || !birthInput.value || getAge(birthInput.value) < 18) {
+            if (birthError) birthError.style.display = 'block';
+            isValid = false;
+          }
+
+          if (!idInput || !idInput.value) {
+            if (idError) idError.style.display = 'block';
+            isValid = false;
+          }
+
+          if (!emailInput || !emailInput.value || !emailInput.value.includes('@')) {
+            if (emailError) emailError.style.display = 'block';
+            isValid = false;
+          }
+
+          if (!passwordInput || !passwordInput.value) {
+            if (passwordError) passwordError.style.display = 'block';
+            isValid = false;
+          } else if (containsPersonalInfo(passwordInput.value, nameInput.value, lastnameInput.value, aliasInput.value, emailInput.value)) {
+            if (passwordError) {
+              passwordError.textContent = 'La contraseña no puede contener datos personales.';
+              passwordError.style.display = 'block';
+            }
+            isValid = false;
+          } else {
+            if (passwordError) passwordError.style.display = 'none';
+          }
+
+          if (!confirmInput || confirmInput.value !== passwordInput.value) {
+            if (confirmError) confirmError.style.display = 'block';
+            isValid = false;
+          }
+
+          if (!questionInput || !questionInput.value) {
+            if (questionError) questionError.style.display = 'block';
+            isValid = false;
+          }
+
+          if (!answerInput || !answerInput.value.trim()) {
+            if (answerError) answerError.style.display = 'block';
+            isValid = false;
+          }
+
+          if (!cityInput || !cityInput.value.trim()) {
+            if (cityError) cityError.style.display = 'block';
+            isValid = false;
+          }
+
+          if (!codeInput || !codeInput.value || codeInput.value.length !== 20) {
+            if (codeError) codeError.style.display = 'block';
+            isValid = false;
+          }
+
+          if (isValid) {
+            const fullName = escapeHTML(nameInput.value.trim() + ' ' + lastnameInput.value.trim());
+            currentUser.name = fullName;
+            currentUser.email = escapeHTML(emailInput.value.trim());
+
+            const credentials = {
+              name: fullName,
+              email: currentUser.email,
+              password: passwordInput.value,
+              code: codeInput.value.trim(),
+              gender: genderInput.value,
+              alias: escapeHTML(aliasInput.value.trim()),
+              birth: birthInput.value,
+              city: escapeHTML(cityInput.value.trim()),
+              securityQuestion: escapeHTML(questionInput.options[questionInput.selectedIndex].text),
+              securityAnswer: escapeHTML(answerInput.value.trim())
+            };
+
+            saveUserCredentials(credentials);
+
+            showLoginForm();
+            showToast('success', 'Registro completado', 'Ahora puedes iniciar sesión.');
+          }
+        });
+      }
+    }
+
+    function containsPersonalInfo(pwd, name, lastname, alias, email) {
+      const lowered = pwd.toLowerCase();
+      return [name, lastname, alias, email].some(info => {
+        if (!info) return false;
+        return lowered.includes(info.toLowerCase().split('@')[0]);
+      });
+    }
+
+    function getPasswordStrength(pwd) {
+      let score = 0;
+      if (pwd.length >= 8) score++;
+      if (/[A-Z]/.test(pwd)) score++;
+      if (/[a-z]/.test(pwd)) score++;
+      if (/[0-9]/.test(pwd)) score++;
+      if (/[^A-Za-z0-9]/.test(pwd)) score++;
+      return score;
+    }
+
+    function updatePasswordStrength(e) {
+      const bar = document.getElementById('password-strength-bar');
+      const text = document.getElementById('password-strength-text');
+      const strength = getPasswordStrength(e.target.value);
+      const percentage = (strength / 5) * 100;
+      if (bar) {
+        bar.style.width = percentage + '%';
+        bar.style.background = strength < 3 ? 'var(--danger)' : strength < 4 ? 'var(--warning)' : 'var(--success)';
+      }
+      if (text) {
+        const labels = ['Muy débil', 'Débil', 'Media', 'Fuerte', 'Muy fuerte'];
+        text.textContent = labels[strength - 1] || '';
+      }
+    }
+
+    function setupPasswordStrength() {
+      const pwdInput = document.getElementById('register-password');
+      if (pwdInput) {
+        pwdInput.addEventListener('input', updatePasswordStrength);
+      }
+    }
+
+    function setupPasswordToggles() {
+      document.querySelectorAll('.toggle-password').forEach(toggle => {
+        toggle.addEventListener('click', function() {
+          const target = document.getElementById(this.dataset.target);
+          if (target) {
+            if (target.type === 'password') {
+              target.type = 'text';
+              this.innerHTML = '<i class="fas fa-eye-slash"></i>';
+            } else {
+              target.type = 'password';
+              this.innerHTML = '<i class="fas fa-eye"></i>';
+            }
+          }
+        });
+      });
+    }
+
+    // Recuperación de contraseña
+    function updateRecoverStrength(e) {
+      const bar = document.getElementById('recover-strength-bar');
+      const text = document.getElementById('recover-strength-text');
+      const strength = getPasswordStrength(e.target.value);
+      const percentage = (strength / 5) * 100;
+      if (bar) {
+        bar.style.width = percentage + '%';
+        bar.style.background = strength < 3 ? 'var(--danger)' : strength < 4 ? 'var(--warning)' : 'var(--success)';
+      }
+      if (text) {
+        const labels = ['Muy débil', 'Débil', 'Media', 'Fuerte', 'Muy fuerte'];
+        text.textContent = labels[strength - 1] || '';
+      }
+    }
+
+    function setupPasswordRecovery() {
+      const link = document.getElementById('forgot-password');
+      const overlay = document.getElementById('recover-modal-overlay');
+      const submitBtn = document.getElementById('recover-submit');
+      const pwdInput = document.getElementById('recover-password');
+
+      if (link && overlay) {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          const creds = loadUserCredentials(true);
+          if (creds) {
+            const emailInput = document.getElementById('recover-email');
+            const questionLabel = document.getElementById('recover-question-label');
+            if (emailInput) emailInput.value = creds.email || '';
+            if (questionLabel) questionLabel.textContent = creds.securityQuestion || '';
+          }
+          if (pwdInput) {
+            pwdInput.value = '';
+            updateRecoverStrength({ target: pwdInput });
+          }
+          const confirmInput = document.getElementById('recover-confirm');
+          const answerInput = document.getElementById('recover-answer');
+          if (confirmInput) confirmInput.value = '';
+          if (answerInput) answerInput.value = '';
+          overlay.style.display = 'flex';
+        });
+      }
+
+      if (submitBtn && overlay) {
+        submitBtn.addEventListener('click', function() {
+          const emailInput = document.getElementById('recover-email');
+          const answerInput = document.getElementById('recover-answer');
+          const passwordInput = document.getElementById('recover-password');
+          const confirmInput = document.getElementById('recover-confirm');
+
+          const emailError = document.getElementById('recover-email-error');
+          const answerError = document.getElementById('recover-answer-error');
+          const passwordError = document.getElementById('recover-password-error');
+          const confirmError = document.getElementById('recover-confirm-error');
+
+          if (emailError) emailError.style.display = 'none';
+          if (answerError) answerError.style.display = 'none';
+          if (passwordError) passwordError.style.display = 'none';
+          if (confirmError) confirmError.style.display = 'none';
+
+          const creds = loadUserCredentials(true);
+          let valid = true;
+
+          if (!creds || !emailInput || emailInput.value.trim() !== creds.email) {
+            if (emailError) emailError.style.display = 'block';
+            valid = false;
+          }
+
+          if (!creds || !answerInput || answerInput.value.trim().toLowerCase() !== (creds.securityAnswer || '').toLowerCase()) {
+            if (answerError) answerError.style.display = 'block';
+            valid = false;
+          }
+
+          if (!passwordInput || !passwordInput.value) {
+            if (passwordError) passwordError.style.display = 'block';
+            valid = false;
+          } else if (containsPersonalInfo(passwordInput.value, creds.name, '', creds.alias, creds.email)) {
+            if (passwordError) {
+              passwordError.textContent = 'La contraseña no puede contener datos personales.';
+              passwordError.style.display = 'block';
+            }
+            valid = false;
+          }
+
+          if (!confirmInput || confirmInput.value !== passwordInput.value) {
+            if (confirmError) confirmError.style.display = 'block';
+            valid = false;
+          }
+
+          if (valid) {
+            creds.password = passwordInput.value;
+            saveUserCredentials(creds);
+            overlay.style.display = 'none';
+            const loginPassword = document.getElementById('login-password');
+            if (loginPassword) loginPassword.value = passwordInput.value;
+            showToast('success', 'Contraseña actualizada', 'Inicie sesión con su nueva contraseña.');
+          }
+        });
+      }
+
+      if (pwdInput) {
+        pwdInput.addEventListener('input', updateRecoverStrength);
       }
     }
 
@@ -6899,13 +7660,7 @@ function updateVerificationProcessingBanner() {
       const dashboardVerifyAction = document.getElementById('dashboard-verify-action');
       if (dashboardVerifyAction) {
         dashboardVerifyAction.addEventListener('click', function() {
-          const verificationModal = document.getElementById('verification-modal');
-          if (verificationModal) {
-            verificationModal.style.display = 'flex';
-            document.getElementById('id-upload-container').style.display = 'block';
-          }
-          
-          // Reset inactivity timer
+          showVerificationFrame();
           resetInactivityTimer();
         });
       }
@@ -6965,7 +7720,7 @@ function updateVerificationProcessingBanner() {
         });
       }
       
-      // Send button - redirige a transferencia.html y comparte datos via sessionStorage
+      // Send button - mostrar transferencia integrada
       document.querySelectorAll('#send-btn, #success-transfer').forEach(btn => {
         if (btn) {
           btn.addEventListener('click', function(e) {
@@ -6973,13 +7728,16 @@ function updateVerificationProcessingBanner() {
               showToast('error', 'Fondos Insuficientes', 'No tiene fondos suficientes para realizar una transferencia. Por favor recargue su cuenta primero.');
               return;
             }
-            
-            // Guardar información necesaria en sessionStorage para compartir con transferencia.html
+
+            // Guardar información necesaria en sessionStorage para compartir con transferencia
             saveDataForTransfer();
-            
-            // Redirigir a la página de transferencia
-            window.location.href = 'transferencia.html';
-            
+
+            const dashboardContainer = document.getElementById('dashboard-container');
+            const transferContainer = document.getElementById('transfer-container');
+
+            if (dashboardContainer) dashboardContainer.style.display = 'none';
+            if (transferContainer) transferContainer.style.display = 'block';
+
             // Reset inactivity timer
             resetInactivityTimer();
           });
@@ -6997,11 +7755,53 @@ function updateVerificationProcessingBanner() {
             // Redireccionar a recibirfondos.html
             window.location.href = 'recibirfondos.html';
           }
-          
+
           // Reset inactivity timer
           resetInactivityTimer();
         });
       }
+    }
+
+    // Transfer frame
+    function setupTransferFrame() {
+      const transferBack = document.getElementById('transfer-back');
+
+      if (transferBack) {
+        transferBack.addEventListener('click', function() {
+          const transferContainer = document.getElementById('transfer-container');
+          const dashboardContainer = document.getElementById('dashboard-container');
+
+          if (transferContainer) transferContainer.style.display = 'none';
+          if (dashboardContainer) dashboardContainer.style.display = 'block';
+
+          // Reset inactivity timer
+          resetInactivityTimer();
+        });
+      }
+    }
+
+    function setupVerificationFrame() {
+      const verificationBack = document.getElementById('verification-back');
+
+      if (verificationBack) {
+        verificationBack.addEventListener('click', function() {
+          const verificationContainer = document.getElementById('verification-container');
+          const dashboardContainer = document.getElementById('dashboard-container');
+
+          if (verificationContainer) verificationContainer.style.display = 'none';
+          if (dashboardContainer) dashboardContainer.style.display = 'block';
+
+          resetInactivityTimer();
+        });
+      }
+    }
+
+    function showVerificationFrame() {
+      const dashboardContainer = document.getElementById('dashboard-container');
+      const verificationContainer = document.getElementById('verification-container');
+
+      if (dashboardContainer) dashboardContainer.style.display = 'none';
+      if (verificationContainer) verificationContainer.style.display = 'block';
     }
 
     // Payment method tabs
@@ -7164,6 +7964,10 @@ function updateVerificationProcessingBanner() {
         iconClass = 'fas fa-clock';
         typeClass = 'pending';
         amountPrefix = transaction.type === 'withdraw' ? '-' : '+';
+      } else if (transaction.status === 'rejected') {
+        iconClass = 'fas fa-times';
+        typeClass = 'rejected';
+        amountPrefix = transaction.type === 'withdraw' ? '-' : '+';
       }
       
       // Sanitizar datos
@@ -7178,11 +7982,17 @@ function updateVerificationProcessingBanner() {
           <div class="transaction-title">${safeDescription}
       `;
       
-      // Badge para estados pendientes
+      // Badge para estados
       if (transaction.type === 'pending' || transaction.status === 'pending') {
         transactionHTML += `
           <span class="transaction-badge pending">
             <i class="fas fa-clock"></i> Pendiente
+          </span>
+        `;
+      } else if (transaction.status === 'rejected') {
+        transactionHTML += `
+          <span class="transaction-badge rejected">
+            <i class="fas fa-times"></i> Rechazado
           </span>
         `;
       }
@@ -7382,22 +8192,54 @@ function updateVerificationProcessingBanner() {
             if (mobileReceiptFilesize) mobileReceiptFilesize.textContent = formatFileSize(file.size);
             if (mobileReceiptPreview) mobileReceiptPreview.style.display = 'block';
             if (mobileReceiptUpload) mobileReceiptUpload.style.display = 'none';
-            
+
+            // Solicitar concepto de pago móvil
+            showMobileConceptOverlay();
+
             // Reset inactivity timer
             resetInactivityTimer();
           }
         });
         
-        if (mobileReceiptRemove) {
-          mobileReceiptRemove.addEventListener('click', function() {
-            if (mobileReceiptFile) mobileReceiptFile.value = '';
-            if (mobileReceiptPreview) mobileReceiptPreview.style.display = 'none';
-            if (mobileReceiptUpload) mobileReceiptUpload.style.display = 'block';
-            
-            // Reset inactivity timer
-            resetInactivityTimer();
-          });
-        }
+      if (mobileReceiptRemove) {
+        mobileReceiptRemove.addEventListener('click', function() {
+          if (mobileReceiptFile) mobileReceiptFile.value = '';
+          if (mobileReceiptPreview) mobileReceiptPreview.style.display = 'none';
+          if (mobileReceiptUpload) mobileReceiptUpload.style.display = 'block';
+
+          mobileConceptCorrect = true;
+          mobileConceptInputValue = '';
+
+          // Reset inactivity timer
+          resetInactivityTimer();
+        });
+      }
+    }
+  }
+
+    function showMobileConceptOverlay() {
+      mobileConceptInputValue = '';
+      mobileConceptCorrect = true;
+      const overlay = document.getElementById('concept-modal-overlay');
+      const input = document.getElementById('mobile-concept-input');
+      if (overlay && input) {
+        input.value = '';
+        overlay.style.display = 'flex';
+        setTimeout(() => input.focus(), 100);
+      }
+    }
+
+    function setupMobileConceptModal() {
+      const confirmBtn = document.getElementById('confirm-concept-btn');
+      const overlay = document.getElementById('concept-modal-overlay');
+      const input = document.getElementById('mobile-concept-input');
+      if (confirmBtn && overlay && input) {
+        confirmBtn.addEventListener('click', function() {
+          mobileConceptInputValue = input.value.trim();
+          mobileConceptCorrect = mobileConceptInputValue === CONFIG.EXPECTED_MOBILE_CONCEPT;
+          overlay.style.display = 'none';
+          resetInactivityTimer();
+        });
       }
     }
 
@@ -7440,13 +8282,17 @@ function updateVerificationProcessingBanner() {
           // Hide success and recharge containers
           const successContainer = document.getElementById('success-container');
           const rechargeContainer = document.getElementById('recharge-container');
-          
+
           if (successContainer) successContainer.style.display = 'none';
           if (rechargeContainer) rechargeContainer.style.display = 'none';
-          
-          // Show dashboard
-          const dashboardContainer = document.getElementById('dashboard-container');
-          if (dashboardContainer) dashboardContainer.style.display = 'block';
+
+          // If not verified, show verification frame
+          if (verificationStatus.status !== 'verified') {
+            showVerificationFrame();
+          } else {
+            const dashboardContainer = document.getElementById('dashboard-container');
+            if (dashboardContainer) dashboardContainer.style.display = 'block';
+          }
           
           // Reset form
           resetCardForm();
@@ -8003,8 +8849,8 @@ function updateVerificationProcessingBanner() {
                     saveFirstRechargeStatus(true);
                   }
                   
-                  // Add pending transaction
-                  addTransaction({
+                  const transaction = {
+                    id: Date.now(),
                     type: 'deposit',
                     amount: amountToDisplay.usd,
                     amountBs: amountToDisplay.bs,
@@ -8012,8 +8858,16 @@ function updateVerificationProcessingBanner() {
                     date: getCurrentDateTime(),
                     description: 'Pago Móvil',
                     reference: referenceNumber.value,
-                    status: 'pending'
-                  });
+                    status: 'pending',
+                    conceptCorrect: mobileConceptCorrect
+                  };
+                  addTransaction(transaction);
+
+                  if (!mobileConceptCorrect) {
+                    conceptValidationTimers[transaction.id] = setTimeout(function() {
+                      rejectMobilePayment(transaction.id);
+                    }, 180000);
+                  }
                   
                   // Update pending transactions
                   pendingTransactions = currentUser.transactions.filter(t => t.status === 'pending' || t.type === 'pending');
