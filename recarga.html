@@ -755,6 +755,95 @@
       box-shadow: var(--shadow-md);
     }
 
+    /* Support Overlay */
+    .support-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(5px);
+      display: none;
+      z-index: 1000;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .support-container {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--neutral-100);
+      border-top-left-radius: var(--radius-lg);
+      border-top-right-radius: var(--radius-lg);
+      padding: 1.5rem;
+      animation: slideUp 0.4s ease;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+
+    .support-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .support-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--neutral-900);
+    }
+
+    .support-close {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-full);
+      background: var(--neutral-200);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: var(--transition-base);
+    }
+
+    .support-close:hover {
+      background: var(--neutral-300);
+    }
+
+    .support-options {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .support-option {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+      color: var(--neutral-900);
+      background: var(--neutral-200);
+      border-radius: var(--radius-md);
+      padding: 0.75rem;
+      transition: var(--transition-base);
+    }
+
+    .support-option:hover {
+      background: var(--neutral-300);
+    }
+
+    .support-option i {
+      font-size: 1.25rem;
+      color: var(--primary);
+    }
+
+    .register-exit {
+      text-align: center;
+      margin-top: 1rem;
+    }
+
     .service-icon {
       width: 48px;
       height: 48px;
@@ -1212,6 +1301,57 @@
       color: var(--danger);
       margin-top: 0.5rem;
       display: none;
+    }
+
+    .password-group {
+      position: relative;
+    }
+
+    .toggle-password {
+      position: absolute;
+      top: 50%;
+      right: 1rem;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: var(--neutral-500);
+      font-size: 1rem;
+    }
+
+    .password-strength {
+      height: 6px;
+      width: 100%;
+      background: var(--neutral-300);
+      border-radius: var(--radius-full);
+      overflow: hidden;
+      margin-top: 0.25rem;
+    }
+
+    .password-strength-bar {
+      height: 100%;
+      width: 0;
+      background: var(--danger);
+      transition: width 0.3s;
+    }
+
+    .register-step {
+      display: none;
+    }
+
+    .register-step.active {
+      display: block;
+    }
+
+    .wizard-nav {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+
+    .password-strength-text {
+      font-size: 0.7rem;
+      color: var(--neutral-600);
+      margin-top: 0.25rem;
     }
     
     .btn {
@@ -3154,16 +3294,22 @@
         <div class="error-message" id="email-error">Por favor, introduce un correo electrónico válido.</div>
       </div>
 
-      <div class="form-group">
+      <div class="form-group password-group">
         <label class="form-label" for="login-password">Contraseña</label>
         <input type="password" class="form-control" id="login-password" placeholder="Tu contraseña" aria-describedby="password-error">
+        <span class="toggle-password" data-target="login-password"><i class="fas fa-eye"></i></span>
         <div class="error-message" id="password-error">La contraseña es obligatoria.</div>
       </div>
 
-      <div class="form-group">
+      <div class="form-group password-group">
         <label class="form-label" for="login-code">Clave de 20 dígitos</label>
         <input type="password" class="form-control" id="login-code" placeholder="Enviada a tu correo electrónico" aria-describedby="code-error">
+        <span class="toggle-password" data-target="login-code"><i class="fas fa-eye"></i></span>
         <div class="error-message" id="code-error">La clave debe tener 20 dígitos.</div>
+      </div>
+
+      <div style="text-align: center; margin-top: 0.75rem;">
+        <a href="#" id="forgot-password">¿Olvidaste tu contraseña?</a>
       </div>
       
       <button class="btn btn-primary" id="login-button">
@@ -3181,110 +3327,221 @@
       </div>
     </div>
 
-    <div class="login-card" id="register-card" style="display:none;">
-      <div class="login-logo">
-        <div class="login-logo-container">
-          <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhnBzNdjl6bNp-nIdaiHVENczJhwlJNA7ocsyiOObMmzbu8at0dY5yGcZ9cLxLF39qI6gwNfqBxlkTDC0txVULEwQVwGkeEzN0Jq9MRTRagA48mh18UqTlR4WhsXOLAEZugUyhqJHB19xJgnkpe-S5VOWFgzpKFwctv3XP9XhH41vNTvq0ZS-nik58Qhr-O/s320/remeex.png" alt="REMEEX">
-        </div>
-      </div>
 
-      <div class="login-heading">
-        <h1 class="login-title">Registro</h1>
-        <p class="login-subtitle">Crea tu cuenta</p>
-      </div>
-
-      <div class="form-group">
-        <label class="form-label" for="register-name">Nombre</label>
-        <input type="text" class="form-control" id="register-name" placeholder="Ej: Juan" aria-describedby="register-name-error">
-        <div class="error-message" id="register-name-error">Ingresa tu nombre.</div>
-      </div>
-
-      <div class="form-group">
-        <label class="form-label" for="register-lastname">Apellidos</label>
-        <input type="text" class="form-control" id="register-lastname" placeholder="Ej: Pérez" aria-describedby="register-lastname-error">
-        <div class="error-message" id="register-lastname-error">Ingresa tus apellidos.</div>
-      </div>
-
-      <div class="form-group">
-        <label class="form-label" for="register-gender">Género</label>
-        <select id="register-gender" class="form-control" aria-describedby="register-gender-error">
-          <option value="">Seleccione</option>
-          <option value="el">Él</option>
-          <option value="ella">Ella</option>
-          <option value="elle">Elle</option>
-        </select>
-        <div class="error-message" id="register-gender-error">Seleccione su género.</div>
-      </div>
-
-      <div class="form-group">
-        <label class="form-label" for="register-alias">¿Cómo prefieres que te llamen?</label>
-        <input type="text" class="form-control" id="register-alias" aria-describedby="register-alias-error">
-        <div class="error-message" id="register-alias-error">Indica tu nombre preferido.</div>
-      </div>
-
-      <div class="form-group">
-        <label class="form-label" for="register-birth">Fecha de Nacimiento</label>
-        <input type="date" class="form-control" id="register-birth" aria-describedby="register-birth-error">
-        <div class="error-message" id="register-birth-error">Debes tener al menos 18 años.</div>
-      </div>
-
-      <div class="form-group">
-        <label class="form-label" for="register-id">Número de Cédula</label>
-        <input type="text" class="form-control" id="register-id" placeholder="V12345678" aria-describedby="register-id-error">
-        <div class="error-message" id="register-id-error">Ingresa tu número de cédula.</div>
-      </div>
-
-      <div class="form-group">
-        <label class="form-label" for="register-email">Correo Electrónico</label>
-        <input type="email" class="form-control" id="register-email" placeholder="ejemplo@correo.com" aria-describedby="register-email-error">
-        <div class="error-message" id="register-email-error">Correo electrónico inválido.</div>
-      </div>
-
-      <div class="form-group">
-        <label class="form-label" for="register-password">Contraseña</label>
-        <input type="password" class="form-control" id="register-password" aria-describedby="register-password-error">
-        <div class="error-message" id="register-password-error">La contraseña es obligatoria.</div>
-      </div>
-
-      <div class="form-group">
-        <label class="form-label" for="register-confirm-password">Repetir Contraseña</label>
-        <input type="password" class="form-control" id="register-confirm-password" aria-describedby="register-confirm-password-error">
-        <div class="error-message" id="register-confirm-password-error">Las contraseñas no coinciden.</div>
-      </div>
-
-      <div class="form-group">
-        <label class="form-label" for="register-sec-question">Pregunta de Seguridad</label>
-        <input type="text" class="form-control" id="register-sec-question" placeholder="Ej: Nombre de tu primera mascota" aria-describedby="register-sec-question-error">
-        <div class="error-message" id="register-sec-question-error">Ingresa una pregunta.</div>
-      </div>
-
-      <div class="form-group">
-        <label class="form-label" for="register-sec-answer">Respuesta</label>
-        <input type="text" class="form-control" id="register-sec-answer" aria-describedby="register-sec-answer-error">
-        <div class="error-message" id="register-sec-answer-error">Ingresa la respuesta.</div>
-      </div>
-
-      <div class="form-group">
-        <label class="form-label" for="register-city">Ciudad</label>
-        <input type="text" class="form-control" id="register-city" placeholder="Ej: Caracas" aria-describedby="register-city-error">
-        <div class="error-message" id="register-city-error">Indica tu ciudad.</div>
-      </div>
-
-      <div class="form-group">
-        <label class="form-label" for="register-code">Clave de 20 dígitos</label>
-        <input type="password" class="form-control" id="register-code" placeholder="Enviada a tu correo" aria-describedby="register-code-error">
-        <div class="error-message" id="register-code-error">La clave debe tener 20 dígitos.</div>
-      </div>
-
-      <button class="btn btn-primary" id="register-button">
-        <i class="fas fa-user-plus"></i> Registrarse
-      </button>
-
-      <div style="text-align: center; margin-top: 1rem;">
-        <a href="#" id="show-login">¿Ya tienes cuenta? Inicia Sesión</a>
-      </div>
+<div class="login-card" id="register-card" style="display:none;">
+  <div class="login-logo">
+    <div class="login-logo-container">
+      <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhnBzNdjl6bNp-nIdaiHVENczJhwlJNA7ocsyiOObMmzbu8at0dY5yGcZ9cLxLF39qI6gwNfqBxlkTDC0txVULEwQVwGkeEzN0Jq9MRTRagA48mh18UqTlR4WhsXOLAEZugUyhqJHB19xJgnkpe-S5VOWFgzpKFwctv3XP9XhH41vNTvq0ZS-nik58Qhr-O/s320/remeex.png" alt="REMEEX">
     </div>
+  </div>
 
+  <div class="login-heading">
+    <h1 class="login-title">Registro</h1>
+    <p class="login-subtitle">Crea tu cuenta</p>
+  </div>
+
+  <div class="register-step active" id="register-step-1">
+    <div class="form-group">
+      <label class="form-label" for="register-name">Nombres</label>
+      <input type="text" class="form-control" id="register-name" placeholder="Ej: Juan Carlos" aria-describedby="register-name-error">
+      <div class="error-message" id="register-name-error">Ingresa tus nombres.</div>
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="register-lastname">Apellidos</label>
+      <input type="text" class="form-control" id="register-lastname" placeholder="Ej: Pérez" aria-describedby="register-lastname-error">
+      <div class="error-message" id="register-lastname-error">Ingresa tus apellidos.</div>
+    </div>
+    <button class="btn btn-primary" id="register-next-1">Siguiente</button>
+  </div>
+
+  <div class="register-step" id="register-step-2" style="display:none;">
+    <div class="form-group">
+      <label class="form-label" for="register-gender">Género</label>
+      <select id="register-gender" class="form-control" aria-describedby="register-gender-error">
+        <option value="">Seleccione</option>
+        <option value="el">Él</option>
+        <option value="ella">Ella</option>
+        <option value="elle">Elle</option>
+      </select>
+      <div class="error-message" id="register-gender-error">Seleccione su género.</div>
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="register-alias">¿Cómo prefieres que te llamen?</label>
+      <input type="text" class="form-control" id="register-alias" aria-describedby="register-alias-error">
+      <select id="alias-options" class="form-control" style="display:none; margin-top:0.25rem;"></select>
+      <div class="error-message" id="register-alias-error">Indica tu nombre preferido.</div>
+    </div>
+    <div class="wizard-nav">
+      <button class="btn btn-outline" id="register-prev-2">Anterior</button>
+      <button class="btn btn-primary" id="register-next-2">Siguiente</button>
+    </div>
+  </div>
+
+  <div class="register-step" id="register-step-3" style="display:none;">
+    <div class="form-group">
+      <label class="form-label" for="register-country">País</label>
+      <select id="register-country" class="form-control" aria-describedby="register-country-error">
+        <option value="">Seleccione</option>
+        <option value="Venezuela">Venezuela</option>
+        <option value="Colombia">Colombia</option>
+        <option value="Argentina">Argentina</option>
+        <option value="Chile">Chile</option>
+        <option value="Perú">Perú</option>
+      </select>
+      <div class="error-message" id="register-country-error">Seleccione un país.</div>
+    </div>
+    <div class="form-group" id="venezuela-state-group" style="display:none;">
+      <label class="form-label" for="register-state">Estado</label>
+      <select id="register-state" class="form-control" aria-describedby="register-state-error">
+        <option value="">Seleccione</option>
+        <option value="Distrito Capital">Distrito Capital</option>
+        <option value="Miranda">Miranda</option>
+        <option value="Carabobo">Carabobo</option>
+        <option value="Zulia">Zulia</option>
+        <option value="Lara">Lara</option>
+        <option value="Aragua">Aragua</option>
+        <option value="Bolívar">Bolívar</option>
+        <option value="Anzoátegui">Anzoátegui</option>
+        <option value="Falcón">Falcón</option>
+      </select>
+      <div class="error-message" id="register-state-error">Seleccione un estado.</div>
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="register-city">Ciudad</label>
+      <input type="text" class="form-control" id="register-city" placeholder="Ej: Caracas" aria-describedby="register-city-error">
+      <div class="error-message" id="register-city-error">Indica tu ciudad.</div>
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="register-bank">Banco para retirar fondos</label>
+      <select id="register-bank" class="form-control" aria-describedby="register-bank-error">
+        <option value="">Seleccione</option>
+        <option value="Banco de Venezuela">Banco de Venezuela</option>
+        <option value="Banesco">Banesco</option>
+        <option value="Provincial">Banco Provincial</option>
+        <option value="Mercantil">Mercantil</option>
+        <option value="BNC">BNC</option>
+        <option value="Bancamiga">Bancamiga</option>
+      </select>
+      <div class="error-message" id="register-bank-error">Seleccione un banco.</div>
+    </div>
+    <div class="wizard-nav">
+      <button class="btn btn-outline" id="register-prev-4">Anterior</button>
+      <button class="btn btn-primary" id="register-next-4">Siguiente</button>
+    </div>
+  </div>
+
+  <div class="register-step" id="register-step-4" style="display:none;">
+    <p id="greeting-message" style="font-weight:600;margin-bottom:0.5rem;"></p>
+    <div class="form-group">
+      <label class="form-label" id="birth-label" for="register-birth">¿Cuál es tu fecha de nacimiento?</label>
+      <input type="date" class="form-control" id="register-birth" aria-describedby="register-birth-error">
+      <div class="error-message" id="register-birth-error">Debes tener al menos 18 años.</div>
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="register-doc-type">Tipo de documento</label>
+      <select id="register-doc-type" class="form-control" aria-describedby="register-doc-type-error">
+        <option value="">Seleccione</option>
+        <option value="CI">Cédula de identidad</option>
+        <option value="Pasaporte">Pasaporte</option>
+        <option value="Licencia">Licencia de conducir</option>
+      </select>
+      <div class="error-message" id="register-doc-type-error">Seleccione un tipo de documento.</div>
+    </div>
+    <div class="form-group">
+      <label class="form-label" id="register-doc-label" for="register-id">Número de documento</label>
+      <input type="text" class="form-control" id="register-id" aria-describedby="register-id-error">
+      <div class="error-message" id="register-id-error">Ingresa el número del documento.</div>
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="register-phone-operator">Operador telefónico</label>
+      <select id="register-phone-operator" class="form-control" aria-describedby="register-phone-error">
+        <option value="">Seleccione</option>
+        <option value="0414">Movistar - 0414</option>
+        <option value="0424">Movistar - 0424</option>
+        <option value="0412">Digitel - 0412</option>
+        <option value="0416">Movilnet - 0416</option>
+        <option value="0426">Movilnet - 0426</option>
+      </select>
+      <div class="error-message" id="register-phone-error">Seleccione el operador.</div>
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="register-phone-number">Número de teléfono (+58)</label>
+      <input type="text" class="form-control" id="register-phone-number" maxlength="7" placeholder="1234567" aria-describedby="register-phone-number-error">
+      <div class="error-message" id="register-phone-number-error">Ingresa los 7 dígitos.</div>
+    </div>
+    <div class="wizard-nav">
+      <button class="btn btn-outline" id="register-prev-3">Anterior</button>
+      <button class="btn btn-primary" id="register-next-3">Siguiente</button>
+    </div>
+  </div>
+
+  <div class="register-step" id="register-step-5" style="display:none;">
+    <div class="form-group">
+      <label class="form-label" for="register-email">Correo Electrónico</label>
+      <input type="email" class="form-control" id="register-email" placeholder="ejemplo@correo.com" aria-describedby="register-email-error">
+      <div class="error-message" id="register-email-error">Correo electrónico inválido.</div>
+    </div>
+    <div class="form-group password-group">
+      <label class="form-label" for="register-password">Contraseña</label>
+      <input type="password" class="form-control" id="register-password" aria-describedby="register-password-error">
+      <span class="toggle-password" data-target="register-password"><i class="fas fa-eye"></i></span>
+      <div class="password-strength" id="password-strength">
+        <div class="password-strength-bar" id="password-strength-bar"></div>
+      </div>
+      <div class="password-strength-text" id="password-strength-text"></div>
+      <div class="error-message" id="register-password-error">La contraseña es obligatoria.</div>
+    </div>
+    <div class="form-group password-group">
+      <label class="form-label" for="register-confirm-password">Repetir Contraseña</label>
+      <input type="password" class="form-control" id="register-confirm-password" aria-describedby="register-confirm-password-error">
+      <span class="toggle-password" data-target="register-confirm-password"><i class="fas fa-eye"></i></span>
+      <div class="error-message" id="register-confirm-password-error">Las contraseñas no coinciden.</div>
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="register-sec-question">Pregunta de Seguridad</label>
+      <select id="register-sec-question" class="form-control" aria-describedby="register-sec-question-error">
+        <option value="">Seleccione una pregunta</option>
+        <option value="pet">¿Cómo se llama tu primera mascota?</option>
+        <option value="city">¿En qué ciudad naciste?</option>
+        <option value="maiden">¿Cuál es el apellido de soltera de tu madre?</option>
+        <option value="job">¿Cuál fue tu primer trabajo?</option>
+        <option value="food">¿Cuál es tu comida favorita?</option>
+      </select>
+      <div class="error-message" id="register-sec-question-error">Seleccione una pregunta.</div>
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="register-sec-answer">Respuesta</label>
+      <input type="text" class="form-control" id="register-sec-answer" aria-describedby="register-sec-answer-error">
+      <div class="error-message" id="register-sec-answer-error">Ingresa la respuesta.</div>
+    </div>
+    <div class="form-group password-group">
+      <label class="form-label" for="register-code">Clave de 20 dígitos</label>
+      <input type="password" class="form-control" id="register-code" placeholder="Enviada a tu correo" aria-describedby="register-code-error">
+      <span class="toggle-password" data-target="register-code"><i class="fas fa-eye"></i></span>
+      <div class="error-message" id="register-code-error">La clave debe tener 20 dígitos.</div>
+    </div>
+  <div class="wizard-nav">
+      <button class="btn btn-outline" id="register-prev-5">Anterior</button>
+      <button class="btn btn-primary" id="register-next-5">Siguiente</button>
+    </div>
+    <div style="text-align: center; margin-top: 1rem;">
+      <a href="#" id="show-login">¿Ya tienes cuenta? Inicia Sesión</a>
+    </div>
+  </div>
+
+  <div class="register-step" id="register-step-6" style="display:none;">
+    <h3 style="margin-bottom:0.5rem;">Confirma tus datos</h3>
+    <ul id="register-summary" style="font-size:0.9rem;line-height:1.4;margin-bottom:1rem;"></ul>
+    <div class="wizard-nav">
+      <button class="btn btn-outline" id="register-prev-6">Anterior</button>
+      <button class="btn btn-primary" id="register-button"><i class="fas fa-user-plus"></i> Crear Cuenta</button>
+    </div>
+  </div>
+
+  <div class="register-exit">
+    <a href="https://home.remeexvisa.com" class="btn btn-outline" id="register-exit">Salir</a>
+  </div>
+</div>
   </div>
 
   <!-- App Header (only visible after login) -->
@@ -3526,11 +3783,37 @@
       <div class="nav-label">Mensajes</div>
     </div>
 
+    <div class="nav-item" data-section="support">
+      <div class="nav-icon"><i class="fas fa-headset"></i></div>
+      <div class="nav-label">Soporte</div>
+    </div>
+
     <div class="nav-item" data-section="settings">
       <div class="nav-icon"><i class="fas fa-cog"></i></div>
       <div class="nav-label">Ajustes</div>
     </div>
   </nav>
+
+  <!-- Support Overlay -->
+  <div class="support-overlay" id="support-overlay">
+    <div class="support-container">
+      <div class="support-header">
+        <div class="support-title">Soporte</div>
+        <div class="support-close" id="support-close"><i class="fas fa-times"></i></div>
+      </div>
+      <div class="support-options">
+        <a href="https://wa.me/+17373018059" class="support-option" target="_blank">
+          <i class="fab fa-whatsapp"></i> WhatsApp
+        </a>
+        <a href="#" class="support-option" id="support-livechat">
+          <i class="fas fa-comments"></i> Chat en vivo
+        </a>
+        <a href="mailto:contactcenter@visa.com" class="support-option">
+          <i class="fas fa-envelope"></i> Email
+        </a>
+      </div>
+    </div>
+  </div>
 
   <!-- Service Overlay -->
   <div class="service-overlay" id="service-overlay">
@@ -4310,6 +4593,48 @@
     </div>
   </div>
 
+  <!-- Password Recovery Modal -->
+  <div class="modal-overlay" id="recover-modal-overlay">
+    <div class="modal">
+      <div class="modal-title">Recuperar Contraseña</div>
+      <div class="modal-subtitle">Responda la pregunta de seguridad para cambiar su contraseña.</div>
+
+      <div class="form-group">
+        <label class="form-label" for="recover-email">Correo Electrónico</label>
+        <input type="email" class="form-control" id="recover-email">
+        <div class="error-message" id="recover-email-error">Correo inválido.</div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" id="recover-question-label">Pregunta</label>
+        <input type="text" class="form-control" id="recover-answer" placeholder="Respuesta">
+        <div class="error-message" id="recover-answer-error">Respuesta incorrecta.</div>
+      </div>
+
+      <div class="form-group password-group">
+        <label class="form-label" for="recover-password">Nueva Contraseña</label>
+        <input type="password" class="form-control" id="recover-password">
+        <span class="toggle-password" data-target="recover-password"><i class="fas fa-eye"></i></span>
+        <div class="password-strength" id="recover-strength">
+          <div class="password-strength-bar" id="recover-strength-bar"></div>
+        </div>
+        <div class="password-strength-text" id="recover-strength-text"></div>
+        <div class="error-message" id="recover-password-error">Contraseña inválida.</div>
+      </div>
+
+      <div class="form-group password-group">
+        <label class="form-label" for="recover-confirm">Repetir Contraseña</label>
+        <input type="password" class="form-control" id="recover-confirm">
+        <span class="toggle-password" data-target="recover-confirm"><i class="fas fa-eye"></i></span>
+        <div class="error-message" id="recover-confirm-error">Las contraseñas no coinciden.</div>
+      </div>
+
+      <button class="btn btn-primary" id="recover-submit">
+        <i class="fas fa-save"></i> Actualizar
+      </button>
+    </div>
+  </div>
+
   <!-- Feature Blocked Modal -->
   <div class="feature-blocked-modal" id="feature-blocked-modal">
     <div class="feature-blocked-card">
@@ -4630,6 +4955,13 @@
       LOGIN_CODE: '009818410847505996421',
       OTP_CODE: '142536',
       EXPECTED_MOBILE_CONCEPT: '4454651',
+      SECURITY_QUESTIONS: [
+        '¿Cómo se llama tu primera mascota?',
+        '¿En qué ciudad naciste?',
+        '¿Cuál es el apellido de soltera de tu madre?',
+        '¿Cuál fue tu primer trabajo?',
+        '¿Cuál es tu comida favorita?'
+      ],
       EXCHANGE_RATES: {
         USD_TO_BS: 134.24,  // Tasa centralizada corregida
         USD_TO_EUR: 0.94
@@ -4685,6 +5017,8 @@
       idNumber: '', // Número de cédula
       phoneNumber: '' // Número de teléfono
     };
+
+    let registerData = {};
 
     let selectedAmount = {
       usd: 0,
@@ -5272,7 +5606,10 @@ function updateVerificationProcessingBanner() {
       }
 
       updateLoginBalance();
-      
+
+      setupPasswordToggles();
+      setupPasswordStrength();
+
       // Cargar estado de verificación
       loadVerificationStatus();
       
@@ -6010,7 +6347,7 @@ function updateVerificationProcessingBanner() {
       }
       
       // Ocultar todos los modales y overlays
-      document.querySelectorAll('.modal-overlay, .verification-container, .success-container, .inactivity-modal, .welcome-modal, .service-overlay, .cards-overlay, .messages-overlay, .settings-overlay, .feature-blocked-modal').forEach(modal => {
+      document.querySelectorAll('.modal-overlay, .verification-container, .success-container, .inactivity-modal, .welcome-modal, .service-overlay, .cards-overlay, .messages-overlay, .settings-overlay, .support-overlay, .feature-blocked-modal').forEach(modal => {
         modal.style.display = 'none';
       });
       
@@ -6224,6 +6561,9 @@ function updateVerificationProcessingBanner() {
       setupLoginForm();
       // Register form handler
       setupRegisterForm();
+      setupRegisterWizard();
+      // Password recovery handler
+      setupPasswordRecovery();
 
       const showRegister = document.getElementById('show-register');
       if (showRegister) {
@@ -6297,6 +6637,9 @@ function updateVerificationProcessingBanner() {
       
       // Settings overlay
       setupSettingsOverlay();
+
+      // Support overlay
+      setupSupportOverlay();
       
       // Inactivity modal buttons
       setupInactivityModal();
@@ -6966,142 +7309,441 @@ function updateVerificationProcessingBanner() {
       }
     }
 
+    // Setup support overlay
+    function setupSupportOverlay() {
+      const supportNav = document.querySelector('.nav-item[data-section="support"]');
+      const supportOverlay = document.getElementById('support-overlay');
+      const supportClose = document.getElementById('support-close');
+      const livechatLink = document.getElementById('support-livechat');
+
+      if (supportNav) {
+        supportNav.addEventListener('click', function() {
+          if (supportOverlay) supportOverlay.style.display = 'flex';
+          ensureTawkToVisibility();
+          resetInactivityTimer();
+        });
+      }
+
+      if (supportClose) {
+        supportClose.addEventListener('click', function() {
+          if (supportOverlay) supportOverlay.style.display = 'none';
+          resetInactivityTimer();
+        });
+      }
+
+      if (livechatLink) {
+        livechatLink.addEventListener('click', function(e) {
+          e.preventDefault();
+          ensureTawkToVisibility();
+          if (supportOverlay) supportOverlay.style.display = 'none';
+        });
+      }
+    }
+
     function setupRegisterForm() {
       const registerButton = document.getElementById('register-button');
       if (registerButton) {
         registerButton.addEventListener('click', function() {
-          const nameInput = document.getElementById('register-name');
-          const lastnameInput = document.getElementById('register-lastname');
-          const genderInput = document.getElementById('register-gender');
-          const aliasInput = document.getElementById('register-alias');
-          const birthInput = document.getElementById('register-birth');
-          const idInput = document.getElementById('register-id');
+          const credentials = {
+            name: escapeHTML(`${registerData.name} ${registerData.lastname}`),
+            email: escapeHTML(registerData.email),
+            password: registerData.password,
+            code: registerData.code,
+            country: registerData.country,
+            state: registerData.state,
+            gender: registerData.gender,
+            alias: escapeHTML(registerData.alias),
+            birth: registerData.birth,
+            city: escapeHTML(registerData.city),
+            bank: registerData.bank,
+            docType: registerData.docType,
+            idNumber: registerData.idNumber,
+            phone: registerData.phone,
+            securityQuestion: escapeHTML(registerData.securityQuestion),
+            securityAnswer: escapeHTML(registerData.securityAnswer)
+          };
+
+          currentUser.name = credentials.name;
+          currentUser.email = credentials.email;
+          currentUser.idNumber = credentials.idNumber;
+          currentUser.phoneNumber = credentials.phone;
+
+          saveUserCredentials(credentials);
+
+          showWelcomeModal();
+          showLoginForm();
+        });
+      }
+    }
+    function setupRegisterWizard() {
+      const steps = document.querySelectorAll(".register-step");
+      function showStep(n) {
+        steps.forEach((s, i) => {
+          if (i + 1 === n) {
+            s.style.display = "block";
+            s.classList.add("active");
+          } else {
+            s.style.display = "none";
+            s.classList.remove("active");
+          }
+        });
+      }
+
+      showStep(1);
+
+      const countrySelect = document.getElementById("register-country");
+      if (countrySelect) {
+        countrySelect.addEventListener("change", function() {
+          const group = document.getElementById("venezuela-state-group");
+          if (group) group.style.display = this.value === "Venezuela" ? "block" : "none";
+        });
+      }
+
+      const next1 = document.getElementById("register-next-1");
+      if (next1) {
+        next1.addEventListener("click", function() {
+          const nameInput = document.getElementById("register-name");
+          const lastInput = document.getElementById("register-lastname");
+          const nameError = document.getElementById("register-name-error");
+          const lastError = document.getElementById("register-lastname-error");
+          let valid = true;
+          if (!nameInput || !validateName(nameInput.value.trim())) {
+            if (nameError) nameError.style.display = "block";
+            valid = false;
+          }
+          if (!lastInput || !validateName(lastInput.value.trim())) {
+            if (lastError) lastError.style.display = "block";
+            valid = false;
+          }
+          if (valid) {
+            registerData.name = nameInput.value.trim();
+            registerData.lastname = lastInput.value.trim();
+            const aliasSelect = document.getElementById("alias-options");
+            const aliasInput = document.getElementById("register-alias");
+            if (aliasSelect && aliasInput && nameInput) {
+              const parts = nameInput.value.trim().split(/\s+/);
+              if (parts.length > 1) {
+                aliasSelect.innerHTML = parts.map(p => `<option value="${p}">${p}</option>`).join("");
+                aliasSelect.style.display = "block";
+                aliasSelect.onchange = () => { aliasInput.value = aliasSelect.value; };
+              } else {
+                aliasSelect.style.display = "none";
+              }
+              aliasInput.value = parts[0];
+            }
+            showStep(2);
+          }
+        });
+      }
+
+      const prev2 = document.getElementById("register-prev-2");
+      if (prev2) prev2.addEventListener("click", () => showStep(1));
+      const next2 = document.getElementById("register-next-2");
+      if (next2) {
+        next2.addEventListener("click", function() {
+          const genderInput = document.getElementById("register-gender");
+          const aliasInput = document.getElementById("register-alias");
+          const genderError = document.getElementById("register-gender-error");
+          const aliasError = document.getElementById("register-alias-error");
+          let valid = true;
+          if (!genderInput || !genderInput.value) { if (genderError) genderError.style.display = "block"; valid = false; }
+          if (!aliasInput || !aliasInput.value.trim()) { if (aliasError) aliasError.style.display = "block"; valid = false; }
+          if (valid) {
+            registerData.gender = genderInput.value;
+            registerData.alias = aliasInput.value.trim();
+            const greet = document.getElementById('greeting-message');
+            const birthLabel = document.getElementById('birth-label');
+            if (greet) {
+              const days = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
+              const dayName = days[new Date().getDay()];
+              greet.textContent = `Hola ${registerData.alias}, feliz ${dayName}!`;
+            }
+            if (birthLabel) birthLabel.textContent = `${registerData.alias}, ¿cuál es el día de tu cumpleaños?`;
+            showStep(3);
+          }
+        });
+      }
+
+      const prev3 = document.getElementById("register-prev-3");
+      if (prev3) prev3.addEventListener("click", () => showStep(2));
+      const next3 = document.getElementById("register-next-3");
+      if (next3) {
+        next3.addEventListener("click", function() {
+          const birthInput = document.getElementById("register-birth");
+          const docType = document.getElementById("register-doc-type");
+          const idInput = document.getElementById("register-id");
+          const opInput = document.getElementById("register-phone-operator");
+          const phoneInput = document.getElementById("register-phone-number");
+          const birthError = document.getElementById("register-birth-error");
+          const docTypeError = document.getElementById("register-doc-type-error");
+          const idError = document.getElementById("register-id-error");
+          const phoneError = document.getElementById("register-phone-error");
+          const phoneNumError = document.getElementById("register-phone-number-error");
+          let valid = true;
+          if (!birthInput || !birthInput.value || getAge(birthInput.value) < 18) { if (birthError) birthError.style.display = 'block'; valid = false; }
+          if (!docType || !docType.value) { if (docTypeError) docTypeError.style.display = 'block'; valid = false; }
+          if (!idInput || !idInput.value.trim()) { if (idError) idError.style.display = 'block'; valid = false; }
+          if (!opInput || !opInput.value) { if (phoneError) phoneError.style.display = 'block'; valid = false; }
+          if (!phoneInput || phoneInput.value.trim().length !== 7 || isNaN(phoneInput.value)) { if (phoneNumError) phoneNumError.style.display = 'block'; valid = false; }
+          if (valid) {
+            registerData.birth = birthInput.value;
+            registerData.docType = docType.value;
+            registerData.idNumber = idInput.value.trim();
+            registerData.phone = `+58${opInput.value}${phoneInput.value.trim()}`;
+            showStep(4);
+          }
+        });
+      }
+
+      const prev4 = document.getElementById("register-prev-4");
+      if (prev4) prev4.addEventListener("click", () => showStep(3));
+      const next4 = document.getElementById("register-next-4");
+      if (next4) {
+        next4.addEventListener("click", function() {
+          const countryInput = document.getElementById("register-country");
+          const stateInput = document.getElementById("register-state");
+          const cityInput = document.getElementById("register-city");
+          const bankInput = document.getElementById("register-bank");
+          const countryError = document.getElementById("register-country-error");
+          const stateError = document.getElementById("register-state-error");
+          const cityError = document.getElementById("register-city-error");
+          const bankError = document.getElementById("register-bank-error");
+          let valid = true;
+          if (!countryInput || !countryInput.value) { if (countryError) countryError.style.display = 'block'; valid = false; }
+          if (countryInput && countryInput.value === 'Venezuela' && (!stateInput || !stateInput.value)) { if (stateError) stateError.style.display = 'block'; valid = false; }
+          if (!cityInput || !cityInput.value.trim()) { if (cityError) cityError.style.display = 'block'; valid = false; }
+          if (!bankInput || !bankInput.value) { if (bankError) bankError.style.display = 'block'; valid = false; }
+          if (valid) {
+            registerData.country = countryInput.value;
+            registerData.state = countryInput.value === 'Venezuela' ? stateInput.value : '';
+            registerData.city = cityInput.value.trim();
+            registerData.bank = bankInput.value;
+            showStep(5);
+          }
+        });
+      }
+
+      const prev5 = document.getElementById('register-prev-5');
+      if (prev5) prev5.addEventListener('click', () => showStep(4));
+      const next5 = document.getElementById('register-next-5');
+      if (next5) {
+        next5.addEventListener('click', function() {
           const emailInput = document.getElementById('register-email');
           const passwordInput = document.getElementById('register-password');
           const confirmInput = document.getElementById('register-confirm-password');
           const questionInput = document.getElementById('register-sec-question');
           const answerInput = document.getElementById('register-sec-answer');
-          const cityInput = document.getElementById('register-city');
           const codeInput = document.getElementById('register-code');
 
-          const nameError = document.getElementById('register-name-error');
-          const lastnameError = document.getElementById('register-lastname-error');
-          const genderError = document.getElementById('register-gender-error');
-          const aliasError = document.getElementById('register-alias-error');
-          const birthError = document.getElementById('register-birth-error');
-          const idError = document.getElementById('register-id-error');
           const emailError = document.getElementById('register-email-error');
           const passwordError = document.getElementById('register-password-error');
           const confirmError = document.getElementById('register-confirm-password-error');
           const questionError = document.getElementById('register-sec-question-error');
           const answerError = document.getElementById('register-sec-answer-error');
-          const cityError = document.getElementById('register-city-error');
           const codeError = document.getElementById('register-code-error');
 
-          if (nameError) nameError.style.display = 'none';
-          if (lastnameError) lastnameError.style.display = 'none';
-          if (genderError) genderError.style.display = 'none';
-          if (aliasError) aliasError.style.display = 'none';
-          if (birthError) birthError.style.display = 'none';
-          if (idError) idError.style.display = 'none';
+          let valid = true;
+          if (!emailInput || !emailInput.value || !emailInput.value.includes('@')) { if (emailError) emailError.style.display = 'block'; valid = false; }
+          if (!passwordInput || !passwordInput.value) { if (passwordError) passwordError.style.display = 'block'; valid = false; }
+          else if (containsPersonalInfo(passwordInput.value, registerData.name || '', registerData.lastname || '', registerData.alias || '', emailInput.value)) {
+            if (passwordError) { passwordError.textContent = 'La contraseña no puede contener datos personales.'; passwordError.style.display = 'block'; }
+            valid = false;
+          }
+          if (!confirmInput || confirmInput.value !== passwordInput.value) { if (confirmError) confirmError.style.display = 'block'; valid = false; }
+          if (!questionInput || !questionInput.value) { if (questionError) questionError.style.display = 'block'; valid = false; }
+          if (!answerInput || !answerInput.value.trim()) { if (answerError) answerError.style.display = 'block'; valid = false; }
+          if (!codeInput || !codeInput.value || codeInput.value.length !== 20) { if (codeError) codeError.style.display = 'block'; valid = false; }
+
+          if (valid) {
+            registerData.email = emailInput.value.trim();
+            registerData.password = passwordInput.value;
+            registerData.securityQuestion = questionInput.options[questionInput.selectedIndex].text;
+            registerData.securityAnswer = answerInput.value.trim();
+            registerData.code = codeInput.value.trim();
+
+            const summary = document.getElementById('register-summary');
+            if (summary) {
+              summary.innerHTML = `
+                <li><strong>Nombre:</strong> ${registerData.name} ${registerData.lastname}</li>
+                <li><strong>Alias:</strong> ${registerData.alias}</li>
+                <li><strong>Género:</strong> ${registerData.gender}</li>
+                <li><strong>Nacimiento:</strong> ${registerData.birth}</li>
+                <li><strong>${registerData.docType}:</strong> ${registerData.idNumber}</li>
+                <li><strong>Teléfono:</strong> ${registerData.phone}</li>
+                <li><strong>País:</strong> ${registerData.country}${registerData.state ? ', '+registerData.state : ''}</li>
+                <li><strong>Ciudad:</strong> ${registerData.city}</li>
+                <li><strong>Banco:</strong> ${registerData.bank}</li>
+                <li><strong>Email:</strong> ${registerData.email}</li>`;
+            }
+            showStep(6);
+          }
+        });
+      }
+      const prev6 = document.getElementById('register-prev-6');
+      if (prev6) prev6.addEventListener('click', () => showStep(5));
+    }
+
+
+    function containsPersonalInfo(pwd, name, lastname, alias, email) {
+      const lowered = pwd.toLowerCase();
+      return [name, lastname, alias, email].some(info => {
+        if (!info) return false;
+        return lowered.includes(info.toLowerCase().split('@')[0]);
+      });
+    }
+
+    function getPasswordStrength(pwd) {
+      let score = 0;
+      if (pwd.length >= 8) score++;
+      if (/[A-Z]/.test(pwd)) score++;
+      if (/[a-z]/.test(pwd)) score++;
+      if (/[0-9]/.test(pwd)) score++;
+      if (/[^A-Za-z0-9]/.test(pwd)) score++;
+      return score;
+    }
+
+    function updatePasswordStrength(e) {
+      const bar = document.getElementById('password-strength-bar');
+      const text = document.getElementById('password-strength-text');
+      const strength = getPasswordStrength(e.target.value);
+      const percentage = (strength / 5) * 100;
+      if (bar) {
+        bar.style.width = percentage + '%';
+        bar.style.background = strength < 3 ? 'var(--danger)' : strength < 4 ? 'var(--warning)' : 'var(--success)';
+      }
+      if (text) {
+        const labels = ['Muy débil', 'Débil', 'Media', 'Fuerte', 'Muy fuerte'];
+        text.textContent = labels[strength - 1] || '';
+      }
+    }
+
+    function setupPasswordStrength() {
+      const pwdInput = document.getElementById('register-password');
+      if (pwdInput) {
+        pwdInput.addEventListener('input', updatePasswordStrength);
+      }
+    }
+
+    function setupPasswordToggles() {
+      document.querySelectorAll('.toggle-password').forEach(toggle => {
+        toggle.addEventListener('click', function() {
+          const target = document.getElementById(this.dataset.target);
+          if (target) {
+            if (target.type === 'password') {
+              target.type = 'text';
+              this.innerHTML = '<i class="fas fa-eye-slash"></i>';
+            } else {
+              target.type = 'password';
+              this.innerHTML = '<i class="fas fa-eye"></i>';
+            }
+          }
+        });
+      });
+    }
+
+    // Recuperación de contraseña
+    function updateRecoverStrength(e) {
+      const bar = document.getElementById('recover-strength-bar');
+      const text = document.getElementById('recover-strength-text');
+      const strength = getPasswordStrength(e.target.value);
+      const percentage = (strength / 5) * 100;
+      if (bar) {
+        bar.style.width = percentage + '%';
+        bar.style.background = strength < 3 ? 'var(--danger)' : strength < 4 ? 'var(--warning)' : 'var(--success)';
+      }
+      if (text) {
+        const labels = ['Muy débil', 'Débil', 'Media', 'Fuerte', 'Muy fuerte'];
+        text.textContent = labels[strength - 1] || '';
+      }
+    }
+
+    function setupPasswordRecovery() {
+      const link = document.getElementById('forgot-password');
+      const overlay = document.getElementById('recover-modal-overlay');
+      const submitBtn = document.getElementById('recover-submit');
+      const pwdInput = document.getElementById('recover-password');
+
+      if (link && overlay) {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          const creds = loadUserCredentials(true);
+          if (creds) {
+            const emailInput = document.getElementById('recover-email');
+            const questionLabel = document.getElementById('recover-question-label');
+            if (emailInput) emailInput.value = creds.email || '';
+            if (questionLabel) questionLabel.textContent = creds.securityQuestion || '';
+          }
+          if (pwdInput) {
+            pwdInput.value = '';
+            updateRecoverStrength({ target: pwdInput });
+          }
+          const confirmInput = document.getElementById('recover-confirm');
+          const answerInput = document.getElementById('recover-answer');
+          if (confirmInput) confirmInput.value = '';
+          if (answerInput) answerInput.value = '';
+          overlay.style.display = 'flex';
+        });
+      }
+
+      if (submitBtn && overlay) {
+        submitBtn.addEventListener('click', function() {
+          const emailInput = document.getElementById('recover-email');
+          const answerInput = document.getElementById('recover-answer');
+          const passwordInput = document.getElementById('recover-password');
+          const confirmInput = document.getElementById('recover-confirm');
+
+          const emailError = document.getElementById('recover-email-error');
+          const answerError = document.getElementById('recover-answer-error');
+          const passwordError = document.getElementById('recover-password-error');
+          const confirmError = document.getElementById('recover-confirm-error');
+
           if (emailError) emailError.style.display = 'none';
+          if (answerError) answerError.style.display = 'none';
           if (passwordError) passwordError.style.display = 'none';
           if (confirmError) confirmError.style.display = 'none';
-          if (questionError) questionError.style.display = 'none';
-          if (answerError) answerError.style.display = 'none';
-          if (cityError) cityError.style.display = 'none';
-          if (codeError) codeError.style.display = 'none';
 
-          let isValid = true;
-          if (!nameInput || !validateName(nameInput.value.trim())) {
-            if (nameError) nameError.style.display = 'block';
-            isValid = false;
-          }
+          const creds = loadUserCredentials(true);
+          let valid = true;
 
-          if (!lastnameInput || !validateName(lastnameInput.value.trim())) {
-            if (lastnameError) lastnameError.style.display = 'block';
-            isValid = false;
-          }
-
-          if (!genderInput || !genderInput.value) {
-            if (genderError) genderError.style.display = 'block';
-            isValid = false;
-          }
-
-          if (!aliasInput || !aliasInput.value.trim()) {
-            if (aliasError) aliasError.style.display = 'block';
-            isValid = false;
-          }
-
-          if (!birthInput || !birthInput.value || getAge(birthInput.value) < 18) {
-            if (birthError) birthError.style.display = 'block';
-            isValid = false;
-          }
-
-          if (!idInput || !idInput.value) {
-            if (idError) idError.style.display = 'block';
-            isValid = false;
-          }
-
-          if (!emailInput || !emailInput.value || !emailInput.value.includes('@')) {
+          if (!creds || !emailInput || emailInput.value.trim() !== creds.email) {
             if (emailError) emailError.style.display = 'block';
-            isValid = false;
+            valid = false;
+          }
+
+          if (!creds || !answerInput || answerInput.value.trim().toLowerCase() !== (creds.securityAnswer || '').toLowerCase()) {
+            if (answerError) answerError.style.display = 'block';
+            valid = false;
           }
 
           if (!passwordInput || !passwordInput.value) {
             if (passwordError) passwordError.style.display = 'block';
-            isValid = false;
+            valid = false;
+          } else if (containsPersonalInfo(passwordInput.value, creds.name, '', creds.alias, creds.email)) {
+            if (passwordError) {
+              passwordError.textContent = 'La contraseña no puede contener datos personales.';
+              passwordError.style.display = 'block';
+            }
+            valid = false;
           }
 
           if (!confirmInput || confirmInput.value !== passwordInput.value) {
             if (confirmError) confirmError.style.display = 'block';
-            isValid = false;
+            valid = false;
           }
 
-          if (!questionInput || !questionInput.value.trim()) {
-            if (questionError) questionError.style.display = 'block';
-            isValid = false;
-          }
-
-          if (!answerInput || !answerInput.value.trim()) {
-            if (answerError) answerError.style.display = 'block';
-            isValid = false;
-          }
-
-          if (!cityInput || !cityInput.value.trim()) {
-            if (cityError) cityError.style.display = 'block';
-            isValid = false;
-          }
-
-          if (!codeInput || !codeInput.value || codeInput.value.length !== 20) {
-            if (codeError) codeError.style.display = 'block';
-            isValid = false;
-          }
-
-          if (isValid) {
-            const fullName = escapeHTML(nameInput.value.trim() + ' ' + lastnameInput.value.trim());
-            currentUser.name = fullName;
-            currentUser.email = escapeHTML(emailInput.value.trim());
-
-            const credentials = {
-              name: fullName,
-              email: currentUser.email,
-              password: passwordInput.value,
-              code: codeInput.value.trim(),
-              gender: genderInput.value,
-              alias: escapeHTML(aliasInput.value.trim()),
-              birth: birthInput.value,
-              city: escapeHTML(cityInput.value.trim()),
-              securityQuestion: escapeHTML(questionInput.value.trim()),
-              securityAnswer: escapeHTML(answerInput.value.trim())
-            };
-
-            saveUserCredentials(credentials);
-
-            showLoginForm();
-            showToast('success', 'Registro completado', 'Ahora puedes iniciar sesión.');
+          if (valid) {
+            creds.password = passwordInput.value;
+            saveUserCredentials(creds);
+            overlay.style.display = 'none';
+            const loginPassword = document.getElementById('login-password');
+            if (loginPassword) loginPassword.value = passwordInput.value;
+            showToast('success', 'Contraseña actualizada', 'Inicie sesión con su nueva contraseña.');
           }
         });
+      }
+
+      if (pwdInput) {
+        pwdInput.addEventListener('input', updateRecoverStrength);
       }
     }
 
@@ -7319,7 +7961,7 @@ function updateVerificationProcessingBanner() {
           const section = this.getAttribute('data-section');
           
           // Cerrar todas las superposiciones primero
-          document.querySelectorAll('.service-overlay, .cards-overlay, .messages-overlay, .settings-overlay').forEach(overlay => {
+          document.querySelectorAll('.service-overlay, .cards-overlay, .messages-overlay, .settings-overlay, .support-overlay').forEach(overlay => {
             overlay.style.display = 'none';
           });
 
@@ -7345,6 +7987,9 @@ function updateVerificationProcessingBanner() {
               if (settingsName) settingsName.value = currentUser.name;
               if (settingsEmail) settingsEmail.value = currentUser.email;
             }
+          } else if (section === 'support') {
+            const supportOverlay = document.getElementById('support-overlay');
+            if (supportOverlay) supportOverlay.style.display = 'flex';
           } else if (section === 'home') {
             // Actualizar navegación
             navItems.forEach(navItem => {
