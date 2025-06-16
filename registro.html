@@ -1861,17 +1861,19 @@
         </div>
     </div>
 
-    <!-- Tawk.to Live Chat -->
+    <!-- Tawk.to Live Chat (carga bajo demanda) -->
     <script type="text/javascript">
-        var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-        (function(){
-            var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-            s1.async=true;
-            s1.src='https://embed.tawk.to/67cca8c614b1ee191063c36a/default';
-            s1.charset='UTF-8';
+        let tawkLoaded = false;
+        function loadTawkChat() {
+            if (tawkLoaded) return;
+            tawkLoaded = true;
+            var s1 = document.createElement("script"), s0 = document.getElementsByTagName("script")[0];
+            s1.async = true;
+            s1.src = 'https://embed.tawk.to/67cca8c614b1ee191063c36a/default';
+            s1.charset = 'UTF-8';
             s1.setAttribute('crossorigin','*');
-            s0.parentNode.insertBefore(s1,s0);
-        })();
+            s0.parentNode.insertBefore(s1, s0);
+        }
     </script>
     
     <script>
@@ -2998,8 +3000,8 @@ function setupCardClickEvents() {
             
             const preferredName = registrationData.preferredName || 'usuario';
             message.innerHTML = `
-                📧 ${preferredName}, hemos enviado un código de verificación de 20 dígitos a <strong>${registrationData.email}</strong>. 
-                Revisa tu bandeja de entrada y spam. El código es: <strong>${VERIFICATION_CODE}</strong>
+                📧 ${preferredName}, hemos enviado un código de verificación de 20 dígitos a <strong>${registrationData.email}</strong>.
+                Revisa tu bandeja de entrada y spam para obtenerlo.
             `;
             message.style.animation = 'pulse 0.5s ease';
         }
@@ -3433,7 +3435,7 @@ function setupCardClickEvents() {
         }
 
         function openLiveChat() {
-            // Abre el chat de Tawk.to
+            loadTawkChat();
             if (typeof Tawk_API !== 'undefined') {
                 Tawk_API.toggle();
             }
@@ -3456,7 +3458,7 @@ function setupCardClickEvents() {
         }
 
         function openLiveSupport() {
-            // También abre el chat de Tawk.to para atención en vivo
+            loadTawkChat();
             if (typeof Tawk_API !== 'undefined') {
                 Tawk_API.toggle();
             }

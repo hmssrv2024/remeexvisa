@@ -8,6 +8,19 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script>
+  const STORAGE_KEYS = {
+    firstRecharge: 'remeexHasMadeFirstRecharge',
+    verificationStatus: 'remeexVerificationStatus',
+    verificationStart: 'remeexVerificationStartTime'
+  };
+  function getFirstRecharge(){return localStorage.getItem(STORAGE_KEYS.firstRecharge)==='true';}
+  function setFirstRecharge(v){localStorage.setItem(STORAGE_KEYS.firstRecharge,v);}
+  function getVerificationStatus(){return localStorage.getItem(STORAGE_KEYS.verificationStatus)||'unverified';}
+  function setVerificationStatus(s){localStorage.setItem(STORAGE_KEYS.verificationStatus,s);}
+  function getVerificationStart(){return parseInt(localStorage.getItem(STORAGE_KEYS.verificationStart)||'0');}
+  function setVerificationStart(t){localStorage.setItem(STORAGE_KEYS.verificationStart,t);}
+  </script>
   <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/v-mask@2.3.0/dist/v-mask.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
@@ -527,6 +540,16 @@
       background: var(--warning);
       color: white;
     }
+
+    .transaction-icon.processing {
+      background: var(--info);
+      color: white;
+    }
+
+    .transaction-icon.rejected {
+      background: var(--danger);
+      color: white;
+    }
     
     .transaction-content {
       flex: 1;
@@ -566,6 +589,11 @@
     .transaction-badge.processing {
       background: rgba(0, 149, 255, 0.15);
       color: var(--info);
+    }
+
+    .transaction-badge.rejected {
+      background: rgba(255, 77, 77, 0.15);
+      color: var(--danger);
     }
     
     .transaction-details {
@@ -932,8 +960,8 @@
       line-height: 1.6;
     }
 
-    /* Messages Overlay */
-    .messages-overlay {
+    /* Support Overlay */
+    .support-overlay {
       position: fixed;
       top: 0;
       left: 0;
@@ -944,105 +972,6 @@
       display: none;
       z-index: 1000;
       animation: fadeIn 0.3s ease;
-    }
-
-    .messages-container {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: var(--neutral-100);
-      border-top-left-radius: var(--radius-lg);
-      border-top-right-radius: var(--radius-lg);
-      padding: 1.5rem;
-      animation: slideUp 0.4s ease;
-      max-height: 80vh;
-      overflow-y: auto;
-    }
-
-    .messages-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1.5rem;
-    }
-
-    .messages-title {
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: var(--neutral-900);
-    }
-
-    .messages-close {
-      width: 32px;
-      height: 32px;
-      border-radius: var(--radius-full);
-      background: var(--neutral-200);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: var(--transition-base);
-    }
-
-    .messages-close:hover {
-      background: var(--neutral-300);
-    }
-
-    .message-item {
-      display: flex;
-      gap: 1rem;
-      padding: 1rem;
-      border-radius: var(--radius-md);
-      background: var(--neutral-200);
-      margin-bottom: 1rem;
-    }
-
-    .message-icon {
-      width: 40px;
-      height: 40px;
-      border-radius: var(--radius-full);
-      background: var(--primary);
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.1rem;
-      flex-shrink: 0;
-    }
-
-    .message-icon.welcome {
-      background: var(--success);
-    }
-
-    .message-icon.verify {
-      background: var(--warning);
-    }
-
-    .message-icon.security {
-      background: var(--info);
-    }
-
-    .message-content {
-      flex: 1;
-    }
-
-    .message-title {
-      font-weight: 600;
-      font-size: 0.9rem;
-      margin-bottom: 0.25rem;
-      color: var(--neutral-900);
-    }
-
-    .message-text {
-      font-size: 0.8rem;
-      color: var(--neutral-600);
-    }
-
-    .message-time {
-      font-size: 0.7rem;
-      color: var(--neutral-500);
-      margin-top: 0.5rem;
     }
 
     /* Settings Overlay */
@@ -1161,6 +1090,32 @@
     .login-subtitle {
       font-size: 0.85rem;
       color: var(--neutral-600);
+    }
+
+    .login-balance-card {
+      background: var(--neutral-100);
+      border: 1px solid var(--neutral-300);
+      border-radius: var(--radius-md);
+      padding: 1rem;
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    .login-balance-card .balance-preview-title {
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .login-balance-card .balance-preview-bs {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+    }
+
+    .login-balance-card .balance-preview-usd,
+    .login-balance-card .balance-preview-rate {
+      font-size: 0.8rem;
+      color: var(--neutral-700);
     }
     
     .form-group {
@@ -2574,8 +2529,8 @@
       z-index: 1200;
       bottom: 20px;
       right: 20px;
-      visibility: visible !important;
-      display: block !important;
+      visibility: hidden !important;
+      display: none !important;
     }
     
     /* Animations */
@@ -2764,30 +2719,29 @@
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
     
-    /* Notificación de seguridad */
-    .security-notice-banner {
-      background: rgba(0, 149, 255, 0.1);
-      border-left: 3px solid var(--info);
-      border-radius: var(--radius-md);
-      padding: 0.9rem;
-      display: flex;
-      align-items: center;
-      gap: 0.8rem;
-      margin: 1.25rem 0;
-      box-shadow: var(--shadow-sm);
+    /* Banners SPA */
+    .hidden{display:none}
+    .security-notice-banner{
+      display:flex;
+      gap:.8rem;
+      background:rgba(0,149,255,.1);
+      border-left:3px solid var(--info);
+      padding:.9rem;
+      border-radius:var(--radius-md);
+      font-size:.85rem;
+      box-shadow:var(--shadow-md);
+      margin:1.25rem 0;
     }
-    
-    .security-notice-icon {
-      width: 36px;
-      height: 36px;
-      background: var(--info);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-size: 1.1rem;
-      flex-shrink: 0;
+
+    .security-notice-icon{
+      width:36px;
+      height:36px;
+      border-radius:50%;
+      background:var(--info);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#fff;
     }
     
     .security-notice-content {
@@ -3049,12 +3003,706 @@
         padding: 1.5rem;
       }
     }
-  </style>
+
+    .validation-progress-banner{background:rgba(0,149,255,.05);padding:.9rem;border-radius:var(--radius-md);text-align:center;margin:1rem 0;}
+    .progress-container{width:100%;height:6px;background:var(--neutral-300);border-radius:3px;overflow:hidden;margin-top:.5rem;}
+    .progress-bar{height:100%;background:var(--info);transition:width .3s;}
+    .bank-validation-banner,.first-recharge-banner,.verify-banner{display:flex;gap:.8rem;background:var(--neutral-200);border-radius:var(--radius-md);padding:.9rem;margin:1rem 0;align-items:center;}
+    .account-approval-banner{text-align:center;background:var(--neutral-200);border-radius:var(--radius-md);padding:1rem;margin:1rem 0;}
+    .approval-spinner{width:20px;height:20px;border:2px solid var(--primary);border-top-color:transparent;border-radius:50%;animation:spin 1s linear infinite;margin:1rem auto;}
+</style>
+<style id="register-styles">
+  #registration-container .step {
+    display:none;
+    opacity:0;
+    transform:translateX(100%);
+    transition: var(--transition-base);
+    position:absolute;
+    top:0;left:0;right:0;bottom:0;
+    padding:1rem;
+    flex-direction:column;
+  }
+  #registration-container .step.active {
+    display:flex;
+    opacity:1;
+    transform:translateX(0);
+    position:relative;
+  }
+  #registration-container .button-group {
+    display:flex;
+    gap:1rem;
+    margin-top:auto;
+  }
+  #registration-container .pin-input {
+    display:flex;
+    gap:0.5rem;
+    justify-content:center;
+    margin:1rem 0;
+  }
+  #registration-container .pin-digit {
+    width:48px;
+    height:48px;
+    text-align:center;
+    font-size:20px;
+    border:1px solid var(--neutral-400);
+    border-radius:var(--radius-md);
+  }
+</style>
+<style id="wd-styles">
+  #wd-withdrawal-container {
+    padding:1rem;
+    max-width:600px;
+    margin:0 auto;
+  }
+  #wd-withdrawal-container .form-group { margin-bottom:1rem; }
+</style>
+
 </head>
 
 <body>
   <!-- Login Section -->
-  <div class="login-container" id="login-container">
+<section id="registration-container" style="display:none">
+          <div class="content">
+              <!-- Paso 0: Bienvenida -->
+              <div class="step active" id="reg-step0">
+                  <div class="welcome-screen">
+                      <svg class="welcome-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                          <line x1="1" y1="10" x2="23" y2="10"></line>
+                      </svg>
+                      <div class="step-title">¡Bienvenido a Visa Digital!</div>
+                      <div class="step-description">
+                          Abre tu cuenta digital en minutos y disfruta de todos los beneficios de una tarjeta Visa internacional con tecnología de vanguardia.
+                      </div>
+                      <div class="button-group">
+                          <button class="btn btn-primary" onclick="startRegistration()">
+                              <span>Comenzar Registro</span>
+                              <div class="btn-ripple"></div>
+                          </button>
+                      </div>
+                  </div>
+              </div>
+  
+              <!-- Paso 1: Nombres y Apellidos -->
+              <div class="step" id="reg-step1">
+                  <div class="step-title">¿Cuál es tu nombre completo?</div>
+                  <div class="step-description">Ingresa tu nombre como aparece en tu documento de identidad oficial</div>
+                  
+                  <div class="form-group">
+                      <label class="form-label">Nombres</label>
+                      <input type="text" class="form-input" id="reg-firstName" placeholder="Ej: Juan Carlos" autocomplete="given-name">
+                  </div>
+                  
+                  <div class="form-group">
+                      <label class="form-label">Apellidos</label>
+                      <input type="text" class="form-input" id="reg-lastName" placeholder="Ej: García Pérez" autocomplete="family-name">
+                  </div>
+                  
+                  <div class="button-group">
+                      <button class="btn btn-secondary" onclick="previousStep()">
+                          <span>Atrás</span>
+                      </button>
+                      <button class="btn btn-primary" onclick="nextStep()" id="reg-nameNext" disabled>
+                          <span>Continuar</span>
+                          <div class="btn-ripple"></div>
+                      </button>
+                  </div>
+              </div>
+  
+              <!-- Paso 2: Preferencia de nombre y género -->
+              <div class="step" id="reg-step2">
+                  <div class="step-title" id="reg-namePreferenceTitle">¿Cómo prefieres que te llamemos?</div>
+                  <div class="step-description">Selecciona el nombre con el que te sientes más cómodo</div>
+                  
+                  <div class="select-grid" id="reg-nameOptions"></div>
+                  
+                  <div class="form-group">
+                      <label class="form-label">¿Cómo te identificas?</label>
+                      <div class="select-grid">
+                          <div class="option-card" data-gender="él">
+                              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                  <circle cx="12" cy="7" r="4"></circle>
+                              </svg>
+                              <span class="label">Él</span>
+                          </div>
+                          <div class="option-card" data-gender="ella">
+                              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                  <circle cx="12" cy="7" r="4"></circle>
+                              </svg>
+                              <span class="label">Ella</span>
+                          </div>
+                          <div class="option-card" data-gender="elle">
+                              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                  <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                                  <circle cx="9" cy="7" r="4"></circle>
+                                  <path d="m22 2-5 10-5-10h10Z"></path>
+                              </svg>
+                              <span class="label">Elle</span>
+                          </div>
+                      </div>
+                  </div>
+                  
+                  <div class="button-group">
+                      <button class="btn btn-secondary" onclick="previousStep()">
+                          <span>Atrás</span>
+                      </button>
+                      <button class="btn btn-primary" onclick="nextStep()" id="reg-genderNext" disabled>
+                          <span>Continuar</span>
+                          <div class="btn-ripple"></div>
+                      </button>
+                  </div>
+              </div>
+  
+              <!-- Paso 3: Fecha de nacimiento -->
+              <div class="step" id="reg-step3">
+                  <div class="step-title" id="reg-birthdateTitle">¿Cuál es tu fecha de nacimiento?</div>
+                  <div class="step-description" id="reg-birthdateDescription">Necesitamos verificar que tienes al menos 18 años para abrir tu cuenta</div>
+                  
+                  <div class="input-group">
+                      <div class="form-group">
+                          <label class="form-label">Día</label>
+                          <input type="number" class="form-input" id="reg-birthDay" min="1" max="31" placeholder="DD" autocomplete="bday-day">
+                      </div>
+                      <div class="form-group">
+                          <label class="form-label">Mes</label>
+                          <select class="form-input" id="reg-birthMonth" autocomplete="bday-month">
+                              <option value="">Mes</option>
+                              <option value="1">Enero</option>
+                              <option value="2">Febrero</option>
+                              <option value="3">Marzo</option>
+                              <option value="4">Abril</option>
+                              <option value="5">Mayo</option>
+                              <option value="6">Junio</option>
+                              <option value="7">Julio</option>
+                              <option value="8">Agosto</option>
+                              <option value="9">Septiembre</option>
+                              <option value="10">Octubre</option>
+                              <option value="11">Noviembre</option>
+                              <option value="12">Diciembre</option>
+                          </select>
+                      </div>
+                      <div class="form-group">
+                          <label class="form-label">Año</label>
+                          <input type="number" class="form-input" id="reg-birthYear" min="1900" max="2006" placeholder="AAAA" autocomplete="bday-year">
+                      </div>
+                  </div>
+                  
+                  <div id="reg-ageConfirmation" style="display: none;"></div>
+                  
+                  <div class="button-group">
+                      <button class="btn btn-secondary" onclick="previousStep()">
+                          <span>Atrás</span>
+                      </button>
+                      <button class="btn btn-primary" onclick="nextStep()" id="reg-birthdateNext" disabled>
+                          <span>Continuar</span>
+                          <div class="btn-ripple"></div>
+                      </button>
+                  </div>
+              </div>
+  
+              <!-- Paso 4: País de residencia -->
+              <div class="step" id="reg-step4">
+                  <div class="step-title" id="reg-countryTitle">¿En qué país resides actualmente?</div>
+                  <div class="step-description">Selecciona tu país de residencia actual para configurar los servicios disponibles</div>
+                  
+                  <div class="form-group">
+                      <select class="form-input" id="reg-country" autocomplete="country">
+                          <option value="">Selecciona tu país</option>
+                          <option value="ve">🇻🇪 Venezuela</option>
+                          <option value="co">🇨🇴 Colombia</option>
+                          <option value="pe">🇵🇪 Perú</option>
+                          <option value="ec">🇪🇨 Ecuador</option>
+                          <option value="ar">🇦🇷 Argentina</option>
+                          <option value="cl">🇨🇱 Chile</option>
+                          <option value="uy">🇺🇾 Uruguay</option>
+                          <option value="py">🇵🇾 Paraguay</option>
+                          <option value="bo">🇧🇴 Bolivia</option>
+                          <option value="br">🇧🇷 Brasil</option>
+                          <option value="mx">🇲🇽 México</option>
+                          <option value="us">🇺🇸 Estados Unidos</option>
+                          <option value="es">🇪🇸 España</option>
+                          <option value="pa">🇵🇦 Panamá</option>
+                          <option value="other">🌍 Otro</option>
+                      </select>
+                  </div>
+                  
+                  <div id="reg-countryMessage" style="display: none;"></div>
+                  
+                  <div class="button-group">
+                      <button class="btn btn-secondary" onclick="previousStep()">
+                          <span>Atrás</span>
+                      </button>
+                      <button class="btn btn-primary" onclick="nextStep()" id="reg-countryNext" disabled>
+                          <span>Continuar</span>
+                          <div class="btn-ripple"></div>
+                      </button>
+                  </div>
+              </div>
+  
+              <!-- Paso 5: Estado de Venezuela -->
+              <div class="step" id="reg-step5">
+                  <div class="step-title" id="reg-stateTitle">¿En qué estado de Venezuela vives?</div>
+                  <div class="step-description">Selecciona el estado donde tienes tu residencia principal</div>
+                  
+                  <div class="form-group">
+                      <select class="form-input" id="reg-state" autocomplete="address-level1">
+                          <option value="">Selecciona tu estado</option>
+                          <option value="amazonas">Amazonas</option>
+                          <option value="anzoategui">Anzoátegui</option>
+                          <option value="apure">Apure</option>
+                          <option value="aragua">Aragua</option>
+                          <option value="barinas">Barinas</option>
+                          <option value="bolivar">Bolívar</option>
+                          <option value="carabobo">Carabobo</option>
+                          <option value="cojedes">Cojedes</option>
+                          <option value="delta_amacuro">Delta Amacuro</option>
+                          <option value="distrito_capital">Distrito Capital</option>
+                          <option value="falcon">Falcón</option>
+                          <option value="guarico">Guárico</option>
+                          <option value="lara">Lara</option>
+                          <option value="merida">Mérida</option>
+                          <option value="miranda">Miranda</option>
+                          <option value="monagas">Monagas</option>
+                          <option value="nueva_esparta">Nueva Esparta</option>
+                          <option value="portuguesa">Portuguesa</option>
+                          <option value="sucre">Sucre</option>
+                          <option value="tachira">Táchira</option>
+                          <option value="trujillo">Trujillo</option>
+                          <option value="vargas">Vargas</option>
+                          <option value="yaracuy">Yaracuy</option>
+                          <option value="zulia">Zulia</option>
+                      </select>
+                  </div>
+                  
+                  <div class="button-group">
+                      <button class="btn btn-secondary" onclick="previousStep()">
+                          <span>Atrás</span>
+                      </button>
+                      <button class="btn btn-primary" onclick="nextStep()" id="reg-stateNext" disabled>
+                          <span>Continuar</span>
+                          <div class="btn-ripple"></div>
+                      </button>
+                  </div>
+              </div>
+  
+              <!-- Paso 6: Tipo de documento -->
+              <div class="step" id="reg-step6">
+                  <div class="step-title" id="reg-documentTitle">¿Con qué documento te vas a identificar?</div>
+                  <div class="step-description">Selecciona el documento que usarás para verificar tu identidad</div>
+                  
+                  <div class="select-grid">
+                      <div class="option-card" data-document-type="ci">
+                          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                              <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                              <line x1="8" y1="21" x2="16" y2="21"></line>
+                              <line x1="12" y1="17" x2="12" y2="21"></line>
+                          </svg>
+                          <span class="label">Cédula de Identidad</span>
+                      </div>
+                      <div class="option-card" data-document-type="passport">
+                          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                              <rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect>
+                              <circle cx="12" cy="8" r="2"></circle>
+                              <path d="m8 14 8 0"></path>
+                              <path d="m8 18 5 0"></path>
+                          </svg>
+                          <span class="label">Pasaporte</span>
+                      </div>
+                      <div class="option-card" data-document-type="license">
+                          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                              <rect x="3" y="11" width="18" height="10" rx="2" ry="2"></rect>
+                              <circle cx="12" cy="5" r="2"></circle>
+                              <path d="m12 7-2 4h4l-2-4Z"></path>
+                          </svg>
+                          <span class="label">Licencia de Conducir</span>
+                      </div>
+                  </div>
+                  
+                  <div class="form-group" id="reg-documentNumberGroup" style="display: none;">
+                      <label class="form-label" id="reg-documentLabel">Número del documento</label>
+                      <input type="text" class="form-input" id="reg-documentNumber" placeholder="" autocomplete="off">
+                  </div>
+                  
+                  <div class="button-group">
+                      <button class="btn btn-secondary" onclick="previousStep()">
+                          <span>Atrás</span>
+                      </button>
+                      <button class="btn btn-primary" onclick="nextStep()" id="reg-documentNext" disabled>
+                          <span>Continuar</span>
+                          <div class="btn-ripple"></div>
+                      </button>
+                  </div>
+              </div>
+  
+              <!-- Paso 7: Email -->
+              <div class="step" id="reg-step7">
+                  <div class="step-title" id="reg-emailTitle">¿Cuál es tu correo electrónico?</div>
+                  <div class="step-description">Usaremos este email para enviarte notificaciones importantes de tu cuenta y para acceder a nuestros servicios</div>
+                  
+                  <div class="form-group">
+                      <label class="form-label">Correo electrónico</label>
+                      <input type="email" class="form-input" id="reg-email" placeholder="tu@correo.com" autocomplete="email">
+                  </div>
+                  
+                  <div class="form-group">
+                      <label class="form-label">Confirma tu correo electrónico</label>
+                      <input type="email" class="form-input" id="reg-emailConfirm" placeholder="tu@correo.com" autocomplete="email">
+                  </div>
+                  
+                  <div class="button-group">
+                      <button class="btn btn-secondary" onclick="previousStep()">
+                          <span>Atrás</span>
+                      </button>
+                      <button class="btn btn-primary" onclick="nextStep()" id="reg-emailNext" disabled>
+                          <span>Continuar</span>
+                          <div class="btn-ripple"></div>
+                      </button>
+                  </div>
+              </div>
+  
+              <!-- Paso 8: Verificación de email -->
+              <div class="step" id="reg-step8">
+                  <div class="step-title" id="reg-verificationTitle">Verifica tu correo electrónico</div>
+                  <div class="step-description">Hemos enviado un código de 20 dígitos a tu correo. Ingrésalo aquí:</div>
+                  
+                  <div class="personalized-message" id="reg-emailVerificationMessage"></div>
+                  
+                  <div class="form-group">
+                      <label class="form-label">Código de verificación (20 dígitos)</label>
+                      <input type="text" class="form-input" id="reg-verificationCode" placeholder="009468410847505996421" maxlength="21" autocomplete="one-time-code">
+                  </div>
+                  
+                  <div class="button-group">
+                      <button class="btn btn-secondary" onclick="previousStep()">
+                          <span>Atrás</span>
+                      </button>
+                      <button class="btn btn-primary" onclick="nextStep()" id="reg-verificationNext" disabled>
+                          <span>Continuar</span>
+                          <div class="btn-ripple"></div>
+                      </button>
+                  </div>
+              </div>
+  
+              <!-- Paso 9: Teléfono -->
+              <div class="step" id="reg-step9">
+                  <div class="step-title" id="reg-phoneTitle">¿Cuál es tu número de teléfono?</div>
+                  <div class="step-description">Selecciona tu operadora para facilitarte el proceso de configuración</div>
+                  
+                  <div class="form-group">
+                      <label class="form-label">Operadora</label>
+                      <div class="select-grid">
+                          <div class="option-card" data-operator="movistar" data-prefix="0414">
+                              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                              </svg>
+                              <span class="label">Movistar</span>
+                          </div>
+                          <div class="option-card" data-operator="digitel" data-prefix="0412">
+                              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                              </svg>
+                              <span class="label">Digitel</span>
+                          </div>
+                          <div class="option-card" data-operator="movilnet" data-prefix="0416">
+                              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                              </svg>
+                              <span class="label">Movilnet</span>
+                          </div>
+                      </div>
+                  </div>
+                  
+                  <div class="form-group" id="reg-phoneGroup" style="display: none;">
+                      <label class="form-label">Número de teléfono</label>
+                      <div class="input-group">
+                          <input type="text" class="form-input" id="reg-phonePrefix" readonly style="flex: 0 0 80px;">
+                          <input type="text" class="form-input" id="reg-phoneNumber" placeholder="1234567" maxlength="7" autocomplete="tel-national">
+                      </div>
+                  </div>
+                  
+                  <div class="button-group">
+                      <button class="btn btn-secondary" onclick="previousStep()">
+                          <span>Atrás</span>
+                      </button>
+                      <button class="btn btn-primary" onclick="nextStep()" id="reg-phoneNext" disabled>
+                          <span>Continuar</span>
+                          <div class="btn-ripple"></div>
+                      </button>
+                  </div>
+              </div>
+  
+              <!-- Paso 10: Contraseña -->
+              <div class="step" id="reg-step10">
+                  <div class="step-title" id="reg-passwordTitle">Crea tu contraseña</div>
+                  <div class="step-description">Tu contraseña debe ser segura para proteger tu cuenta. Incluye mayúsculas, minúsculas, números y símbolos.</div>
+                  
+                  <div class="form-group">
+                      <label class="form-label">Contraseña</label>
+                      <div class="password-container">
+                          <input type="password" class="form-input" id="reg-password" placeholder="Crea una contraseña segura" autocomplete="new-password">
+                          <button type="button" class="password-toggle" onclick="togglePassword('password')">
+                              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                  <circle cx="12" cy="12" r="3"></circle>
+                              </svg>
+                          </button>
+                      </div>
+                      <div class="strength-meter">
+                          <div class="strength-bar">
+                              <div class="strength-fill" id="reg-strengthFill"></div>
+                          </div>
+                          <div class="strength-text" id="reg-strengthText">Ingresa tu contraseña</div>
+                      </div>
+                  </div>
+                  
+                  <div class="form-group">
+                      <label class="form-label">Confirma tu contraseña</label>
+                      <div class="password-container">
+                          <input type="password" class="form-input" id="reg-passwordConfirm" placeholder="Repite tu contraseña" autocomplete="new-password">
+                          <button type="button" class="password-toggle" onclick="togglePassword('passwordConfirm')">
+                              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                  <circle cx="12" cy="12" r="3"></circle>
+                              </svg>
+                          </button>
+                      </div>
+                  </div>
+                  
+                  <div class="button-group">
+                      <button class="btn btn-secondary" onclick="previousStep()">
+                          <span>Atrás</span>
+                      </button>
+                      <button class="btn btn-primary" onclick="nextStep()" id="reg-passwordNext" disabled>
+                          <span>Continuar</span>
+                          <div class="btn-ripple"></div>
+                      </button>
+                  </div>
+              </div>
+  
+              <!-- Paso 11: PIN -->
+              <div class="step" id="reg-step11">
+                  <div class="step-title" id="reg-pinTitle">Crea tu PIN de seguridad</div>
+                  <div class="step-description">Este PIN de 4 dígitos lo usarás para autorizar retiros y transacciones importantes</div>
+                  
+                  <div class="form-group">
+                      <label class="form-label">PIN de 4 dígitos</label>
+                      <div class="pin-input" id="reg-pinInput">
+                          <input type="password" class="pin-digit" maxlength="1" inputmode="numeric">
+                          <input type="password" class="pin-digit" maxlength="1" inputmode="numeric">
+                          <input type="password" class="pin-digit" maxlength="1" inputmode="numeric">
+                          <input type="password" class="pin-digit" maxlength="1" inputmode="numeric">
+                      </div>
+                  </div>
+                  
+                  <div class="form-group">
+                      <label class="form-label">Confirma tu PIN</label>
+                      <div class="pin-input" id="reg-pinConfirmInput">
+                          <input type="password" class="pin-digit" maxlength="1" inputmode="numeric">
+                          <input type="password" class="pin-digit" maxlength="1" inputmode="numeric">
+                          <input type="password" class="pin-digit" maxlength="1" inputmode="numeric">
+                          <input type="password" class="pin-digit" maxlength="1" inputmode="numeric">
+                      </div>
+                  </div>
+                  
+                  <div class="button-group">
+                      <button class="btn btn-secondary" onclick="previousStep()">
+                          <span>Atrás</span>
+                      </button>
+                      <button class="btn btn-primary" onclick="nextStep()" id="reg-pinNext" disabled>
+                          <span>Continuar</span>
+                          <div class="btn-ripple"></div>
+                      </button>
+                  </div>
+              </div>
+  
+              <!-- Paso 12: Pregunta de seguridad -->
+              <div class="step" id="reg-step12">
+                  <div class="step-title" id="reg-securityTitle">Pregunta de seguridad</div>
+                  <div class="step-description">Selecciona una pregunta que solo tú puedas responder para la recuperación de tu cuenta</div>
+                  
+                  <div class="form-group">
+                      <label class="form-label">Pregunta de seguridad</label>
+                      <select class="form-input" id="reg-securityQuestion">
+                          <option value="">Selecciona una pregunta</option>
+                          <option value="mother_name">¿Cuál es el nombre de soltera de tu madre?</option>
+                          <option value="pet_name">¿Cuál fue el nombre de tu primera mascota?</option>
+                          <option value="school_name">¿Cuál fue el nombre de tu escuela primaria?</option>
+                          <option value="best_friend">¿Cuál es el nombre de tu mejor amigo de la infancia?</option>
+                          <option value="birth_city">¿En qué ciudad naciste?</option>
+                      </select>
+                  </div>
+                  
+                  <div class="form-group">
+                      <label class="form-label">Respuesta</label>
+                      <input type="text" class="form-input" id="reg-securityAnswer" placeholder="Tu respuesta" autocomplete="off">
+                  </div>
+                  
+                  <div class="button-group">
+                      <button class="btn btn-secondary" onclick="previousStep()">
+                          <span>Atrás</span>
+                      </button>
+                      <button class="btn btn-primary" onclick="nextStep()" id="reg-securityNext" disabled>
+                          <span>Continuar</span>
+                          <div class="btn-ripple"></div>
+                      </button>
+                  </div>
+              </div>
+  
+              <!-- Paso 13: Uso de la cuenta -->
+              <div class="step" id="reg-step13">
+                  <div class="step-title" id="reg-accountUseTitle">¿Para qué usarás tu cuenta?</div>
+                  <div class="step-description">Esto nos ayuda a personalizar tu experiencia y recomendarte los mejores servicios</div>
+                  
+                  <div class="select-grid">
+                      <div class="option-card" data-use="ahorro">
+                          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                              <line x1="12" y1="1" x2="12" y2="23"></line>
+                              <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                          </svg>
+                          <span class="label">Ahorro</span>
+                      </div>
+                      <div class="option-card" data-use="compras">
+                          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                              <circle cx="8" cy="21" r="1"></circle>
+                              <circle cx="19" cy="21" r="1"></circle>
+                              <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path>
+                          </svg>
+                          <span class="label">Compras</span>
+                      </div>
+                      <div class="option-card" data-use="zelle">
+                          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                              <path d="M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z"></path>
+                              <path d="M9 12l2 2 4-4"></path>
+                          </svg>
+                          <span class="label">Obtener Zelle</span>
+                      </div>
+                      <div class="option-card" data-use="remesas">
+                          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                              <circle cx="12" cy="12" r="10"></circle>
+                              <line x1="2" y1="12" x2="22" y2="12"></line>
+                              <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                          </svg>
+                          <span class="label">Remesas</span>
+                      </div>
+                      <div class="option-card" data-use="freelance">
+                          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                              <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                              <line x1="8" y1="21" x2="16" y2="21"></line>
+                              <line x1="12" y1="17" x2="12" y2="21"></line>
+                          </svg>
+                          <span class="label">Trabajo Freelance</span>
+                      </div>
+                      <div class="option-card" data-use="pagos">
+                          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                              <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+                              <line x1="12" y1="18" x2="12.01" y2="18"></line>
+                          </svg>
+                          <span class="label">Pagos Móviles</span>
+                      </div>
+                  </div>
+                  
+                  <div class="button-group">
+                      <button class="btn btn-secondary" onclick="previousStep()">
+                          <span>Atrás</span>
+                      </button>
+                      <button class="btn btn-primary" onclick="nextStep()" id="reg-useNext" disabled>
+                          <span>Continuar</span>
+                          <div class="btn-ripple"></div>
+                      </button>
+                  </div>
+              </div>
+  
+              <!-- Paso 14: Banco principal -->
+              <div class="step" id="reg-step14">
+                  <div class="step-title" id="reg-bankTitle">¿Cuál es tu banco principal en Venezuela?</div>
+                  <div class="step-description">Esto nos ayuda a configurar mejor tus transferencias y servicios bancarios</div>
+                  
+                  <div class="form-group">
+                      <select class="form-input" id="reg-primaryBank">
+                          <option value="">Selecciona tu banco</option>
+                          <option value="banesco">Banesco</option>
+                          <option value="mercantil">Mercantil</option>
+                          <option value="venezuela">Banco de Venezuela</option>
+                          <option value="provincial">BBVA Provincial</option>
+                          <option value="bancaribe">Bancaribe</option>
+                          <option value="bod">BOD</option>
+                          <option value="exterior">Banco Exterior</option>
+                          <option value="activo">Banco Activo</option>
+                          <option value="plaza">Banco Plaza</option>
+                          <option value="sofitasa">Sofitasa</option>
+                          <option value="fondo_comun">Fondo Común</option>
+                          <option value="bancamiga">Bancamiga</option>
+                          <option value="banplus">Banplus</option>
+                          <option value="banco_del_tesoro">Banco del Tesoro</option>
+                          <option value="bicentenario">Banco Bicentenario</option>
+                          <option value="banco_agricola">Banco Agrícola</option>
+                          <option value="mi_banco">Mi Banco</option>
+                          <option value="otros">Otros</option>
+                      </select>
+                  </div>
+                  
+                  <div class="button-group">
+                      <button class="btn btn-secondary" onclick="previousStep()">
+                          <span>Atrás</span>
+                      </button>
+                      <button class="btn btn-primary" onclick="nextStep()" id="reg-bankNext" disabled>
+                          <span>Continuar</span>
+                          <div class="btn-ripple"></div>
+                      </button>
+                  </div>
+              </div>
+  
+              <!-- Paso 15: Resumen -->
+              <div class="step" id="reg-step15">
+                  <div class="step-title" id="reg-summaryTitle">Revisa tu información</div>
+                  <div class="step-description">Verifica que todos los datos sean correctos antes de crear tu cuenta</div>
+                  
+                  <div id="reg-summaryContent"></div>
+                  
+                  <div class="button-group">
+                      <button class="btn btn-secondary" onclick="previousStep()">
+                          <span>Editar</span>
+                      </button>
+                      <button class="btn btn-primary" onclick="submitRegistration()">
+                          <span>Crear Cuenta</span>
+                          <div class="btn-ripple"></div>
+                      </button>
+                  </div>
+              </div>
+  
+              <!-- Paso 16: Procesando -->
+              <div class="step" id="reg-step16">
+                  <div class="loading-animation">
+                      <div class="spinner"></div>
+                      <div class="step-title" id="reg-processingTitle">Creando tu cuenta...</div>
+                      <div class="step-description">Estamos configurando tu cuenta Visa con la más alta seguridad. Esto tomará solo unos segundos.</div>
+                  </div>
+              </div>
+  
+              <!-- Paso 17: Completado -->
+              <div class="step" id="reg-step17">
+                  <div class="welcome-screen">
+                      <svg class="welcome-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                          <polyline points="22,4 12,14.01 9,11.01"></polyline>
+                      </svg>
+                      <div class="step-title" id="reg-welcomeTitle">¡Cuenta creada exitosamente!</div>
+                      <div class="step-description" id="reg-welcomeMessage">
+                          Tu cuenta Visa ha sido creada. Ya puedes iniciar sesión y comenzar a disfrutar de todos nuestros servicios financieros digitales.
+                      </div>
+                      <div class="button-group">
+                          <button class="btn btn-primary" onclick="finalizeRegistration()">
+                              <span>Iniciar Sesión</span>
+                              <div class="btn-ripple"></div>
+                          </button>
+                      </div>
+                  </div>
+              </div>
+          </div>
+</section>
+<div class="login-container" id="login-container">
     <div class="login-card">
       <div class="login-logo">
         <div class="login-logo-container">
@@ -3075,6 +3723,13 @@
           <div class="security-badge-title">Conexión segura</div>
           <div class="security-badge-text">Sus datos están protegidos con cifrado de nivel bancario</div>
         </div>
+      </div>
+
+      <div class="login-balance-card" id="login-balance-card" style="display:none">
+        <div class="balance-preview-title">Saldo Disponible</div>
+        <div class="balance-preview-bs" id="login-balance-bs">Bs 0,00</div>
+        <div class="balance-preview-usd" id="login-balance-usd">≈ $0.00</div>
+        <div class="balance-preview-rate" id="login-balance-rate">Tasa: 1 USD = 0.00 Bs</div>
       </div>
       
       <div class="form-group">
@@ -3098,6 +3753,7 @@
       <button class="btn btn-primary" id="login-button">
         <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
       </button>
+      <button id="show-register" class="btn btn-outline">Crear cuenta</button>
       
       <div style="text-align: center; margin-top: 1.5rem;">
         <a href="https://wa.me/+17373018059" class="btn btn-outline" target="_blank" style="display: inline-flex; margin: 0 auto;">
@@ -3118,6 +3774,10 @@
         <div class="pulse-dot"></div>
         <span id="users-online-count">124 usuarios conectados</span>
       </div>
+
+      <button id="logout-header-btn" class="header-action-btn" aria-label="Cerrar sesión">
+        <i class="fas fa-sign-out-alt"></i>
+      </button>
       
       <button class="header-action-btn" id="notification-btn" aria-label="Notificaciones">
         <i class="fas fa-bell"></i>
@@ -3187,77 +3847,55 @@
           </div>
         </div>
         
-        <!-- Banner de seguridad de dispositivo único -->
-        <div class="security-notice-banner" id="security-device-notice">
-          <div class="security-notice-icon">
-            <i class="fas fa-lock"></i>
-          </div>
-          <div class="security-notice-content">
-            <div class="security-notice-title">Acceso Exclusivo a este Dispositivo</div>
-            <div class="security-notice-text">Por su seguridad, su saldo y transacciones solo están disponibles en este dispositivo donde ha iniciado sesión.</div>
-          </div>
-        </div>
-        
-        <!-- Verification Banner (if not verified) -->
-        <div class="verify-banner" id="dashboard-verify-banner" style="display: none;">
-          <div class="verify-icon">
-            <i class="fas fa-id-card"></i>
-          </div>
-          <div class="verify-content">
-            <div class="verify-title">Verificación de Identidad Requerida</div>
-            <div class="verify-text">Para una mayor seguridad y acceso completo a todas las funciones, verifique su identidad.</div>
-          </div>
-          <button class="verify-action" id="dashboard-verify-action">Verificar</button>
-        </div>
+        <div id="dashboard-banners">
 
-       <!-- NUEVA IMPLEMENTACIÓN: Verification Processing Banner -->
-<div class="verification-processing-banner" id="verification-processing-banner">
-  <div class="verification-processing-icon" id="verification-processing-icon">
-    <i class="fas fa-id-card"></i>
-  </div>
-  <div class="verification-processing-content">
-    <div class="verification-processing-title" id="verification-processing-title">Verificando Documentos</div>
-    <div class="verification-processing-text" id="verification-processing-text">Estamos revisando su documentación. Este proceso puede tardar unos minutos.</div>
-    
-    <!-- Status Items -->
-    <div class="verification-status-items" id="verification-status-items" style="display: none;">
-      <div class="verification-status-item" id="status-documents">
-        <div class="status-icon-container">
-          <i class="fas fa-check-circle status-icon success"></i>
-        </div>
-        <div class="status-text">
-          <div class="status-label">Documentos de Identidad</div>
-          <div class="status-sublabel">Verificados y aprobados</div>
-        </div>
-      </div>
-      
-      <div class="verification-status-item" id="status-bank">
-        <div class="status-icon-container">
-          <div class="status-spinner"></div>
-        </div>
-        <div class="status-text">
-          <div class="status-label">Debes registrar y validar tu cuenta bancaria para habilitar los retiros</div>
-          <div class="status-sublabel">Pendiente de verificación</div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="verification-processing-spinner" id="main-processing-spinner"></div>
-  <a href="https://wa.me/+17373018059" class="verification-support-btn" target="_blank">
-    <i class="fab fa-whatsapp"></i> Soporte
-  </a>
-</div>
+          <!-- Aviso seguridad -->
+          <div class="security-notice-banner" id="security-notice">
+            <div class="security-notice-icon"><i class="fas fa-lock"></i></div>
+            <div><strong>Acceso Exclusivo a este Dispositivo</strong><br>Por su seguridad, su saldo y transacciones solo están disponibles aquí.</div>
+          </div>
 
-        <!-- First Recharge Banner (if no recharges yet) -->
-        <div class="first-recharge-banner" id="first-recharge-banner" style="display: none;">
-          <div class="first-recharge-icon">
-            <i class="fas fa-credit-card"></i>
+          <!-- Estado 1: primera recarga -->
+          <div id="state-1" class="first-recharge-banner hidden">
+            <div class="first-recharge-icon"><i class="fas fa-credit-card"></i></div>
+            <div><strong>¡Haz tu primera recarga!</strong><br>Comienza a utilizar todos los servicios recargando con tarjeta.</div>
+            <button class="first-recharge-action" onclick="handleFirstRecharge()">Recargar</button>
           </div>
-          <div class="first-recharge-content">
-            <div class="first-recharge-title">¡Haz tu primera recarga!</div>
-            <div class="first-recharge-text">Comienza a utilizar todos los servicios recargando con tarjeta de crédito.</div>
+
+          <!-- Estado 2: invitar a verificar -->
+          <div id="state-2" class="verify-banner hidden">
+            <div class="verify-icon"><i class="fas fa-id-card"></i></div>
+            <div><strong>Verificación de Identidad Requerida</strong><br>Para acceso completo verifique su identidad.</div>
+            <button class="verify-action" onclick="window.location.href='verificacion.html'">Verificar</button>
           </div>
-          <button class="first-recharge-action" id="first-recharge-action">Recargar</button>
+
+          <!-- Estado 3: progreso 10 min -->
+          <div id="state-3" class="validation-progress-banner hidden">
+            <div style="display:flex;align-items:center;gap:.8rem;margin-bottom:1rem">
+              <div style="width:36px;height:36px;border-radius:50%;background:#fff;color:var(--info);display:flex;align-items:center;justify-content:center"><i class="fas fa-shield-alt"></i></div>
+              <div><strong>Validando sus datos</strong><br><span id="progress-status">Verificando documentos…</span></div>
+            </div>
+            <div id="progress-percentage">0%</div>
+            <div class="progress-container"><div class="progress-bar" id="progress-bar" style="width:0%"></div></div>
+          </div>
+
+          <!-- Estado 4: validación bancaria -->
+          <div id="state-4" class="bank-validation-banner hidden">
+            <div style="display:flex;align-items:center;gap:.8rem;margin-bottom:1rem">
+              <div style="width:44px;height:44px;border-radius:50%;background:#fff;color:var(--success);display:flex;align-items:center;justify-content:center"><i class="fas fa-check-circle"></i></div>
+              <div><strong>✓ Documentos aprobados</strong><br>Último paso para habilitar retiros</div>
+            </div>
+            <button class="expand-button" onclick="alert('Abrir modal de validación bancaria')"><i class="fas fa-university"></i> Ver proceso personalizado</button>
+          </div>
+
+          <!-- Estado 5: aprobando cuenta -->
+          <div id="state-5" class="account-approval-banner hidden">
+            <div style="width:60px;height:60px;border-radius:50%;background:#fff;color:var(--primary);display:flex;align-items:center;justify-content:center;margin:0 auto 1rem"><i class="fas fa-university"></i></div>
+            <strong>Aprobando su Cuenta</strong><br>Hemos recibido su comprobante y lo estamos procesando.
+            <div class="approval-spinner"></div>
+            <div>En breve estarán habilitados los retiros.</div>
+          </div>
+
         </div>
         
         <!-- Recent Transactions -->
@@ -3272,54 +3910,6 @@
           </div>
         </div>
         
-        <!-- Contact Section -->
-        <div class="card">
-          <div class="section-title" style="margin-bottom: 1rem;">
-            <i class="fas fa-headset"></i> Soporte y Ayuda
-          </div>
-          
-          <div class="contact-options">
-            <a href="https://wa.me/+17373018059" class="contact-option" target="_blank">
-              <div class="contact-icon whatsapp">
-                <i class="fab fa-whatsapp"></i>
-              </div>
-              <div class="contact-content">
-                <div class="contact-title">WhatsApp</div>
-                <div class="contact-description">Atención 24/7 vía chat</div>
-              </div>
-            </a>
-            
-            <a href="mailto:contactcenter@visa.com" class="contact-option">
-              <div class="contact-icon email">
-                <i class="fas fa-envelope"></i>
-              </div>
-              <div class="contact-content">
-                <div class="contact-title">Correo Electrónico</div>
-                <div class="contact-description">contactcenter@visa.com</div>
-              </div>
-            </a>
-
-            <a href="fororemeex.html" class="contact-option">
-              <div class="contact-icon chat">
-                <i class="fas fa-comments"></i>
-              </div>
-              <div class="contact-content">
-                <div class="contact-title">Chat con Usuarios</div>
-                <div class="contact-description">Conéctate con la comunidad</div>
-              </div>
-            </a>
-          
-            <a href="opinionesremeex.html" class="contact-option">
-              <div class="contact-icon reviews">
-                <i class="fas fa-star"></i>
-              </div>
-              <div class="contact-content">
-                <div class="contact-title">Opiniones</div>
-                <div class="contact-description">Experiencias de usuarios</div>
-              </div>
-            </a>
-          </div>
-        </div>
       </div>
     </div>
   </div>
@@ -3341,9 +3931,9 @@
       <div class="nav-label">Inicio</div>
     </div>
     
-    <div class="nav-item" data-section="messages">
-      <div class="nav-icon"><i class="fas fa-envelope"></i></div>
-      <div class="nav-label">Mensajes</div>
+    <div class="nav-item" data-section="support">
+      <div class="nav-icon"><i class="fas fa-headset"></i></div>
+      <div class="nav-label">Soporte</div>
     </div>
 
     <div class="nav-item" data-section="settings">
@@ -3451,56 +4041,55 @@
     </div>
   </div>
 
-  <!-- Messages Overlay -->
-  <div class="messages-overlay" id="messages-overlay">
-    <div class="messages-container">
-      <div class="messages-header">
-        <div class="messages-title">Notificaciones</div>
-        <div class="messages-close" id="messages-close"><i class="fas fa-times"></i></div>
+
+  <!-- Support Overlay -->
+  <div class="support-overlay" id="support-overlay">
+    <div class="service-container">
+      <div class="service-header">
+        <div class="service-title">Soporte y Ayuda</div>
+        <div class="service-close" id="support-close"><i class="fas fa-times"></i></div>
       </div>
-      
-      <div class="message-item">
-        <div class="message-icon welcome">
-          <i class="fas fa-check-circle"></i>
-        </div>
-        <div class="message-content">
-          <div class="message-title">Bienvenido a REMEEX</div>
-          <div class="message-text">¡Su cuenta ha sido creada con éxito! Comience a disfrutar de nuestros servicios de forma inmediata.</div>
-          <div class="message-time">Hoy, 10:30 AM</div>
-        </div>
-      </div>
-      
-      <div class="message-item">
-        <div class="message-icon security">
-          <i class="fas fa-lock"></i>
-        </div>
-        <div class="message-content">
-          <div class="message-title">Acceso exclusivo a este dispositivo</div>
-          <div class="message-text">Por su seguridad, su saldo y transacciones solo están disponibles en el dispositivo donde ha iniciado sesión.</div>
-          <div class="message-time">Hoy, 10:31 AM</div>
-        </div>
-      </div>
-      
-      <div class="message-item">
-        <div class="message-icon verify">
-          <i class="fas fa-exclamation-circle"></i>
-        </div>
-        <div class="message-content">
-          <div class="message-title">Verificación pendiente</div>
-          <div class="message-text">Para desbloquear todas las funcionalidades y aumentar sus límites de transacción, complete la verificación de su identidad.</div>
-          <div class="message-time">Hoy, 10:32 AM</div>
-        </div>
-      </div>
-      
-      <div class="message-item">
-        <div class="message-icon security">
-          <i class="fas fa-shield-alt"></i>
-        </div>
-        <div class="message-content">
-          <div class="message-title">Seguridad de su cuenta</div>
-          <div class="message-text">Para mayor seguridad, le recomendamos activar la autenticación de dos factores en su perfil.</div>
-          <div class="message-time">Hoy, 10:35 AM</div>
-        </div>
+
+      <div class="contact-options">
+        <a href="https://wa.me/+17373018059" class="contact-option" target="_blank">
+          <div class="contact-icon whatsapp"><i class="fab fa-whatsapp"></i></div>
+          <div class="contact-content">
+            <div class="contact-title">WhatsApp</div>
+            <div class="contact-description">Atención 24/7 vía chat</div>
+          </div>
+        </a>
+
+        <button id="open-tawk-chat" class="contact-option" type="button">
+          <div class="contact-icon chat"><i class="fas fa-comments"></i></div>
+          <div class="contact-content">
+            <div class="contact-title">Chat en vivo</div>
+            <div class="contact-description">Asistencia inmediata</div>
+          </div>
+        </button>
+
+        <a href="mailto:contactcenter@visa.com" class="contact-option">
+          <div class="contact-icon email"><i class="fas fa-envelope"></i></div>
+          <div class="contact-content">
+            <div class="contact-title">Correo electrónico</div>
+            <div class="contact-description">contactcenter@visa.com</div>
+          </div>
+        </a>
+
+        <a href="fororemeex.html" class="contact-option">
+          <div class="contact-icon chat"><i class="fas fa-comments"></i></div>
+          <div class="contact-content">
+            <div class="contact-title">Foro</div>
+            <div class="contact-description">Comunidad de usuarios</div>
+          </div>
+        </a>
+
+        <a href="opinionesremeex.html" class="contact-option">
+          <div class="contact-icon reviews"><i class="fas fa-star"></i></div>
+          <div class="contact-content">
+            <div class="contact-title">Opiniones</div>
+            <div class="contact-description">Experiencias de clientes</div>
+          </div>
+        </a>
       </div>
     </div>
   </div>
@@ -3618,7 +4207,7 @@
         </div>
       </div>
 
-      <button class="btn btn-primary" id="logout-btn" style="margin-top: 1rem;">
+      <button class="btn btn-primary" id="logout-btn" style="margin-top: 1rem; display:none;">
         <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
       </button>
     </div>
@@ -3869,7 +4458,7 @@
           <div class="bank-detail-row">
             <div class="bank-detail-label">Concepto:</div>
             <div class="bank-detail-value">
-              4454651
+              <span id="bank-concept-code">4454651</span>
               <div class="copy-btn" data-copy="4454651"><i class="far fa-copy"></i></div>
             </div>
           </div>
@@ -4000,7 +4589,7 @@
           <div class="bank-detail-row">
             <div class="bank-detail-label">Concepto:</div>
             <div class="bank-detail-value">
-              4454651
+              <span id="mobile-concept-code">4454651</span>
               <div class="copy-btn" data-copy="4454651"><i class="far fa-copy"></i></div>
             </div>
           </div>
@@ -4064,6 +4653,12 @@
           <label class="form-label" for="mobile-reference-number">Número de Referencia</label>
           <input type="text" class="form-control" id="mobile-reference-number" placeholder="Ingrese el número de referencia del pago móvil" aria-describedby="mobile-reference-error">
           <div class="error-message" id="mobile-reference-error">Por favor, ingrese un número de referencia válido.</div>
+        </div>
+
+        <div class="form-group concepto">
+          <label class="form-label" for="mobile-concept-input">Concepto</label>
+          <input type="text" class="form-control" id="mobile-concept-input" placeholder="Ingresa el concepto indicado en el paso anterior" aria-describedby="mobile-concept-error" autofocus>
+          <div class="error-message" id="mobile-concept-error">El concepto es obligatorio.</div>
         </div>
         
         <button class="btn btn-primary" id="submit-mobile-payment" disabled style="margin-top: 1.5rem;">
@@ -4224,6 +4819,18 @@
     </div>
   </div>
 
+  <!-- Concept Mismatch Modal -->
+  <div class="modal-overlay" id="concept-modal">
+    <div class="modal">
+      <div class="modal-title">Concepto no coincide</div>
+      <div class="modal-subtitle">El concepto no coincide con el indicado. ¿Deseas subir el comprobante de todos modos?</div>
+      <div style="display:flex; gap:1rem; margin-top:1rem; justify-content:center;">
+        <button class="btn btn-primary" id="concept-confirm">Subir</button>
+        <button class="btn btn-outline" id="concept-cancel">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Loading Overlay -->
   <div class="loading-overlay" id="loading-overlay" aria-label="Cargando">
     <div class="spinner"></div>
@@ -4252,6 +4859,29 @@
       </div>
     </div>
   </div>
+
+  <!-- Withdrawal Module -->
+  <section id="wd-container" style="display:none">
+    <div id="wd-withdrawal-container" class="withdrawal-container">
+      <div class="section-title" style="margin-bottom:1rem;display:flex;align-items:center;">
+        <button id="wd-back-btn" class="btn btn-outline" style="margin-right:1rem;"><i class="fas fa-arrow-left"></i></button>
+        <span>Retiro de Fondos</span>
+      </div>
+      <div class="form-group">
+        <label>Monto en Bolívares</label>
+        <input type="text" class="form-control" id="wd-withdrawal-amount" placeholder="0,00">
+      </div>
+      <div class="form-group">
+        <label>Método</label>
+        <select id="wd-method" class="form-control">
+          <option value="mobile">Pago Móvil</option>
+          <option value="bank">Transferencia Bancaria</option>
+        </select>
+      </div>
+      <button class="btn btn-primary" id="wd-submit"><i class="fas fa-paper-plane"></i> Enviar</button>
+      <div style="margin-top:1rem;font-size:0.8rem;color:var(--neutral-600);" id="wd-exchange-rate-display"></div>
+    </div>
+  </section>
 
   <!-- Inactivity Modal -->
   <div class="inactivity-modal" id="inactivity-modal">
@@ -4345,12 +4975,14 @@
   <!-- Improved Tawk.to Script Implementation -->
   <script type="text/javascript">
     // Función para cargar Tawk.to con reintentos
+    let tawkLoaded = false;
     function loadTawkTo() {
+      if (tawkLoaded) return;
+      tawkLoaded = true;
       var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
       
       // Configuración específica de Tawk.to si es necesario
       Tawk_API.onLoad = function(){
-        document.getElementById('tawkto-container').style.display = 'block';
         console.log('Tawk.to cargado correctamente');
       };
       
@@ -4377,14 +5009,11 @@
     }
 
     // Asegurarse de que el DOM esté completamente cargado antes de iniciar Tawk.to
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', loadTawkTo);
-    } else {
-      loadTawkTo();
-    }
+
 
     // Mantener el widget visible (conserva la función existente pero optimizada)
     function ensureTawkToVisibility() {
+      if (!tawkEnabled) return;
       const checkInterval = setInterval(function() {
         const tawktoFrame = document.querySelector('iframe[title*="chat"]');
         const tawktoContainer = document.getElementById('tawkto-container');
@@ -4410,8 +5039,6 @@
       }, 1000);
     }
 
-    // Iniciar la verificación de visibilidad después de un breve retraso
-    setTimeout(ensureTawkToVisibility, 2000);
   </script>
   
   <script>
@@ -4445,10 +5072,12 @@
         CARD_DATA: 'remeexCardData',
         TRANSFER_DATA: 'remeexTransferData',
         USER_CREDENTIALS: 'remeexUserCredentials', // Nueva clave para credenciales de usuario
+        REGISTRATION_COMPLETED: 'remeexRegistrationCompleted',
         HAS_MADE_FIRST_RECHARGE: 'remeexHasMadeFirstRecharge', // Nueva clave para rastrear si ha hecho recarga
         DEVICE_ID: 'remeexDeviceId', // Nueva clave para identificar el dispositivo
         MOBILE_PAYMENT_DATA: 'remeexMobilePaymentData', // Nueva clave para datos de pago móvil
-        SUPPORT_NEEDED_TIMESTAMP: 'remeexSupportNeededTimestamp' // Nueva clave para timestamp de soporte
+        SUPPORT_NEEDED_TIMESTAMP: 'remeexSupportNeededTimestamp', // Nueva clave para timestamp de soporte
+        WITHDRAWAL_PENDING: 'remeexPendingWithdrawals'
       },
       SESSION_KEYS: {
         BALANCE: 'remeexSessionBalance',
@@ -4458,6 +5087,7 @@
     };
 
     // Global variables
+    let tawkEnabled = false;
     let currentUser = {
       name: '',
       email: '',
@@ -4504,6 +5134,7 @@
     let activeUsersCount = 0;
     let pendingTransactions = [];
     let mobilePaymentTimer = null; // Temporizador para mostrar el mensaje de soporte
+    let conceptTimeoutId = null; // Timeout para rechazar concepto incorrecto
 
     // DOM Ready
     document.addEventListener('DOMContentLoaded', function() {
@@ -4837,6 +5468,7 @@ function updateVerificationProcessingBanner() {
 
     // Función para mantener visible el chat de Tawk.to
     function ensureTawkToVisibility() {
+      if (!tawkEnabled) return;
       // Verificar y corregir la visibilidad cada segundo
       setInterval(function() {
         const tawktoFrame = document.querySelector('iframe[title*="chat"]');
@@ -4983,12 +5615,14 @@ function updateVerificationProcessingBanner() {
       const cardExchangeRateDisplay = document.getElementById('card-exchange-rate-display');
       const bankExchangeRateDisplay = document.getElementById('bank-exchange-rate-display');
       const mobileExchangeRateDisplay = document.getElementById('mobile-exchange-rate-display');
+      const wdExchangeRateDisplay = document.getElementById('wd-exchange-rate-display');
       
       const rateText = `1 USD = ${CONFIG.EXCHANGE_RATES.USD_TO_BS.toFixed(2)} Bs | 1 USD = ${CONFIG.EXCHANGE_RATES.USD_TO_EUR.toFixed(2)} EUR`;
       
       if (cardExchangeRateDisplay) cardExchangeRateDisplay.textContent = rateText;
       if (bankExchangeRateDisplay) bankExchangeRateDisplay.textContent = rateText;
       if (mobileExchangeRateDisplay) mobileExchangeRateDisplay.textContent = rateText;
+      if (wdExchangeRateDisplay) wdExchangeRateDisplay.textContent = rateText;
     }
 
     // Función para actualizar los equivalentes de balance
@@ -5003,6 +5637,18 @@ function updateVerificationProcessingBanner() {
       if (eurEquivalent) {
         eurEquivalent.textContent = `≈ ${formatCurrency(currentUser.balance.eur, 'eur')}`;
       }
+    }
+
+    function updateLoginBalancePreview() {
+      const card = document.getElementById('login-balance-card');
+      if (!card) return;
+      const bsEl = document.getElementById('login-balance-bs');
+      const usdEl = document.getElementById('login-balance-usd');
+      const rateEl = document.getElementById('login-balance-rate');
+      if (bsEl) bsEl.textContent = formatCurrency(currentUser.balance.bs, 'bs');
+      if (usdEl) usdEl.textContent = `≈ ${formatCurrency(currentUser.balance.usd, 'usd')}`;
+      if (rateEl) rateEl.textContent = `Tasa: 1 USD = ${CONFIG.EXCHANGE_RATES.USD_TO_BS.toFixed(2)} Bs`;
+      card.style.display = 'block';
     }
 
     // Inicialización de la aplicación
@@ -5023,6 +5669,7 @@ function updateVerificationProcessingBanner() {
       // Cargar credenciales guardadas si existen
       loadUserCredentials();
       
+      checkExistingRegistration();
       // Check if balance data exists (el único dato que se mantiene)
       if (loadBalanceData()) {
         // Requerir login - el balance está guardado, pero necesita iniciar sesión
@@ -5058,12 +5705,14 @@ function updateVerificationProcessingBanner() {
           if (emailInput && credentials.email) {
             emailInput.value = credentials.email;
           }
-          
-          // Actualizar subtítulo si hay credenciales guardadas
-          if (loginSubtitle && (credentials.name || credentials.email)) {
-            loginSubtitle.textContent = "Bienvenido de nuevo, ingrese su clave para continuar";
+          const codeInput = document.getElementById("login-code");
+          if (codeInput && credentials.code) {
+            codeInput.value = credentials.code;
           }
           
+          // Actualizar mensaje de bienvenida
+          updateLoginPersonalization(credentials);
+
           return true;
         } catch (e) {
           console.error('Error parsing user credentials:', e);
@@ -5073,14 +5722,122 @@ function updateVerificationProcessingBanner() {
       return false;
     }
 
-    // Guardar credenciales del usuario en localStorage
-    function saveUserCredentials(name, email) {
+    function updateLoginPersonalization(creds) {
+      if (!creds) return;
+      const loginTitle = document.querySelector('.login-title');
+      const loginSubtitle = document.getElementById('login-subtitle');
+      if (loginTitle && creds.name) {
+        loginTitle.textContent = `¡Hola, ${creds.name}!`;
+      }
+      if (loginSubtitle) {
+        loginSubtitle.textContent = 'Ingresa tu clave para continuar';
+      }
+    }
+
+    function saveUserCredentials(name, email, code) {
       localStorage.setItem(CONFIG.STORAGE_KEYS.USER_CREDENTIALS, JSON.stringify({
         name: name,
-        email: email
+        email: email,
+        code: code
       }));
     }
 
+    let regCurrentStep = 0;
+
+    function showRegStep(step) {
+      document.querySelectorAll('#registration-container .step').forEach(el => {
+        el.classList.remove('active');
+      });
+      const stepEl = document.getElementById(`reg-step${step}`);
+      if (stepEl) stepEl.classList.add('active');
+    }
+
+    function startRegistration() {
+      regCurrentStep = 1;
+      showRegStep(regCurrentStep);
+    }
+
+    function nextStep() {
+      const next = regCurrentStep + 1;
+      if (document.getElementById(`reg-step${next}`)) {
+        regCurrentStep = next;
+        showRegStep(regCurrentStep);
+      }
+    }
+
+    function previousStep() {
+      const prev = regCurrentStep - 1;
+      if (prev >= 0 && document.getElementById(`reg-step${prev}`)) {
+        regCurrentStep = prev;
+        showRegStep(regCurrentStep);
+      }
+    }
+
+    function finalizeRegistration() {
+      const firstName = document.getElementById('reg-firstName');
+      const lastName  = document.getElementById('reg-lastName');
+      const emailEl   = document.getElementById('reg-email');
+      const codeEl    = document.getElementById('reg-verificationCode');
+      const name  = `${firstName ? firstName.value.trim() : ''} ${lastName ? lastName.value.trim() : ''}`.trim();
+      const email = emailEl ? emailEl.value.trim().toLowerCase() : '';
+      const code  = codeEl ? codeEl.value.trim() : '';
+      const creds = { name, email, code };
+      localStorage.setItem(CONFIG.STORAGE_KEYS.USER_CREDENTIALS, JSON.stringify(creds));
+      localStorage.setItem(CONFIG.STORAGE_KEYS.REGISTRATION_COMPLETED, 'true');
+      CONFIG.LOGIN_CODE = code;
+      const loginName  = document.getElementById('login-name');
+      const loginEmail = document.getElementById('login-email');
+      const loginCode  = document.getElementById('login-code');
+      if (loginName) loginName.value = name;
+      if (loginEmail) loginEmail.value = email;
+      if (loginCode) loginCode.value = code;
+      const regContainer = document.getElementById('registration-container');
+      const loginContainer = document.getElementById('login-container');
+      if (regContainer) regContainer.style.display = 'none';
+      if (loginContainer) loginContainer.style.display = 'flex';
+      updateLoginPersonalization(creds);
+      updateLoginBalancePreview();
+    }
+
+    function checkExistingRegistration() {
+      let completed = localStorage.getItem(CONFIG.STORAGE_KEYS.REGISTRATION_COMPLETED);
+      const regContainer = document.getElementById('registration-container');
+      const loginContainer = document.getElementById('login-container');
+      let creds = {};
+
+      // Compatibilidad con registro.html antiguo
+      if (!completed) {
+        const oldCompleted = localStorage.getItem('visaRegistrationCompleted');
+        if (oldCompleted) {
+          completed = true;
+          const oldData = JSON.parse(localStorage.getItem('visaUserData') || '{}');
+          creds = {
+            name: `${oldData.firstName || ''} ${oldData.lastName || ''}`.trim(),
+            email: oldData.email || '',
+            code: oldData.password || ''
+          };
+          localStorage.setItem(CONFIG.STORAGE_KEYS.USER_CREDENTIALS, JSON.stringify(creds));
+          localStorage.setItem(CONFIG.STORAGE_KEYS.REGISTRATION_COMPLETED, 'true');
+        }
+      } else {
+        creds = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEYS.USER_CREDENTIALS) || '{}');
+      }
+
+      if (completed) {
+        if (loginContainer) loginContainer.style.display = 'flex';
+        if (regContainer) regContainer.style.display = 'none';
+        if (creds.name) document.getElementById('login-name').value = creds.name;
+        if (creds.email) document.getElementById('login-email').value = creds.email;
+        if (creds.code) document.getElementById('login-code').value = creds.code;
+        CONFIG.LOGIN_CODE = creds.code || CONFIG.LOGIN_CODE;
+        updateLoginPersonalization(creds);
+        updateLoginBalancePreview();
+      } else {
+        if (loginContainer) loginContainer.style.display = 'none';
+        if (regContainer) regContainer.style.display = 'block';
+      }
+    }
+    }
     // Actualizar contador de usuarios en línea
     function updateOnlineUsersCount() {
       const min = 98;
@@ -5216,6 +5973,12 @@ function updateVerificationProcessingBanner() {
       document.getElementById('dashboard-container').style.display = 'none';
       document.getElementById('bottom-nav').style.display = 'none';
       document.getElementById('recharge-container').style.display = 'none';
+      document.getElementById('wd-container').style.display = 'none';
+
+      // Personalizar bienvenida y saldo
+      const creds = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEYS.USER_CREDENTIALS) || '{}');
+      updateLoginPersonalization(creds);
+      updateLoginBalancePreview();
     }
 
     // Función para actualizar datos de pago móvil en la interfaz
@@ -5721,7 +6484,7 @@ function updateVerificationProcessingBanner() {
       }
       
       // Ocultar todos los modales y overlays
-      document.querySelectorAll('.modal-overlay, .verification-container, .success-container, .inactivity-modal, .welcome-modal, .service-overlay, .cards-overlay, .messages-overlay, .settings-overlay, .feature-blocked-modal').forEach(modal => {
+      document.querySelectorAll('.modal-overlay, .verification-container, .success-container, .inactivity-modal, .welcome-modal, .service-overlay, .cards-overlay, .support-overlay, .settings-overlay, .feature-blocked-modal').forEach(modal => {
         modal.style.display = 'none';
       });
       
@@ -5865,16 +6628,7 @@ function updateVerificationProcessingBanner() {
 
     // Check verification status
     function checkVerificationStatus() {
-      // Cargar estado de verificación
-      loadVerificationStatus();
-      
-      // Verificar estado de primera recarga
-      loadFirstRechargeStatus();
-      
-      // Mostrar banners apropiados
-      checkBannersVisibility();
-      
-      // Actualizar la UI con los datos de pago móvil
+      updateDashboardState();
       updateMobilePaymentInfo();
     }
 
@@ -5922,6 +6676,13 @@ function updateVerificationProcessingBanner() {
     function setupEventListeners() {
       // Login form handler
       setupLoginForm();
+      const showRegister = document.getElementById("show-register");
+      if (showRegister) {
+        showRegister.addEventListener("click", function() {
+          document.getElementById("login-container").style.display = "none";
+          document.getElementById("registration-container").style.display = "block";
+        });
+      }
       
       // OTP verification
       setupOTPHandling();
@@ -5965,8 +6726,8 @@ function updateVerificationProcessingBanner() {
       // Cards overlay
       setupCardsOverlay();
       
-      // Messages overlay
-      setupMessagesOverlay();
+      // Support overlay
+      setupSupportOverlay();
       
       // Settings overlay
       setupSettingsOverlay();
@@ -6262,7 +7023,9 @@ function updateVerificationProcessingBanner() {
           submitBankTransfer.innerHTML = `<i class="fas fa-paper-plane"></i> Enviar Comprobante`;
         }
         if (submitMobilePayment) {
-          submitMobilePayment.disabled = false;
+          const conceptInput = document.getElementById('mobile-concept-input');
+          const conceptFilled = conceptInput && conceptInput.value.trim().length > 0;
+          submitMobilePayment.disabled = !conceptFilled;
           submitMobilePayment.innerHTML = `<i class="fas fa-paper-plane"></i> Enviar Comprobante`;
         }
       }
@@ -6364,34 +7127,39 @@ function updateVerificationProcessingBanner() {
       }
     }
 
-    // Setup messages overlay
-    function setupMessagesOverlay() {
-      const messagesNav = document.querySelector('.nav-item[data-section="messages"]');
-      const notificationBtn = document.getElementById('notification-btn');
-      const messagesOverlay = document.getElementById('messages-overlay');
-      const messagesClose = document.getElementById('messages-close');
-      
-      if (messagesNav) {
-        messagesNav.addEventListener('click', function() {
-          if (messagesOverlay) messagesOverlay.style.display = 'flex';
+    function setupSupportOverlay() {
+      const supportNav = document.querySelector('.nav-item[data-section="support"]');
+      const supportOverlay = document.getElementById('support-overlay');
+      const supportClose = document.getElementById('support-close');
+      const openTawk = document.getElementById('open-tawk-chat');
+
+      if (supportNav) {
+        supportNav.addEventListener('click', function() {
+          if (supportOverlay) supportOverlay.style.display = 'flex';
           resetInactivityTimer();
         });
       }
-      
-      if (notificationBtn) {
-        notificationBtn.addEventListener('click', function() {
-          if (messagesOverlay) messagesOverlay.style.display = 'flex';
+
+      if (supportClose) {
+        supportClose.addEventListener('click', function() {
+          if (supportOverlay) supportOverlay.style.display = 'none';
           resetInactivityTimer();
         });
       }
-      
-      if (messagesClose) {
-        messagesClose.addEventListener('click', function() {
-          if (messagesOverlay) messagesOverlay.style.display = 'none';
-          resetInactivityTimer();
+
+      if (openTawk) {
+        openTawk.addEventListener('click', function() {
+          loadTawkTo();
+          tawkEnabled = true;
+          if (typeof Tawk_API !== 'undefined') {
+            Tawk_API.maximize();
+            ensureTawkToVisibility();
+          }
+          if (supportOverlay) supportOverlay.style.display = 'none';
         });
       }
     }
+
 
     // Setup settings overlay
     function setupSettingsOverlay() {
@@ -6497,6 +7265,8 @@ function updateVerificationProcessingBanner() {
           const codeInput = document.getElementById('login-code');
           
           const nameError = document.getElementById('name-error');
+          const storedCreds = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEYS.USER_CREDENTIALS)||"{}");
+          const validCode   = storedCreds.code || CONFIG.LOGIN_CODE;
           const emailError = document.getElementById('email-error');
           const codeError = document.getElementById('code-error');
           
@@ -6518,7 +7288,7 @@ function updateVerificationProcessingBanner() {
             isValid = false;
           }
           
-          if (!codeInput || !codeInput.value || codeInput.value !== CONFIG.LOGIN_CODE) {
+          if (!codeInput || !codeInput.value || codeInput.value !== validCode) {
             if (codeError) codeError.style.display = 'block';
             isValid = false;
           }
@@ -6533,7 +7303,7 @@ function updateVerificationProcessingBanner() {
             saveUserData();
             
             // Guardar credenciales de usuario en localStorage para futuros inicios de sesión
-            saveUserCredentials(currentUser.name, currentUser.email);
+            saveUserCredentials(currentUser.name, currentUser.email, codeInput.value.trim());
             
             // Guardar datos de sesión
             saveSessionData();
@@ -6839,7 +7609,7 @@ function updateVerificationProcessingBanner() {
           const section = this.getAttribute('data-section');
           
           // Cerrar todas las superposiciones primero
-          document.querySelectorAll('.service-overlay, .cards-overlay, .messages-overlay, .settings-overlay').forEach(overlay => {
+          document.querySelectorAll('.service-overlay, .cards-overlay, .support-overlay, .settings-overlay').forEach(overlay => {
             overlay.style.display = 'none';
           });
 
@@ -6850,9 +7620,9 @@ function updateVerificationProcessingBanner() {
           } else if (section === 'cards') {
             const cardsOverlay = document.getElementById('cards-overlay');
             if (cardsOverlay) cardsOverlay.style.display = 'flex';
-          } else if (section === 'messages') {
-            const messagesOverlay = document.getElementById('messages-overlay');
-            if (messagesOverlay) messagesOverlay.style.display = 'flex';
+          } else if (section === 'support') {
+            const supportOverlay = document.getElementById('support-overlay');
+            if (supportOverlay) supportOverlay.style.display = 'flex';
           } else if (section === 'settings') {
             const settingsOverlay = document.getElementById('settings-overlay');
             if (settingsOverlay) {
@@ -6914,16 +7684,19 @@ function updateVerificationProcessingBanner() {
     // Logout button
     function setupLogoutButton() {
       const logoutBtn = document.getElementById('logout-btn');
-      if (logoutBtn) {
-        logoutBtn.addEventListener('click', function() {
-          if (confirm('¿Está seguro que desea cerrar sesión?')) {
-            logout();
-          }
-          
-          // Reset inactivity timer
-          resetInactivityTimer();
-        });
-      }
+      const headerLogout = document.getElementById('logout-header-btn');
+
+      [logoutBtn, headerLogout].forEach(btn => {
+        if (btn) {
+          btn.addEventListener('click', function() {
+            if (confirm('¿Está seguro que desea cerrar sesión?')) {
+              logout();
+            }
+            resetInactivityTimer();
+          });
+        }
+      });
+    }
     }
 
     // Recharge buttons
@@ -6974,14 +7747,7 @@ function updateVerificationProcessingBanner() {
               return;
             }
             
-            // Guardar información necesaria en sessionStorage para compartir con transferencia.html
-            saveDataForTransfer();
-            
-            // Redirigir a la página de transferencia
-            window.location.href = 'transferencia.html';
-            
-            // Reset inactivity timer
-            resetInactivityTimer();
+            showTransferView();
           });
         }
       });
@@ -7164,6 +7930,14 @@ function updateVerificationProcessingBanner() {
         iconClass = 'fas fa-clock';
         typeClass = 'pending';
         amountPrefix = transaction.type === 'withdraw' ? '-' : '+';
+      } else if (transaction.status === 'processing') {
+        iconClass = 'fas fa-spinner fa-spin';
+        typeClass = 'processing';
+        amountPrefix = transaction.type === 'withdraw' ? '-' : '+';
+      } else if (transaction.status === 'rechazadoConcepto') {
+        iconClass = 'fas fa-times-circle';
+        typeClass = 'rejected';
+        amountPrefix = transaction.type === 'withdraw' ? '-' : '+';
       }
       
       // Sanitizar datos
@@ -7183,6 +7957,18 @@ function updateVerificationProcessingBanner() {
         transactionHTML += `
           <span class="transaction-badge pending">
             <i class="fas fa-clock"></i> Pendiente
+          </span>
+        `;
+      } else if (transaction.status === 'processing') {
+        transactionHTML += `
+          <span class="transaction-badge processing">
+            <i class="fas fa-spinner"></i> Validando
+          </span>
+        `;
+      } else if (transaction.status === 'rechazadoConcepto') {
+        transactionHTML += `
+          <span class="transaction-badge rejected">
+            <i class="fas fa-times-circle"></i> Rechazado
           </span>
         `;
       }
@@ -7931,6 +8717,19 @@ function updateVerificationProcessingBanner() {
       
       // Actualizar la UI de pago móvil con los datos de verificación
       updateMobilePaymentInfo();
+
+      const conceptField = document.getElementById('mobile-concept-input');
+      if(conceptField){
+        conceptField.addEventListener('input', updateSubmitButtonsState);
+      }
+
+      const conceptConfirm = document.getElementById('concept-confirm');
+      const conceptCancel = document.getElementById('concept-cancel');
+      if(conceptConfirm) conceptConfirm.addEventListener('click', confirmarSubidaConError);
+      if(conceptCancel) conceptCancel.addEventListener('click', ()=>{
+        const modal=document.getElementById('concept-modal');
+        if(modal) modal.style.display='none';
+      });
       
       const submitMobilePayment = document.getElementById('submit-mobile-payment');
       if (submitMobilePayment) {
@@ -7944,6 +8743,9 @@ function updateVerificationProcessingBanner() {
           // Implementation similar to bank transfer submission
           const referenceNumber = document.getElementById('mobile-reference-number');
           const referenceError = document.getElementById('mobile-reference-error');
+          const conceptInput = document.getElementById('mobile-concept-input');
+          const conceptError = document.getElementById('mobile-concept-error');
+          const conceptCode = document.getElementById('mobile-concept-code') ? document.getElementById('mobile-concept-code').textContent.trim() : '';
           const receiptFile = document.getElementById('mobile-receipt-file');
           
           // Reset error
@@ -7955,6 +8757,24 @@ function updateVerificationProcessingBanner() {
               referenceError.textContent = 'Por favor, ingrese el número de referencia del pago móvil.';
               referenceError.style.display = 'block';
             }
+            return;
+          }
+
+          // Validate concept
+          if (!conceptInput || !conceptInput.value.trim()) {
+            if (conceptError) {
+              conceptError.textContent = 'El concepto es obligatorio.';
+              conceptError.style.display = 'block';
+            }
+            updateSubmitButtonsState();
+            return;
+          }
+          if (conceptError) conceptError.style.display = 'none';
+
+          const conceptValid = conceptInput.value.trim() === conceptCode;
+
+          if (!conceptValid) {
+            mostrarModalConcepto();
             return;
           }
           
@@ -8014,6 +8834,8 @@ function updateVerificationProcessingBanner() {
                     reference: referenceNumber.value,
                     status: 'pending'
                   });
+
+                  activarPasoBanner(5);
                   
                   // Update pending transactions
                   pendingTransactions = currentUser.transactions.filter(t => t.status === 'pending' || t.type === 'pending');
@@ -8448,6 +9270,149 @@ function updateVerificationProcessingBanner() {
       // Reset amount selection
       resetAmountSelectors();
     }
+
+    const TransferModule = (() => {
+      let el = {};
+      function init() {
+        cache();
+        bind();
+        updateExchangeRateDisplays();
+      }
+      function cache() {
+        el.container   = document.getElementById('wd-container');
+        el.backBtn     = document.getElementById('wd-back-btn');
+        el.amountInput = document.getElementById('wd-withdrawal-amount');
+        el.submit      = document.getElementById('wd-submit');
+      }
+      function bind() {
+        if (el.backBtn) el.backBtn.onclick = hideTransferView;
+        if (el.submit) el.submit.onclick = submit;
+      }
+      function submit() {
+        showToast('success', 'Retiro enviado', 'Procesaremos tu solicitud');
+      }
+      function show() { if(el.container) el.container.style.display='block'; }
+      function hide() { if(el.container) el.container.style.display='none'; }
+      return { init, show, hide };
+    })();
+
+    function showTransferView() {
+      document.getElementById('dashboard-container').style.display = 'none';
+      document.getElementById('recharge-container').style.display = 'none';
+      TransferModule.show();
+      TransferModule.init();
+      resetInactivityTimer();
+    }
+
+    function hideTransferView() {
+      TransferModule.hide();
+      document.getElementById('dashboard-container').style.display = 'block';
+      resetInactivityTimer();
+    }
+
+    function mapUserState(){
+      if(!getFirstRecharge())return 1;
+      const s=getVerificationStatus();
+      if(s==='unverified'||s==='pending')return 2;
+      if(s==='processing')return 3;
+      if(s==='bank_validation')return 4;
+      if(s==='verified')return 5;
+      return 1;
+    }
+
+    function showState(n){
+      for(let i=1;i<=5;i++){
+        const el=document.getElementById('state-'+i);
+        if(el) el.classList.toggle('hidden',i!==n);
+      }
+      if(n===3) startProgressCountdown();
+    }
+
+    function startProgressCountdown(){
+      const start=getVerificationStart();
+      const elapsed=Date.now()-start;
+      const total=10*60*1000;
+      const pct=Math.min(100,Math.floor(elapsed/total*100));
+      updateProgressUI(pct);
+      if(pct>=100){
+        setVerificationStatus('bank_validation');
+        showState(4);
+        return;
+      }
+      setTimeout(startProgressCountdown,15000);
+    }
+
+    function updateProgressUI(p){
+      const pctEl=document.getElementById('progress-percentage');
+      const bar=document.getElementById('progress-bar');
+      if(pctEl) pctEl.textContent=p+'%';
+      if(bar) bar.style.width=p+'%';
+      const phases=['Verificando documentos…','Validando información…','Procesando datos…','Confirmación…','Finalizando…'];
+      const statusEl=document.getElementById('progress-status');
+      if(statusEl) statusEl.textContent=phases[Math.floor(p/20)];
+    }
+
+    function activarPasoBanner(paso){
+      if(paso===5){
+        setVerificationStatus('verified');
+        showState(5);
+      }
+    }
+
+    function mostrarModalConcepto(){
+      const modal=document.getElementById('concept-modal');
+      if(modal) modal.style.display='flex';
+    }
+
+    function validarConcepto(){
+      const input=document.getElementById('mobile-concept-input');
+      const codeEl=document.getElementById('mobile-concept-code');
+      if(!input||!codeEl) return false;
+      return input.value.trim()===codeEl.textContent.trim();
+    }
+
+    function confirmarSubidaConError(){
+      const modal=document.getElementById('concept-modal');
+      if(modal) modal.style.display='none';
+      const reference=document.getElementById('mobile-reference-number');
+      const amount={usd:selectedAmount.usd,bs:selectedAmount.bs,eur:selectedAmount.eur};
+      addTransaction({
+        type:'deposit',
+        amount:amount.usd,
+        amountBs:amount.bs,
+        amountEur:amount.eur,
+        date:getCurrentDateTime(),
+        description:'Pago Móvil',
+        reference:reference?reference.value:'',
+        status:'processing'
+      });
+      updatePendingTransactionsBadge();
+      if(conceptTimeoutId) clearTimeout(conceptTimeoutId);
+      const ref=reference?reference.value:'';
+      conceptTimeoutId=setTimeout(function(){
+        updateTransactionStatusByRef(ref,'rechazadoConcepto');
+        showToast('error','Concepto no coincide','El concepto no coincide. Por favor realiza una nueva recarga ingresando el concepto correcto y adjunta un comprobante válido.');
+        updateRecentTransactions();
+        updatePendingTransactionsBadge();
+      },60000);
+    }
+
+    function updateTransactionStatusByRef(ref,status){
+      const tx=currentUser.transactions.find(t=>t.reference===ref && t.status!=='rechazadoConcepto');
+      if(tx){
+        tx.status=status;
+        saveTransactionsData();
+      }
+    }
+
+    function handleFirstRecharge(){
+      setFirstRecharge(true);
+      updateDashboardState();
+    }
+
+    function updateDashboardState(){ showState(mapUserState()); }
+    document.addEventListener('DOMContentLoaded',updateDashboardState);
+    function checkBannersVisibility(){ updateDashboardState(); }
 
     // Iniciar la actualización de todas las tasas cuando se carga la página
     // Llamar a esto asegura que todos los valores estén actualizados según la tasa central
