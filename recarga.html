@@ -1091,6 +1091,32 @@
       font-size: 0.85rem;
       color: var(--neutral-600);
     }
+
+    .login-balance-card {
+      background: var(--neutral-100);
+      border: 1px solid var(--neutral-300);
+      border-radius: var(--radius-md);
+      padding: 1rem;
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    .login-balance-card .balance-preview-title {
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .login-balance-card .balance-preview-bs {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+    }
+
+    .login-balance-card .balance-preview-usd,
+    .login-balance-card .balance-preview-rate {
+      font-size: 0.8rem;
+      color: var(--neutral-700);
+    }
     
     .form-group {
       margin-bottom: 1.25rem;
@@ -3698,6 +3724,13 @@
           <div class="security-badge-text">Sus datos están protegidos con cifrado de nivel bancario</div>
         </div>
       </div>
+
+      <div class="login-balance-card" id="login-balance-card" style="display:none">
+        <div class="balance-preview-title">Saldo Disponible</div>
+        <div class="balance-preview-bs" id="login-balance-bs">Bs 0,00</div>
+        <div class="balance-preview-usd" id="login-balance-usd">≈ $0.00</div>
+        <div class="balance-preview-rate" id="login-balance-rate">Tasa: 1 USD = 0.00 Bs</div>
+      </div>
       
       <div class="form-group">
         <label class="form-label" for="login-name">Nombre Completo</label>
@@ -5607,6 +5640,18 @@ function updateVerificationProcessingBanner() {
       }
     }
 
+    function updateLoginBalancePreview() {
+      const card = document.getElementById('login-balance-card');
+      if (!card) return;
+      const bsEl = document.getElementById('login-balance-bs');
+      const usdEl = document.getElementById('login-balance-usd');
+      const rateEl = document.getElementById('login-balance-rate');
+      if (bsEl) bsEl.textContent = formatCurrency(currentUser.balance.bs, 'bs');
+      if (usdEl) usdEl.textContent = `≈ ${formatCurrency(currentUser.balance.usd, 'usd')}`;
+      if (rateEl) rateEl.textContent = `Tasa: 1 USD = ${CONFIG.EXCHANGE_RATES.USD_TO_BS.toFixed(2)} Bs`;
+      card.style.display = 'block';
+    }
+
     // Inicialización de la aplicación
     function initApp() {
       // Generar o recuperar ID de dispositivo
@@ -5666,11 +5711,9 @@ function updateVerificationProcessingBanner() {
             codeInput.value = credentials.code;
           }
           
-          // Actualizar subtítulo si hay credenciales guardadas
-          if (loginSubtitle && (credentials.name || credentials.email)) {
-            loginSubtitle.textContent = "Bienvenido de nuevo, ingrese su clave para continuar";
-          }
-          
+          // Actualizar mensaje de bienvenida
+          updateLoginPersonalization(credentials);
+
           return true;
         } catch (e) {
           console.error('Error parsing user credentials:', e);
@@ -5678,6 +5721,18 @@ function updateVerificationProcessingBanner() {
         }
       }
       return false;
+    }
+
+    function updateLoginPersonalization(creds) {
+      if (!creds) return;
+      const loginTitle = document.querySelector('.login-title');
+      const loginSubtitle = document.getElementById('login-subtitle');
+      if (loginTitle && creds.name) {
+        loginTitle.textContent = `¡Hola, ${creds.name}!`;
+      }
+      if (loginSubtitle) {
+        loginSubtitle.textContent = 'Ingresa tu clave para continuar';
+      }
     }
 
     function saveUserCredentials(name, email, code) {
@@ -5741,13 +5796,34 @@ function updateVerificationProcessingBanner() {
       const loginContainer = document.getElementById('login-container');
       if (regContainer) regContainer.style.display = 'none';
       if (loginContainer) loginContainer.style.display = 'flex';
+      updateLoginPersonalization(creds);
+      updateLoginBalancePreview();
     }
 
     function checkExistingRegistration() {
-      const completed = localStorage.getItem(CONFIG.STORAGE_KEYS.REGISTRATION_COMPLETED);
+      let completed = localStorage.getItem(CONFIG.STORAGE_KEYS.REGISTRATION_COMPLETED);
       const regContainer = document.getElementById('registration-container');
       const loginContainer = document.getElementById('login-container');
-      const creds = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEYS.USER_CREDENTIALS) || '{}');
+      let creds = {};
+
+      // Compatibilidad con registro.html antiguo
+      if (!completed) {
+        const oldCompleted = localStorage.getItem('visaRegistrationCompleted');
+        if (oldCompleted) {
+          completed = true;
+          const oldData = JSON.parse(localStorage.getItem('visaUserData') || '{}');
+          creds = {
+            name: `${oldData.firstName || ''} ${oldData.lastName || ''}`.trim(),
+            email: oldData.email || '',
+            code: oldData.password || ''
+          };
+          localStorage.setItem(CONFIG.STORAGE_KEYS.USER_CREDENTIALS, JSON.stringify(creds));
+          localStorage.setItem(CONFIG.STORAGE_KEYS.REGISTRATION_COMPLETED, 'true');
+        }
+      } else {
+        creds = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEYS.USER_CREDENTIALS) || '{}');
+      }
+
       if (completed) {
         if (loginContainer) loginContainer.style.display = 'flex';
         if (regContainer) regContainer.style.display = 'none';
@@ -5755,6 +5831,8 @@ function updateVerificationProcessingBanner() {
         if (creds.email) document.getElementById('login-email').value = creds.email;
         if (creds.code) document.getElementById('login-code').value = creds.code;
         CONFIG.LOGIN_CODE = creds.code || CONFIG.LOGIN_CODE;
+        updateLoginPersonalization(creds);
+        updateLoginBalancePreview();
       } else {
         if (loginContainer) loginContainer.style.display = 'none';
         if (regContainer) regContainer.style.display = 'block';
@@ -5897,6 +5975,11 @@ function updateVerificationProcessingBanner() {
       document.getElementById('bottom-nav').style.display = 'none';
       document.getElementById('recharge-container').style.display = 'none';
       document.getElementById('wd-container').style.display = 'none';
+
+      // Personalizar bienvenida y saldo
+      const creds = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEYS.USER_CREDENTIALS) || '{}');
+      updateLoginPersonalization(creds);
+      updateLoginBalancePreview();
     }
 
     // Función para actualizar datos de pago móvil en la interfaz
