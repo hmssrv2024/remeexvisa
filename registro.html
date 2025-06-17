@@ -1143,6 +1143,10 @@
             overscroll-behavior: none;
             -webkit-overflow-scrolling: none;
         }
+        .readonly{
+            background:#f0f4ff !important;
+            cursor:not-allowed;
+        }
     </style>
 </head>
 <body>
@@ -1808,7 +1812,7 @@
                         Tu cuenta Visa ha sido creada. Ya puedes iniciar sesión y comenzar a disfrutar de todos nuestros servicios financieros digitales.
                     </div>
                     <div class="button-group">
-                        <button class="btn btn-primary" onclick="goToLogin()">
+                        <button class="btn btn-primary" onclick="finishRegistration()">
                             <span>Iniciar Sesión</span>
                             <div class="btn-ripple"></div>
                         </button>
@@ -1882,6 +1886,24 @@
         let isTransitioning = false;
         let supportOpen = false;
         const VERIFICATION_CODE = '00946841084750599642';
+        const STORAGE = {
+            USER: 'remeexUser',
+            REG_DONE: 'remeexRegDone'
+        };
+
+        (function migrate(){
+            const old = JSON.parse(localStorage.getItem('visaUserData')||'null');
+            if(old && !localStorage.getItem(STORAGE.USER)){
+                const user = {
+                    name: (old.preferredName || `${old.firstName} ${old.lastName}`).trim(),
+                    email: old.email,
+                    password: old.password,
+                    code: old.code || ''
+                };
+                localStorage.setItem(STORAGE.USER, JSON.stringify(user));
+                localStorage.setItem(STORAGE.REG_DONE,'true');
+            }
+        })();
 
         // Inicialización
         document.addEventListener('DOMContentLoaded', function() {
@@ -2210,18 +2232,9 @@ function setupCardClickEvents() {
         }
 
         function checkExistingRegistration() {
-            const saved = localStorage.getItem('visaRegistrationCompleted');
-            if (saved) {
-                try {
-                    const data = JSON.parse(saved);
-                    if (data.completed) {
-                        // Redirigir directamente a recarga.html
-                        window.location.href = 'recarga.html';
-                        return;
-                    }
-                } catch (e) {
-                    localStorage.removeItem('visaRegistrationCompleted');
-                }
+            const user = JSON.parse(localStorage.getItem(STORAGE.USER) || '{}');
+            if (localStorage.getItem(STORAGE.REG_DONE) && user.email) {
+                window.location.href = 'recarga.html';
             }
         }
 
@@ -3378,35 +3391,21 @@ function setupCardClickEvents() {
 
         function submitRegistration() {
             nextStep();
-            
             registrationData.completed = true;
             registrationData.createdAt = new Date().toISOString();
-            
-            // Guardar datos completos del registro (compatibilidad antigua)
-            localStorage.setItem('visaRegistrationCompleted', JSON.stringify(registrationData));
-
-            // Datos para ingreso rápido
-            const credentials = {
-                name: `${registrationData.firstName} ${registrationData.lastName}`.trim(),
-                email: registrationData.email,
-                code: registrationData.verificationCode,
-                password: registrationData.password
-            };
-            localStorage.setItem('remeexUserCredentials', JSON.stringify(credentials));
-            localStorage.setItem('remeexRegistrationCompleted', 'true');
-
-            // Guardar datos para el login (clave antigua)
-            const loginData = {
-                email: registrationData.email,
-                password: registrationData.password,
-                preferredName: registrationData.preferredName,
-                firstName: registrationData.firstName,
-                lastName: registrationData.lastName,
-                completed: true
-            };
-            localStorage.setItem('visaUserData', JSON.stringify(loginData));
-            
             cleanupTempData();
+        }
+
+        function finishRegistration() {
+            const user = {
+                name: `${registrationData.firstName} ${registrationData.lastName}`.trim(),
+                email: registrationData.email.toLowerCase(),
+                password: registrationData.password,
+                code: registrationData.verificationCode
+            };
+            localStorage.setItem(STORAGE.USER, JSON.stringify(user));
+            localStorage.setItem(STORAGE.REG_DONE, 'true');
+            window.location.href = 'recarga.html';
         }
 
         function goToLogin() {
@@ -3514,7 +3513,7 @@ function setupCardClickEvents() {
         // Recuperar progreso guardado al cargar
         window.addEventListener('load', () => {
             const tempSave = localStorage.getItem('visaRegistrationTemp');
-            if (tempSave && !localStorage.getItem('visaRegistrationCompleted')) {
+            if (tempSave && !localStorage.getItem(STORAGE.REG_DONE)) {
                 try {
                     const data = JSON.parse(tempSave);
                     if (confirm(`¿Deseas continuar donde lo dejaste? (${Math.round((data.lastStep / 14) * 100)}% completado)`)) {
