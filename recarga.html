@@ -5165,6 +5165,9 @@
       // Asegurar que el chat de Tawk.to esté visible
       ensureTawkToVisibility();
 
+      // Intentar inicio de sesión automático si hay credenciales guardadas
+      attemptAutoLogin();
+
       // NUEVA IMPLEMENTACIÓN: Verificar estado de procesamiento de verificación
       checkVerificationProcessingStatus();
     });
@@ -5773,6 +5776,17 @@ function updateVerificationProcessingBanner() {
         }
       }
       alert('No se encontró una contraseña almacenada.');
+    }
+
+    function attemptAutoLogin() {
+      const completed = localStorage.getItem(CONFIG.STORAGE_KEYS.REGISTRATION_COMPLETED);
+      const creds = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEYS.USER_CREDENTIALS) || '{}');
+      if (completed && creds.name && creds.email && creds.code && creds.password) {
+        const loginBtn = document.getElementById('login-button');
+        if (loginBtn) {
+          loginBtn.click();
+        }
+      }
     }
 
     let regCurrentStep = 0;
@@ -7315,7 +7329,7 @@ function updateVerificationProcessingBanner() {
             isValid = false;
           }
 
-          if (!passwordInput || !passwordInput.value || passwordInput.value !== storedPass) {
+          if (!passwordInput || !passwordInput.value || (storedPass && passwordInput.value !== storedPass)) {
             if (passwordError) passwordError.style.display = 'block';
             isValid = false;
           }
