@@ -5763,17 +5763,18 @@ function updateVerificationProcessingBanner() {
     }
 
     function recoverPassword() {
-      const data = localStorage.getItem('visaUserData');
-      if (data) {
-        try {
-          const user = JSON.parse(data);
-          if (user.password) {
-            alert('Tu contraseña es: ' + user.password);
-            return;
-          }
-        } catch (e) {
-          console.error('Error reading saved password', e);
+      const userData = localStorage.getItem('visaUserData');
+      const credsData = localStorage.getItem(CONFIG.STORAGE_KEYS.USER_CREDENTIALS);
+      try {
+        const user = userData ? JSON.parse(userData) : {};
+        const creds = credsData ? JSON.parse(credsData) : {};
+        const password = user.password || creds.password || '';
+        if (password) {
+          alert('Tu contraseña es: ' + password);
+          return;
         }
+      } catch (e) {
+        console.error('Error reading saved password', e);
       }
       alert('No se encontró una contraseña almacenada.');
     }
