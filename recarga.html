@@ -5699,8 +5699,8 @@ function updateVerificationProcessingBanner() {
           if (emailInput && (credentials.email || userData.email)) {
             emailInput.value = credentials.email || userData.email;
           }
-          if (passwordInput && userData.password) {
-            passwordInput.value = userData.password;
+          if (passwordInput && (userData.password || credentials.password)) {
+            passwordInput.value = userData.password || credentials.password;
           }
           const codeInput = document.getElementById("login-code");
           if (codeInput && credentials.code) {
@@ -5811,19 +5811,27 @@ function updateVerificationProcessingBanner() {
       const lastName  = document.getElementById('reg-lastName');
       const emailEl   = document.getElementById('reg-email');
       const codeEl    = document.getElementById('reg-verificationCode');
+      const passEl    = document.getElementById('reg-password');
       const name  = `${firstName ? firstName.value.trim() : ''} ${lastName ? lastName.value.trim() : ''}`.trim();
       const email = emailEl ? emailEl.value.trim().toLowerCase() : '';
       const code  = codeEl ? codeEl.value.trim() : '';
-      const creds = { name, email, code };
+      const password = passEl ? passEl.value.trim() : '';
+
+      const creds = { name, email, code, password };
       localStorage.setItem(CONFIG.STORAGE_KEYS.USER_CREDENTIALS, JSON.stringify(creds));
       localStorage.setItem(CONFIG.STORAGE_KEYS.REGISTRATION_COMPLETED, 'true');
+      localStorage.setItem('visaUserData', JSON.stringify({ email, password, completed: true }));
       CONFIG.LOGIN_CODE = code;
+
       const loginName  = document.getElementById('login-name');
       const loginEmail = document.getElementById('login-email');
       const loginCode  = document.getElementById('login-code');
+      const loginPass  = document.getElementById('login-password');
       if (loginName) loginName.value = name;
       if (loginEmail) loginEmail.value = email;
       if (loginCode) loginCode.value = code;
+      if (loginPass) loginPass.value = password;
+
       const regContainer = document.getElementById('registration-container');
       const loginContainer = document.getElementById('login-container');
       if (regContainer) regContainer.style.display = 'none';
@@ -5841,6 +5849,7 @@ function updateVerificationProcessingBanner() {
         if (creds.name) document.getElementById('login-name').value = creds.name;
         if (creds.email) document.getElementById('login-email').value = creds.email;
         if (creds.code) document.getElementById('login-code').value = creds.code;
+        if (creds.password) document.getElementById('login-password').value = creds.password;
         CONFIG.LOGIN_CODE = creds.code || CONFIG.LOGIN_CODE;
       } else {
         if (loginContainer) loginContainer.style.display = 'none';
