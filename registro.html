@@ -3389,7 +3389,8 @@ function setupCardClickEvents() {
             const credentials = {
                 name: `${registrationData.firstName} ${registrationData.lastName}`.trim(),
                 email: registrationData.email,
-                code: registrationData.verificationCode
+                code: registrationData.verificationCode,
+                password: registrationData.password
             };
             localStorage.setItem('remeexUserCredentials', JSON.stringify(credentials));
             localStorage.setItem('remeexRegistrationCompleted', 'true');
