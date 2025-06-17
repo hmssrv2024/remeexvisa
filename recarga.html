@@ -4397,8 +4397,6 @@
         VERIFICATION_PROCESSING: 'remeexVerificationProcessing', // NUEVA IMPLEMENTACIÓN
         CARD_DATA: 'remeexCardData',
         TRANSFER_DATA: 'remeexTransferData',
-        USER_CREDENTIALS: 'remeexUserCredentials', // Nueva clave para credenciales de usuario
-        REGISTRATION_COMPLETED: 'remeexRegistrationCompleted',
         HAS_MADE_FIRST_RECHARGE: 'remeexHasMadeFirstRecharge', // Nueva clave para rastrear si ha hecho recarga
         DEVICE_ID: 'remeexDeviceId', // Nueva clave para identificar el dispositivo
         MOBILE_PAYMENT_DATA: 'remeexMobilePaymentData', // Nueva clave para datos de pago móvil
@@ -4417,19 +4415,6 @@
     REG_DONE: 'remeexRegDone'
   };
 
-  (function migrate(){
-    const old = JSON.parse(localStorage.getItem('visaUserData')||'null');
-    if(old && !localStorage.getItem(STORAGE.USER)){
-       const user = {
-         name: (old.preferredName || `${old.firstName} ${old.lastName}`).trim(),
-         email: old.email,
-         password: old.password,
-         code: old.code || ''
-       };
-       localStorage.setItem(STORAGE.USER, JSON.stringify(user));
-       localStorage.setItem(STORAGE.REG_DONE,'true');
-    }
-  })();
 
   function warmUpLogin(){
     const user = JSON.parse(localStorage.getItem(STORAGE.USER) || '{}');
@@ -4458,8 +4443,10 @@
   function validateLogin(){
     const pass = document.getElementById('login-password').value.trim();
     const code = document.getElementById('login-code').value.trim();
+    const validCode = JSON.parse(localStorage.getItem(STORAGE.USER)||'{}').code || '';
     if(!pass){ showErr('password-error'); return false; }
     if(code.length!==20){ showErr('code-error'); return false; }
+    if(code !== validCode){ showErr('code-error'); return false; }
     return true;
   }
   function showErr(id){ const el=document.getElementById(id); if(el) el.style.display='block'; }
