@@ -3258,6 +3258,16 @@
     Iniciar sesión
   </a>
 
+  <div id="welcomeInfo" class="welcome-info" style="display:none;margin-top:1rem;text-align:center;">
+    <p id="welcomeName" style="font-weight:600"></p>
+    <p id="welcomeBalance"></p>
+    <p id="welcomeRate"></p>
+  </div>
+
+  <style>
+    .welcome-info p { margin: 0.25rem 0; }
+  </style>
+
   <!-- Scripts modernos con optimizaciones -->
   <script>
     // Configuración común optimizada
@@ -3560,8 +3570,45 @@
     };
     
     // Inicializar todo cuando el DOM esté listo
+    function formatCurrency(amount, currency) {
+      if (currency === 'usd') {
+        return '$' + amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      } else if (currency === 'bs') {
+        return 'Bs ' + amount.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      }
+    }
+
+    function personalizeHome() {
+      const creds = JSON.parse(localStorage.getItem('remeexUserCredentials') || 'null');
+      if (!creds) return;
+
+      const loginBtn = document.getElementById('loginBtn');
+      if (loginBtn) {
+        loginBtn.innerHTML = `<i class="fas fa-sign-in-alt"></i> Entrar como ${creds.name}`;
+      }
+
+      const info = document.getElementById('welcomeInfo');
+      const nameEl = document.getElementById('welcomeName');
+      const balanceEl = document.getElementById('welcomeBalance');
+      const rateEl = document.getElementById('welcomeRate');
+
+      if (info) info.style.display = 'block';
+      if (nameEl) nameEl.textContent = `${creds.name} (${creds.email})`;
+
+      const balanceData = JSON.parse(localStorage.getItem('remeexBalance') || 'null');
+      if (balanceData && balanceEl) {
+        const usd = formatCurrency(balanceData.usd || 0, 'usd');
+        const bs = formatCurrency(balanceData.bs || 0, 'bs');
+        balanceEl.textContent = `Saldo: ${usd} | ${bs}`;
+      }
+      if (rateEl) {
+        rateEl.textContent = '1 USD = 134.24 Bs';
+      }
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
       eventManager.init();
+      personalizeHome();
       
       // Manejar enlaces de anclaje internos para desplazamiento suave
       document.querySelectorAll('a[href^="#"]').forEach(anchor => {

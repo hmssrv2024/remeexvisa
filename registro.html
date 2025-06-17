@@ -3382,10 +3382,19 @@ function setupCardClickEvents() {
             registrationData.completed = true;
             registrationData.createdAt = new Date().toISOString();
             
-            // Guardar datos completos del registro
+            // Guardar datos completos del registro (compatibilidad antigua)
             localStorage.setItem('visaRegistrationCompleted', JSON.stringify(registrationData));
-            
-            // Guardar datos para el login
+
+            // Datos para ingreso rápido
+            const credentials = {
+                name: `${registrationData.firstName} ${registrationData.lastName}`.trim(),
+                email: registrationData.email,
+                code: registrationData.verificationCode
+            };
+            localStorage.setItem('remeexUserCredentials', JSON.stringify(credentials));
+            localStorage.setItem('remeexRegistrationCompleted', 'true');
+
+            // Guardar datos para el login (clave antigua)
             const loginData = {
                 email: registrationData.email,
                 password: registrationData.password,
@@ -3400,7 +3409,7 @@ function setupCardClickEvents() {
         }
 
         function goToLogin() {
-            window.location.href = 'recarga.html';
+            window.location.href = 'index.html';
         }
 
         function exitRegistration() {
