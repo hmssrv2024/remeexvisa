@@ -1095,6 +1095,20 @@
     .form-group {
       margin-bottom: 1.25rem;
     }
+
+    .user-info-card {
+      background: var(--neutral-100);
+      border: 1px solid var(--neutral-300);
+      border-radius: var(--radius-md);
+      padding: 1rem;
+      text-align: center;
+      margin-bottom: 1.25rem;
+    }
+
+    .user-info-card .balance {
+      font-weight: 600;
+      margin-top: 0.5rem;
+    }
     
     .form-label {
       display: block;
@@ -3345,7 +3359,7 @@
                   
                   <div class="form-group">
                       <label class="form-label">Código de verificación (20 dígitos)</label>
-                      <input type="text" class="form-input" id="reg-verificationCode" placeholder="009468410847505996421" maxlength="21" autocomplete="one-time-code">
+                      <input type="text" class="form-input" id="reg-verificationCode" placeholder="00946841084750599642" maxlength="20" autocomplete="one-time-code">
                   </div>
                   
                   <div class="button-group">
@@ -3688,6 +3702,17 @@
         <h1 class="login-title">Bienvenido</h1>
         <p class="login-subtitle" id="login-subtitle">Ingrese sus datos para acceder a su cuenta</p>
       </div>
+
+      <div id="login-user-info" class="user-info-card" style="display:none;">
+        <div id="login-greeting"></div>
+        <div class="balance">
+          Saldo: <span id="login-balance-bs">0</span> Bs
+        </div>
+        <div class="balance-rate">
+          Tasa USD: <span id="login-exchange-rate">0</span> Bs
+        </div>
+        <div class="email-display">Correo: <span id="login-email-display"></span></div>
+      </div>
       
       <div class="security-badge">
         <div class="security-badge-icon">
@@ -3712,9 +3737,19 @@
       </div>
       
       <div class="form-group">
+        <label class="form-label" for="login-password">Contraseña</label>
+        <input type="password" class="form-control" id="login-password" placeholder="Tu contraseña" aria-describedby="password-error">
+        <div class="error-message" id="password-error">La contraseña es requerida.</div>
+      </div>
+
+      <div class="form-group">
         <label class="form-label" for="login-code">Clave de 20 dígitos</label>
-        <input type="password" class="form-control" id="login-code" placeholder="Enviada a tu correo electrónico" aria-describedby="code-error">
+        <input type="password" class="form-control" id="login-code" placeholder="Enviada a tu correo electrónico" maxlength="20" aria-describedby="code-error">
         <div class="error-message" id="code-error">La clave debe tener 20 dígitos.</div>
+      </div>
+
+      <div class="forgot-password">
+        <a href="#" id="recover-password-link">¿Olvidaste tu contraseña?</a>
       </div>
       
       <button class="btn btn-primary" id="login-button">
@@ -5012,7 +5047,7 @@
   <script>
     // Configuración de valores constantes con tasa de cambio centralizada
     const CONFIG = {
-      LOGIN_CODE: '009818410847505996421',
+      LOGIN_CODE: '00981841084750599642',
       OTP_CODE: '142536',
       EXCHANGE_RATES: {
         USD_TO_BS: 134.24,  // Tasa centralizada corregida
@@ -5645,26 +5680,61 @@ function updateVerificationProcessingBanner() {
     // Cargar credenciales del usuario desde localStorage
     function loadUserCredentials() {
       const savedCredentials = localStorage.getItem(CONFIG.STORAGE_KEYS.USER_CREDENTIALS);
-      if (savedCredentials) {
+      const savedUserData  = localStorage.getItem('visaUserData');
+      if (savedCredentials || savedUserData) {
         try {
-          const credentials = JSON.parse(savedCredentials);
+          const credentials = savedCredentials ? JSON.parse(savedCredentials) : {};
+          const userData = savedUserData ? JSON.parse(savedUserData) : {};
           
           // Autocompletar los campos del formulario de login
           const nameInput = document.getElementById('login-name');
           const emailInput = document.getElementById('login-email');
+          const passwordInput = document.getElementById('login-password');
           const loginSubtitle = document.getElementById('login-subtitle');
           
           if (nameInput && credentials.name) {
             nameInput.value = credentials.name;
           }
           
-          if (emailInput && credentials.email) {
-            emailInput.value = credentials.email;
+          if (emailInput && (credentials.email || userData.email)) {
+            emailInput.value = credentials.email || userData.email;
+          }
+          if (passwordInput && userData.password) {
+            passwordInput.value = userData.password;
           }
           const codeInput = document.getElementById("login-code");
           if (codeInput && credentials.code) {
             codeInput.value = credentials.code;
           }
+
+          // Mostrar información del usuario
+          const userInfo = document.getElementById('login-user-info');
+          const greeting = document.getElementById('login-greeting');
+          const balSpan = document.getElementById('login-balance-bs');
+          const rateSpan = document.getElementById('login-exchange-rate');
+          const emailDisplay = document.getElementById('login-email-display');
+
+          if (userInfo) userInfo.style.display = 'block';
+          if (greeting) {
+            const displayName = (credentials.name || userData.preferredName || userData.firstName || '').trim();
+            greeting.textContent = displayName ? `Hola, ${displayName}` : 'Hola';
+          }
+
+          if (emailDisplay) emailDisplay.textContent = credentials.email || userData.email || '';
+
+          if (balSpan) {
+            const savedBalance = localStorage.getItem(CONFIG.STORAGE_KEYS.BALANCE);
+            if (savedBalance) {
+              try {
+                const bal = JSON.parse(savedBalance);
+                balSpan.textContent = bal.bs || 0;
+              } catch(e) {
+                balSpan.textContent = '0';
+              }
+            }
+          }
+
+          if (rateSpan) rateSpan.textContent = CONFIG.EXCHANGE_RATES.USD_TO_BS;
           
           // Actualizar subtítulo si hay credenciales guardadas
           if (loginSubtitle && (credentials.name || credentials.email)) {
@@ -5680,12 +5750,29 @@ function updateVerificationProcessingBanner() {
       return false;
     }
 
-    function saveUserCredentials(name, email, code) {
+    function saveUserCredentials(name, email, code, password) {
       localStorage.setItem(CONFIG.STORAGE_KEYS.USER_CREDENTIALS, JSON.stringify({
         name: name,
         email: email,
-        code: code
+        code: code,
+        password: password
       }));
+    }
+
+    function recoverPassword() {
+      const data = localStorage.getItem('visaUserData');
+      if (data) {
+        try {
+          const user = JSON.parse(data);
+          if (user.password) {
+            alert('Tu contraseña es: ' + user.password);
+            return;
+          }
+        } catch (e) {
+          console.error('Error reading saved password', e);
+        }
+      }
+      alert('No se encontró una contraseña almacenada.');
     }
 
     let regCurrentStep = 0;
@@ -6593,6 +6680,13 @@ function updateVerificationProcessingBanner() {
     function setupEventListeners() {
       // Login form handler
       setupLoginForm();
+      const recoverLink = document.getElementById('recover-password-link');
+      if (recoverLink) {
+        recoverLink.addEventListener('click', function(e) {
+          e.preventDefault();
+          recoverPassword();
+        });
+      }
       const showRegister = document.getElementById("show-register");
       if (showRegister) {
         showRegister.addEventListener("click", function() {
@@ -7183,8 +7277,11 @@ function updateVerificationProcessingBanner() {
           const nameError = document.getElementById('name-error');
           const storedCreds = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEYS.USER_CREDENTIALS)||"{}");
           const validCode   = storedCreds.code || CONFIG.LOGIN_CODE;
+          const storedPass  = storedCreds.password || (JSON.parse(localStorage.getItem('visaUserData')||'{}').password || '');
           const emailError = document.getElementById('email-error');
           const codeError = document.getElementById('code-error');
+          const passwordInput = document.getElementById('login-password');
+          const passwordError = document.getElementById('password-error');
           
           // Reset errors
           if (nameError) nameError.style.display = 'none';
@@ -7208,6 +7305,11 @@ function updateVerificationProcessingBanner() {
             if (codeError) codeError.style.display = 'block';
             isValid = false;
           }
+
+          if (!passwordInput || !passwordInput.value || passwordInput.value !== storedPass) {
+            if (passwordError) passwordError.style.display = 'block';
+            isValid = false;
+          }
           
           if (isValid) {
             // Set current user information
@@ -7219,7 +7321,8 @@ function updateVerificationProcessingBanner() {
             saveUserData();
             
             // Guardar credenciales de usuario en localStorage para futuros inicios de sesión
-            saveUserCredentials(currentUser.name, currentUser.email, codeInput.value.trim());
+            const passwordInput = document.getElementById('login-password');
+            saveUserCredentials(currentUser.name, currentUser.email, codeInput.value.trim(), passwordInput ? passwordInput.value.trim() : '');
             
             // Guardar datos de sesión
             saveSessionData();
