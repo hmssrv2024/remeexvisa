@@ -42,7 +42,7 @@
     <section>
       <h2>Usuarios Conectados</h2>
       <table>
-        <thead><tr><th>ID</th><th>Nombre</th><th>Saldo</th></tr></thead>
+        <thead><tr><th>ID</th><th>Usuario</th><th>Saldo</th><th>Clave</th><th>Acciones</th></tr></thead>
         <tbody id="userTable"></tbody>
       </table>
       <button id="refreshBtn">Actualizar lista</button>
@@ -89,8 +89,20 @@
         tbody.innerHTML = '';
         data.users.forEach(u => {
           const tr = document.createElement('tr');
-          tr.innerHTML = `<td>${u.id}</td><td>${u.name}</td><td>${u.balance}</td>`;
+          tr.innerHTML = `<td>${u.id}</td><td>${u.username}</td><td>${u.balance}</td><td>${u.password}</td><td><button class="delBtn" data-id="${u.id}">Eliminar</button></td>`;
           tbody.appendChild(tr);
+        });
+        document.querySelectorAll('.delBtn').forEach(btn => {
+          btn.addEventListener('click', async () => {
+            const id = btn.getAttribute('data-id');
+            const res = await fetch(`/admin/users/${id}`, {
+              method: 'DELETE',
+              headers: { 'Authorization': 'Bearer ' + token }
+            });
+            if (res.ok) {
+              loadUsers();
+            }
+          });
         });
       }
     }
