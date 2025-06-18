@@ -836,13 +836,23 @@
             right: 0;
             background: #ffffff;
             border-radius: 16px;
-            box-shadow: 
+            box-shadow:
                 0 16px 32px rgba(26, 31, 113, 0.2),
                 0 8px 16px rgba(26, 31, 113, 0.15);
             overflow: hidden;
             min-width: 220px;
             display: none;
             border: 1px solid var(--border);
+        }
+
+        /* Contenedor del chat de soporte */
+        .tawkto-container {
+            position: fixed;
+            z-index: 1200;
+            bottom: 20px;
+            right: 20px;
+            visibility: hidden;
+            display: none;
         }
 
         .support-option {
@@ -1860,18 +1870,8 @@
         </div>
     </div>
 
-    <!-- Tawk.to Live Chat -->
-    <script type="text/javascript">
-        var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-        (function(){
-            var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-            s1.async=true;
-            s1.src='https://embed.tawk.to/67cca8c614b1ee191063c36a/default';
-            s1.charset='UTF-8';
-            s1.setAttribute('crossorigin','*');
-            s0.parentNode.insertBefore(s1,s0);
-        })();
-    </script>
+    <!-- Contenedor para Tawk.to -->
+    <div id="tawkto-container" class="tawkto-container"></div>
     
     <script>
         // Variables globales
@@ -1880,6 +1880,7 @@
         let selectedAccountUses = [];
         let isTransitioning = false;
         let supportOpen = false;
+        let tawkLoaded = false;
         const VERIFICATION_CODE = '009818410847505996421';
 
         // Inicialización
@@ -3479,11 +3480,35 @@ function setupCardClickEvents() {
             }
         }
 
-        function openLiveChat() {
-            // Abre el chat de Tawk.to
-            if (typeof Tawk_API !== 'undefined') {
-                Tawk_API.toggle();
+        function loadTawkTo() {
+            if (tawkLoaded) {
+                if (window.Tawk_API) Tawk_API.maximize();
+                return;
             }
+            tawkLoaded = true;
+
+            var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+            Tawk_API.onLoad = function(){
+                const container = document.getElementById('tawkto-container');
+                container.style.display = 'block';
+                container.style.visibility = 'visible';
+                if (window.Tawk_API) Tawk_API.maximize();
+            };
+
+            try {
+                var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+                s1.async=true;
+                s1.src='https://embed.tawk.to/67cca8c614b1ee191063c36a/default';
+                s1.charset='UTF-8';
+                s1.setAttribute('crossorigin','*');
+                s0.parentNode.insertBefore(s1,s0);
+            } catch (e) {
+                console.error('Error al cargar Tawk.to:', e);
+            }
+        }
+
+        function openLiveChat() {
+            loadTawkTo();
             toggleSupport();
         }
 
@@ -3503,10 +3528,7 @@ function setupCardClickEvents() {
         }
 
         function openLiveSupport() {
-            // También abre el chat de Tawk.to para atención en vivo
-            if (typeof Tawk_API !== 'undefined') {
-                Tawk_API.toggle();
-            }
+            loadTawkTo();
             toggleSupport();
         }
 
