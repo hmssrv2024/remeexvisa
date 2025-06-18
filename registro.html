@@ -45,16 +45,14 @@
         }
 
         html, body {
-            height: 100vh;
-            height: calc(var(--vh, 1vh) * 100);
-            overflow: hidden;
+            min-height: calc(var(--vh, 1vh) * 100);
+            overflow-x: hidden;
+            overflow-y: auto;
             font-size: 16px;
             -webkit-text-size-adjust: 100%;
             -ms-text-size-adjust: 100%;
-            position: fixed;
+            position: relative;
             width: 100%;
-            top: 0;
-            left: 0;
         }
 
         body {
@@ -73,15 +71,14 @@
         .container {
             width: 100%;
             max-width: 420px;
-            height: 100vh;
-            height: calc(var(--vh, 1vh) * 100);
+            min-height: calc(var(--vh, 1vh) * 100);
             background: #ffffff;
             border: 1px solid var(--border);
-            box-shadow: 
+            box-shadow:
                 0 20px 40px rgba(26, 31, 113, 0.1),
                 0 10px 20px rgba(26, 31, 113, 0.05);
             position: relative;
-            overflow: hidden;
+            overflow-y: auto;
             display: flex;
             flex-direction: column;
             border-radius: 0;
@@ -255,7 +252,8 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            overflow: hidden;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
             position: relative;
             min-height: 0;
             background: #ffffff;
@@ -1155,13 +1153,13 @@
         }
 
         .container {
-            overscroll-behavior: none;
-            -webkit-overflow-scrolling: none;
+            overscroll-behavior: auto;
+            -webkit-overflow-scrolling: touch;
         }
 
         .content {
-            overscroll-behavior: none;
-            -webkit-overflow-scrolling: none;
+            overscroll-behavior: auto;
+            -webkit-overflow-scrolling: touch;
         }
     </style>
     <script src="bank-data.js"></script>
@@ -1889,7 +1887,6 @@
             populateBankOptions();
             checkExistingRegistration();
             preventZoom();
-            preventScroll();
             initializeViewport();
             startUserCounter();
             initializeAnimations();
@@ -2364,8 +2361,8 @@ function setupCardClickEvents() {
                     const verificationCode = document.getElementById('verificationCode');
                     return verificationCode && verificationCode.value === VERIFICATION_CODE;
                 case 9:
-                    return !!(registrationData.operator && registrationData.phoneNumber && 
-                             registrationData.phoneNumber.length === 7);
+                    return !!(registrationData.operator && registrationData.fullPhoneNumber &&
+                             registrationData.fullPhoneNumber.length === 11);
                 case 10:
                     const password = document.getElementById('password');
                     const passwordConfirm = document.getElementById('passwordConfirm');
@@ -3072,7 +3069,7 @@ function setupCardClickEvents() {
             registrationData.phoneNumber = this.value;
             registrationData.fullPhoneNumber = (registrationData.phonePrefix || '') + this.value;
             
-            const isValid = this.value.length === 7;
+            const isValid = registrationData.fullPhoneNumber.length === 11;
             enableNextButton('phoneNext', isValid);
             
             if (isValid) {
@@ -3364,7 +3361,7 @@ function setupCardClickEvents() {
             summaryData.push(
                 { label: 'Documento', value: registrationData.documentNumber || '' },
                 { label: 'Email', value: registrationData.email || '' },
-                { label: 'Teléfono', value: `${registrationData.phonePrefix || ''}-${registrationData.phoneNumber || ''}` },
+                { label: 'Teléfono', value: registrationData.fullPhoneNumber || '' },
                 { label: 'Usos de cuenta', value: selectedAccountUses.join(', ') || 'No especificado' }
             );
             
