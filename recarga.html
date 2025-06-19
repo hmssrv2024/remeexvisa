@@ -6410,6 +6410,8 @@ function stopVerificationProgress() {
 
       // Actualizar enlaces de WhatsApp con datos actuales
       updateWhatsAppLinks();
+
+      updateVerificationButtons();
     }
 
     // Cargar credenciales del usuario desde localStorage
@@ -7033,6 +7035,9 @@ function stopVerificationProgress() {
           const verificationData = JSON.parse(data);
           verificationStatus.idNumber = verificationData.idNumber || '';
           verificationStatus.phoneNumber = verificationData.phoneNumber || '';
+          if (verificationData['full-name']) currentUser.fullName = verificationData['full-name'];
+          if (verificationData.phoneNumber) currentUser.phoneNumber = verificationData.phoneNumber;
+          if (verificationData.documentNumber) currentUser.idNumber = verificationData.documentNumber;
           // El estado se carga en loadVerificationStatus
           return true;
         } catch (e) {
@@ -7603,7 +7608,7 @@ function stopVerificationProgress() {
     }
 
     // Check verification status
-    function checkVerificationStatus() {
+  function checkVerificationStatus() {
       // Cargar estado de verificación
       loadVerificationStatus();
       
@@ -7613,10 +7618,58 @@ function stopVerificationProgress() {
       
       // Mostrar banners apropiados
       checkBannersVisibility();
-      
+
       // Actualizar la UI con los datos de pago móvil
       updateMobilePaymentInfo();
-    }
+      updateVerificationButtons();
+  }
+
+  function updateVerificationButtons() {
+      const verifyIdentityBtn = document.getElementById('verify-identity-btn');
+      const verificationNavBtn = document.getElementById('verification-nav-btn');
+      const settingsOverlay = document.getElementById('settings-overlay');
+
+      if (verifyIdentityBtn) {
+        verifyIdentityBtn.onclick = null;
+        if (verificationStatus.status !== 'unverified') {
+          verifyIdentityBtn.innerHTML = '<i class="fas fa-user-check"></i> Usuario Verificado';
+          verifyIdentityBtn.addEventListener('click', function() {
+            if (settingsOverlay) settingsOverlay.style.display = 'none';
+            showToast('info', 'Usuario Verificado', 'Solo falta un paso para habilitar retiros, realiza una recarga desde la cuenta que registraste, esa recarga se suma al saldo que tienes en tu cuenta de Remeex y podras retirarlo todo');
+            resetInactivityTimer();
+          });
+        } else {
+          verifyIdentityBtn.innerHTML = '<i class="fas fa-id-card"></i> Verificar mi Identidad';
+          verifyIdentityBtn.addEventListener('click', function() {
+            if (settingsOverlay) settingsOverlay.style.display = 'none';
+            window.location.href = 'verificacion.html';
+            resetInactivityTimer();
+          });
+        }
+      }
+
+      if (verificationNavBtn) {
+        verificationNavBtn.onclick = null;
+        const titleEl = verificationNavBtn.querySelector('.settings-nav-title');
+        const descEl = verificationNavBtn.querySelector('.settings-nav-description');
+        if (verificationStatus.status !== 'unverified') {
+          if (titleEl) titleEl.textContent = 'Usuario Verificado';
+          if (descEl) descEl.textContent = 'Recarga para habilitar retiros';
+          verificationNavBtn.addEventListener('click', function() {
+            if (settingsOverlay) settingsOverlay.style.display = 'none';
+            showToast('info', 'Usuario Verificado', 'Solo falta un paso para habilitar retiros, realiza una recarga desde la cuenta que registraste, esa recarga se suma al saldo que tienes en tu cuenta de Remeex y podras retirarlo todo');
+            resetInactivityTimer();
+          });
+        } else {
+          if (titleEl) titleEl.textContent = 'Verificación';
+          if (descEl) descEl.textContent = 'Verificar identidad y documentos';
+          verificationNavBtn.addEventListener('click', function() {
+            window.location.href = 'verificacion.html';
+            resetInactivityTimer();
+          });
+        }
+      }
+  }
 
     // Actualizar badge de transacciones pendientes
     function updatePendingTransactionsBadge() {
@@ -7767,17 +7820,9 @@ function stopVerificationProgress() {
   function setupSettingsNavigation() {
       const verificationNavBtn = document.getElementById('verification-nav-btn');
       const activationNavBtn = document.getElementById('activation-nav-btn');
-      
-      if (verificationNavBtn) {
-        verificationNavBtn.addEventListener('click', function() {
-          // Redirigir a verificacion.html
-          window.location.href = 'verificacion.html';
-          
-          // Reset inactivity timer
-          resetInactivityTimer();
-        });
-      }
-      
+
+      updateVerificationButtons();
+
       if (activationNavBtn) {
         activationNavBtn.addEventListener('click', function() {
           // Redirigir a activacion.html
@@ -8621,13 +8666,15 @@ function stopVerificationProgress() {
         settingsNav.addEventListener('click', function() {
           if (settingsOverlay) {
             settingsOverlay.style.display = 'flex';
-            
+
             // Update settings form
             const settingsName = document.getElementById('settings-name');
             const settingsEmail = document.getElementById('settings-email');
-            
+
             if (settingsName) settingsName.value = currentUser.name;
             if (settingsEmail) settingsEmail.value = currentUser.email;
+
+            updateVerificationButtons();
           }
           resetInactivityTimer();
         });
@@ -8640,18 +8687,8 @@ function stopVerificationProgress() {
         });
       }
       
-      // Verify identity button
-      const verifyIdentityBtn = document.getElementById('verify-identity-btn');
-      if (verifyIdentityBtn) {
-        verifyIdentityBtn.addEventListener('click', function() {
-          if (settingsOverlay) settingsOverlay.style.display = 'none';
-
-          // Redirigir a la página de verificación
-          window.location.href = 'verificacion.html';
-
-          resetInactivityTimer();
-        });
-      }
+      // Actualizar botones de verificación
+      updateVerificationButtons();
 
 
       const resolveBtn = document.getElementById('resolve-problem-btn');
