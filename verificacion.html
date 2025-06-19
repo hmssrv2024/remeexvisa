@@ -3286,32 +3286,32 @@
 
       // Simulate validation process with progress animation
       const validationSteps = [
-        { 
-          step: 1, 
-          progress: 25, 
-          text: 'Verificando información personal...', 
-          delay: 1200,
+        {
+          step: 1,
+          progress: 25,
+          text: 'Verificando información personal...',
+          delay: 400,
           icon: '<i class="fas fa-check"></i>'
         },
-        { 
-          step: 2, 
-          progress: 50, 
-          text: 'Validando datos bancarios...', 
-          delay: 1000,
+        {
+          step: 2,
+          progress: 50,
+          text: 'Validando datos bancarios...',
+          delay: 400,
           icon: '<i class="fas fa-check"></i>'
         },
-        { 
-          step: 3, 
-          progress: 75, 
-          text: 'Procesando biometría facial...', 
-          delay: 1300,
+        {
+          step: 3,
+          progress: 75,
+          text: 'Procesando biometría facial...',
+          delay: 400,
           icon: '<i class="fas fa-check"></i>'
         },
-        { 
-          step: 4, 
-          progress: 100, 
-          text: 'Completando verificación...', 
-          delay: 800,
+        {
+          step: 4,
+          progress: 100,
+          text: 'Completando verificación...',
+          delay: 400,
           icon: '<i class="fas fa-check"></i>'
         }
       ];
@@ -3323,7 +3323,7 @@
           // Proceso completado - mostrar completion y redirigir
           setTimeout(() => {
             completeVerificationProcess();
-          }, 1000);
+          }, 400);
           return;
         }
 
@@ -3379,7 +3379,7 @@
             stepEl?.classList.add('completed');
             stepEl?.classList.remove('active');
             if (iconEl) iconEl.innerHTML = icon;
-          }, 800);
+          }, 300);
         }
       }
     }
@@ -3432,7 +3432,7 @@
       
       updateProgress(totalSteps + 1);
       
-      // Confetti effect with better timing
+      // Confetti effect with faster timing
       setTimeout(() => {
         confetti({
           particleCount: 150,
@@ -3450,7 +3450,7 @@
             colors: ['#1a1f71', '#00d34d', '#f7b600']
           });
         }, 300);
-      }, 800);
+      }, 200);
       
       showToast('success', '¡Verificación completada!', 'Su información ha sido enviada correctamente');
       
