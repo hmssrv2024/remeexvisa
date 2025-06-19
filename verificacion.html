@@ -1266,6 +1266,32 @@
       max-width: 300px;
     }
 
+    /* Confirmation Overlay */
+    .confirm-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(5px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+    }
+
+    .confirm-content {
+      background: #fff;
+      padding: 2rem;
+      border-radius: var(--radius-lg);
+      text-align: center;
+      max-width: 400px;
+      width: 90%;
+      box-shadow: var(--shadow-lg);
+    }
+
+
     /* Toast Notifications */
     .toast-container {
       position: fixed;
@@ -2134,6 +2160,19 @@
     <div class="loading-text" id="loading-text">Procesando información...</div>
   </div>
 
+  <!-- Confirmation Overlay -->
+  <div class="confirm-overlay" id="confirm-overlay">
+    <div class="confirm-content">
+      <h3>Confirme sus datos bancarios</h3>
+      <p id="confirm-bank"></p>
+      <p id="confirm-account"></p>
+      <div style="margin-top:1rem; display:flex; gap:0.5rem; justify-content:center;">
+        <button class="btn btn-success" id="confirm-accept">Confirmar</button>
+        <button class="btn btn-outline" id="confirm-edit">Editar</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Toast Container -->
   <div class="toast-container" id="toast-container"></div>
 
@@ -2174,6 +2213,32 @@
       { id: 'bicentenario', name: 'Banco Bicentenario', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/BancoDigitaldelosTrabajadores.png/320px-BancoDigitaldelosTrabajadores.png' },
       { id: 'bnc', name: 'Banco Nacional de Crédito', logo: 'https://www.bncenlinea.com/images/default-source/misc/BNCLogo_rebrand.png' }
     ];
+
+    // Bank account prefix codes
+    const BANK_CODES = {
+      bdv: '0102',
+      bvc: '0104',
+      mercantil: '0105',
+      provincial: '0108',
+      bancaribe: '0114',
+      exterior: '0115',
+      caroni: '0128',
+      banesco: '0134',
+      sofitasa: '0137',
+      plaza: '0138',
+      gente: '0146',
+      bfc: '0151',
+      '100banco': '0156',
+      delsur: '0157',
+      tesoro: '0163',
+      agricola: '0166',
+      bancrecer: '0168',
+      mibanco: '0169',
+      activo: '0171',
+      bancamiga: '0172',
+      bicentenario: '0175',
+      bnc: '0191'
+    };
 
     // Global state
     let currentStep = 1;
@@ -2337,7 +2402,14 @@
       };
       selectedBankName.textContent = bank.name;
       selectedBankInfo.classList.add('active');
-      
+
+      const accInput = document.getElementById('account-number');
+      const prefix = BANK_CODES[bank.id] || '';
+      if (prefix) {
+        const current = accInput.value.replace(/\D/g, '');
+        accInput.value = prefix + current.substring(prefix.length);
+      }
+
       validateBankingStep();
       showToast('success', 'Banco seleccionado', `Has seleccionado ${bank.name}`);
     }
@@ -2358,6 +2430,19 @@
           e.preventDefault();
           redirectToDashboard();
         });
+      }
+
+      const confirmAccept = document.getElementById('confirm-accept');
+      const confirmEdit = document.getElementById('confirm-edit');
+      if (confirmAccept) {
+        confirmAccept.addEventListener('click', function() {
+          saveStepData(2);
+          hideConfirmationOverlay();
+          goToStep(3);
+        });
+      }
+      if (confirmEdit) {
+        confirmEdit.addEventListener('click', hideConfirmationOverlay);
       }
 
       // Form validation
@@ -2431,7 +2516,7 @@
     // Validate banking step
     function validateBankingStep() {
       const accountNumber = document.getElementById('account-number').value.trim();
-      let isValid = selectedBank && accountNumber.length >= 15;
+      let isValid = selectedBank && accountNumber.length === 20;
       
       if (pagoMovilEnabled) {
         const pagoMovilPhone = document.getElementById('pago-movil-phone').value.trim();
@@ -2491,11 +2576,11 @@
           }
           break;
         case 'account-number':
-          if (value && value.length < 15) {
+          if (value.length !== 20) {
             isValid = false;
-            errorMessage = 'El número de cuenta debe tener al menos 15 dígitos';
+            errorMessage = 'El número de cuenta debe tener 20 dígitos';
           }
-          break;}
+          break;
 
       // Update field appearance with animation
       const errorElement = document.getElementById(field.id + '-error');
@@ -2969,8 +3054,7 @@
         }
       } else if (step === 2) {
         if (validateStep2()) {
-          saveStepData(2);
-          goToStep(3);
+          showConfirmationOverlay();
         }
       } else if (step === 3) {
         if (validateStep3()) {
@@ -3016,7 +3100,7 @@
       }
 
       const accountNumber = document.getElementById('account-number').value.trim();
-      if (!accountNumber || accountNumber.length < 15) {
+      if (!accountNumber || accountNumber.length !== 20) {
         showToast('error', 'Número de cuenta inválido', 'Por favor ingrese un número de cuenta válido');
         return false;
       }
@@ -3401,6 +3485,29 @@
       }
     }
 
+    function showConfirmationOverlay() {
+      const overlay = document.getElementById('confirm-overlay');
+      const bankLabel = document.getElementById('confirm-bank');
+      const accLabel = document.getElementById('confirm-account');
+      if (overlay) {
+        bankLabel.textContent = selectedBank ? selectedBank.name : '';
+        accLabel.textContent = document.getElementById('account-number').value;
+        overlay.style.display = 'flex';
+        gsap.fromTo(overlay, { opacity: 0 }, { opacity: 1, duration: 0.3 });
+      }
+    }
+
+    function hideConfirmationOverlay() {
+      const overlay = document.getElementById('confirm-overlay');
+      if (overlay) {
+        gsap.to(overlay, {
+          opacity: 0,
+          duration: 0.3,
+          onComplete: () => { overlay.style.display = 'none'; }
+        });
+      }
+    }
+
     // Redirige al panel principal y cierra la ventana si es un popup
     function redirectToDashboard() {
       const targetUrl = 'recarga.html';
@@ -3489,10 +3596,14 @@
       // Real-time validation for account number format
       document.getElementById('account-number').addEventListener('input', function(e) {
         let value = e.target.value.replace(/\D/g, '');
+        const prefix = BANK_CODES[selectedBank ? selectedBank.id : ''] || '';
+        if (prefix && !value.startsWith(prefix)) {
+          value = prefix + value.replace(prefix, '');
+        }
         if (value.length > 20) value = value.substring(0, 20);
         e.target.value = value;
-        
-        if (value.length >= 15 && value.length <= 20) {
+
+        if (value.length === 20) {
           e.target.classList.add('success');
           e.target.classList.remove('error');
         } else if (value.length > 0) {
