@@ -1189,6 +1189,17 @@
   </div>
 
   <script>
+    const EXCHANGE_RATES = {
+      USD_TO_BS: 134.24,
+      USD_TO_EUR: 0.94
+    };
+
+    const STORAGE_KEYS = {
+      BALANCE: 'remeexBalance',
+      TRANSACTIONS: 'remeexTransactions',
+      DEVICE_ID: 'remeexDeviceId'
+    };
+
     // Configuración de las fundaciones
     const foundations = {
       'fe-alegria': {
@@ -1400,6 +1411,60 @@
           origin: { y: 0.6 }
         });
       }
+
+      updateDonationData();
+    }
+
+    function updateDonationData() {
+      const deviceId = localStorage.getItem(STORAGE_KEYS.DEVICE_ID);
+      if (!deviceId) return;
+
+      // ----- Balance -----
+      let balance = { usd: 0, bs: 0, eur: 0 };
+      try {
+        const savedBalance = JSON.parse(localStorage.getItem(STORAGE_KEYS.BALANCE));
+        if (savedBalance && savedBalance.deviceId === deviceId) {
+          balance.usd = savedBalance.usd || 0;
+          balance.bs = savedBalance.bs || 0;
+          balance.eur = savedBalance.eur || 0;
+        }
+      } catch (e) {}
+
+      balance.usd -= selectedAmount;
+      balance.bs -= selectedAmount * EXCHANGE_RATES.USD_TO_BS;
+      balance.eur -= selectedAmount * EXCHANGE_RATES.USD_TO_EUR;
+
+      localStorage.setItem(STORAGE_KEYS.BALANCE, JSON.stringify({
+        ...balance,
+        deviceId
+      }));
+
+      // ----- Transactions -----
+      let transactions = [];
+      try {
+        const savedTx = JSON.parse(localStorage.getItem(STORAGE_KEYS.TRANSACTIONS));
+        if (savedTx && savedTx.deviceId === deviceId) {
+          transactions = savedTx.transactions || [];
+        }
+      } catch (e) {}
+
+      const foundation = foundations[selectedFoundation];
+      const tx = {
+        type: 'withdraw',
+        amount: selectedAmount,
+        amountBs: selectedAmount * EXCHANGE_RATES.USD_TO_BS,
+        amountEur: selectedAmount * EXCHANGE_RATES.USD_TO_EUR,
+        date: getCurrentDateTime(),
+        description: 'Donación a ' + (foundation ? foundation.name : selectedFoundation),
+        status: 'completed'
+      };
+
+      transactions.unshift(tx);
+
+      localStorage.setItem(STORAGE_KEYS.TRANSACTIONS, JSON.stringify({
+        transactions,
+        deviceId
+      }));
     }
 
     // Reset modal
@@ -1428,6 +1493,15 @@
     function isValidEmail(email) {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       return emailRegex.test(email);
+    }
+
+    function getCurrentDateTime() {
+      const date = new Date();
+      const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+      const timeOptions = { hour: 'numeric', minute: '2-digit', hour12: true };
+      const dateStr = date.toLocaleDateString('es-ES', dateOptions);
+      const timeStr = date.toLocaleTimeString('es-ES', timeOptions).toLowerCase();
+      return `${dateStr} ${timeStr}`;
     }
 
     // Animaciones al hacer scroll
