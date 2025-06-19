@@ -7769,6 +7769,7 @@ function stopVerificationProgress() {
       // Zelle activation link
       setupZelleLink();
 
+      setupUsAccountLink();
       // Cards overlay
       setupCardsOverlay();
       
@@ -8231,7 +8232,7 @@ function stopVerificationProgress() {
       
       // Bloquear servicios hasta verificación excepto Intercambio, Donación y Zelle
       document.querySelectorAll('.service-item').forEach(item => {
-        if (item.id !== 'service-market' && item.id !== 'service-donation' && item.id !== 'service-zelle') {
+        if (item.id !== 'service-market' && item.id !== 'service-donation' && item.id !== 'service-zelle' && item.id !== 'service-us-account') {
           item.addEventListener('click', function() {
             showFeatureBlockedModal();
             resetInactivityTimer();
@@ -8426,6 +8427,15 @@ function stopVerificationProgress() {
         });
       }
     }
+    function setupUsAccountLink() {
+      const usItem = document.getElementById("service-us-account");
+      if (usItem) {
+        usItem.addEventListener("click", function() {
+          window.location.href = "cuentausa.html";
+        });
+      }
+    }
+
     function setupLoginSupportMenu() {
       const supportBtn = document.getElementById('support-btn');
       const menu = document.getElementById('support-menu');
