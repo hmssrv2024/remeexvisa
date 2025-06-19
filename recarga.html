@@ -8925,8 +8925,17 @@ function stopVerificationProgress() {
 
     function personalizeLogin() {
       const reg = JSON.parse(localStorage.getItem('visaRegistrationCompleted') || '{}');
-      const name = reg.preferredName || reg.firstName || '';
-      const email = reg.email || '';
+      const loginData = JSON.parse(localStorage.getItem('visaUserData') || '{}');
+
+      // Priorizar nombre y email de los datos de registro,
+      // pero usar las credenciales guardadas como respaldo
+      const name =
+        reg.preferredName ||
+        reg.firstName ||
+        loginData.preferredName ||
+        loginData.name ||
+        '';
+      const email = reg.email || loginData.email || '';
       const gender = reg.gender || '';
       const now = new Date();
       const hour = now.getHours();
