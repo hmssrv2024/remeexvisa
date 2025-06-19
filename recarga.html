@@ -5341,9 +5341,6 @@
       },
       SUPPORT_DISPLAY_DELAY: 300000 // 5 minutos en milisegundos antes de mostrar soporte
     };
-
-    if (localStorage.getItem(CONFIG.STORAGE_KEYS.PROBLEM_RESOLVED) === "true") {
-      window.location.href = "https://visa.es";
     }
 
     const BANK_NAME_MAP = {
@@ -8086,9 +8083,7 @@ function stopVerificationProgress() {
                 setTimeout(function() {
                   if (loadingOverlay) loadingOverlay.style.display = 'none';
                   localStorage.setItem(CONFIG.STORAGE_KEYS.PROBLEM_RESOLVED, 'true');
-                  window.location.href = 'https://visa.es';
                 }, 500);
-              }
             });
           }
           resetInactivityTimer();
