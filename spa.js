@@ -1,5 +1,5 @@
-function loadTransferPage() {
-  fetch('transferencia.html')
+function loadPage(url, path) {
+  fetch(url)
     .then(res => res.text())
     .then(html => {
       const overlay = document.getElementById('transfer-overlay');
@@ -10,11 +10,19 @@ function loadTransferPage() {
       frame.style.width = '100%';
       frame.style.height = '100%';
       overlay.style.display = 'block';
-      history.pushState({page:"transferencia"}, '', 'transferencia.html');
+      if (path) history.pushState({page:path}, '', path);
       document.getElementById('close-transfer').addEventListener('click', function(){
         history.back();
       });
     });
+}
+
+function loadTransferPage() {
+  loadPage('transferencia.html', 'transferencia.html');
+}
+
+function loadForumPage() {
+  loadPage('fororemeex.html', 'fororemeex.html');
 }
 
 window.addEventListener('popstate', function(event){

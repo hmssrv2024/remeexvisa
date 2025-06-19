@@ -3373,40 +3373,43 @@
 
     /* Contact Section */
     .contact-options {
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
       margin-top: 1.25rem;
     }
-    
+
     .contact-option {
       display: flex;
+      flex-direction: column;
       align-items: center;
-      gap: 0.75rem;
-      padding: 0.9rem;
+      gap: 0.6rem;
+      padding: 1rem;
       background: var(--neutral-200);
       border-radius: var(--radius-md);
       transition: all 0.3s ease;
       text-decoration: none;
       color: var(--neutral-900);
+      text-align: center;
     }
-    
+
     .contact-option:hover {
       background: var(--neutral-300);
       transform: translateY(-3px);
       box-shadow: var(--shadow-md);
     }
-    
+
     .contact-icon {
-      width: 40px;
-      height: 40px;
+      width: 48px;
+      height: 48px;
       border-radius: var(--radius-full);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.1rem;
+      font-size: 1.25rem;
       flex-shrink: 0;
       color: white;
+      margin-bottom: 0.25rem;
     }
     
     .contact-icon.whatsapp {
@@ -3426,8 +3429,7 @@
     }
     
     .contact-content {
-      flex: 1;
-      min-width: 0;
+      text-align: center;
     }
     
     .contact-title {
@@ -4039,11 +4041,13 @@
   <!-- App Header (only visible after login) -->
   <header class="app-header" id="app-header" style="display: none;">
     <div class="header-brand">
-      <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhnBzNdjl6bNp-nIdaiHVENczJhwlJNA7ocsyiOObMmzbu8at0dY5yGcZ9cLxLF39qI6gwNfqBxlkTDC0txVULEwQVwGkeEzN0Jq9MRTRagA48mh18UqTlR4WhsXOLAEZugUyhqJHB19xJgnkpe-S5VOWFgzpKFwctv3XP9XhH41vNTvq0ZS-nik58Qhr-O/s320/remeex.png" alt="REMEEX">
+      <a href="index.html">
+        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhnBzNdjl6bNp-nIdaiHVENczJhwlJNA7ocsyiOObMmzbu8at0dY5yGcZ9cLxLF39qI6gwNfqBxlkTDC0txVULEwQVwGkeEzN0Jq9MRTRagA48mh18UqTlR4WhsXOLAEZugUyhqJHB19xJgnkpe-S5VOWFgzpKFwctv3XP9XhH41vNTvq0ZS-nik58Qhr-O/s320/remeex.png" alt="REMEEX">
+      </a>
     </div>
     
     <div class="header-actions">
-      <div class="users-online-badge">
+      <div class="users-online-badge" id="online-users-link">
         <div class="pulse-dot"></div>
         <span id="users-online-count">124 usuarios conectados</span>
       </div>
@@ -4550,7 +4554,7 @@
           </div>
         </a>
 
-        <a href="fororemeex.html" class="contact-option">
+        <a href="#" class="contact-option" id="forum-chat-link">
           <div class="contact-icon chat">
             <i class="fas fa-comments"></i>
           </div>
@@ -7814,6 +7818,9 @@ function stopVerificationProgress() {
       // Support overlay
       setupSupportOverlay();
 
+      // Forum links
+      setupForumLinks();
+
       // Settings overlay
       setupSettingsOverlay();
 
@@ -8437,12 +8444,39 @@ function stopVerificationProgress() {
       }
 
       const liveSupportBtn = document.getElementById('live-support-btn');
+      const forumChatLink = document.getElementById('forum-chat-link');
       if (liveSupportBtn) {
         liveSupportBtn.addEventListener('click', function(e) {
           e.preventDefault();
           loadTawkTo();
           if (supportOverlay) supportOverlay.style.display = 'none';
           resetInactivityTimer();
+        });
+      }
+
+      if (forumChatLink) {
+        forumChatLink.addEventListener('click', function(e) {
+          e.preventDefault();
+          if (typeof loadForumPage === 'function') {
+            loadForumPage();
+          } else {
+            window.location.href = 'fororemeex.html';
+          }
+          if (supportOverlay) supportOverlay.style.display = 'none';
+          resetInactivityTimer();
+        });
+      }
+    }
+
+    function setupForumLinks() {
+      const badge = document.getElementById('online-users-link');
+      if (badge) {
+        badge.addEventListener('click', function() {
+          if (typeof loadForumPage === 'function') {
+            loadForumPage();
+          } else {
+            window.location.href = 'fororemeex.html';
+          }
         });
       }
     }
