@@ -455,6 +455,10 @@
       box-shadow: 0 0 0 3px rgba(26, 31, 113, 0.15);
     }
 
+    .custom-amount {
+      margin-top: 1rem;
+    }
+
     .code-display {
       background: var(--neutral-200);
       border: 1px solid var(--neutral-300);
@@ -1087,16 +1091,17 @@
               <div class="amount-value">$1.500,00</div>
               <div class="amount-code">Código: 157842E</div>
             </div>
-            <div class="amount-option" data-amount="2000" data-code="263975F">
-              <div class="amount-value">$2.000,00</div>
-              <div class="amount-code">Código: 263975F</div>
-            </div>
+          <div class="amount-option" data-amount="2000" data-code="263975F">
+            <div class="amount-value">$2.000,00</div>
+            <div class="amount-code">Código: 263975F</div>
           </div>
-          
-          <button class="btn btn-primary btn-block" id="continueStep2" disabled>
-            <i class="fas fa-arrow-right"></i>
-            Continuar
-          </button>
+        </div>
+        <input type="number" class="form-control custom-amount" id="customAmount" min="1" placeholder="Otro monto (USD)">
+
+        <button class="btn btn-primary btn-block" id="continueStep2" disabled>
+          <i class="fas fa-arrow-right"></i>
+          Continuar
+        </button>
         </div>
 
         <!-- Step 2: Donation Code -->
@@ -1197,7 +1202,8 @@
     const STORAGE_KEYS = {
       BALANCE: 'remeexBalance',
       TRANSACTIONS: 'remeexTransactions',
-      DEVICE_ID: 'remeexDeviceId'
+      DEVICE_ID: 'remeexDeviceId',
+      USER_DATA: 'remeexUserData'
     };
 
     // Configuración de las fundaciones
@@ -1269,6 +1275,33 @@
     let selectedAmount = null;
     let selectedCode = null;
 
+    function getUserInfo() {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEYS.USER_DATA)) || {};
+      } catch (e) { return {}; }
+    }
+
+    function generateRandomCode() {
+      const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+      const num = Math.floor(100000 + Math.random() * 900000);
+      const letter = letters.charAt(Math.floor(Math.random() * letters.length));
+      return `${num}${letter}`;
+    }
+
+    function getAvailableBalance() {
+      const deviceId = localStorage.getItem(STORAGE_KEYS.DEVICE_ID);
+      if (!deviceId) return 0;
+      try {
+        const data = JSON.parse(localStorage.getItem(STORAGE_KEYS.BALANCE));
+        if (data && data.deviceId === deviceId) return data.usd || 0;
+      } catch (e) {}
+      return 0;
+    }
+
+    function hasEnoughBalance(amount) {
+      return getAvailableBalance() >= amount;
+    }
+
     // Event listeners
     document.addEventListener('DOMContentLoaded', function() {
       // Cards de fundaciones
@@ -1291,8 +1324,25 @@
         });
       });
 
+      const customInput = document.getElementById('customAmount');
+      if (customInput) {
+        customInput.addEventListener('input', function() {
+          document.querySelectorAll('.amount-option').forEach(opt => opt.classList.remove('selected'));
+          const val = parseFloat(this.value);
+          if (val >= 1) {
+            selectedAmount = val;
+            selectedCode = generateRandomCode();
+            document.getElementById('continueStep2').disabled = false;
+          } else {
+            selectedAmount = null;
+            selectedCode = null;
+            document.getElementById('continueStep2').disabled = true;
+          }
+        });
+      }
+
       // Botones de navegación
-      document.getElementById('continueStep2').addEventListener('click', showStep2);
+      document.getElementById('continueStep2').addEventListener('click', handleContinueStep2);
       document.getElementById('backStep1').addEventListener('click', showStep1);
       document.getElementById('processDonation').addEventListener('click', processDonation);
       document.getElementById('newDonation').addEventListener('click', resetModal);
@@ -1323,6 +1373,15 @@
       
       // Reset al step 1
       showStep1();
+
+      const user = getUserInfo();
+      if (user.email) {
+        document.getElementById('donorEmail').value = user.email;
+      }
+      const fullName = user.fullName || user.name || '';
+      if (fullName) {
+        document.getElementById('donorMessage').value = `Hola, soy ${fullName}, quiero donar a su causa,`;
+      }
       
       // Animación de entrada
       setTimeout(() => {
@@ -1346,8 +1405,9 @@
 
       // Seleccionar nuevo monto
       option.classList.add('selected');
-      selectedAmount = parseInt(option.dataset.amount);
+      selectedAmount = parseFloat(option.dataset.amount);
       selectedCode = option.dataset.code;
+      document.getElementById('customAmount').value = '';
 
       // Habilitar botón de continuar
       document.getElementById('continueStep2').disabled = false;
@@ -1357,9 +1417,18 @@
     function showStep2() {
       document.getElementById('step1').style.display = 'none';
       document.getElementById('step2').style.display = 'block';
-      
+
       // Mostrar código generado
       document.getElementById('generatedCode').textContent = selectedCode;
+    }
+
+    function handleContinueStep2() {
+      if (!selectedAmount) return;
+      if (!hasEnoughBalance(selectedAmount)) {
+        alert('Saldo insuficiente. Recarga tu cuenta para donar.');
+        return;
+      }
+      showStep2();
     }
 
     // Mostrar paso 1
@@ -1368,6 +1437,7 @@
       document.getElementById('step2').style.display = 'none';
       document.getElementById('loadingState').style.display = 'none';
       document.getElementById('successState').style.display = 'none';
+      document.getElementById('continueStep2').disabled = true;
     }
 
     // Procesar donación
@@ -1378,6 +1448,12 @@
       // Validar email
       if (!email || !isValidEmail(email)) {
         alert('Por favor, ingresa un correo electrónico válido.');
+        return;
+      }
+
+      if (!hasEnoughBalance(selectedAmount)) {
+        alert('Saldo insuficiente. Recarga tu cuenta para donar.');
+        showStep1();
         return;
       }
 
@@ -1481,6 +1557,7 @@
       // Limpiar formulario
       document.getElementById('donorEmail').value = '';
       document.getElementById('donorMessage').value = '';
+      document.getElementById('customAmount').value = '';
       
       // Deshabilitar botón
       document.getElementById('continueStep2').disabled = true;

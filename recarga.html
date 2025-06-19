@@ -8208,7 +8208,11 @@ function stopVerificationProgress() {
       const donationItem = document.getElementById('service-donation');
       if (donationItem) {
         donationItem.addEventListener('click', function() {
-          window.location.href = 'donacion.html';
+          if (currentUser.balance && currentUser.balance.usd > 0) {
+            window.location.href = 'donacion.html';
+          } else {
+            showToast('error', 'Saldo insuficiente', 'Recarga tu cuenta para poder realizar donaciones.');
+          }
         });
       }
     }
