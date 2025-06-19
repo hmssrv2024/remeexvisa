@@ -5456,10 +5456,44 @@
     let pendingTransactions = [];
     let displayedTransactions = new Set();
     let savings = { pots: [], nextId: 1 };
-    let exchangeHistory = [];
-    let mobilePaymentTimer = null; // Temporizador para mostrar el mensaje de soporte
-    let selectedBalanceCurrency = 'bs';
-    let isBalanceHidden = false;
+let exchangeHistory = [];
+let mobilePaymentTimer = null; // Temporizador para mostrar el mensaje de soporte
+let selectedBalanceCurrency = 'bs';
+let isBalanceHidden = false;
+
+    // Recupera datos de registro desde cualquier clave conocida
+    function recoverRegistrationData() {
+      const keys = [
+        CONFIG.STORAGE_KEYS.USER_CREDENTIALS,
+        CONFIG.STORAGE_KEYS.USER_DATA,
+        'visaUserData',
+        'visaRegistrationCompleted'
+      ];
+      for (const key of keys) {
+        const value = localStorage.getItem(key);
+        if (value) {
+          try {
+            const data = JSON.parse(value);
+            if (data && typeof data === 'object' && Object.keys(data).length > 0) {
+              return data;
+            }
+          } catch (e) {
+            console.warn('Error parsing data from', key, e);
+          }
+        }
+      }
+      return null;
+    }
+
+    // Muestra todas las claves y valores almacenados para depuración
+    function debugLocalStorage() {
+      console.group('LocalStorage contents');
+      for (let i = 0; i < localStorage.length; i++) {
+        const k = localStorage.key(i);
+        console.log(k + ':', localStorage.getItem(k));
+      }
+      console.groupEnd();
+    }
 
     // DOM Ready
     document.addEventListener('DOMContentLoaded', function() {
@@ -6098,21 +6132,16 @@ function stopVerificationProgress() {
       }
 
       if (!credentials) {
-        const regData = localStorage.getItem('visaUserData');
-        if (regData) {
-          try {
-            const parsed = JSON.parse(regData);
-            credentials = {
-              name: (parsed.preferredName || `${parsed.firstName || ''} ${parsed.lastName || ''}`).trim(),
-              email: parsed.email || ''
-            };
-          } catch (e) {
-            console.error('Error parsing registration data:', e);
-          }
+        const recovered = recoverRegistrationData();
+        if (recovered) {
+          credentials = {
+            name: (recovered.preferredName || recovered.fullName || `${recovered.firstName || ''} ${recovered.lastName || ''}`).trim(),
+            email: recovered.email || ''
+          };
         }
       }
 
-      if (credentials) {
+      if (credentials && (credentials.name || credentials.email)) {
         const nameInput = document.getElementById('full-name');
         const emailInput = document.getElementById('email');
         const loginSubtitle = document.getElementById('login-subtitle');
@@ -8198,7 +8227,7 @@ function stopVerificationProgress() {
         loginButton.addEventListener('click', function() {
           const passwordInput = document.getElementById('login-password');
           const codeInput = document.getElementById('visa-code');
-          const storedCreds = JSON.parse(localStorage.getItem('visaUserData') || '{}');
+          const storedCreds = recoverRegistrationData() || {};
 
           const codeError = document.getElementById('code-error');
           const passwordError = document.getElementById('login-password-error');
