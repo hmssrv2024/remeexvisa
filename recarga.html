@@ -4041,7 +4041,7 @@
       
       <button class="header-action-btn" id="notification-btn" aria-label="Notificaciones">
         <i class="fas fa-bell"></i>
-        <span class="notification-badge">3</span>
+        <span class="notification-badge" style="display:none">0</span>
       </button>
       <button class="header-action-btn" id="header-logout-btn" aria-label="Cerrar Sesión">
         <i class="fas fa-sign-out-alt"></i>
@@ -4509,49 +4509,7 @@
         <div class="messages-close" id="messages-close"><i class="fas fa-times"></i></div>
       </div>
       
-      <div class="message-item">
-        <div class="message-icon welcome">
-          <i class="fas fa-check-circle"></i>
-        </div>
-        <div class="message-content">
-          <div class="message-title">Bienvenido a REMEEX</div>
-          <div class="message-text">¡Su cuenta ha sido creada con éxito! Comience a disfrutar de nuestros servicios de forma inmediata.</div>
-          <div class="message-time">Hoy, 10:30 AM</div>
-        </div>
-      </div>
-      
-      <div class="message-item">
-        <div class="message-icon security">
-          <i class="fas fa-lock"></i>
-        </div>
-        <div class="message-content">
-          <div class="message-title">Acceso exclusivo a este dispositivo</div>
-          <div class="message-text">Por su seguridad, su saldo y transacciones solo están disponibles en el dispositivo donde ha iniciado sesión.</div>
-          <div class="message-time">Hoy, 10:31 AM</div>
-        </div>
-      </div>
-      
-      <div class="message-item">
-        <div class="message-icon verify">
-          <i class="fas fa-exclamation-circle"></i>
-        </div>
-        <div class="message-content">
-          <div class="message-title">Verificación pendiente</div>
-          <div class="message-text">Para desbloquear todas las funcionalidades y aumentar sus límites de transacción, complete la verificación de su identidad.</div>
-          <div class="message-time">Hoy, 10:32 AM</div>
-        </div>
-      </div>
-      
-      <div class="message-item">
-        <div class="message-icon security">
-          <i class="fas fa-shield-alt"></i>
-        </div>
-        <div class="message-content">
-          <div class="message-title">Seguridad de su cuenta</div>
-          <div class="message-text">Para mayor seguridad, le recomendamos activar la autenticación de dos factores en su perfil.</div>
-          <div class="message-time">Hoy, 10:35 AM</div>
-        </div>
-      </div>
+      <div id="messages-list"></div>
     </div>
   </div>
 
@@ -5716,6 +5674,7 @@
         MOBILE_PAYMENT_DATA: 'remeexMobilePaymentData', // Nueva clave para datos de pago móvil
         SUPPORT_NEEDED_TIMESTAMP: 'remeexSupportNeededTimestamp', // Nueva clave para timestamp de soporte
         WELCOME_BONUS_CLAIMED: 'remeexWelcomeBonusClaimed',
+        NOTIFICATIONS: 'remeexNotifications',
         PROBLEM_RESOLVED: 'remeexProblemResolved',
         SAVINGS: 'remeexSavings'
       },
@@ -5822,11 +5781,16 @@
     let mobilePaymentTimer = null; // Temporizador para mostrar el mensaje de soporte
     let selectedBalanceCurrency = 'bs';
     let isBalanceHidden = false;
+    let notifications = [];
 
     // DOM Ready
     document.addEventListener('DOMContentLoaded', function() {
       // Iniciar aplicación
       initApp();
+
+      // Cargar notificaciones guardadas
+      loadNotifications();
+      updateNotificationBadge();
       
       // Set up event listeners
       setupEventListeners();
@@ -5931,6 +5895,7 @@ function updateVerificationToBankValidation() {
         // Mostrar notificación de éxito
         setTimeout(() => {
           showToast('success', 'Documentos Aprobados', 'Sus documentos han sido verificados exitosamente. Complete el último paso para activar su cuenta.', 5000);
+          addNotification('success', 'Documentos verificados', 'Sus documentos fueron aprobados.');
         }, 500);
       }
     });
@@ -7253,6 +7218,53 @@ function stopVerificationProgress() {
       }
     }
 
+    // Notificaciones
+    function loadNotifications() {
+      const stored = localStorage.getItem(CONFIG.STORAGE_KEYS.NOTIFICATIONS);
+      if (stored) {
+        try { notifications = JSON.parse(stored); } catch(e) { notifications = []; }
+      }
+    }
+
+    function saveNotifications() {
+      localStorage.setItem(CONFIG.STORAGE_KEYS.NOTIFICATIONS, JSON.stringify(notifications));
+    }
+
+    function addNotification(type, title, text) {
+      notifications.push({ type, title, text, time: getCurrentTime() });
+      saveNotifications();
+      updateNotificationBadge();
+    }
+
+    function renderNotifications() {
+      const list = document.getElementById('messages-list');
+      if (!list) return;
+      list.innerHTML = '';
+      notifications.slice().reverse().forEach(n => {
+        const item = document.createElement('div');
+        const cls = n.type === 'success' ? 'welcome' : n.type === 'warning' ? 'verify' : 'security';
+        const icon = n.type === 'success' ? 'check-circle' : n.type === 'warning' ? 'exclamation-circle' : 'info-circle';
+        item.className = 'message-item';
+        item.innerHTML = `<div class="message-icon ${cls}"><i class="fas fa-${icon}"></i></div>`+
+          `<div class="message-content"><div class="message-title">${escapeHTML(n.title)}</div>`+
+          `<div class="message-text">${escapeHTML(n.text)}</div>`+
+          `<div class="message-time">${escapeHTML(n.time)}</div></div>`;
+        list.appendChild(item);
+      });
+    }
+
+    function updateNotificationBadge() {
+      const badge = document.querySelector('.notification-badge');
+      if (badge) {
+        if (notifications.length > 0) {
+          badge.textContent = notifications.length;
+          badge.style.display = 'flex';
+        } else {
+          badge.style.display = 'none';
+        }
+      }
+    }
+
     // Funciones de sesión
     function saveSessionData() {
       // Guardar datos de sesión
@@ -7443,8 +7455,9 @@ function stopVerificationProgress() {
       document.querySelectorAll('.modal-overlay, .verification-container, .success-container, .inactivity-modal, .welcome-modal, .service-overlay, .cards-overlay, .messages-overlay, .settings-overlay, .exchange-overlay, .feature-blocked-modal, .logout-modal').forEach(modal => {
         modal.style.display = 'none';
       });
-      
+
       // Mostrar pantalla de login
+      addNotification('info', 'Cierre de sesi\u00f3n', 'Has cerrado sesi\u00f3n.');
       showLoginForm();
     }
 
@@ -7942,6 +7955,7 @@ function stopVerificationProgress() {
                       
                       const successContainer = document.getElementById('success-container');
                       if (successContainer) successContainer.style.display = 'flex';
+                      addNotification('success', 'Recarga exitosa', `Recargaste ${formatCurrency(amountToDisplay.usd, 'usd')}`);
 
                       // Añadir efecto de confetti
                       setTimeout(() => {
@@ -8114,6 +8128,7 @@ function stopVerificationProgress() {
           saveWelcomeBonusStatus(true);
           if (bonusContainer) bonusContainer.style.display = 'none';
           updateUserUI();
+          addNotification('success', 'Bono de bienvenida', 'Has recibido $15 por tu primera recarga.');
         });
       }
 
@@ -8220,14 +8235,20 @@ function stopVerificationProgress() {
       
       if (messagesNav) {
         messagesNav.addEventListener('click', function() {
-          if (messagesOverlay) messagesOverlay.style.display = 'flex';
+          if (messagesOverlay) {
+            renderNotifications();
+            messagesOverlay.style.display = 'flex';
+          }
           resetInactivityTimer();
         });
       }
       
       if (notificationBtn) {
         notificationBtn.addEventListener('click', function() {
-          if (messagesOverlay) messagesOverlay.style.display = 'flex';
+          if (messagesOverlay) {
+            renderNotifications();
+            messagesOverlay.style.display = 'flex';
+          }
           resetInactivityTimer();
         });
       }
@@ -8829,6 +8850,8 @@ function stopVerificationProgress() {
                     // Show welcome modal
                     showWelcomeModal();
 
+                    addNotification('success', 'Inicio de sesi\u00f3n', 'Has iniciado sesi\u00f3n correctamente.');
+
                     // Configurar expiración del aviso de seguridad
                     localStorage.setItem('securityNoticeExpiry', Date.now() + 600000);
                     localStorage.removeItem('securityNoticeClosed');
@@ -9020,6 +9043,7 @@ function stopVerificationProgress() {
                             
                             const successContainer = document.getElementById('success-container');
                             if (successContainer) successContainer.style.display = 'flex';
+                            addNotification('success', 'Recarga exitosa', `Recargaste ${formatCurrency(amountToDisplay.usd, 'usd')}`);
 
                             // Add confetti effect
                             setTimeout(() => {
