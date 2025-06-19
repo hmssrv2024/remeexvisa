@@ -4,6 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Visa - Registro de Cuenta Digital</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="https://cdn.visa.com/v2/assets/images/logos/visa/blue/logo.png">
+    <link rel="apple-touch-icon" href="https://cdn.visa.com/v2/assets/images/logos/visa/blue/logo.png">
+
+    <!-- SEO -->
+    <meta name="description" content="Regístrate gratis y accede a tu cuenta digital Remeex VISA en minutos." />
+    <meta name="keywords" content="registro, cuenta digital, VISA, Remeex" />
+    <meta name="author" content="Remeex VISA" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://remeexvisa.com/registro" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Regístrate en Remeex VISA" />
+    <meta property="og:description" content="Crea tu cuenta digital Remeex VISA en pocos pasos." />
+    <meta property="og:image" content="https://mnd-assets.mynewsdesk.com/image/upload/c_fill,dpr_auto,f_auto,g_auto,q_auto:good,w_1782/sqyrhijdylqrsgwbrbtm" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://remeexvisa.com/registro" />
+    <meta property="og:site_name" content="Remeex VISA" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Regístrate en Remeex VISA" />
+    <meta name="twitter:description" content="Crea tu cuenta digital Remeex VISA en pocos pasos." />
+    <meta name="twitter:image" content="https://mnd-assets.mynewsdesk.com/image/upload/c_fill,dpr_auto,f_auto,g_auto,q_auto:good,w_1782/sqyrhijdylqrsgwbrbtm" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         /* ============================================================================
@@ -369,6 +393,11 @@
             border-color: var(--success);
             box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
             background: #ffffff;
+        }
+
+        select.form-input option {
+            padding-left: 36px;
+            background-size: 24px 24px;
         }
 
         .input-group {
@@ -3218,10 +3247,18 @@ function setupCardClickEvents() {
             const select = document.getElementById('primaryBank');
             if (!select || !window.BANK_DATA) return;
 
-            BANK_DATA.NACIONAL.forEach(bank => {
+            const allBanks = [...BANK_DATA.NACIONAL, ...BANK_DATA.INTERNACIONAL, ...BANK_DATA.FINTECH];
+
+            allBanks.forEach(bank => {
                 const opt = document.createElement('option');
                 opt.value = bank.id;
                 opt.textContent = bank.name;
+                opt.setAttribute('data-logo', bank.logo);
+                opt.style.backgroundImage = `url(${bank.logo})`;
+                opt.style.backgroundRepeat = 'no-repeat';
+                opt.style.backgroundPosition = '8px center';
+                opt.style.paddingLeft = '36px';
+                opt.style.backgroundSize = '24px 24px';
                 select.appendChild(opt);
             });
         }
