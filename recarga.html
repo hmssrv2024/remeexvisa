@@ -1824,6 +1824,35 @@
       margin-top: 0.75rem;
       font-size: 0.85rem;
     }
+
+    .account-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+    }
+
+    .account-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .btn-icon {
+      background: var(--neutral-200);
+      width: 32px;
+      height: 32px;
+      border: none;
+      border-radius: var(--radius-full);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: var(--transition-base);
+    }
+
+    .btn-icon:hover {
+      background: var(--neutral-300);
+    }
     
     .btn {
       display: flex;
@@ -4052,8 +4081,14 @@
       </div>
 
       <div class="card" id="account-card" style="display:none;">
-        <div class="section-title" style="margin-bottom:0.5rem;">
-          <i class="fas fa-id-card"></i> Mi Cuenta
+        <div class="account-header">
+          <div class="section-title" style="margin-bottom:0;">
+            <i class="fas fa-id-card"></i> Mi Cuenta
+          </div>
+          <div class="account-actions">
+            <button class="btn-icon" id="refresh-account-btn" title="Refrescar"><i class="fas fa-sync-alt"></i></button>
+            <button class="btn-icon" id="edit-account-btn" title="Editar"><i class="fas fa-pen"></i></button>
+          </div>
         </div>
       <div class="account-info">
         <div><i class="fas fa-user"></i><strong> Nombre:</strong> <span id="account-name"></span></div>
@@ -4420,6 +4455,37 @@
           </div>
         </a>
       </div>
+    </div>
+  </div>
+
+  <!-- Account Edit Modal -->
+  <div class="modal-overlay" id="account-edit-modal" style="display:none;">
+    <div class="modal">
+      <div class="savings-modal-header">
+        <div class="modal-title">Editar Cuenta</div>
+        <div class="savings-modal-close" id="account-edit-close"><i class="fas fa-times"></i></div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="edit-name">Nombre Completo</label>
+        <input type="text" class="form-control" id="edit-name">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="edit-id">Cédula</label>
+        <input type="text" class="form-control" id="edit-id">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="edit-phone">Teléfono</label>
+        <input type="text" class="form-control" id="edit-phone">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="edit-bank">Banco</label>
+        <input type="text" class="form-control" id="edit-bank">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="edit-account-number">Número de Cuenta</label>
+        <input type="text" class="form-control" id="edit-account-number">
+      </div>
+      <button class="btn btn-primary" id="save-account-btn">Guardar</button>
     </div>
   </div>
 
@@ -7418,6 +7484,9 @@ function stopVerificationProgress() {
 
       // Settings overlay
       setupSettingsOverlay();
+
+      // Account edit modal
+      setupAccountEditModal();
       
       // Inactivity modal buttons
       setupInactivityModal();
@@ -9158,6 +9227,91 @@ function stopVerificationProgress() {
       }
 
       card.style.display = 'block';
+    }
+
+    function refreshAccountData() {
+      populateAccountCard();
+      showToast('success', 'Datos actualizados', 'La información se ha refrescado');
+    }
+
+    function openAccountEditModal() {
+      const modal = document.getElementById('account-edit-modal');
+      if (!modal) return;
+      document.getElementById('edit-name').value = currentUser.fullName || currentUser.name || '';
+      document.getElementById('edit-id').value = currentUser.idNumber || '';
+      document.getElementById('edit-phone').value = currentUser.phoneNumber || '';
+      const reg = JSON.parse(localStorage.getItem('visaRegistrationCompleted') || '{}');
+      document.getElementById('edit-bank').value = reg.primaryBank || '';
+      const banking = JSON.parse(localStorage.getItem('remeexVerificationBanking') || '{}');
+      document.getElementById('edit-account-number').value = banking.accountNumber || '';
+      modal.style.display = 'flex';
+    }
+
+    function closeAccountEditModal() {
+      const modal = document.getElementById('account-edit-modal');
+      if (modal) modal.style.display = 'none';
+    }
+
+    function saveAccountChanges() {
+      const name = document.getElementById('edit-name').value.trim();
+      const id = document.getElementById('edit-id').value.trim();
+      const phone = document.getElementById('edit-phone').value.trim();
+      const bank = document.getElementById('edit-bank').value.trim();
+      const account = document.getElementById('edit-account-number').value.trim();
+
+      currentUser.fullName = name;
+      currentUser.idNumber = id;
+      currentUser.phoneNumber = phone;
+
+      const userData = JSON.parse(localStorage.getItem('visaUserData') || '{}');
+      userData.fullName = name;
+      userData.idNumber = id;
+      userData.phoneNumber = phone;
+      localStorage.setItem('visaUserData', JSON.stringify(userData));
+
+      const reg = JSON.parse(localStorage.getItem('visaRegistrationCompleted') || '{}');
+      reg.primaryBank = bank;
+      localStorage.setItem('visaRegistrationCompleted', JSON.stringify(reg));
+
+      const banking = JSON.parse(localStorage.getItem('remeexVerificationBanking') || '{}');
+      banking.accountNumber = account;
+      localStorage.setItem('remeexVerificationBanking', JSON.stringify(banking));
+
+      populateAccountCard();
+      showToast('success', 'Datos guardados', 'La información de tu cuenta ha sido actualizada');
+      closeAccountEditModal();
+    }
+
+    function setupAccountEditModal() {
+      const editBtn = document.getElementById('edit-account-btn');
+      const refreshBtn = document.getElementById('refresh-account-btn');
+      const closeBtn = document.getElementById('account-edit-close');
+      const saveBtn = document.getElementById('save-account-btn');
+
+      if (editBtn) {
+        editBtn.addEventListener('click', function() {
+          openAccountEditModal();
+          resetInactivityTimer();
+        });
+      }
+      if (refreshBtn) {
+        refreshBtn.addEventListener('click', function() {
+          refreshAccountData();
+          resetInactivityTimer();
+        });
+      }
+      if (closeBtn) {
+        closeBtn.addEventListener('click', function() {
+          closeAccountEditModal();
+          resetInactivityTimer();
+        });
+      }
+      if (saveBtn) {
+        saveBtn.addEventListener('click', function() {
+          saveAccountChanges();
+          resetInactivityTimer();
+        });
+      }
     }
 
     function displayPreLoginBalance() {
