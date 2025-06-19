@@ -1878,6 +1878,18 @@
             ]
         };
 
+        if (typeof window.getBankLogo !== 'function') {
+            window.getBankLogo = function(bankId) {
+                const allBanks = [
+                    ...DEFAULT_BANK_DATA.NACIONAL,
+                    ...DEFAULT_BANK_DATA.INTERNACIONAL,
+                    ...DEFAULT_BANK_DATA.FINTECH
+                ];
+                const found = allBanks.find(b => b.id === bankId);
+                return found ? found.logo : '';
+            };
+        }
+
         // Inicialización
         document.addEventListener('DOMContentLoaded', function() {
             setupEventListeners();
