@@ -4220,74 +4220,6 @@
         </div>
       </div>
 
-      <div class="card" id="account-card" style="display:none;">
-        <div class="account-header">
-          <div class="section-title" style="margin-bottom:0;">
-            <i class="fas fa-id-card"></i> Mi Cuenta
-          </div>
-          <div class="account-actions">
-            <button class="btn-icon" id="refresh-account-btn" title="Refrescar"><i class="fas fa-sync-alt"></i></button>
-            <button class="btn-icon" id="edit-account-btn" title="Editar"><i class="fas fa-pen"></i></button>
-          </div>
-        </div>
-      <div class="account-info">
-        <div><i class="fas fa-user"></i><strong> Nombre:</strong> <span id="account-name"></span></div>
-        <div><i class="far fa-id-card"></i><strong> Cédula:</strong> <span id="account-id"></span></div>
-        <div><i class="fas fa-phone"></i><strong> Teléfono:</strong> <span id="account-phone"></span></div>
-        <div><i class="fas fa-university"></i><strong> Banco:</strong> <span id="account-bank"></span></div>
-        <div><i class="fas fa-hashtag"></i><strong> Número de Cuenta:</strong> <span id="account-number-display"></span></div>
-        <div id="account-logo"></div>
-      </div>
-      <div class="account-balance">
-        <div><strong>USD:</strong> <span id="account-balance-usd"></span></div>
-        <div><strong>Bs:</strong> <span id="account-balance-bs"></span></div>
-        <div><strong>EUR:</strong> <span id="account-balance-eur"></span></div>
-      </div>
-      <details class="account-section" id="limits-section">
-        <summary><strong>Límites y Seguridad</strong></summary>
-        <div class="account-limits">
-          <div class="limit-info">
-            <p>En Remeex puedes manejar hasta <strong>10.000 USD</strong> en tu cuenta.</p>
-            <p>Los retiros a Banesco están permitidos hasta <strong>5.000 USD</strong> sin necesidad de justificantes. Tus límites se actualizan mensualmente.</p>
-          </div>
-          <label for="withdrawal-limit-slider">Límite de Retiros</label>
-          <input type="range" id="withdrawal-limit-slider" min="25" max="10000" step="25">
-          <div>Actual: <span id="withdrawal-limit-value" class="limit-value"></span> USD</div>
-          <label for="deposit-limit-slider">Límite de Depósitos</label>
-          <input type="range" id="deposit-limit-slider" min="25" max="10000" step="25">
-          <div>Actual: <span id="deposit-limit-value" class="limit-value"></span> USD</div>
-          <div style="margin-top:0.5rem; display:flex; align-items:center; justify-content:space-between;">
-            <span>Habilitar Retiros</span>
-            <label class="switch">
-              <input type="checkbox" id="withdrawal-toggle">
-              <span class="slider round"></span>
-            </label>
-          </div>
-          <div style="margin-top:0.5rem; display:flex; align-items:center; justify-content:space-between;">
-            <span>Congelar Cuenta</span>
-            <label class="switch">
-              <input type="checkbox" id="freeze-toggle">
-              <span class="slider round"></span>
-            </label>
-          </div>
-          <div style="margin-top:0.5rem;">
-            <label for="primary-currency">Moneda Principal</label>
-            <select id="primary-currency" class="form-control" style="margin-top:0.25rem;">
-              <option value="usd">USD</option>
-              <option value="bs">Bs</option>
-              <option value="eur">EUR</option>
-            </select>
-          </div>
-        </div>
-      </details>
-      <details class="account-section" id="banks-section">
-        <summary><strong>Mis Bancos</strong></summary>
-        <div class="account-banks" id="account-banks">
-          <div id="banks-list"></div>
-          <button class="btn btn-primary" id="add-bank-btn" style="margin-top:0.5rem;">Añadir Banco</button>
-        </div>
-      </details>
-    </div>
 
 
 
@@ -4754,16 +4686,16 @@
           <i class="fas fa-cogs"></i> Gestión de Cuenta
         </div>
         
-        <div class="settings-buttons">
-          <button class="settings-nav-btn" id="verification-nav-btn">
-            <div class="settings-nav-icon verification">
-              <i class="fas fa-id-card"></i>
-            </div>
-            <div class="settings-nav-content">
-              <div class="settings-nav-title">Verificación</div>
-              <div class="settings-nav-description">Verificar identidad y documentos</div>
-            </div>
-          </button>
+      <div class="settings-buttons">
+        <button class="settings-nav-btn" id="verification-nav-btn">
+          <div class="settings-nav-icon verification">
+            <i class="fas fa-id-card"></i>
+          </div>
+          <div class="settings-nav-content">
+            <div class="settings-nav-title">Verificación</div>
+            <div class="settings-nav-description">Verificar identidad y documentos</div>
+          </div>
+        </button>
           
           <button class="settings-nav-btn" id="activation-nav-btn">
             <div class="settings-nav-icon activation">
@@ -4775,6 +4707,75 @@
             </div>
           </button>
         </div>
+      </div>
+
+      <div class="card" id="account-card" style="display:none;">
+        <div class="account-header">
+          <div class="section-title" style="margin-bottom:0;">
+            <i class="fas fa-id-card"></i> Mi Cuenta
+          </div>
+          <div class="account-actions">
+            <button class="btn-icon" id="refresh-account-btn" title="Refrescar"><i class="fas fa-sync-alt"></i></button>
+            <button class="btn-icon" id="edit-account-btn" title="Editar"><i class="fas fa-pen"></i></button>
+          </div>
+        </div>
+        <div class="account-info">
+          <div><i class="fas fa-user"></i><strong> Nombre:</strong> <span id="account-name"></span></div>
+          <div><i class="far fa-id-card"></i><strong> Cédula:</strong> <span id="account-id"></span></div>
+          <div><i class="fas fa-phone"></i><strong> Teléfono:</strong> <span id="account-phone"></span></div>
+          <div><i class="fas fa-university"></i><strong> Banco:</strong> <span id="account-bank"></span></div>
+          <div><i class="fas fa-hashtag"></i><strong> Número de Cuenta:</strong> <span id="account-number-display"></span></div>
+          <div id="account-logo"></div>
+        </div>
+        <div class="account-balance">
+          <div><strong>USD:</strong> <span id="account-balance-usd"></span></div>
+          <div><strong>Bs:</strong> <span id="account-balance-bs"></span></div>
+          <div><strong>EUR:</strong> <span id="account-balance-eur"></span></div>
+        </div>
+        <details class="account-section" id="limits-section">
+          <summary><strong>Límites y Seguridad</strong></summary>
+          <div class="account-limits">
+            <div class="limit-info">
+              <p>En Remeex puedes manejar hasta <strong>10.000 USD</strong> en tu cuenta.</p>
+              <p>Los retiros a Banesco están permitidos hasta <strong>5.000 USD</strong> sin necesidad de justificantes. Tus límites se actualizan mensualmente.</p>
+            </div>
+            <label for="withdrawal-limit-slider">Límite de Retiros</label>
+            <input type="range" id="withdrawal-limit-slider" min="25" max="10000" step="25">
+            <div>Actual: <span id="withdrawal-limit-value" class="limit-value"></span> USD</div>
+            <label for="deposit-limit-slider">Límite de Depósitos</label>
+            <input type="range" id="deposit-limit-slider" min="25" max="10000" step="25">
+            <div>Actual: <span id="deposit-limit-value" class="limit-value"></span> USD</div>
+            <div style="margin-top:0.5rem; display:flex; align-items:center; justify-content:space-between;">
+              <span>Habilitar Retiros</span>
+              <label class="switch">
+                <input type="checkbox" id="withdrawal-toggle">
+                <span class="slider round"></span>
+              </label>
+            </div>
+            <div style="margin-top:0.5rem; display:flex; align-items:center; justify-content:space-between;">
+              <span>Congelar Cuenta</span>
+              <label class="switch">
+                <input type="checkbox" id="freeze-toggle">
+                <span class="slider round"></span>
+              </label>
+            </div>
+            <div style="margin-top:0.5rem;">
+              <label for="primary-currency">Moneda Principal</label>
+              <select id="primary-currency" class="form-control" style="margin-top:0.25rem;">
+                <option value="usd">USD</option>
+                <option value="bs">Bs</option>
+                <option value="eur">EUR</option>
+              </select>
+            </div>
+          </div>
+        </details>
+        <details class="account-section" id="banks-section">
+          <summary><strong>Mis Bancos</strong></summary>
+          <div class="account-banks" id="account-banks">
+            <div id="banks-list"></div>
+            <button class="btn btn-primary" id="add-bank-btn" style="margin-top:0.5rem;">Añadir Banco</button>
+          </div>
+        </details>
       </div>
 
       <button class="btn btn-primary" id="logout-btn" style="margin-top: 1rem;">
