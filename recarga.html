@@ -1700,6 +1700,7 @@
     
     .form-group {
       margin-bottom: 1.25rem;
+      position: relative;
     }
     
     .form-label {
@@ -1733,6 +1734,16 @@
       color: var(--danger);
       margin-top: 0.5rem;
       display: none;
+    }
+
+    .password-toggle {
+      position: absolute;
+      top: 50%;
+      right: 0.75rem;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: var(--neutral-600);
+      font-size: 0.9rem;
     }
 
     .login-balance-card {
@@ -3806,12 +3817,14 @@
       <div class="form-group">
         <label class="form-label" for="login-password">Contraseña</label>
         <input type="password" class="form-control" id="login-password" placeholder="Tu contraseña" aria-describedby="login-password-error">
+        <span class="password-toggle" id="toggle-login-password"><i class="fas fa-eye"></i></span>
         <div class="error-message" id="login-password-error">Por favor, introduce tu contraseña.</div>
       </div>
 
       <div class="form-group">
         <label class="form-label" for="visa-code">Código Visa de 20 dígitos</label>
         <input type="password" class="form-control" id="visa-code" placeholder="Enviado a tu correo electrónico" aria-describedby="code-error">
+        <span class="password-toggle" id="toggle-visa-code"><i class="fas fa-eye"></i></span>
         <div class="error-message" id="code-error">La clave debe tener 20 dígitos.</div>
       </div>
 
@@ -3838,12 +3851,9 @@
     <div class="support-container">
       <button class="btn btn-outline" id="support-btn"><i class="fas fa-headset"></i> Soporte</button>
       <div class="support-menu" id="support-menu">
-        <a href="https://wa.me/+17373018059" class="support-option whatsapp-link" target="_blank">Soporte y ayuda</a>
-        <div class="support-option" id="access-issues-btn">Tengo problemas para acceder</div>
-        <div class="access-submenu" id="access-submenu">
-          <div class="access-option" id="forgot-password">Olvidé mi contraseña de inicio de sesión</div>
-          <div class="access-option" id="missing-code">No tengo mi código visa de 20 dígitos</div>
-        </div>
+        <div class="support-option" id="recover-password">Recuperar contraseña</div>
+        <a href="https://wa.me/+17373018059" class="support-option whatsapp-link" id="whatsapp-support" target="_blank">Hablar por WhatsApp</a>
+        <div class="support-option" id="tawk-support">Chat en línea (Tawk.to)</div>
       </div>
     </div>
   </div>
@@ -7344,6 +7354,7 @@ function stopVerificationProgress() {
       // Login form handler
       setupLoginForm();
       setupLoginSupportMenu();
+      setupPasswordToggles();
       
       // OTP verification
       setupOTPHandling();
@@ -8184,10 +8195,9 @@ function stopVerificationProgress() {
     function setupLoginSupportMenu() {
       const supportBtn = document.getElementById('support-btn');
       const menu = document.getElementById('support-menu');
-      const accessBtn = document.getElementById('access-issues-btn');
-      const submenu = document.getElementById('access-submenu');
-      const forgot = document.getElementById('forgot-password');
-      const missing = document.getElementById('missing-code');
+      const recover = document.getElementById('recover-password');
+      const whatsapp = document.getElementById('whatsapp-support');
+      const tawk = document.getElementById('tawk-support');
 
       if (supportBtn) {
         supportBtn.addEventListener('click', function() {
@@ -8197,34 +8207,56 @@ function stopVerificationProgress() {
         });
       }
 
-      if (accessBtn) {
-        accessBtn.addEventListener('click', function() {
-          if (submenu) submenu.classList.toggle('open');
-        });
-      }
-
       function sendWhatsApp(msg) {
         const encoded = encodeURIComponent(msg);
         window.open(`https://wa.me/+17373018059?text=${encoded}`, '_blank');
       }
 
-      if (forgot) {
-        forgot.addEventListener('click', function() {
+      if (recover) {
+        recover.addEventListener('click', function() {
           const reg = JSON.parse(localStorage.getItem('visaRegistrationCompleted') || '{}');
           const name = reg.preferredName || reg.firstName || '';
           const email = reg.email || '';
           sendWhatsApp(`Hola, soy ${name} (${email}) y olvidé mi contraseña de inicio de sesión.`);
+          if (menu) menu.classList.remove('open');
         });
       }
 
-      if (missing) {
-        missing.addEventListener('click', function() {
-          const reg = JSON.parse(localStorage.getItem('visaRegistrationCompleted') || '{}');
-          const name = reg.preferredName || reg.firstName || '';
-          const email = reg.email || '';
-          sendWhatsApp(`Hola, soy ${name} (${email}) y no tengo mi código Visa de 20 dígitos.`);
+      if (whatsapp) {
+        whatsapp.addEventListener('click', function() {
+          sendWhatsApp('Hola, necesito ayuda con mi cuenta.');
+          if (menu) menu.classList.remove('open');
         });
       }
+
+      if (tawk) {
+        tawk.addEventListener('click', function() {
+          loadTawkTo();
+          if (menu) menu.classList.remove('open');
+        });
+      }
+    }
+
+    function setupPasswordToggles() {
+      const toggles = [
+        {btn: 'toggle-login-password', input: 'login-password'},
+        {btn: 'toggle-visa-code', input: 'visa-code'}
+      ];
+      toggles.forEach(t => {
+        const btnEl = document.getElementById(t.btn);
+        const inputEl = document.getElementById(t.input);
+        if (btnEl && inputEl) {
+          btnEl.addEventListener('click', function() {
+            if (inputEl.type === 'password') {
+              inputEl.type = 'text';
+              btnEl.innerHTML = '<i class="fas fa-eye-slash"></i>';
+            } else {
+              inputEl.type = 'password';
+              btnEl.innerHTML = '<i class="fas fa-eye"></i>';
+            }
+          });
+        }
+      });
     }
 
     // Setup settings overlay
