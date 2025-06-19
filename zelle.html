@@ -260,6 +260,15 @@
           • Identificación verificada
         </div>
       </div>
+      <div class="warning-box">
+        <div class="warning-box-title">
+          <i class="fas fa-exclamation-circle"></i>
+          Aviso Importante
+        </div>
+        <div class="warning-box-content">
+          REMEEX no está afiliado a Zelle®. El servicio es provisto por terceros y su uso se rige por los Términos de Uso de Zelle.
+        </div>
+      </div>
       <button class="btn btn-primary" id="start-activation">
         <i class="fas fa-rocket"></i>
         Comenzar Activación
@@ -408,6 +417,15 @@
           Después de registrarte, recibirás un código de verificación en tu email. Este proceso puede tomar hasta 3 días hábiles para completarse.
         </div>
       </div>
+      <div class="info-box">
+        <div class="info-box-title">
+          <i class="fas fa-shield-alt"></i>
+          Privacidad
+        </div>
+        <div class="info-box-content">
+          Tus datos se usarán únicamente para activar Zelle en REMEEX. Podrás modificarlos o eliminarlos desde tu cuenta cuando quieras.
+        </div>
+      </div>
       <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
         <button class="btn btn-outline" id="back-step-4" style="flex: 1;">
           <i class="fas fa-arrow-left"></i>
@@ -494,11 +512,32 @@
           if (zelleData.status === 'active') {
             showToast('info', 'Zelle ya está activo', 'Tu cuenta Zelle ya está configurada y lista para usar.');
             setTimeout(() => { window.history.back(); }, 2000);
+          } else {
+            prefillForms();
           }
         } catch (e) {
           console.error('Error loading Zelle data:', e);
         }
       }
+    }
+
+    function prefillForms() {
+      if (zelleData.bank) {
+        selectedBank = zelleData.bank;
+        document.querySelectorAll('.bank-option').forEach(opt => {
+          opt.classList.toggle('selected', opt.dataset.bank === selectedBank);
+        });
+        document.getElementById('continue-step-2')?.removeAttribute('disabled');
+        if (CONFIG.SUPPORTED_BANKS[selectedBank]) {
+          document.getElementById('routing-number')?.value = CONFIG.SUPPORTED_BANKS[selectedBank].routing;
+        }
+      }
+      document.getElementById('account-holder')?.value = zelleData.accountHolder || '';
+      document.getElementById('account-number')?.value = zelleData.accountNumber || '';
+      document.getElementById('routing-number')?.value = zelleData.routingNumber || '';
+      document.getElementById('ssn')?.value = zelleData.ssn || '';
+      document.getElementById('zelle-email')?.value = zelleData.email || '';
+      document.getElementById('zelle-phone')?.value = zelleData.phone || '';
     }
     function setupEventListeners() {
       setupStepNavigation();
