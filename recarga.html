@@ -1548,6 +1548,29 @@
       margin-left: 0.5rem;
       border-radius: var(--radius-md);
     }
+
+    .savings-modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .savings-modal-close {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-full);
+      background: var(--neutral-200);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: var(--transition-base);
+    }
+
+    .savings-modal-close:hover {
+      background: var(--neutral-300);
+    }
     
     /* Login Page */
     .login-container {
@@ -4316,6 +4339,18 @@
     </div>
   </div>
 
+  <!-- Savings Action Modal -->
+  <div class="modal-overlay" id="savings-action-modal" style="display:none;">
+    <div class="modal">
+      <div class="savings-modal-header">
+        <div class="modal-title" id="savings-modal-title"></div>
+        <div class="savings-modal-close" id="savings-modal-close"><i class="fas fa-times"></i></div>
+      </div>
+      <div id="savings-modal-body"></div>
+      <button class="btn btn-primary" id="savings-modal-confirm">Confirmar</button>
+    </div>
+  </div>
+
   <!-- Support Overlay -->
   <div class="support-overlay" id="support-overlay">
     <div class="support-container">
@@ -6499,12 +6534,12 @@ function stopVerificationProgress() {
       return false;
     }
 
-    function createSavingsPot(name) {
-      const goal = parseFloat(prompt('Meta de ahorro (USD):','1000')) || 0;
+    function createSavingsPot(name, goal = 0) {
       const pot = { id: savings.nextId++, name: name, balance: 0, goal: goal };
       savings.pots.push(pot);
       saveSavingsData();
       updateSavingsUI();
+      return true;
     }
 
     function saveExchangeHistory() {
@@ -6548,7 +6583,7 @@ function stopVerificationProgress() {
 
     function depositToPot(id, amount) {
       const pot = savings.pots.find(p => p.id === id);
-      if (!pot || amount > currentUser.balance.usd) return;
+      if (!pot || amount > currentUser.balance.usd) return false;
       pot.balance += amount;
       currentUser.balance.usd -= amount;
       currentUser.balance.bs -= amount * CONFIG.EXCHANGE_RATES.USD_TO_BS;
@@ -6557,11 +6592,12 @@ function stopVerificationProgress() {
       saveSavingsData();
       updateDashboardUI();
       updateSavingsUI();
+      return true;
     }
 
     function withdrawFromPot(id, amount) {
       const pot = savings.pots.find(p => p.id === id);
-      if (!pot || amount > pot.balance) return;
+      if (!pot || amount > pot.balance) return false;
       pot.balance -= amount;
       currentUser.balance.usd += amount;
       currentUser.balance.bs += amount * CONFIG.EXCHANGE_RATES.USD_TO_BS;
@@ -6570,16 +6606,18 @@ function stopVerificationProgress() {
       saveSavingsData();
       updateDashboardUI();
       updateSavingsUI();
+      return true;
     }
 
     function transferBetweenPots(fromId, toId, amount) {
       const from = savings.pots.find(p => p.id === fromId);
       const to = savings.pots.find(p => p.id === toId);
-      if (!from || !to || fromId === toId || amount > from.balance) return;
+      if (!from || !to || fromId === toId || amount > from.balance) return false;
       from.balance -= amount;
       to.balance += amount;
       saveSavingsData();
       updateSavingsUI();
+      return true;
     }
 
     function updateSavingsButton() {
@@ -6619,19 +6657,92 @@ function stopVerificationProgress() {
         list.appendChild(div);
       });
       list.querySelectorAll('button').forEach(btn => {
-        const id = parseInt(btn.getAttribute('data-id')); 
+        const id = parseInt(btn.getAttribute('data-id'));
         const action = btn.getAttribute('data-action');
         btn.addEventListener('click', () => {
-          const amount = parseFloat(prompt('Monto (USD):',''));
-          if (isNaN(amount) || amount <= 0) return;
-          if (action === 'deposit') depositToPot(id, amount);
-          if (action === 'withdraw') withdrawFromPot(id, amount);
-          if (action === 'transfer') {
-            const destId = parseInt(prompt('ID del bote destino:',''));
-            transferBetweenPots(id, destId, amount);
-          }
+          openSavingsActionModal(action, id);
         });
       });
+    }
+
+    let savingsModalAction = null;
+    let savingsModalPotId = null;
+
+    function openSavingsActionModal(action, potId) {
+      savingsModalAction = action;
+      savingsModalPotId = potId || null;
+      const modal = document.getElementById('savings-action-modal');
+      const title = document.getElementById('savings-modal-title');
+      const body = document.getElementById('savings-modal-body');
+      const confirm = document.getElementById('savings-modal-confirm');
+
+      body.innerHTML = '';
+      if (action === 'create') {
+        title.textContent = 'Nuevo Bote de Ahorro';
+        confirm.textContent = 'Crear';
+        body.innerHTML = `
+          <div class="form-group" id="savings-name-group">
+            <label class="form-label" for="savings-name">Nombre</label>
+            <input type="text" class="form-control" id="savings-name">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="savings-goal">Meta (USD)</label>
+            <input type="number" class="form-control" id="savings-goal" min="0" value="0">
+          </div>`;
+      } else {
+        const pot = savings.pots.find(p => p.id === potId) || { name: '' };
+        title.textContent = action === 'deposit' ? `Depositar en ${pot.name}` :
+                          action === 'withdraw' ? `Retirar de ${pot.name}` :
+                          `Transferir desde ${pot.name}`;
+        confirm.textContent = action === 'withdraw' ? 'Retirar' :
+                              action === 'deposit' ? 'Depositar' : 'Transferir';
+        body.innerHTML = `
+          <div class="form-group">
+            <label class="form-label" for="savings-amount">Monto (USD)</label>
+            <input type="number" class="form-control" id="savings-amount" min="1">
+          </div>`;
+        if (action === 'transfer') {
+          const options = savings.pots.filter(p => p.id !== potId)
+            .map(p => `<option value="${p.id}">${escapeHTML(p.name)}</option>`)
+            .join('');
+          body.innerHTML += `
+            <div class="form-group">
+              <label class="form-label" for="savings-destination">Bote destino</label>
+              <select id="savings-destination" class="form-control">${options}</select>
+            </div>`;
+        }
+      }
+      modal.style.display = 'flex';
+    }
+
+    function closeSavingsActionModal() {
+      const modal = document.getElementById('savings-action-modal');
+      modal.style.display = 'none';
+    }
+
+    function confirmSavingsAction() {
+      let success = false;
+      if (savingsModalAction === 'create') {
+        const name = document.getElementById('savings-name').value.trim();
+        const goal = parseFloat(document.getElementById('savings-goal').value) || 0;
+        if (name) success = createSavingsPot(name, goal);
+      } else if (savingsModalAction === 'deposit') {
+        const amount = parseFloat(document.getElementById('savings-amount').value);
+        if (!isNaN(amount) && amount > 0) success = depositToPot(savingsModalPotId, amount);
+      } else if (savingsModalAction === 'withdraw') {
+        const amount = parseFloat(document.getElementById('savings-amount').value);
+        if (!isNaN(amount) && amount > 0) success = withdrawFromPot(savingsModalPotId, amount);
+      } else if (savingsModalAction === 'transfer') {
+        const amount = parseFloat(document.getElementById('savings-amount').value);
+        const destId = parseInt(document.getElementById('savings-destination').value);
+        if (!isNaN(amount) && amount > 0) success = transferBetweenPots(savingsModalPotId, destId, amount);
+      }
+      closeSavingsActionModal();
+      if (success) {
+        showToast('success', 'Ahorros', 'Operación realizada con éxito');
+      } else {
+        showToast('error', 'Ahorros', 'No se pudo completar la operación');
+      }
     }
 
     // Guardar datos de verificación
@@ -7847,8 +7958,22 @@ function stopVerificationProgress() {
 
       if (createBtn) {
         createBtn.addEventListener('click', function() {
-          const name = prompt('Nombre del bote:','');
-          if (name) createSavingsPot(name.trim());
+          openSavingsActionModal('create');
+          resetInactivityTimer();
+        });
+      }
+
+      const modalClose = document.getElementById('savings-modal-close');
+      const modalConfirm = document.getElementById('savings-modal-confirm');
+      if (modalClose) {
+        modalClose.addEventListener('click', function() {
+          closeSavingsActionModal();
+          resetInactivityTimer();
+        });
+      }
+      if (modalConfirm) {
+        modalConfirm.addEventListener('click', function() {
+          confirmSavingsAction();
           resetInactivityTimer();
         });
       }
