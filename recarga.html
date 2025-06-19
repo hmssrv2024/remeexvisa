@@ -1513,6 +1513,58 @@
       background: var(--neutral-300);
     }
 
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .summary-card {
+      background: var(--neutral-100);
+      border-radius: var(--radius-lg);
+      padding: 1rem;
+      box-shadow: var(--shadow-sm);
+      text-align: center;
+    }
+
+    .summary-card.primary {
+      background: var(--card-gradient);
+      color: white;
+    }
+
+    .summary-amount {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-top: 0.5rem;
+    }
+
+    .quick-actions {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .quick-action {
+      background: var(--neutral-200);
+      border-radius: var(--radius-lg);
+      padding: 0.75rem;
+      text-align: center;
+      cursor: pointer;
+      transition: var(--transition-base);
+    }
+
+    .quick-action:hover {
+      background: var(--neutral-300);
+    }
+
+    .quick-action i {
+      display: block;
+      font-size: 1.2rem;
+      margin-bottom: 0.25rem;
+    }
+
     .savings-list {
       display: flex;
       flex-direction: column;
@@ -4500,8 +4552,25 @@
         <div class="savings-title">Mis Ahorros</div>
         <div class="savings-close" id="savings-close"><i class="fas fa-times"></i></div>
       </div>
+      <div class="summary-grid">
+        <div class="summary-card primary">
+          <div>Total Ahorrado</div>
+          <div class="summary-amount" id="summary-total">$0.00</div>
+        </div>
+        <div class="summary-card">
+          <div>Botes Activos</div>
+          <div class="summary-amount" id="summary-count">0</div>
+        </div>
+      </div>
+
+      <div class="quick-actions">
+        <div class="quick-action" id="create-savings-btn">
+          <i class="fas fa-plus"></i>
+          <div>Nuevo Bote</div>
+        </div>
+      </div>
+
       <div class="savings-list" id="savings-list"></div>
-      <button class="btn btn-primary" id="create-savings-btn"><i class="fas fa-plus-circle"></i> Crear Bote</button>
     </div>
   </div>
 
@@ -6854,8 +6923,18 @@ function stopVerificationProgress() {
       container.style.display = 'block';
     }
 
+    function updateSavingsSummary() {
+      const totalEl = document.getElementById('summary-total');
+      const countEl = document.getElementById('summary-count');
+      if (!totalEl || !countEl) return;
+      const total = savings.pots.reduce((sum, p) => sum + p.balance, 0);
+      totalEl.textContent = formatCurrency(total, 'usd');
+      countEl.textContent = savings.pots.length;
+    }
+
     function updateSavingsUI() {
       updateSavingsButton();
+      updateSavingsSummary();
       const list = document.getElementById('savings-list');
       if (!list) return;
       list.innerHTML = '';
