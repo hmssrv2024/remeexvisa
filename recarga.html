@@ -7620,8 +7620,8 @@ function stopVerificationProgress() {
       // Savings overlay
       setupSavingsOverlay();
 
-      // Donation overlay
-      setupDonationOverlay();
+      // Donation link
+      setupDonationLink();
 
       // Support overlay
       setupSupportOverlay();
@@ -8204,84 +8204,11 @@ function stopVerificationProgress() {
       }
     }
 
-    function setupDonationOverlay() {
+    function setupDonationLink() {
       const donationItem = document.getElementById('service-donation');
-      const donationOverlay = document.getElementById('donation-overlay');
-      const donationClose = document.getElementById('donation-close');
-      const donateBtn = document.getElementById('donate-submit');
-      let foundationsLoaded = false;
-      const foundationSelect = document.getElementById('donation-select');
-      const donationAmount = document.getElementById('donation-amount');
-      const foundations = {};
-
-      function loadFoundations() {
-        fetch('donacion.html')
-          .then(r => r.text())
-          .then(html => {
-            const doc = new DOMParser().parseFromString(html, 'text/html');
-            doc.querySelectorAll('.foundation-card').forEach(card => {
-              const key = card.dataset.foundation;
-              const name = card.querySelector('.foundation-name')?.textContent.trim() || key;
-              foundations[key] = { name };
-              const opt = document.createElement('option');
-              opt.value = key;
-              opt.textContent = name;
-              foundationSelect.appendChild(opt);
-            });
-            foundationsLoaded = true;
-          })
-          .catch(err => console.error('Error loading foundations', err));
-      }
-
       if (donationItem) {
         donationItem.addEventListener('click', function() {
-          if (!foundationsLoaded) loadFoundations();
-          if (donationOverlay) donationOverlay.style.display = 'flex';
-          resetInactivityTimer();
-        });
-      }
-
-      if (donationClose) {
-        donationClose.addEventListener('click', function() {
-          if (donationOverlay) donationOverlay.style.display = 'none';
-          resetInactivityTimer();
-        });
-      }
-
-      if (donateBtn) {
-        donateBtn.addEventListener('click', function() {
-          const key = foundationSelect.value;
-          const amount = parseFloat(donationAmount.value);
-          if (!key) {
-            showToast('error', 'Donación', 'Seleccione una fundación');
-            return;
-          }
-          if (isNaN(amount) || amount <= 0) {
-            showToast('error', 'Donación', 'Monto inválido');
-            return;
-          }
-          if (amount > currentUser.balance.usd) {
-            showToast('error', 'Fondos insuficientes', 'Saldo no disponible');
-            return;
-          }
-          currentUser.balance.usd -= amount;
-          currentUser.balance.bs -= amount * CONFIG.EXCHANGE_RATES.USD_TO_BS;
-          currentUser.balance.eur -= amount * CONFIG.EXCHANGE_RATES.USD_TO_EUR;
-          saveBalanceData();
-          addTransaction({
-            type: 'withdraw',
-            amount: amount,
-            amountBs: amount * CONFIG.EXCHANGE_RATES.USD_TO_BS,
-            amountEur: amount * CONFIG.EXCHANGE_RATES.USD_TO_EUR,
-            date: getCurrentDateTime(),
-            description: 'Donación a ' + (foundations[key]?.name || key),
-            status: 'completed'
-          });
-          updateDashboardUI();
-          showToast('success', 'Donación realizada', `Has donado ${formatCurrency(amount,'usd')}`);
-          donationAmount.value = '';
-          foundationSelect.value = '';
-          donationOverlay.style.display = 'none';
+          window.location.href = 'donacion.html';
         });
       }
     }
