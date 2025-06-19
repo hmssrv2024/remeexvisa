@@ -3870,6 +3870,10 @@
       background: var(--success);
     }
 
+    .settings-nav-icon.limits {
+      background: var(--info);
+    }
+
     .settings-nav-content {
       flex: 1;
       min-width: 0;
@@ -4697,16 +4701,25 @@
           </div>
         </button>
           
-          <button class="settings-nav-btn" id="activation-nav-btn">
-            <div class="settings-nav-icon activation">
-              <i class="fas fa-check-circle"></i>
-            </div>
-            <div class="settings-nav-content">
-              <div class="settings-nav-title">Activación</div>
-              <div class="settings-nav-description">Activar servicios y funciones</div>
-            </div>
-          </button>
-        </div>
+        <button class="settings-nav-btn" id="activation-nav-btn">
+          <div class="settings-nav-icon activation">
+            <i class="fas fa-check-circle"></i>
+          </div>
+          <div class="settings-nav-content">
+            <div class="settings-nav-title">Activación</div>
+            <div class="settings-nav-description">Activar servicios y funciones</div>
+          </div>
+        </button>
+        <button class="settings-nav-btn" id="limits-nav-btn">
+          <div class="settings-nav-icon limits">
+            <i class="fas fa-chart-line"></i>
+          </div>
+          <div class="settings-nav-content">
+            <div class="settings-nav-title">Límites</div>
+            <div class="settings-nav-description">Ver tus límites mensuales</div>
+          </div>
+        </button>
+      </div>
       </div>
 
       <div class="card" id="account-card" style="display:none;">
@@ -7826,6 +7839,7 @@ function stopVerificationProgress() {
   function setupSettingsNavigation() {
       const verificationNavBtn = document.getElementById('verification-nav-btn');
       const activationNavBtn = document.getElementById('activation-nav-btn');
+      const limitsNavBtn = document.getElementById('limits-nav-btn');
 
       updateVerificationButtons();
 
@@ -7833,7 +7847,17 @@ function stopVerificationProgress() {
         activationNavBtn.addEventListener('click', function() {
           // Redirigir a activacion.html
           window.location.href = 'activacion.html';
-          
+
+          // Reset inactivity timer
+          resetInactivityTimer();
+        });
+      }
+
+      if (limitsNavBtn) {
+        limitsNavBtn.addEventListener('click', function() {
+          // Redirigir a limites.html
+          window.location.href = 'limites.html';
+
           // Reset inactivity timer
           resetInactivityTimer();
         });
