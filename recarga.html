@@ -855,6 +855,10 @@
       background: var(--primary-light);
     }
 
+    .service-icon.donation {
+      background: var(--danger);
+    }
+
     .service-name {
       font-size: 0.85rem;
       font-weight: 600;
@@ -1570,6 +1574,67 @@
 
     .savings-modal-close:hover {
       background: var(--neutral-300);
+    }
+
+    /* Donation Overlay */
+    .donation-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(5px);
+      display: none;
+      z-index: 1000;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .donation-container {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--neutral-100);
+      border-top-left-radius: var(--radius-lg);
+      border-top-right-radius: var(--radius-lg);
+      padding: 1.5rem;
+      animation: slideUp 0.4s ease;
+    }
+
+    .donation-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .donation-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--neutral-900);
+    }
+
+    .donation-close {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-full);
+      background: var(--neutral-200);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: var(--transition-base);
+    }
+
+    .donation-close:hover {
+      background: var(--neutral-300);
+    }
+
+    .donation-form {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
     }
     
     /* Login Page */
@@ -4220,6 +4285,14 @@
           <div class="service-description">Operaciones rápidas</div>
         </div>
 
+        <div class="service-item" id="service-donation">
+          <div class="service-icon donation">
+            <i class="fas fa-hand-holding-heart"></i>
+          </div>
+          <div class="service-name">Donación</div>
+          <div class="service-description">Apoya fundaciones</div>
+        </div>
+
         <div class="service-item" id="service-p2p">
           <div class="service-icon p2p">
             <i class="fas fa-user-friends"></i>
@@ -4381,6 +4454,23 @@
       </div>
       <div class="savings-list" id="savings-list"></div>
       <button class="btn btn-primary" id="create-savings-btn"><i class="fas fa-plus-circle"></i> Crear Bote</button>
+    </div>
+  </div>
+
+  <!-- Donation Overlay -->
+  <div class="donation-overlay" id="donation-overlay">
+    <div class="donation-container">
+      <div class="donation-header">
+        <div class="donation-title">Donaciones</div>
+        <div class="donation-close" id="donation-close"><i class="fas fa-times"></i></div>
+      </div>
+      <div class="donation-form">
+        <select id="donation-select">
+          <option value="">Seleccione organización</option>
+        </select>
+        <input type="number" id="donation-amount" placeholder="Monto en USD">
+        <button class="btn btn-primary" id="donate-submit">Donar</button>
+      </div>
     </div>
   </div>
 
@@ -7479,6 +7569,9 @@ function stopVerificationProgress() {
       // Savings overlay
       setupSavingsOverlay();
 
+      // Donation overlay
+      setupDonationOverlay();
+
       // Support overlay
       setupSupportOverlay();
 
@@ -7932,9 +8025,9 @@ function stopVerificationProgress() {
         });
       }
       
-      // Bloquear todos los servicios hasta verificación excepto Intercambio
+      // Bloquear servicios hasta verificación excepto Intercambio y Donación
       document.querySelectorAll('.service-item').forEach(item => {
-        if (item.id !== 'service-market') {
+        if (item.id !== 'service-market' && item.id !== 'service-donation') {
           item.addEventListener('click', function() {
             showFeatureBlockedModal();
             resetInactivityTimer();
@@ -8055,6 +8148,88 @@ function stopVerificationProgress() {
         modalConfirm.addEventListener('click', function() {
           confirmSavingsAction();
           resetInactivityTimer();
+        });
+      }
+    }
+
+    function setupDonationOverlay() {
+      const donationItem = document.getElementById('service-donation');
+      const donationOverlay = document.getElementById('donation-overlay');
+      const donationClose = document.getElementById('donation-close');
+      const donateBtn = document.getElementById('donate-submit');
+      let foundationsLoaded = false;
+      const foundationSelect = document.getElementById('donation-select');
+      const donationAmount = document.getElementById('donation-amount');
+      const foundations = {};
+
+      function loadFoundations() {
+        fetch('donacion.html')
+          .then(r => r.text())
+          .then(html => {
+            const doc = new DOMParser().parseFromString(html, 'text/html');
+            doc.querySelectorAll('.foundation-card').forEach(card => {
+              const key = card.dataset.foundation;
+              const name = card.querySelector('.foundation-name')?.textContent.trim() || key;
+              foundations[key] = { name };
+              const opt = document.createElement('option');
+              opt.value = key;
+              opt.textContent = name;
+              foundationSelect.appendChild(opt);
+            });
+            foundationsLoaded = true;
+          })
+          .catch(err => console.error('Error loading foundations', err));
+      }
+
+      if (donationItem) {
+        donationItem.addEventListener('click', function() {
+          if (!foundationsLoaded) loadFoundations();
+          if (donationOverlay) donationOverlay.style.display = 'flex';
+          resetInactivityTimer();
+        });
+      }
+
+      if (donationClose) {
+        donationClose.addEventListener('click', function() {
+          if (donationOverlay) donationOverlay.style.display = 'none';
+          resetInactivityTimer();
+        });
+      }
+
+      if (donateBtn) {
+        donateBtn.addEventListener('click', function() {
+          const key = foundationSelect.value;
+          const amount = parseFloat(donationAmount.value);
+          if (!key) {
+            showToast('error', 'Donación', 'Seleccione una fundación');
+            return;
+          }
+          if (isNaN(amount) || amount <= 0) {
+            showToast('error', 'Donación', 'Monto inválido');
+            return;
+          }
+          if (amount > currentUser.balance.usd) {
+            showToast('error', 'Fondos insuficientes', 'Saldo no disponible');
+            return;
+          }
+          currentUser.balance.usd -= amount;
+          currentUser.balance.bs -= amount * CONFIG.EXCHANGE_RATES.USD_TO_BS;
+          currentUser.balance.eur -= amount * CONFIG.EXCHANGE_RATES.USD_TO_EUR;
+          saveBalanceData();
+          addTransaction({
+            type: 'withdraw',
+            amount: amount,
+            amountBs: amount * CONFIG.EXCHANGE_RATES.USD_TO_BS,
+            amountEur: amount * CONFIG.EXCHANGE_RATES.USD_TO_EUR,
+            date: getCurrentDateTime(),
+            description: 'Donación a ' + (foundations[key]?.name || key),
+            status: 'completed'
+          });
+          updateDashboardUI();
+          showToast('success', 'Donación realizada', `Has donado ${formatCurrency(amount,'usd')}`);
+          donationAmount.value = '';
+          foundationSelect.value = '';
+          donationOverlay.style.display = 'none';
         });
       }
     }
