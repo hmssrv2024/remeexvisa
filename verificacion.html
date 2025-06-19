@@ -2270,8 +2270,8 @@
       const existingData = localStorage.getItem(CONFIG.STORAGE_KEYS.VERIFICATION_DATA);
       const existingStatus = localStorage.getItem(CONFIG.STORAGE_KEYS.VERIFICATION_STATUS);
       
-      if (existingData && existingStatus === 'completed') {
-        showAlreadyCompleted();
+      if (existingStatus && existingStatus !== 'unverified') {
+        redirectToDashboard();
         return;
       }
       
