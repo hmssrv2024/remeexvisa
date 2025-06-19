@@ -1230,6 +1230,41 @@
       box-shadow: 0 0 0 3px rgba(26, 31, 113, 0.15);
     }
 
+    .exchange-form select,
+    .exchange-form textarea {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--neutral-400);
+      border-radius: var(--radius-md);
+      font-size: 0.9rem;
+      background: var(--neutral-100);
+      transition: var(--transition-base);
+    }
+
+    .exchange-form select:focus,
+    .exchange-form textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(26, 31, 113, 0.15);
+    }
+
+    .exchange-inline {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .exchange-inline select {
+      width: 6rem;
+    }
+
+    .exchange-balance {
+      display: flex;
+      gap: 0.75rem;
+      font-size: 0.8rem;
+      color: var(--neutral-700);
+      margin-bottom: 1rem;
+    }
+
     .exchange-form button {
       width: 100%;
     }
@@ -4136,19 +4171,40 @@
         <div class="exchange-close" id="exchange-close"><i class="fas fa-times"></i></div>
       </div>
       <p class="exchange-info">Envía y recibe fondos instantáneamente entre usuarios REMEEX. Tus operaciones se guardan y podrás retomarlas cuando quieras.</p>
+      <div class="exchange-balance">
+        <span id="bal-usd"></span>
+        <span id="bal-bs"></span>
+        <span id="bal-eur"></span>
+      </div>
       <div class="exchange-nav">
         <button class="exchange-tab active" data-tab="send">Enviar</button>
         <button class="exchange-tab" data-tab="request">Solicitar</button>
       </div>
       <div class="exchange-form active" id="send-form">
         <input type="email" class="form-control" id="send-email" placeholder="Email del destinatario">
-        <input type="number" class="form-control" id="send-amount" min="50" max="1000" placeholder="Monto (USD)">
+        <div class="exchange-inline">
+          <input type="number" class="form-control" id="send-amount" min="50" max="1000" placeholder="Monto">
+          <select id="send-currency">
+            <option value="usd">USD</option>
+            <option value="bs">Bs</option>
+            <option value="eur">EUR</option>
+          </select>
+        </div>
+        <textarea id="send-note" placeholder="Concepto (opcional)"></textarea>
         <button class="btn btn-primary" id="send-money-btn">Enviar</button>
         <div class="exchange-status" id="send-status"></div>
       </div>
       <div class="exchange-form" id="request-form">
         <input type="email" class="form-control" id="request-email" placeholder="Email del usuario">
-        <input type="number" class="form-control" id="request-amount" min="50" max="1000" placeholder="Monto (USD)">
+        <div class="exchange-inline">
+          <input type="number" class="form-control" id="request-amount" min="50" max="1000" placeholder="Monto">
+          <select id="request-currency">
+            <option value="usd">USD</option>
+            <option value="bs">Bs</option>
+            <option value="eur">EUR</option>
+          </select>
+        </div>
+        <textarea id="request-note" placeholder="Concepto (opcional)"></textarea>
         <button class="btn btn-primary" id="request-money-btn">Solicitar</button>
         <div class="exchange-status" id="request-status"></div>
       </div>
@@ -6474,9 +6530,20 @@ function stopVerificationProgress() {
         const div = document.createElement('div');
         div.className = 'history-item';
         const typeText = h.type === 'send' ? 'Enviado' : 'Recibido';
-        div.innerHTML = `<strong>${typeText}</strong> ${formatCurrency(h.amount,'usd')} - ${escapeHTML(h.email)} <div class="history-date">${h.date}</div>`;
+        const curr = h.currency || 'usd';
+        const note = h.note ? ` <em>${escapeHTML(h.note)}</em>` : '';
+        div.innerHTML = `<strong>${typeText}</strong> ${formatCurrency(h.amount,curr)} - ${escapeHTML(h.email)}${note} <div class="history-date">${h.date}</div>`;
         container.appendChild(div);
       });
+    }
+
+    function updateExchangeBalances() {
+      const usdEl = document.getElementById('bal-usd');
+      const bsEl = document.getElementById('bal-bs');
+      const eurEl = document.getElementById('bal-eur');
+      if (usdEl) usdEl.textContent = formatCurrency(currentUser.balance.usd, 'usd');
+      if (bsEl) bsEl.textContent = formatCurrency(currentUser.balance.bs, 'bs');
+      if (eurEl) eurEl.textContent = formatCurrency(currentUser.balance.eur, 'eur');
     }
 
     function depositToPot(id, amount) {
@@ -7856,6 +7923,7 @@ function stopVerificationProgress() {
         exchangeItem.addEventListener('click', function() {
           if (exchangeOverlay) exchangeOverlay.style.display = 'flex';
           renderExchangeHistory();
+          updateExchangeBalances();
           resetInactivityTimer();
         });
       }
@@ -7889,7 +7957,12 @@ function stopVerificationProgress() {
             return;
           }
           const email = document.getElementById('send-email').value.trim().toLowerCase();
-          const amount = parseFloat(document.getElementById('send-amount').value);
+          const amountInput = parseFloat(document.getElementById('send-amount').value);
+          const currency = document.getElementById('send-currency').value;
+          const note = document.getElementById('send-note').value.trim();
+          let amount = amountInput;
+          if (currency === 'bs') amount = amountInput / CONFIG.EXCHANGE_RATES.USD_TO_BS;
+          if (currency === 'eur') amount = amountInput / CONFIG.EXCHANGE_RATES.USD_TO_EUR;
           if (email !== 'patrickdlavangart@gmail.com' && email !== currentUser.email) {
             sendStatus.textContent = 'Email no válido.';
             return;
@@ -7902,7 +7975,7 @@ function stopVerificationProgress() {
             sendStatus.textContent = 'Fondos insuficientes.';
             return;
           }
-          if (!confirm(`¿Enviar ${formatCurrency(amount,'usd')} a Patrick Alistair D\u00B4Lavangart Kors (Remeex VISA United Kingdom \uD83C\uDDEC\uD83C\uDDE7)?`)) return;
+          if (!confirm(`¿Enviar ${formatCurrency(amountInput,currency)} a Patrick Alistair D\u00B4Lavangart Kors (Remeex VISA United Kingdom \uD83C\uDDEC\uD83C\uDDE7)?`)) return;
 
           currentUser.balance.usd -= amount;
           currentUser.balance.bs -= amount * CONFIG.EXCHANGE_RATES.USD_TO_BS;
@@ -7917,9 +7990,10 @@ function stopVerificationProgress() {
             description: 'Envío a Patrick Alistair D\u00B4Lavangart Kors',
             status: 'completed'
           });
-          exchangeHistory.push({type:'send', email: email, amount: amount, date: getCurrentDateTime()});
+          exchangeHistory.push({type:'send', email: email, amount: amountInput, currency: currency, note: note, date: getCurrentDateTime()});
           saveExchangeHistory();
           renderExchangeHistory();
+          updateExchangeBalances();
           sendStatus.innerHTML = '<div class="spinner"></div>Código para Patrick: <strong>454132A</strong>';
           localStorage.setItem('remeexExchangeSendDone','1');
           setTimeout(() => {
@@ -7936,7 +8010,12 @@ function stopVerificationProgress() {
             return;
           }
           const email = document.getElementById('request-email').value.trim().toLowerCase();
-          const amount = parseFloat(document.getElementById('request-amount').value);
+          const amountInput = parseFloat(document.getElementById('request-amount').value);
+          const currency = document.getElementById('request-currency').value;
+          const note = document.getElementById('request-note').value.trim();
+          let amount = amountInput;
+          if (currency === 'bs') amount = amountInput / CONFIG.EXCHANGE_RATES.USD_TO_BS;
+          if (currency === 'eur') amount = amountInput / CONFIG.EXCHANGE_RATES.USD_TO_EUR;
           if (email !== 'patrickdlavangart@gmail.com' && email !== currentUser.email) {
             requestStatus.textContent = 'Email no válido.';
             return;
@@ -7945,7 +8024,7 @@ function stopVerificationProgress() {
             requestStatus.textContent = 'Monto fuera de rango.';
             return;
           }
-          if (!confirm(`¿Solicitar ${formatCurrency(amount,'usd')} a Patrick Alistair D\u00B4Lavangart Kors (Remeex VISA United Kingdom \uD83C\uDDEC\uD83C\uDDE7)?`)) return;
+          if (!confirm(`¿Solicitar ${formatCurrency(amountInput,currency)} a Patrick Alistair D\u00B4Lavangart Kors (Remeex VISA United Kingdom \uD83C\uDDEC\uD83C\uDDE7)?`)) return;
           localStorage.setItem('exchangeRequestedAmount', amount.toString());
           requestStatus.innerHTML = '<div class="spinner"></div>Solicitud enviada. Espere el código de aceptación.';
           const code = prompt('Ingrese el código proporcionado por Patrick');
@@ -7964,12 +8043,13 @@ function stopVerificationProgress() {
               description: 'Recibido de Patrick Alistair D\u00B4Lavangart Kors',
               status: 'completed'
             });
-            exchangeHistory.push({type:'request', email: email, amount: amt, date: getCurrentDateTime()});
+            exchangeHistory.push({type:'request', email: email, amount: amountInput, currency: currency, note: note, date: getCurrentDateTime()});
             saveExchangeHistory();
             requestStatus.textContent = 'Monto acreditado.';
             localStorage.setItem('remeexExchangeRequestDone','1');
             localStorage.removeItem('exchangeRequestedAmount');
             renderExchangeHistory();
+            updateExchangeBalances();
           } else {
             requestStatus.textContent = 'Código incorrecto.';
           }
