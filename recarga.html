@@ -1044,15 +1044,17 @@
 
     .messages-container {
       position: absolute;
-      bottom: 0;
+      top: 60px;
       left: 0;
       right: 0;
+      width: 95%;
+      margin: 0 auto;
       background: var(--neutral-100);
-      border-top-left-radius: var(--radius-lg);
-      border-top-right-radius: var(--radius-lg);
-      padding: 1.5rem;
-      animation: slideUp 0.4s ease;
-      max-height: 80vh;
+      border-bottom-left-radius: var(--radius-lg);
+      border-bottom-right-radius: var(--radius-lg);
+      padding: 1rem;
+      animation: slideDown 0.4s ease;
+      max-height: 60vh;
       overflow-y: auto;
     }
 
@@ -3497,6 +3499,11 @@
 
     @keyframes slideUp {
       from { transform: translateY(100%); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    @keyframes slideDown {
+      from { transform: translateY(-100%); opacity: 0; }
       to { transform: translateY(0); opacity: 1; }
     }
     
@@ -7302,6 +7309,13 @@ function stopVerificationProgress() {
       }
     }
 
+    function hideNotificationBadge() {
+      const badge = document.querySelector('.notification-badge');
+      if (badge) {
+        badge.style.display = 'none';
+      }
+    }
+
     // Funciones de sesión
     function saveSessionData() {
       // Guardar datos de sesión
@@ -8334,6 +8348,7 @@ function stopVerificationProgress() {
           if (messagesOverlay) {
             renderNotifications();
             messagesOverlay.style.display = 'flex';
+            hideNotificationBadge();
           }
           resetInactivityTimer();
         });
@@ -8344,6 +8359,7 @@ function stopVerificationProgress() {
           if (messagesOverlay) {
             renderNotifications();
             messagesOverlay.style.display = 'flex';
+            hideNotificationBadge();
           }
           resetInactivityTimer();
         });
