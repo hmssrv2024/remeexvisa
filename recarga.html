@@ -1875,7 +1875,8 @@
       margin-bottom: 0.5rem;
     }
 
-    #limit-slider {
+    #withdrawal-limit-slider,
+    #deposit-limit-slider {
       width: 100%;
     }
 
@@ -3867,6 +3868,18 @@
         padding: 1.5rem;
       }
     }
+    details.account-section {
+      margin-top: 0.75rem;
+    }
+    details.account-section summary {
+      cursor: pointer;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    #banks-list div {
+      padding: 0.25rem 0;
+      border-bottom: 1px solid var(--neutral-200);
+    }
   </style>
 </head>
 
@@ -4168,15 +4181,50 @@
         <div><strong>Bs:</strong> <span id="account-balance-bs"></span></div>
         <div><strong>EUR:</strong> <span id="account-balance-eur"></span></div>
       </div>
-      <div class="account-limits">
-        <div class="limit-info">
-          <p>En Remeex puedes manejar hasta <strong>10.000 USD</strong> en tu cuenta.</p>
-          <p>Los retiros a Banesco están permitidos hasta <strong>5.000 USD</strong> sin necesidad de justificantes. Tus límites se actualizan mensualmente.</p>
+      <details class="account-section" id="limits-section">
+        <summary><strong>Límites y Seguridad</strong></summary>
+        <div class="account-limits">
+          <div class="limit-info">
+            <p>En Remeex puedes manejar hasta <strong>10.000 USD</strong> en tu cuenta.</p>
+            <p>Los retiros a Banesco están permitidos hasta <strong>5.000 USD</strong> sin necesidad de justificantes. Tus límites se actualizan mensualmente.</p>
+          </div>
+          <label for="withdrawal-limit-slider">Límite de Retiros</label>
+          <input type="range" id="withdrawal-limit-slider" min="25" max="10000" step="25">
+          <div>Actual: <span id="withdrawal-limit-value" class="limit-value"></span> USD</div>
+          <label for="deposit-limit-slider">Límite de Depósitos</label>
+          <input type="range" id="deposit-limit-slider" min="25" max="10000" step="25">
+          <div>Actual: <span id="deposit-limit-value" class="limit-value"></span> USD</div>
+          <div style="margin-top:0.5rem; display:flex; align-items:center; justify-content:space-between;">
+            <span>Habilitar Retiros</span>
+            <label class="switch">
+              <input type="checkbox" id="withdrawal-toggle">
+              <span class="slider round"></span>
+            </label>
+          </div>
+          <div style="margin-top:0.5rem; display:flex; align-items:center; justify-content:space-between;">
+            <span>Congelar Cuenta</span>
+            <label class="switch">
+              <input type="checkbox" id="freeze-toggle">
+              <span class="slider round"></span>
+            </label>
+          </div>
+          <div style="margin-top:0.5rem;">
+            <label for="primary-currency">Moneda Principal</label>
+            <select id="primary-currency" class="form-control" style="margin-top:0.25rem;">
+              <option value="usd">USD</option>
+              <option value="bs">Bs</option>
+              <option value="eur">EUR</option>
+            </select>
+          </div>
         </div>
-        <label for="limit-slider">Ajustar límite mensual</label>
-        <input type="range" id="limit-slider" min="25" max="10000" step="25">
-        <div>Tu límite actual: <span id="limit-value" class="limit-value"></span> USD</div>
-      </div>
+      </details>
+      <details class="account-section" id="banks-section">
+        <summary><strong>Mis Bancos</strong></summary>
+        <div class="account-banks" id="account-banks">
+          <div id="banks-list"></div>
+          <button class="btn btn-primary" id="add-bank-btn" style="margin-top:0.5rem;">Añadir Banco</button>
+        </div>
+      </details>
     </div>
 
 
@@ -4561,15 +4609,15 @@
       </div>
       <div class="form-group">
         <label class="form-label" for="edit-id">Cédula</label>
-        <input type="text" class="form-control" id="edit-id">
+        <input type="text" class="form-control" id="edit-id" disabled>
       </div>
       <div class="form-group">
         <label class="form-label" for="edit-phone">Teléfono</label>
-        <input type="text" class="form-control" id="edit-phone">
+        <input type="text" class="form-control" id="edit-phone" disabled>
       </div>
       <div class="form-group">
         <label class="form-label" for="edit-bank">Banco</label>
-        <input type="text" class="form-control" id="edit-bank">
+        <select class="form-control" id="edit-bank"></select>
       </div>
       <div class="form-group">
         <label class="form-label" for="edit-account-number">Número de Cuenta</label>
@@ -5641,7 +5689,10 @@
       hasClaimedWelcomeBonus: false,
       deviceId: '', // ID único para este dispositivo
       idNumber: '', // Número de cédula
-      phoneNumber: '' // Número de teléfono
+      phoneNumber: '', // Número de teléfono
+      withdrawalsEnabled: true,
+      accountFrozen: false,
+      primaryCurrency: 'usd'
     };
 
     let selectedAmount = {
@@ -7580,6 +7631,7 @@ function stopVerificationProgress() {
 
       // Account edit modal
       setupAccountEditModal();
+      setupBankManagement();
       
       // Inactivity modal buttons
       setupInactivityModal();
@@ -9383,22 +9435,60 @@ function stopVerificationProgress() {
       if (balBs) balBs.textContent = formatCurrency(currentUser.balance.bs,'bs');
       if (balEur) balEur.textContent = formatCurrency(currentUser.balance.eur,'eur');
 
-      const slider = document.getElementById('limit-slider');
-      const limitValue = document.getElementById('limit-value');
-      if (slider && limitValue) {
-        const country = reg.country || 've';
-        const maxLimit = country === 've' ? 5000 : 10000;
-        slider.min = 25;
-        slider.max = maxLimit;
-        const saved = parseInt(localStorage.getItem('remeexLimit') || slider.max, 10);
-        slider.value = saved;
-        limitValue.textContent = saved;
-        slider.addEventListener('input', () => {
-          limitValue.textContent = slider.value;
-        });
-        slider.addEventListener('change', () => {
-          localStorage.setItem('remeexLimit', slider.value);
-        });
+      const wSlider = document.getElementById('withdrawal-limit-slider');
+      const wValue = document.getElementById('withdrawal-limit-value');
+      const dSlider = document.getElementById('deposit-limit-slider');
+      const dValue = document.getElementById('deposit-limit-value');
+      if (wSlider && wValue) {
+        const max = 10000;
+        wSlider.min = 25;
+        wSlider.max = max;
+        const saved = parseInt(localStorage.getItem('remeexWithdrawalLimit') || wSlider.max, 10);
+        wSlider.value = saved;
+        wValue.textContent = saved;
+        wSlider.oninput = () => { wValue.textContent = wSlider.value; };
+        wSlider.onchange = () => localStorage.setItem('remeexWithdrawalLimit', wSlider.value);
+      }
+      if (dSlider && dValue) {
+        const max = 10000;
+        dSlider.min = 25;
+        dSlider.max = max;
+        const saved = parseInt(localStorage.getItem('remeexDepositLimit') || dSlider.max, 10);
+        dSlider.value = saved;
+        dValue.textContent = saved;
+        dSlider.oninput = () => { dValue.textContent = dSlider.value; };
+        dSlider.onchange = () => localStorage.setItem('remeexDepositLimit', dSlider.value);
+      }
+
+      const withdrawalToggle = document.getElementById('withdrawal-toggle');
+      if (withdrawalToggle) {
+        const enabled = localStorage.getItem('remeexWithdrawalsEnabled') !== 'false';
+        withdrawalToggle.checked = enabled;
+        withdrawalToggle.onchange = () => {
+          localStorage.setItem('remeexWithdrawalsEnabled', withdrawalToggle.checked);
+        };
+      }
+      const freezeToggle = document.getElementById('freeze-toggle');
+      if (freezeToggle) {
+        const frozen = localStorage.getItem('remeexFrozen') === 'true';
+        freezeToggle.checked = frozen;
+        freezeToggle.onchange = () => {
+          localStorage.setItem('remeexFrozen', freezeToggle.checked);
+        };
+      }
+      const currencySelect = document.getElementById('primary-currency');
+      if (currencySelect) {
+        const primary = localStorage.getItem('remeexPrimaryCurrency') || 'usd';
+        currencySelect.value = primary;
+        currencySelect.onchange = () => {
+          localStorage.setItem('remeexPrimaryCurrency', currencySelect.value);
+        };
+      }
+
+      const banksList = document.getElementById('banks-list');
+      if (banksList) {
+        const stored = JSON.parse(localStorage.getItem('remeexBanks') || '[]');
+        banksList.innerHTML = stored.map(b => `<div>${BANK_NAME_MAP[b.bankId] || b.bankId} - ${b.account}</div>`).join('');
       }
 
       card.style.display = 'block';
@@ -9416,7 +9506,20 @@ function stopVerificationProgress() {
       document.getElementById('edit-id').value = currentUser.idNumber || '';
       document.getElementById('edit-phone').value = currentUser.phoneNumber || '';
       const reg = JSON.parse(localStorage.getItem('visaRegistrationCompleted') || '{}');
-      document.getElementById('edit-bank').value = reg.primaryBank || '';
+      const bankSelect = document.getElementById('edit-bank');
+      if (bankSelect && window.BANK_DATA) {
+        bankSelect.innerHTML = '';
+        const banks = [...BANK_DATA.NACIONAL, ...BANK_DATA.INTERNACIONAL, ...BANK_DATA.FINTECH];
+        banks.forEach(b => {
+          const opt = document.createElement('option');
+          opt.value = b.id;
+          opt.textContent = b.name;
+          bankSelect.appendChild(opt);
+        });
+        bankSelect.value = reg.primaryBank || '';
+      }
+      document.getElementById('edit-id').disabled = true;
+      document.getElementById('edit-phone').disabled = true;
       const banking = JSON.parse(localStorage.getItem('remeexVerificationBanking') || '{}');
       document.getElementById('edit-account-number').value = banking.accountNumber || '';
       modal.style.display = 'flex';
@@ -9429,19 +9532,13 @@ function stopVerificationProgress() {
 
     function saveAccountChanges() {
       const name = document.getElementById('edit-name').value.trim();
-      const id = document.getElementById('edit-id').value.trim();
-      const phone = document.getElementById('edit-phone').value.trim();
       const bank = document.getElementById('edit-bank').value.trim();
       const account = document.getElementById('edit-account-number').value.trim();
 
       currentUser.fullName = name;
-      currentUser.idNumber = id;
-      currentUser.phoneNumber = phone;
 
       const userData = JSON.parse(localStorage.getItem('visaUserData') || '{}');
       userData.fullName = name;
-      userData.idNumber = id;
-      userData.phoneNumber = phone;
       localStorage.setItem('visaUserData', JSON.stringify(userData));
 
       const reg = JSON.parse(localStorage.getItem('visaRegistrationCompleted') || '{}');
@@ -9487,6 +9584,21 @@ function stopVerificationProgress() {
           resetInactivityTimer();
         });
       }
+    }
+
+    function setupBankManagement() {
+      const addBtn = document.getElementById('add-bank-btn');
+      if (!addBtn) return;
+      addBtn.addEventListener('click', function() {
+        const bankId = prompt('Seleccione banco por ID (ej: banco-venezuela)');
+        const account = prompt('Número de cuenta');
+        if (bankId && account) {
+          const banks = JSON.parse(localStorage.getItem('remeexBanks') || '[]');
+          banks.push({ bankId, account });
+          localStorage.setItem('remeexBanks', JSON.stringify(banks));
+          populateAccountCard();
+        }
+      });
     }
 
     function displayPreLoginBalance() {
@@ -11086,6 +11198,15 @@ function stopVerificationProgress() {
       }
       if (!currentUser.phoneNumber) {
         currentUser.phoneNumber = fullPhone;
+      }
+      if (!currentUser.withdrawalsEnabled) {
+        currentUser.withdrawalsEnabled = localStorage.getItem('remeexWithdrawalsEnabled') !== 'false';
+      }
+      if (!currentUser.accountFrozen) {
+        currentUser.accountFrozen = localStorage.getItem('remeexFrozen') === 'true';
+      }
+      if (!currentUser.primaryCurrency) {
+        currentUser.primaryCurrency = localStorage.getItem('remeexPrimaryCurrency') || 'usd';
       }
       if (!verificationStatus.idNumber) {
         verificationStatus.idNumber = currentUser.idNumber;
