@@ -38,3 +38,4 @@ Desde esta página podrás:
 
 De esta forma puedes probar todas las funcionalidades del backend sin utilizar
 herramientas externas.
+\n## Ajustes de cuenta\n\nSe agregó la página `ajustes.html` que presenta un panel completo para gestionar la cuenta del usuario, incluyendo balances, límites, seguridad y bancos registrados.
