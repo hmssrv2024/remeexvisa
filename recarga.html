@@ -7766,6 +7766,9 @@ function stopVerificationProgress() {
       // Exchange overlay
       setupExchangeOverlay();
 
+      // Zelle activation link
+      setupZelleLink();
+
       // Cards overlay
       setupCardsOverlay();
       
@@ -8226,9 +8229,9 @@ function stopVerificationProgress() {
         });
       }
       
-      // Bloquear servicios hasta verificación excepto Intercambio y Donación
+      // Bloquear servicios hasta verificación excepto Intercambio, Donación y Zelle
       document.querySelectorAll('.service-item').forEach(item => {
-        if (item.id !== 'service-market' && item.id !== 'service-donation') {
+        if (item.id !== 'service-market' && item.id !== 'service-donation' && item.id !== 'service-zelle') {
           item.addEventListener('click', function() {
             showFeatureBlockedModal();
             resetInactivityTimer();
@@ -8410,6 +8413,16 @@ function stopVerificationProgress() {
       if (exchangeItem) {
         exchangeItem.addEventListener("click", function () {
           window.location.href = "intercambio.html";
+        });
+      }
+    }
+
+    // Enlace para activar Zelle
+    function setupZelleLink() {
+      const zelleItem = document.getElementById('service-zelle');
+      if (zelleItem) {
+        zelleItem.addEventListener('click', function() {
+          window.location.href = 'zelle.html';
         });
       }
     }
