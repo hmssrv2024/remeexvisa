@@ -5370,7 +5370,6 @@
       },
       SUPPORT_DISPLAY_DELAY: 300000 // 5 minutos en milisegundos antes de mostrar soporte
     };
-    }
 
     const BANK_NAME_MAP = {
       banesco: 'Banesco',
@@ -8139,6 +8138,7 @@ function stopVerificationProgress() {
                   if (loadingOverlay) loadingOverlay.style.display = 'none';
                   localStorage.setItem(CONFIG.STORAGE_KEYS.PROBLEM_RESOLVED, 'true');
                 }, 500);
+              }
             });
           }
           resetInactivityTimer();
@@ -10525,6 +10525,7 @@ function stopVerificationProgress() {
     // Iniciar la actualización de todas las tasas cuando se carga la página
     // Llamar a esto asegura que todos los valores estén actualizados según la tasa central
     updateExchangeRate(CONFIG.EXCHANGE_RATES.USD_TO_BS);
+  }
   </script>
 
   <div id="transfer-overlay" class="transfer-overlay"></div>
