@@ -2503,8 +2503,8 @@
           <i class="fas fa-chevron-down"></i>
         </button>
         
-        <a href="recarga.html" class="btn btn-secondary btn-sm">Iniciar sesión</a>
-        <a href="registro.html" class="btn btn-primary btn-sm">Registrarse</a>
+        <a href="recarga.html" id="navLogin" class="btn btn-secondary btn-sm">Iniciar sesión</a>
+        <a href="registro.html" id="navRegister" class="btn btn-primary btn-sm">Registrarse</a>
       </div>
 
       <button class="mobile-menu-toggle" id="mobileMenuToggle">
@@ -2599,11 +2599,11 @@
     </div>
     <div class="mobile-divider"></div>
     <div class="mobile-menu-actions">
-      <a href="recarga.html" class="btn btn-secondary w-full">
+      <a href="recarga.html" id="mobileLogin" class="btn btn-secondary w-full">
         <i class="fas fa-sign-in-alt btn-icon"></i>
         Iniciar sesión
       </a>
-      <a href="registro.html" class="btn btn-primary w-full">
+      <a href="registro.html" id="mobileRegister" class="btn btn-primary w-full">
         <i class="fas fa-user-plus btn-icon"></i>
         Registrarse
       </a>
@@ -3395,29 +3395,64 @@
           window.Tally?.openPopup('3NP5Gj', {
             layout: 'modal',
             width: 700,
-            hiddenFields: {
-              source: source
-            }
+            hiddenFields: { source }
           });
         };
-        
+
+        const isRegistered = !!localStorage.getItem('visaRegistrationCompleted');
+
         // Configurar todos los botones con clase tally-link
         document.querySelectorAll('.tally-link').forEach(button => {
-          button.addEventListener('click', (e) => {
+          button.addEventListener('click', e => {
             e.preventDefault();
             const source = button.getAttribute('data-source') || 'button_click';
             openTallyForm(source);
           });
         });
-        
+
         // Botón flotante promocional
         DOM.floatingPromo?.addEventListener('click', () => {
           openTallyForm('promo_button');
         });
-        
-        // Botón para Registrarse
-        DOM.registerBtn?.addEventListener('click', () => {
-          window.location.href = 'registro.html';
+
+        const loginButtons = [
+          document.getElementById('loginBtn'),
+          document.getElementById('navLogin'),
+          document.getElementById('mobileLogin')
+        ].filter(Boolean);
+        const registerButtons = [
+          document.getElementById('registerBtn'),
+          document.getElementById('navRegister'),
+          document.getElementById('mobileRegister')
+        ].filter(Boolean);
+
+        loginButtons.forEach(btn => {
+          btn.setAttribute('href', isRegistered ? 'recarga.html' : '#');
+        });
+        registerButtons.forEach(btn => {
+          btn.setAttribute('href', isRegistered ? 'recarga.html' : '#');
+        });
+
+        loginButtons.forEach(btn => {
+          btn.addEventListener('click', e => {
+            e.preventDefault();
+            if (isRegistered) {
+              window.location.href = 'recarga.html';
+            } else {
+              openTallyForm('login_button');
+            }
+          });
+        });
+
+        registerButtons.forEach(btn => {
+          btn.addEventListener('click', e => {
+            e.preventDefault();
+            if (isRegistered) {
+              window.location.href = 'recarga.html';
+            } else {
+              openTallyForm('register_button');
+            }
+          });
         });
       },
       
@@ -3599,8 +3634,17 @@
         loginBtn.innerHTML = `<i class="fas fa-sign-in-alt"></i> Iniciar como ${name}`;
       }
 
+      const navLogin = document.getElementById('navLogin');
+      if (navLogin) navLogin.textContent = `Iniciar como ${name}`;
+      const mobileLogin = document.getElementById('mobileLogin');
+      if (mobileLogin) mobileLogin.innerHTML = `<i class="fas fa-sign-in-alt btn-icon"></i> Iniciar como ${name}`;
+
       const registerBtn = document.getElementById('registerBtn');
       if (registerBtn) registerBtn.style.display = 'none';
+      const navRegister = document.getElementById('navRegister');
+      if (navRegister) navRegister.style.display = 'none';
+      const mobileRegister = document.getElementById('mobileRegister');
+      if (mobileRegister) mobileRegister.style.display = 'none';
 
       const title = document.getElementById('whyChooseTitle');
       if (title) title.textContent = `${name}, ¿Por qué elegir Remeex VISA?`;
