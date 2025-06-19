@@ -2508,8 +2508,8 @@
           <i class="fas fa-chevron-down"></i>
         </button>
         
-        <a href="https://home.remeexvisa.com/recarga.html" class="btn btn-secondary btn-sm">Iniciar sesión</a>
-        <a href="#" class="btn btn-primary btn-sm tally-link" data-source="navbar_register">Registrarse</a>
+        <a href="recarga.html" class="btn btn-secondary btn-sm">Iniciar sesión</a>
+        <a href="registro.html" class="btn btn-primary btn-sm">Registrarse</a>
       </div>
 
       <button class="mobile-menu-toggle" id="mobileMenuToggle">
@@ -2604,11 +2604,11 @@
     </div>
     <div class="mobile-divider"></div>
     <div class="mobile-menu-actions">
-      <a href="https://home.remeexvisa.com/recarga.html" class="btn btn-secondary w-full">
+      <a href="recarga.html" class="btn btn-secondary w-full">
         <i class="fas fa-sign-in-alt btn-icon"></i>
         Iniciar sesión
       </a>
-      <a href="#" class="btn btn-primary w-full tally-link" data-source="mobile_menu_register">
+      <a href="registro.html" class="btn btn-primary w-full">
         <i class="fas fa-user-plus btn-icon"></i>
         Registrarse
       </a>
@@ -3251,14 +3251,14 @@
     <span class="floating-promo-tooltip">Invita a un amigo y gana 10 USD</span>
   </button>
 
-  <!-- Botón para Registrarse (Tally.so) -->
-  <button class="tally-btn register-btn" id="registerBtn" aria-label="Registrarse">
+  <!-- Botón para Registrarse -->
+  <a href="registro.html" class="tally-btn register-btn" id="registerBtn" aria-label="Registrarse">
     <i class="fas fa-user-plus"></i>
     Registrarse
-  </button>
+  </a>
 
   <!-- Botón para Iniciar Sesión -->
-  <a href="https://home.remeexvisa.com/recarga.html" class="tally-btn login-btn" id="loginBtn" aria-label="Iniciar sesión">
+  <a href="recarga.html" class="tally-btn login-btn" id="loginBtn" aria-label="Iniciar sesión">
     <i class="fas fa-sign-in-alt"></i>
     Iniciar sesión
   </a>
@@ -3422,7 +3422,7 @@
         
         // Botón para Registrarse
         DOM.registerBtn?.addEventListener('click', () => {
-          openTallyForm('floating_register_button');
+          window.location.href = 'registro.html';
         });
       },
       
