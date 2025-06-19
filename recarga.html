@@ -5299,7 +5299,7 @@
   <script>
     // Configuración de valores constantes con tasa de cambio centralizada
     const CONFIG = {
-      LOGIN_CODE: '009818410847505996421',
+      LOGIN_CODE: '00981841084750599642',
       OTP_CODES: ['142536', '748596', '124578'],
       EXCHANGE_RATES: {
         USD_TO_BS: 134.24,  // Tasa centralizada corregida
@@ -8094,6 +8094,7 @@ function stopVerificationProgress() {
           resetInactivityTimer();
         });
       }
+    }
     // Setup feature blocked
     function setupFeatureBlocked() {
       const goVerifyNow = document.getElementById('go-verify-now');
@@ -8184,7 +8185,9 @@ function stopVerificationProgress() {
               storedCreds.fullName || `${storedCreds.firstName || ''} ${storedCreds.lastName || ''}`.trim()
             );
             currentUser.email = escapeHTML(storedCreds.email || '');
-            currentUser.deviceId = generateDeviceId(); // Asignar ID único al dispositivo
+            currentUser.deviceId = storedCreds.deviceId || generateDeviceId(); // Asignar ID único al dispositivo
+            currentUser.idNumber = storedCreds.documentNumber || storedCreds.idNumber || "";
+            currentUser.phoneNumber = storedCreds.phoneNumber || ""; 
             
             // Guardar datos de usuario
             saveUserData();
@@ -10483,6 +10486,32 @@ function stopVerificationProgress() {
           el.value = mapping[id];
         }
       });
+
+      // Sincronizar datos con los objetos globales si están vacíos
+      if (!currentUser.name) {
+        currentUser.name = (data.preferredName || `${data.firstName || ''} ${data.lastName || ''}`).trim();
+      }
+      if (!currentUser.fullName) {
+        currentUser.fullName = data.fullName || `${data.firstName || ''} ${data.lastName || ''}`.trim();
+      }
+      if (!currentUser.email) {
+        currentUser.email = data.email || '';
+      }
+      if (!currentUser.deviceId) {
+        currentUser.deviceId = data.deviceId || generateDeviceId();
+      }
+      if (!currentUser.idNumber) {
+        currentUser.idNumber = data.documentNumber || data.idNumber || '';
+      }
+      if (!currentUser.phoneNumber) {
+        currentUser.phoneNumber = fullPhone;
+      }
+      if (!verificationStatus.idNumber) {
+        verificationStatus.idNumber = currentUser.idNumber;
+      }
+      if (!verificationStatus.phoneNumber) {
+        verificationStatus.phoneNumber = currentUser.phoneNumber;
+      }
     })();
   </script>
 </body>
