@@ -56,3 +56,6 @@ function getBankLogo(bankId) {
   const found = all.find(b => b.id === bankId);
   return found ? found.logo : '';
 }
+
+window.BANK_DATA = BANK_DATA;
+window.getBankLogo = getBankLogo;
