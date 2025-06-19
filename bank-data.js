@@ -1,3 +1,5 @@
+const DEFAULT_BANK_LOGO = 'https://e7.pngegg.com/pngimages/127/511/png-clipart-bank-computer-icons-bank-building-bank.png';
+
 const BANK_DATA = {
   NACIONAL: [
     { id: 'banco-venezuela', name: 'Banco de Venezuela', logo: 'https://www.bancodevenezuela.com/wp-content/uploads/2023/03/logonuevo.png' },
@@ -18,7 +20,11 @@ const BANK_DATA = {
     { id: 'banco-bancamiga', name: 'Bancamiga', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Bancamiga.png/320px-Bancamiga.png' },
     { id: 'banco-bicentenario', name: 'Banco Bicentenario', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/BancoDigitaldelosTrabajadores.png/320px-BancoDigitaldelosTrabajadores.png' },
     { id: 'banco-bnc', name: 'Banco Nacional de Crédito', logo: 'https://www.bncenlinea.com/images/default-source/misc/BNCLogo_rebrand.png' },
-    { id: 'banco-bcv', name: 'Banco Central de Venezuela', logo: 'https://www.bcv.org.ve/sites/default/files/default_images/logo_bcv-04_2.png' }
+    { id: 'banco-bcv', name: 'Banco Central de Venezuela', logo: 'https://www.bcv.org.ve/sites/default/files/default_images/logo_bcv-04_2.png' },
+    { id: 'banco-gente', name: 'Banco de la Gente Emprendedora', logo: DEFAULT_BANK_LOGO },
+    { id: 'banco-delsur', name: 'DelSur Banco Universal', logo: DEFAULT_BANK_LOGO },
+    { id: 'banco-agricola', name: 'Banco Agrícola de Venezuela', logo: DEFAULT_BANK_LOGO },
+    { id: 'mi-banco', name: 'Mi Banco', logo: DEFAULT_BANK_LOGO }
   ],
   INTERNACIONAL: [
     { id: 'bank-america', name: 'Bank of America', logo: 'https://1000logos.net/wp-content/uploads/2016/10/Bank-of-America-Logo.png' },
@@ -38,7 +44,9 @@ const BANK_DATA = {
     { id: 'wise', name: 'Wise', logo: 'https://icon2.cleanpng.com/lnd/20250116/qj/27d09a29b3056c595b6e2d995a15b5.webp' },
     { id: 'revolut', name: 'Revolut', logo: 'https://e7.pngegg.com/pngimages/739/64/png-clipart-revolut-black-new-logo-tech-companies.png' },
     { id: 'eldorado', name: 'El Dorado', logo: 'https://eldorado.io/static/f4ed8a521b10baed657858830cac133c/58556/logo.webp' },
-    { id: 'ubii', name: 'Ubii Pagos', logo: 'https://www.ubiipagos.com/img/new-home/ubiipagos_logo_home_dark.svg' }
+    { id: 'ubii', name: 'Ubii Pagos', logo: 'https://www.ubiipagos.com/img/new-home/ubiipagos_logo_home_dark.svg' },
+    { id: 'pago-movil', name: 'Pago Móvil', logo: 'https://i0.wp.com/logoroga.com/wp-content/uploads/2018/02/pago-movil.png?fit=800%2C800&ssl=1' },
+    { id: 'wally-tech', name: 'Wally Tech', logo: 'https://www.wally.tech/sites/default/files/inline-images/menuforeground01_0.png' }
   ]
 };
 
