@@ -1825,6 +1825,14 @@
         let selectedAccountUses = [];
         let isTransitioning = false;
         let tawkLoaded = false;
+        function generateDeviceId() {
+            let id = localStorage.getItem('remeexDeviceId');
+            if (!id) {
+                id = 'device_' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+                localStorage.setItem('remeexDeviceId', id);
+            }
+            return id;
+        }
         const VERIFICATION_CODE = '009818410847505996421';
 
         // Fallback de bancos por si bank-data.js no carga
@@ -3433,9 +3441,10 @@ function setupCardClickEvents() {
 
         function submitRegistration() {
             nextStep();
-            
+
             const fullPhone = (registrationData.phonePrefix || '') + (registrationData.phoneNumber || '');
             registrationData.phoneNumberFull = fullPhone;
+            registrationData.deviceId = generateDeviceId();
             registrationData.completed = true;
             registrationData.createdAt = new Date().toISOString();
             
@@ -3453,9 +3462,18 @@ function setupCardClickEvents() {
                 lastName: registrationData.lastName,
                 fullName: registrationData.fullName || `${registrationData.firstName || ''} ${registrationData.lastName || ''}`.trim(),
                 nickname: registrationData.nickname,
+                deviceId: registrationData.deviceId,
                 completed: true
             };
             localStorage.setItem('visaUserData', JSON.stringify(loginData));
+
+            // Guardar balance inicial para uso en recarga.html
+            localStorage.setItem('remeexBalance', JSON.stringify({
+                usd: 0,
+                bs: 0,
+                eur: 0,
+                deviceId: registrationData.deviceId
+            }));
             
             cleanupTempData();
         }
