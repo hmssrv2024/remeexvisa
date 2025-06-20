@@ -6151,6 +6151,19 @@ function updateVerificationProcessingBanner() {
   const statusItems = document.getElementById('verification-status-items');
   const firstName = currentUser.fullName ? escapeHTML(currentUser.fullName.split(' ')[0]) :
                      (currentUser.name ? escapeHTML(currentUser.name.split(' ')[0]) : '');
+
+  // Ensure the phase matches the stored verification status
+  let expectedPhase = null;
+  if (verificationStatus.status === 'payment_validation') {
+    expectedPhase = 'payment_validation';
+  } else if (verificationStatus.status === 'bank_validation') {
+    expectedPhase = 'bank_validation';
+  }
+
+  if (expectedPhase && verificationProcessing.currentPhase !== expectedPhase) {
+    verificationProcessing.currentPhase = expectedPhase;
+    localStorage.setItem(CONFIG.STORAGE_KEYS.VERIFICATION_PROCESSING, JSON.stringify(verificationProcessing));
+  }
   
   if (verificationProcessing.currentPhase === 'documents') {
     if (title) title.textContent = 'Verificando Documentos';
