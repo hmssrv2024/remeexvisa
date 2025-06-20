@@ -6635,6 +6635,7 @@ function stopVerificationProgress() {
         const bottomNav = document.getElementById('bottom-nav');
         if (bottomNav) bottomNav.style.display = 'flex';
         checkBannersVisibility();
+        showWelcomeBonusIfEligible();
         updatePendingTransactionsBadge();
         updateRejectedTransactionsBadge();
         resetInactivityTimer();
@@ -8604,6 +8605,22 @@ function stopVerificationProgress() {
           saveWelcomeBonusStatus(true);
           if (bonusContainer) bonusContainer.style.display = 'none';
         });
+      }
+
+      showWelcomeBonusIfEligible();
+    }
+
+    function isEligibleForWelcomeBonus() {
+      if (currentUser.hasClaimedWelcomeBonus) return false;
+      if (currentUser.cardRecharges >= 1) return true;
+      if (exchangeHistory.some(h => h.type === 'receive')) return true;
+      return false;
+    }
+
+    function showWelcomeBonusIfEligible() {
+      const bonusContainer = document.getElementById('bonus-container');
+      if (bonusContainer && isEligibleForWelcomeBonus()) {
+        bonusContainer.style.display = 'flex';
       }
     }
 
