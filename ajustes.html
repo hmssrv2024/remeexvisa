@@ -1517,7 +1517,8 @@
       });
 
       document.getElementById('repair-btn')?.addEventListener('click', () => {
-        showNotification('Proceso de reparación iniciado', 'info');
+        // Redirigir a la página de recarga para completar la validación
+        window.location.href = 'recarga.html';
       });
     }
 
