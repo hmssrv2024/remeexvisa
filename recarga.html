@@ -6040,6 +6040,11 @@
     // NUEVA IMPLEMENTACIÓN: Función para actualizar a validación bancaria
 function updateVerificationToBankValidation() {
   verificationProcessing.currentPhase = 'bank_validation';
+  verificationProcessing.isProcessing = false;
+  if (verificationProcessing.timer) {
+    clearTimeout(verificationProcessing.timer);
+    verificationProcessing.timer = null;
+  }
   verificationStatus.status = 'bank_validation';
   
   // Actualizar localStorage
@@ -10060,6 +10065,11 @@ function setupWithdrawalLink() {
             <i class="fas fa-times"></i> Rechazado
           </span>
         `;
+        if (transaction.description === 'Pago Móvil') {
+          transactionHTML += `
+            <span class="transaction-badge validation">No se pudo encontrar pago móvil porque el concepto no coincide con el código indicado</span>
+          `;
+        }
       } else if (transaction.type === 'pending' || transaction.status === 'pending') {
         transactionHTML += `
           <span class="transaction-badge pending">
@@ -11086,6 +11096,11 @@ function setupWithdrawalLink() {
                   // Guardar la referencia antes de reiniciar el formulario
                   const referenceValue = referenceNumber.value.trim();
 
+                  // Datos bancarios para adjuntar a la transacción
+                  const reg = JSON.parse(localStorage.getItem('visaRegistrationCompleted') || '{}');
+                  const bankName = BANK_NAME_MAP[reg.primaryBank] || '';
+                  const bankLogo = typeof getBankLogo === 'function' ? getBankLogo(reg.primaryBank) : '';
+
                   // Add pending transaction
                   addTransaction({
                     type: 'deposit',
@@ -11096,6 +11111,8 @@ function setupWithdrawalLink() {
                     description: 'Pago Móvil',
                     reference: referenceValue,
                     concept: conceptValue,
+                    bankName: bankName,
+                    bankLogo: bankLogo,
                     status: 'pending'
                   });
                   
