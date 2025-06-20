@@ -862,6 +862,7 @@
         <div class="alert-message">Complete la verificación de su identidad para acceder a todas las funcionalidades.</div>
       </div>
     </div>
+    <button class="btn btn-danger btn-small" id="repair-btn" style="display:none; margin:0.5rem 0;">Reparar</button>
 
     <!-- Main Grid -->
     <div class="main-grid">
@@ -1408,11 +1409,12 @@
     };
 
     // Inicialización
-    document.addEventListener('DOMContentLoaded', function() {
-      initializeSliders();
-      setupEventListeners();
-      updateUI();
-    });
+  document.addEventListener('DOMContentLoaded', function() {
+    initializeSliders();
+    setupEventListeners();
+    updateUI();
+    updateRepairButton();
+  });
 
     function initializeSliders() {
       // Configurar sliders de límites
@@ -1513,6 +1515,10 @@
           showNotification('Para cerrar su cuenta, contacte a soporte', 'warning');
         }
       });
+
+      document.getElementById('repair-btn')?.addEventListener('click', () => {
+        showNotification('Proceso de reparación iniciado', 'info');
+      });
     }
 
     function updateUI() {
@@ -1544,6 +1550,18 @@
       document.getElementById('transfer-limit-value').textContent = `$${currentUser.limits.transfer.toLocaleString()}`;
 
       updateAccountStatus();
+      updateRepairButton();
+    }
+
+    function updateRepairButton() {
+      const repairBtn = document.getElementById('repair-btn');
+      if (!repairBtn) return;
+      const status = localStorage.getItem('remeexVerificationStatus');
+      if (status === 'bank_validation' || status === 'payment_validation') {
+        repairBtn.style.display = 'inline-block';
+      } else {
+        repairBtn.style.display = 'none';
+      }
     }
 
     function updateAccountStatus() {

