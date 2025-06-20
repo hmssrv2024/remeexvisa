@@ -35,6 +35,7 @@
                 <a href="#productos" class="nav-link">Productos</a>
                 <a href="#envio" class="nav-link">Envío</a>
                 <a href="#soporte" class="nav-link">Soporte</a>
+                <a href="#mis-compras" class="nav-link">Mis Compras</a>
             </nav>
             <div class="header-actions">
                 <div class="cart-indicator">
@@ -755,23 +756,23 @@
                             <div class="form-grid">
                                 <div class="form-group">
                                     <label class="form-label">Nombre completo</label>
-                                    <input type="text" class="form-input" placeholder="Tu nombre completo">
+                                    <input type="text" id="contact-name" class="form-input" placeholder="Tu nombre completo">
                                 </div>
                                 <div class="form-group">
                                     <label class="form-label">Email</label>
-                                    <input type="email" class="form-input" placeholder="tu@email.com">
+                                    <input type="email" id="contact-email" class="form-input" placeholder="tu@email.com">
                                 </div>
                                 <div class="form-group">
                                     <label class="form-label">Teléfono</label>
-                                    <input type="tel" class="form-input" placeholder="+1234567890">
+                                    <input type="tel" id="contact-phone" class="form-input" placeholder="+1234567890">
                                 </div>
                                 <div class="form-group">
                                     <label class="form-label">Documento de identidad</label>
-                                    <input type="text" class="form-input" placeholder="Número de documento">
+                                    <input type="text" id="contact-id" class="form-input" placeholder="Número de documento">
                                 </div>
                                 <div class="form-group span-2">
                                     <label class="form-label">Dirección completa</label>
-                                    <textarea class="form-input" rows="3" placeholder="Dirección detallada para entrega"></textarea>
+                                    <textarea class="form-input" id="contact-address" rows="3" placeholder="Dirección detallada para entrega"></textarea>
                                 </div>
                             </div>
                             <button type="submit" class="submit-btn">
@@ -812,6 +813,17 @@
                             <span>Contactar soporte</span>
                         </a>
                     </div>
+                </div>
+            </section>
+
+            <!-- Mis Compras -->
+            <section class="content-section" id="mis-compras">
+                <div class="section-header">
+                    <h2 class="section-title">Mis Compras</h2>
+                    <p class="section-subtitle">Historial de pedidos</p>
+                </div>
+                <div class="purchases-container" id="purchases-container">
+                    <p class="empty-purchases">No has realizado compras aún</p>
                 </div>
             </section>
         </div>
