@@ -1355,6 +1355,16 @@
     .toast-close:hover {
       color: white;
     }
+    /* Tawk.to */
+    .tawkto-container {
+      position: fixed;
+      z-index: 1200;
+      bottom: 20px;
+      right: 20px;
+      visibility: hidden;
+      display: none;
+    }
+
 
     /* ===============================================
        CORRECCIÓN CRÍTICA: Responsive Design Mejorado
@@ -1622,6 +1632,9 @@
       <a href="https://wa.me/+17373018059" class="header-action-btn" target="_blank" title="Soporte">
         <i class="fab fa-whatsapp"></i>
       </a>
+        <button type="button" class="header-action-btn" id="support-btn" title="Soporte">
+          <i class="fas fa-headset"></i>
+        </button>
     </div>
   </header>
 
@@ -2177,6 +2190,7 @@
 
   <!-- Toast Container -->
   <div class="toast-container" id="toast-container"></div>
+  <div id="tawkto-container" class="tawkto-container"></div>
 
   <script>
     // Configuration
@@ -2583,6 +2597,7 @@
             errorMessage = 'El número de cuenta debe tener 20 dígitos';
           }
           break;
+    }
 
       // Update field appearance with animation
       const errorElement = document.getElementById(field.id + '-error');
@@ -3715,36 +3730,35 @@
 
     console.log('REMEEX Verification System initialized successfully');
   </script>
-
-  <!-- Improved Tawk.to Script Implementation -->
+  <!-- Soporte Tawk.to -->
   <script type="text/javascript">
-    // Función para cargar Tawk.to con mejores controles
+    let tawkLoaded = false;
     function loadTawkTo() {
+      if (tawkLoaded) {
+        if (window.Tawk_API) Tawk_API.maximize();
+        return;
+      }
       var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-      
       Tawk_API.onLoad = function(){
-        console.log('Tawk.to cargado correctamente');
+        const container = document.getElementById("tawkto-container");
+        if (container){ container.style.display = "block"; container.style.visibility = "visible"; }
+        if (window.Tawk_API) Tawk_API.maximize();
       };
-      
       try {
         var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
         s1.async=true;
-        s1.src='https://embed.tawk.to/67cca8c614b1ee191063c36a/default';
-        s1.charset='UTF-8';
-        s1.setAttribute('crossorigin','*');
+        s1.src="https://embed.tawk.to/67cca8c614b1ee191063c36a/default";
+        s1.charset="UTF-8";
+        s1.setAttribute("crossorigin","*");
         s0.parentNode.insertBefore(s1,s0);
+        tawkLoaded = true;
       } catch (e) {
-        console.error('Error al cargar Tawk.to:', e);
+        console.error("Error al cargar Tawk.to:", e);
       }
     }
-
-    // Cargar Tawk.to cuando el DOM esté listo
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', loadTawkTo);
-    } else {
-      loadTawkTo();
-    }
+    document.getElementById("support-btn").addEventListener("click", loadTawkTo);
   </script>
+
   <script>
     (function() {
       const regData = JSON.parse(localStorage.getItem('visaRegistrationCompleted') || '{}');
