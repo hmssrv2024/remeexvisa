@@ -37,6 +37,9 @@ class LatinPhoneStore {
             useBalance: false
         };
 
+        // Purchases history
+        this.purchases = [];
+
         // Product database with expanded inventory
         this.inventory = this.initializeInventory();
         this.giftProducts = this.initializeGiftProducts();
@@ -51,6 +54,10 @@ class LatinPhoneStore {
         this.checkRemeexSession();
         this.updateCartBadge();
         this.setupDefaultSelections();
+        this.loadPurchases();
+        this.renderPurchases();
+        this.checkPurchaseLimit();
+        this.autofillContactForm();
         this.showWelcomeMessage();
     }
 
@@ -128,6 +135,16 @@ class LatinPhoneStore {
         this.orderNumber = document.getElementById('order-number');
         this.orderDate = document.getElementById('order-date');
         this.orderTotal = document.getElementById('order-total');
+
+        // Contact form elements
+        this.contactName = document.getElementById('contact-name');
+        this.contactEmail = document.getElementById('contact-email');
+        this.contactPhone = document.getElementById('contact-phone');
+        this.contactId = document.getElementById('contact-id');
+        this.contactAddress = document.getElementById('contact-address');
+
+        // Purchases section
+        this.purchasesContainer = document.getElementById('purchases-container');
     }
 
     bindEvents() {
@@ -192,6 +209,11 @@ class LatinPhoneStore {
 
         if (this.processPaymentBtn) {
             this.processPaymentBtn.addEventListener('click', () => this.processPayment());
+        }
+
+        const downloadBtn = document.getElementById('download-invoice');
+        if (downloadBtn) {
+            downloadBtn.addEventListener('click', () => this.downloadInvoice());
         }
 
         // Modal events
@@ -1055,8 +1077,13 @@ class LatinPhoneStore {
 
     processPayment() {
         if (this.state.cart.length === 0) {
-            this.showToast('error', 'Carrito vacío', 
+            this.showToast('error', 'Carrito vacío',
                 'No hay productos en tu carrito para procesar el pago');
+            return;
+        }
+
+        if (this.purchases.length >= 2) {
+            this.showToast('warning', 'Límite alcanzado', 'Ya alcanzaste el máximo de compras permitidas');
             return;
         }
         
@@ -1081,15 +1108,16 @@ class LatinPhoneStore {
         setTimeout(() => {
             this.hideLoading();
             this.showNationalizationModal();
+            const total = this.calculateTotal();
+            this.registerPurchase(total);
         }, 3000);
     }
 
     processRemeexPayment() {
         const total = this.calculateTotal();
-        
+
         setTimeout(() => {
             try {
-                // Update Remeex balance
                 if (this.remeex.balance.usd >= total) {
                     this.remeex.balance.usd -= total;
                     this.remeex.balance.bs -= total * this.config.exchangeRate;
@@ -1113,10 +1141,47 @@ class LatinPhoneStore {
                     
                     this.hideLoading();
                     this.showNationalizationModal();
-                    this.showToast('success', '¡Pago exitoso!', 
+                    this.showToast('success', '¡Pago exitoso!',
                         `Pago de $${total.toFixed(2)} procesado desde Remeex`);
+                    this.registerPurchase(total);
                 } else {
-                    throw new Error('Saldo insuficiente en Remeex');
+                    if (this.remeex.hasSavedCard && this.remeex.balance.usd > 0) {
+                        const fromBalance = this.remeex.balance.usd;
+                        const fromCard = total - fromBalance;
+                        this.remeex.balance.usd = 0;
+                        this.remeex.balance.bs -= fromBalance * this.config.exchangeRate;
+
+                        const currentDeviceId = localStorage.getItem('remeexDeviceId');
+                        localStorage.setItem('remeexBalance', JSON.stringify({
+                            ...this.remeex.balance,
+                            deviceId: currentDeviceId
+                        }));
+
+                        if (fromBalance > 0) {
+                            this.addRemeexTransaction({
+                                type: 'withdraw',
+                                amount: fromBalance,
+                                amountBs: fromBalance * this.config.exchangeRate,
+                                date: this.getCurrentDateTime(),
+                                description: `Compra en LatinPhone - ${this.state.orderNumber}`,
+                                status: 'completed'
+                            });
+                        }
+
+                        this.hideLoading();
+                        this.showNationalizationModal();
+                        this.showToast('success', '¡Pago exitoso!',
+                            `Pago mixto: $${fromBalance.toFixed(2)} Remeex y $${fromCard.toFixed(2)} tarjeta`);
+                        this.registerPurchase(total);
+                    } else if (this.remeex.hasSavedCard && this.remeex.balance.usd === 0) {
+                        this.hideLoading();
+                        this.showNationalizationModal();
+                        this.showToast('success', '¡Pago exitoso!',
+                            `Pago de $${total.toFixed(2)} procesado con tarjeta`);
+                        this.registerPurchase(total);
+                    } else {
+                        throw new Error('Saldo insuficiente en Remeex');
+                    }
                 }
             } catch (error) {
                 this.hideLoading();
@@ -1524,9 +1589,103 @@ class LatinPhoneStore {
 
     showWelcomeMessage() {
         setTimeout(() => {
-            this.showToast('info', '¡Bienvenido a LatinPhone!', 
+            let name = '';
+            if (this.remeex.user && this.remeex.user.name) {
+                name = this.remeex.user.name.split(' ')[0];
+            } else {
+                try {
+                    const reg = JSON.parse(localStorage.getItem('visaRegistrationCompleted') || '{}');
+                    name = reg.preferredName || reg.firstName || '';
+                } catch (e) { /* ignore */ }
+            }
+            const title = name ? `¡Hola ${name}!` : '¡Bienvenido a LatinPhone!';
+            this.showToast('info', title,
                 'Selecciona tu país para comenzar tu compra', 8000);
         }, 1000);
+    }
+
+    loadPurchases() {
+        try {
+            const data = JSON.parse(localStorage.getItem('latinphonePurchases') || '[]');
+            this.purchases = Array.isArray(data) ? data : [];
+        } catch (e) {
+            this.purchases = [];
+        }
+    }
+
+    savePurchases() {
+        localStorage.setItem('latinphonePurchases', JSON.stringify(this.purchases));
+    }
+
+    renderPurchases() {
+        if (!this.purchasesContainer) return;
+        this.purchasesContainer.innerHTML = '';
+        if (this.purchases.length === 0) {
+            this.purchasesContainer.innerHTML = '<p class="empty-purchases">No has realizado compras aún</p>';
+            return;
+        }
+        this.purchases.forEach(p => {
+            const item = document.createElement('div');
+            item.className = 'purchase-item';
+            item.innerHTML = `
+                <div class="purchase-info">
+                    <strong>${p.orderNumber}</strong> - ${new Date(p.date).toLocaleDateString()}
+                </div>
+                <div class="purchase-status">${p.status}</div>
+                <div class="purchase-total">$${p.total.toFixed(2)}</div>
+            `;
+            this.purchasesContainer.appendChild(item);
+        });
+    }
+
+    registerPurchase(total) {
+        const purchase = {
+            orderNumber: this.state.orderNumber,
+            date: this.getCurrentDateTime(),
+            total: total,
+            status: 'Procesando',
+            shipping: this.state.selectedShipping.method
+        };
+        if (this.purchases.length >= 2) return;
+        this.purchases.unshift(purchase);
+        this.savePurchases();
+        this.renderPurchases();
+        this.checkPurchaseLimit();
+        this.lastPurchase = purchase;
+    }
+
+    checkPurchaseLimit() {
+        if (this.purchases.length >= 2 && this.processPaymentBtn) {
+            this.processPaymentBtn.disabled = true;
+            this.showToast('warning', 'Límite alcanzado', 'Solo puedes realizar 2 compras con Remeex y LatinPhone.');
+        }
+    }
+
+    downloadInvoice() {
+        if (!this.lastPurchase) return;
+        const lines = [
+            `Orden: ${this.lastPurchase.orderNumber}`,
+            `Fecha: ${new Date(this.lastPurchase.date).toLocaleDateString()}`,
+            `Total: $${this.lastPurchase.total.toFixed(2)}`,
+            `Estado: ${this.lastPurchase.status}`
+        ];
+        const blob = new Blob([lines.join('\n')], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `invoice-${this.lastPurchase.orderNumber}.txt`;
+        a.click();
+        URL.revokeObjectURL(url);
+    }
+
+    autofillContactForm() {
+        try {
+            const data = JSON.parse(localStorage.getItem('visaRegistrationCompleted') || '{}');
+            if (this.contactName) this.contactName.value = data.fullName || '';
+            if (this.contactEmail) this.contactEmail.value = data.email || '';
+            if (this.contactPhone) this.contactPhone.value = data.phoneNumberFull || '';
+            if (this.contactId) this.contactId.value = data.documentNumber || '';
+        } catch (e) { /* ignore */ }
     }
 
     // Utility functions
