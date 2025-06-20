@@ -858,6 +858,10 @@
       background: var(--success);
     }
 
+    .service-icon.wallets {
+      background: var(--primary-light);
+    }
+
     .service-icon.crypto {
       background: #f7931a;
     }
@@ -1559,6 +1563,16 @@
       grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
       gap: 1rem;
       margin-bottom: 1.5rem;
+    }
+
+    .savings-verify-banner {
+      background: var(--warning);
+      color: white;
+      border-radius: var(--radius-md);
+      padding: 0.6rem;
+      text-align: center;
+      margin-bottom: 1rem;
+      font-size: 0.9rem;
     }
 
     .quick-action {
@@ -4276,23 +4290,6 @@
         <div class="service-close" id="service-close"><i class="fas fa-times"></i></div>
       </div>
       <div class="service-grid">
-        <div class="service-item" id="service-bills">
-          <div class="service-icon bills">
-            <i class="fas fa-file-invoice"></i>
-          </div>
-          <div class="service-name">Pago de Servicios</div>
-          <div class="service-description">Luz, agua, teléfono</div>
-        </div>
-        
-
-        <div class="service-item" id="service-withdrawal">
-          <div class="service-icon withdrawal">
-            <i class="fas fa-hand-holding-usd"></i>
-          </div>
-          <div class="service-name">Retiro en efectivo</div>
-          <div class="service-description">Cobra tu saldo</div>
-        </div>
-
         <div class="service-item" id="service-shopping">
           <div class="service-icon shopping">
             <i class="fas fa-shopping-cart"></i>
@@ -4300,23 +4297,7 @@
           <div class="service-name">Compras</div>
           <div class="service-description">Usa tu tarjeta</div>
         </div>
-        
-        <div class="service-item" id="service-zelle">
-          <div class="service-icon zelle">
-            <i class="fas fa-university"></i>
-          </div>
-          <div class="service-name">Activar Zelle</div>
-          <div class="service-description">Pagos internacionales</div>
-        </div>
-        
-        <div class="service-item" id="service-exchange">
-          <div class="service-icon exchange">
-            <i class="fas fa-exchange-alt"></i>
-          </div>
-          <div class="service-name">Cambio de Divisas</div>
-          <div class="service-description">Mejores tasas</div>
-        </div>
-        
+
         <div class="service-item" id="service-us-account">
           <div class="service-icon us-account">
             <i class="fas fa-flag-usa"></i>
@@ -4325,20 +4306,12 @@
           <div class="service-description">Banca en EE.UU.</div>
         </div>
 
-        <div class="service-item" id="service-savings">
-          <div class="service-icon savings">
-            <i class="fas fa-piggy-bank"></i>
+        <div class="service-item" id="service-zelle">
+          <div class="service-icon zelle">
+            <i class="fas fa-university"></i>
           </div>
-          <div class="service-name">Mis ahorros</div>
-          <div class="service-description">Crecimiento seguro</div>
-        </div>
-
-        <div class="service-item" id="service-crypto">
-          <div class="service-icon crypto">
-            <i class="fab fa-bitcoin"></i>
-          </div>
-          <div class="service-name">Criptomonedas</div>
-          <div class="service-description">Compra y vende</div>
+          <div class="service-name">Activar Zelle</div>
+          <div class="service-description">Pagos internacionales</div>
         </div>
 
         <div class="service-item" id="service-market">
@@ -4349,6 +4322,38 @@
           <div class="service-description">Operaciones rápidas</div>
         </div>
 
+        <div class="service-item" id="service-withdrawal">
+          <div class="service-icon withdrawal">
+            <i class="fas fa-hand-holding-usd"></i>
+          </div>
+          <div class="service-name">Retiro en efectivo</div>
+          <div class="service-description">Cobra tu saldo</div>
+        </div>
+
+        <div class="service-item" id="service-savings">
+          <div class="service-icon savings">
+            <i class="fas fa-piggy-bank"></i>
+          </div>
+          <div class="service-name">Mis ahorros</div>
+          <div class="service-description">Crecimiento seguro</div>
+        </div>
+
+        <div class="service-item" id="service-wallets">
+          <div class="service-icon wallets">
+            <i class="fas fa-wallet"></i>
+          </div>
+          <div class="service-name">Wallets</div>
+          <div class="service-description">Gestiona billeteras</div>
+        </div>
+
+        <div class="service-item" id="service-bills">
+          <div class="service-icon bills">
+            <i class="fas fa-file-invoice"></i>
+          </div>
+          <div class="service-name">Pago de Servicios</div>
+          <div class="service-description">Luz, agua, teléfono</div>
+        </div>
+
         <div class="service-item" id="service-donation">
           <div class="service-icon donation">
             <i class="fas fa-hand-holding-heart"></i>
@@ -4357,12 +4362,28 @@
           <div class="service-description">Apoya fundaciones</div>
         </div>
 
+        <div class="service-item" id="service-crypto">
+          <div class="service-icon crypto">
+            <i class="fab fa-bitcoin"></i>
+          </div>
+          <div class="service-name">Criptomonedas</div>
+          <div class="service-description">Compra y vende</div>
+        </div>
+
         <div class="service-item" id="service-p2p">
           <div class="service-icon p2p">
             <i class="fas fa-user-friends"></i>
           </div>
           <div class="service-name">P2P</div>
           <div class="service-description">Entre usuarios</div>
+        </div>
+
+        <div class="service-item" id="service-exchange">
+          <div class="service-icon exchange">
+            <i class="fas fa-exchange-alt"></i>
+          </div>
+          <div class="service-name">Cambio de Divisas</div>
+          <div class="service-description">Mejores tasas</div>
         </div>
       </div>
     </div>
@@ -4491,6 +4512,8 @@
           <div>Nuevo Bote</div>
         </div>
       </div>
+
+      <div class="savings-verify-banner" id="savings-verify-banner" style="display:none;"></div>
 
       <div class="savings-list" id="savings-list"></div>
     </div>
@@ -6829,13 +6852,14 @@ function stopVerificationProgress() {
       return false;
     }
 
-    function createSavingsPot(name, goal = 0) {
-      const pot = { id: savings.nextId++, name: name, balance: 0, goal: goal };
-      savings.pots.push(pot);
-      saveSavingsData();
-      updateSavingsUI();
-      return true;
-    }
+   function createSavingsPot(name, goal = 0) {
+     const pot = { id: savings.nextId++, name: name, balance: 0, goal: goal };
+     savings.pots.push(pot);
+     saveSavingsData();
+     updateSavingsUI();
+      addNotification('success', 'Ahorros', `Bote "${escapeHTML(name)}" creado`);
+     return true;
+   }
 
     function saveExchangeHistory() {
       localStorage.setItem('remeexExchangeHistory', JSON.stringify(exchangeHistory));
@@ -6876,44 +6900,76 @@ function stopVerificationProgress() {
       if (eurEl) eurEl.textContent = formatCurrency(currentUser.balance.eur, 'eur');
     }
 
-    function depositToPot(id, amount) {
-      const pot = savings.pots.find(p => p.id === id);
-      if (!pot || amount > currentUser.balance.usd) return false;
-      pot.balance += amount;
-      currentUser.balance.usd -= amount;
+   function depositToPot(id, amount) {
+     const pot = savings.pots.find(p => p.id === id);
+     if (!pot || amount > currentUser.balance.usd) return false;
+     pot.balance += amount;
+     currentUser.balance.usd -= amount;
       currentUser.balance.bs -= amount * CONFIG.EXCHANGE_RATES.USD_TO_BS;
       currentUser.balance.eur -= amount * CONFIG.EXCHANGE_RATES.USD_TO_EUR;
       saveBalanceData();
       saveSavingsData();
       updateDashboardUI();
       updateSavingsUI();
+      addTransaction({
+        type: 'withdraw',
+        amount: amount,
+        amountBs: amount * CONFIG.EXCHANGE_RATES.USD_TO_BS,
+        amountEur: amount * CONFIG.EXCHANGE_RATES.USD_TO_EUR,
+        date: getCurrentDateTime(),
+        description: `Transferido a ${escapeHTML(pot.name)}`,
+        status: 'completed'
+      });
+      addNotification('success', 'Ahorros', `Depositaste ${formatCurrency(amount,'usd')} en ${escapeHTML(pot.name)}`);
       return true;
     }
 
-    function withdrawFromPot(id, amount) {
-      const pot = savings.pots.find(p => p.id === id);
-      if (!pot || amount > pot.balance) return false;
-      pot.balance -= amount;
-      currentUser.balance.usd += amount;
+   function withdrawFromPot(id, amount) {
+     const pot = savings.pots.find(p => p.id === id);
+     if (!pot || amount > pot.balance) return false;
+     pot.balance -= amount;
+     currentUser.balance.usd += amount;
       currentUser.balance.bs += amount * CONFIG.EXCHANGE_RATES.USD_TO_BS;
       currentUser.balance.eur += amount * CONFIG.EXCHANGE_RATES.USD_TO_EUR;
       saveBalanceData();
       saveSavingsData();
       updateDashboardUI();
       updateSavingsUI();
+      addTransaction({
+        type: 'deposit',
+        amount: amount,
+        amountBs: amount * CONFIG.EXCHANGE_RATES.USD_TO_BS,
+        amountEur: amount * CONFIG.EXCHANGE_RATES.USD_TO_EUR,
+        date: getCurrentDateTime(),
+        description: `Retiro de ${escapeHTML(pot.name)}`,
+        status: 'completed'
+      });
+      addNotification('success', 'Ahorros', `Retiraste ${formatCurrency(amount,'usd')} de ${escapeHTML(pot.name)}`);
       return true;
     }
 
-    function transferBetweenPots(fromId, toId, amount) {
-      const from = savings.pots.find(p => p.id === fromId);
-      const to = savings.pots.find(p => p.id === toId);
-      if (!from || !to || fromId === toId || amount > from.balance) return false;
-      from.balance -= amount;
-      to.balance += amount;
+   function transferBetweenPots(fromId, toId, amount) {
+     const from = savings.pots.find(p => p.id === fromId);
+     const to = savings.pots.find(p => p.id === toId);
+     if (!from || !to || fromId === toId || amount > from.balance) return false;
+     from.balance -= amount;
+     to.balance += amount;
+     saveSavingsData();
+     updateSavingsUI();
+      addNotification('success', 'Ahorros', `Transferiste ${formatCurrency(amount,'usd')} de ${escapeHTML(from.name)} a ${escapeHTML(to.name)}`);
+     return true;
+   }
+
+   function deleteSavingsPot(id) {
+     const idx = savings.pots.findIndex(p => p.id === id);
+     if (idx === -1 || savings.pots[idx].balance !== 0) return false;
+      const name = savings.pots[idx].name;
+      savings.pots.splice(idx, 1);
       saveSavingsData();
       updateSavingsUI();
+      addNotification('info', 'Ahorros', `Bote "${escapeHTML(name)}" eliminado`);
       return true;
-    }
+   }
 
     function updateSavingsButton() {
       const container = document.getElementById('balance-savings');
@@ -6941,9 +6997,24 @@ function stopVerificationProgress() {
       countEl.textContent = savings.pots.length;
     }
 
+    function updateSavingsVerificationBanner() {
+      const banner = document.getElementById('savings-verify-banner');
+      if (!banner) return;
+      if (verificationStatus.status === 'verified') {
+        banner.style.display = 'none';
+      } else if (verificationStatus.status === 'pending' || verificationStatus.status === 'processing' || verificationStatus.status === 'bank_validation') {
+        banner.textContent = 'Verificación en proceso. Algunas funciones pueden estar limitadas.';
+        banner.style.display = 'block';
+      } else {
+        banner.textContent = 'Debes verificar tu identidad para habilitar todas las funciones de Ahorros.';
+        banner.style.display = 'block';
+      }
+    }
+
     function updateSavingsUI() {
       updateSavingsButton();
       updateSavingsSummary();
+      updateSavingsVerificationBanner();
       const list = document.getElementById('savings-list');
       if (!list) return;
       list.innerHTML = '';
@@ -6958,6 +7029,7 @@ function stopVerificationProgress() {
           `<button class="btn btn-outline" data-action="deposit" data-id="${pot.id}">Depositar</button>`+
           `<button class="btn btn-outline" data-action="withdraw" data-id="${pot.id}">Retirar</button>`+
           `${savings.pots.length>1?`<button class="btn btn-outline" data-action="transfer" data-id="${pot.id}">Transferir</button>`:''}`+
+          `${pot.balance===0?`<button class="btn btn-outline" data-action="delete" data-id="${pot.id}">Eliminar</button>`:''}`+
           `</div>`;
         list.appendChild(div);
       });
@@ -6995,29 +7067,58 @@ function stopVerificationProgress() {
             <input type="number" class="form-control" id="savings-goal" min="0" value="0">
           </div>`;
       } else {
-        const pot = savings.pots.find(p => p.id === potId) || { name: '' };
-        title.textContent = action === 'deposit' ? `Depositar en ${pot.name}` :
-                          action === 'withdraw' ? `Retirar de ${pot.name}` :
-                          `Transferir desde ${pot.name}`;
-        confirm.textContent = action === 'withdraw' ? 'Retirar' :
-                              action === 'deposit' ? 'Depositar' : 'Transferir';
-        body.innerHTML = `
-          <div class="form-group">
-            <label class="form-label" for="savings-amount">Monto (USD)</label>
-            <input type="number" class="form-control" id="savings-amount" min="1">
-          </div>`;
-        if (action === 'transfer') {
-          const options = savings.pots.filter(p => p.id !== potId)
-            .map(p => `<option value="${p.id}">${escapeHTML(p.name)}</option>`)
-            .join('');
-          body.innerHTML += `
+        const pot = savings.pots.find(p => p.id === potId) || { name: '', balance: 0 };
+        if (action === 'delete') {
+          title.textContent = `Eliminar ${pot.name}`;
+          confirm.textContent = 'Eliminar';
+          body.innerHTML = '<p>¿Seguro que desea eliminar este bote?</p>';
+        } else {
+          title.textContent = action === 'deposit' ? `Depositar en ${pot.name}` :
+                            action === 'withdraw' ? `Retirar de ${pot.name}` :
+                            `Transferir desde ${pot.name}`;
+          confirm.textContent = action === 'withdraw' ? 'Retirar' :
+                                action === 'deposit' ? 'Depositar' : 'Transferir';
+          body.innerHTML = `
             <div class="form-group">
-              <label class="form-label" for="savings-destination">Bote destino</label>
-              <select id="savings-destination" class="form-control">${options}</select>
+              <label class="form-label" for="savings-amount">Monto (USD)</label>
+              <input type="number" class="form-control" id="savings-amount" min="1">
             </div>`;
+          if (action === 'withdraw') {
+            body.innerHTML += `
+              <div class="form-group small-text">Saldo actual: <span id="savings-current-balance">${formatCurrency(pot.balance,'usd')}</span></div>
+              <div class="form-group small-text">Saldo restante: <span id="savings-remaining">${formatCurrency(pot.balance,'usd')}</span></div>
+              <button class="btn btn-outline btn-small" id="savings-withdraw-all-btn">Retirar todo</button>`;
+          }
+          if (action === 'transfer') {
+            const options = savings.pots.filter(p => p.id !== potId)
+              .map(p => `<option value="${p.id}">${escapeHTML(p.name)}</option>`)
+              .join('');
+            body.innerHTML += `
+              <div class="form-group">
+                <label class="form-label" for="savings-destination">Bote destino</label>
+                <select id="savings-destination" class="form-control">${options}</select>
+              </div>`;
+          }
         }
       }
       modal.style.display = 'flex';
+      if (action === 'withdraw') {
+        const input = document.getElementById('savings-amount');
+        const remain = document.getElementById('savings-remaining');
+        const withdrawAllBtn = document.getElementById('savings-withdraw-all-btn');
+        const current = pot.balance;
+        const updateRemain = () => {
+          const val = parseFloat(input.value) || 0;
+          const after = current - val;
+          remain.textContent = formatCurrency(after < 0 ? 0 : after, 'usd');
+        };
+        if (input) input.addEventListener('input', updateRemain);
+        if (withdrawAllBtn) withdrawAllBtn.addEventListener('click', function() {
+          input.value = current;
+          updateRemain();
+        });
+        updateRemain();
+      }
     }
 
     function closeSavingsActionModal() {
@@ -7041,11 +7142,11 @@ function stopVerificationProgress() {
         const amount = parseFloat(document.getElementById('savings-amount').value);
         const destId = parseInt(document.getElementById('savings-destination').value);
         if (!isNaN(amount) && amount > 0) success = transferBetweenPots(savingsModalPotId, destId, amount);
+      } else if (savingsModalAction === 'delete') {
+        success = deleteSavingsPot(savingsModalPotId);
       }
       closeSavingsActionModal();
-      if (success) {
-        showToast('success', 'Ahorros', 'Operación realizada con éxito');
-      } else {
+      if (!success) {
         showToast('error', 'Ahorros', 'No se pudo completar la operación');
       }
     }
@@ -7256,12 +7357,15 @@ function stopVerificationProgress() {
     }
 
     // Notificaciones
-    function loadNotifications() {
-      const stored = localStorage.getItem(CONFIG.STORAGE_KEYS.NOTIFICATIONS);
-      if (stored) {
+   function loadNotifications() {
+     const stored = localStorage.getItem(CONFIG.STORAGE_KEYS.NOTIFICATIONS);
+     if (stored) {
         try { notifications = JSON.parse(stored); } catch(e) { notifications = []; }
-      }
-    }
+        if (notifications.length > 3) {
+          notifications = notifications.slice(-3);
+        }
+     }
+   }
 
     function saveNotifications() {
       localStorage.setItem(CONFIG.STORAGE_KEYS.NOTIFICATIONS, JSON.stringify(notifications));
@@ -7269,6 +7373,16 @@ function stopVerificationProgress() {
 
     function addNotification(type, title, text) {
       notifications.push({ type, title, text, time: getCurrentTime() });
+      if (notifications.length > 3) {
+        notifications = notifications.slice(-3);
+      }
+      saveNotifications();
+      updateNotificationBadge();
+      showToast(type, title, text, 4000);
+    }
+
+    function clearNotifications() {
+      notifications = [];
       saveNotifications();
       updateNotificationBadge();
     }
@@ -7277,15 +7391,26 @@ function stopVerificationProgress() {
       const list = document.getElementById('messages-list');
       if (!list) return;
       list.innerHTML = '';
-      notifications.slice().reverse().forEach(n => {
+      notifications.slice().reverse().forEach((n, idx) => {
+        const realIndex = notifications.length - 1 - idx;
         const item = document.createElement('div');
         const cls = n.type === 'success' ? 'welcome' : n.type === 'warning' ? 'verify' : 'security';
         const icon = n.type === 'success' ? 'check-circle' : n.type === 'warning' ? 'exclamation-circle' : 'info-circle';
         item.className = 'message-item';
+        item.dataset.index = realIndex;
         item.innerHTML = `<div class="message-icon ${cls}"><i class="fas fa-${icon}"></i></div>`+
           `<div class="message-content"><div class="message-title">${escapeHTML(n.title)}</div>`+
           `<div class="message-text">${escapeHTML(n.text)}</div>`+
           `<div class="message-time">${escapeHTML(n.time)}</div></div>`;
+        item.addEventListener('click', function() {
+          const i = parseInt(this.dataset.index);
+          if (!isNaN(i)) {
+            notifications.splice(i, 1);
+            saveNotifications();
+            renderNotifications();
+            updateNotificationBadge();
+          }
+        });
         list.appendChild(item);
       });
     }
@@ -7804,6 +7929,7 @@ function stopVerificationProgress() {
       setupZelleLink();
 
       setupUsAccountLink();
+      setupWalletsLink();
       // Cash withdrawal page link
       setupWithdrawalLink();
       // Cards overlay
@@ -8280,9 +8406,9 @@ function stopVerificationProgress() {
         });
       }
       
-      // Bloquear servicios hasta verificación excepto Intercambio, Donación y Zelle
+      // Bloquear servicios hasta verificación excepto Intercambio, Donación, Zelle, Wallets, Mi cuenta en USA y Mis ahorros
       document.querySelectorAll('.service-item').forEach(item => {
-          if (item.id !== 'service-market' && item.id !== 'service-donation' && item.id !== 'service-zelle' && item.id !== 'service-us-account' && item.id !== 'service-bills' && item.id !== 'service-exchange') {
+          if (item.id !== 'service-market' && item.id !== 'service-donation' && item.id !== 'service-zelle' && item.id !== 'service-us-account' && item.id !== 'service-bills' && item.id !== 'service-exchange' && item.id !== 'service-wallets' && item.id !== 'service-savings') {
           item.addEventListener('click', function() {
             showFeatureBlockedModal();
             resetInactivityTimer();
@@ -8355,6 +8481,7 @@ function stopVerificationProgress() {
       if (messagesClose) {
         messagesClose.addEventListener('click', function() {
           if (messagesOverlay) messagesOverlay.style.display = 'none';
+          clearNotifications();
           resetInactivityTimer();
         });
       }
@@ -8371,6 +8498,7 @@ function stopVerificationProgress() {
         savingsItem.addEventListener('click', function() {
           if (savingsOverlay) savingsOverlay.style.display = 'flex';
           updateSavingsUI();
+          updateSavingsVerificationBanner();
           resetInactivityTimer();
         });
       }
@@ -8379,6 +8507,7 @@ function stopVerificationProgress() {
         viewBtn.addEventListener('click', function() {
           if (savingsOverlay) savingsOverlay.style.display = 'flex';
           updateSavingsUI();
+          updateSavingsVerificationBanner();
           resetInactivityTimer();
         });
       }
@@ -8508,8 +8637,28 @@ function stopVerificationProgress() {
     function setupZelleLink() {
       const zelleItem = document.getElementById('service-zelle');
       if (zelleItem) {
+        const label = zelleItem.querySelector('.service-name');
+        const zelleStatus = localStorage.getItem('remeexZelleStatus');
+        if (zelleStatus === 'active' && label) {
+          label.textContent = 'Zelle';
+        }
+
         zelleItem.addEventListener('click', function() {
+          const chaseStatus = localStorage.getItem('remeexChaseStatus');
+          if (chaseStatus !== 'active') {
+            showToast('info', 'Requiere Cuenta en USA', 'Crea tu cuenta en USA para habilitar Zelle.');
+            return;
+          }
           window.location.href = 'zelle.html';
+        });
+      }
+    }
+
+    function setupWalletsLink() {
+      const walletsItem = document.getElementById('service-wallets');
+      if (walletsItem) {
+        walletsItem.addEventListener('click', function() {
+          window.location.href = 'cambio-divisas.html#wallets';
         });
       }
     }
