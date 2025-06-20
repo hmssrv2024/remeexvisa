@@ -7803,6 +7803,8 @@ function stopVerificationProgress() {
       setupZelleLink();
 
       setupUsAccountLink();
+      // Cash withdrawal page link
+      setupWithdrawalLink();
       // Cards overlay
       setupCardsOverlay();
       
@@ -8510,14 +8512,23 @@ function stopVerificationProgress() {
         });
       }
     }
-    function setupUsAccountLink() {
-      const usItem = document.getElementById("service-us-account");
-      if (usItem) {
-        usItem.addEventListener("click", function() {
-          window.location.href = "cuentausa.html";
-        });
-      }
-    }
+function setupUsAccountLink() {
+  const usItem = document.getElementById("service-us-account");
+  if (usItem) {
+    usItem.addEventListener("click", function() {
+      window.location.href = "cuentausa.html";
+    });
+  }
+}
+
+function setupWithdrawalLink() {
+  const item = document.getElementById('service-withdrawal');
+  if (item) {
+    item.addEventListener('click', function() {
+      window.location.href = 'retiro.html';
+    });
+  }
+}
 
     function setupLoginSupportMenu() {
       const supportBtn = document.getElementById('support-btn');
