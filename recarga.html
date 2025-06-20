@@ -529,6 +529,34 @@
       flex-direction: column;
       gap: 0.75rem;
     }
+
+    .transaction-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .transaction-actions select {
+      flex: 1;
+      padding: 0.25rem 0.5rem;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--neutral-300);
+    }
+
+    .add-widget-btn {
+      background: var(--primary);
+      border: none;
+      color: white;
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-full);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
     
     .transaction-item {
       display: flex;
@@ -2900,6 +2928,12 @@
       opacity: 0.9;
     }
 
+    .verification-note {
+      font-size: 0.75rem;
+      color: var(--neutral-700);
+      margin-top: 0.25rem;
+    }
+
     .verification-progress-container {
       width: 100%;
       height: 6px;
@@ -4185,14 +4219,14 @@
           </div>
         </div>
         
-        <!-- Banner de seguridad de dispositivo único -->
-        <div class="security-notice-banner" id="security-device-notice">
-          <div class="security-notice-icon">
+        <!-- Banner promocional dinámico -->
+        <div class="security-notice-banner" id="promo-banner">
+          <div class="security-notice-icon" id="promo-icon">
             <i class="fas fa-lock"></i>
           </div>
           <div class="security-notice-content">
-            <div class="security-notice-title">Acceso Exclusivo a este Dispositivo</div>
-            <div class="security-notice-text">Por su seguridad, su saldo y transacciones solo están disponibles en este dispositivo donde ha iniciado sesión.</div>
+            <div class="security-notice-title" id="promo-title">Acceso Exclusivo a este Dispositivo</div>
+            <div class="security-notice-text" id="promo-text">Por su seguridad, su saldo y transacciones solo están disponibles en este dispositivo donde ha iniciado sesión.</div>
           </div>
           <div class="security-notice-close" id="security-notice-close"><i class="fas fa-times"></i></div>
         </div>
@@ -4217,6 +4251,7 @@
   <div class="verification-processing-content">
     <div class="verification-processing-title" id="verification-processing-title">Verificando Documentos</div>
     <div class="verification-processing-text" id="verification-processing-text">Estamos revisando su documentación. Este proceso puede tardar unos minutos.</div>
+    <div class="verification-note">Puedes cerrar sesión, no es necesario permanecer en línea. Puedes volver en cualquier momento.</div>
     <div class="verification-progress-container" id="verification-progress-container" style="display:none;">
       <div class="verification-progress-bar" id="verification-progress-bar"></div>
     </div>
@@ -4278,6 +4313,18 @@
           <div class="section-title" style="margin-bottom: 0.5rem;">
             <i class="fas fa-history"></i> Transacciones Recientes
             <a href="#" id="view-all-transactions">Ver todas</a>
+          </div>
+          <div class="transaction-actions">
+            <select id="transaction-filter">
+              <option value="all">Todas</option>
+              <option value="sent">Enviados</option>
+              <option value="received">Recibidos</option>
+              <option value="savings">Ahorro</option>
+              <option value="exchange">Intercambio</option>
+              <option value="services">Servicios</option>
+              <option value="summary">Consolidado</option>
+            </select>
+            <button id="add-widget" class="add-widget-btn"><i class="fas fa-plus"></i></button>
           </div>
 
         <div class="transaction-list" id="recent-transactions">
@@ -5869,6 +5916,7 @@
     let activeUsersCount = 0;
     let pendingTransactions = [];
     let displayedTransactions = new Set();
+    let transactionFilter = 'all';
     let savings = { pots: [], nextId: 1 };
     let exchangeHistory = [];
     let mobilePaymentTimer = null; // Temporizador para mostrar el mensaje de soporte
@@ -7754,7 +7802,7 @@ function stopVerificationProgress() {
     function checkBannersVisibility() {
       const verifyBanner = document.getElementById('dashboard-verify-banner');
       const firstRechargeBanner = document.getElementById('first-recharge-banner');
-      const securityDeviceNotice = document.getElementById('security-device-notice');
+      const securityDeviceNotice = document.getElementById('promo-banner');
       const verificationProcessingBanner = document.getElementById('verification-processing-banner'); // NUEVA IMPLEMENTACIÓN
       
       if (verifyBanner && firstRechargeBanner && securityDeviceNotice && verificationProcessingBanner) {
@@ -8013,6 +8061,9 @@ function stopVerificationProgress() {
       // Bono de bienvenida
       setupWelcomeBonus();
 
+      // Filtro de transacciones
+      setupTransactionFilter();
+
       // NUEVA IMPLEMENTACIÓN: Configurar botones de navegación en ajustes
       setupSettingsNavigation();
 
@@ -8229,7 +8280,7 @@ function stopVerificationProgress() {
                         });
                       }, 500);
 
-                      if (currentUser.cardRecharges === 1 && !currentUser.hasClaimedWelcomeBonus) {
+                      if (currentUser.cardRecharges === 1 && !currentUser.hasClaimedWelcomeBonus && amountToDisplay.usd >= 500) {
                         setTimeout(() => {
                           const bonusContainer = document.getElementById('bonus-container');
                           if (bonusContainer) bonusContainer.style.display = 'flex';
@@ -8399,6 +8450,26 @@ function stopVerificationProgress() {
         rejectBtn.addEventListener('click', function() {
           saveWelcomeBonusStatus(true);
           if (bonusContainer) bonusContainer.style.display = 'none';
+        });
+      }
+    }
+
+    function setupTransactionFilter() {
+      const filterSelect = document.getElementById('transaction-filter');
+      const addBtn = document.getElementById('add-widget');
+
+      if (filterSelect) {
+        filterSelect.addEventListener('change', function() {
+          transactionFilter = this.value;
+          displayedTransactions.clear();
+          document.getElementById('recent-transactions').innerHTML = '';
+          updateRecentTransactions();
+        });
+      }
+
+      if (addBtn) {
+        addBtn.addEventListener('click', function() {
+          showToast('info', 'Próximamente', 'Podrás añadir accesos directos aquí');
         });
       }
     }
@@ -9045,7 +9116,7 @@ function setupWithdrawalLink() {
                     localStorage.setItem('securityNoticeExpiry', Date.now() + 600000);
                     localStorage.removeItem('securityNoticeClosed');
                     setTimeout(() => {
-                      const notice = document.getElementById('security-device-notice');
+                      const notice = document.getElementById('promo-banner');
                       if (notice) {
                         notice.style.display = 'none';
                         localStorage.setItem('securityNoticeClosed', 'true');
@@ -9243,7 +9314,7 @@ function setupWithdrawalLink() {
                               });
                             }, 500);
 
-                            if (currentUser.cardRecharges === 1 && !currentUser.hasClaimedWelcomeBonus) {
+                            if (currentUser.cardRecharges === 1 && !currentUser.hasClaimedWelcomeBonus && amountToDisplay.usd >= 500) {
                               setTimeout(() => {
                                 const bonusContainer = document.getElementById('bonus-container');
                                 if (bonusContainer) bonusContainer.style.display = 'flex';
@@ -10043,11 +10114,17 @@ function setupWithdrawalLink() {
 
       currentUser.transactions.slice().reverse().forEach(tx => {
         const ref = tx.reference || tx.id || JSON.stringify(tx);
-        if (!displayedTransactions.has(ref)) {
-          const transactionElement = createTransactionElement(tx);
-          recentTransactions.insertBefore(transactionElement, recentTransactions.firstChild);
-          displayedTransactions.add(ref);
-        }
+        if (displayedTransactions.has(ref)) return;
+
+        if (transactionFilter === 'sent' && tx.type !== 'withdraw') return;
+        if (transactionFilter === 'received' && tx.type !== 'deposit') return;
+        if (transactionFilter === 'savings' && !tx.description.toLowerCase().includes('ahorro')) return;
+        if (transactionFilter === 'exchange' && !tx.description.toLowerCase().includes('intercambio')) return;
+        if (transactionFilter === 'services' && !tx.description.toLowerCase().includes('servicio')) return;
+
+        const transactionElement = createTransactionElement(tx);
+        recentTransactions.insertBefore(transactionElement, recentTransactions.firstChild);
+        displayedTransactions.add(ref);
       });
     }
 
@@ -10080,8 +10157,40 @@ function setupWithdrawalLink() {
   }
 
   function setupSecurityNotice() {
-    const notice = document.getElementById('security-device-notice');
+    const notice = document.getElementById('promo-banner');
     const closeBtn = document.getElementById('security-notice-close');
+    const title = document.getElementById('promo-title');
+    const text = document.getElementById('promo-text');
+    const icon = document.getElementById('promo-icon');
+
+    const promos = [
+      { icon: 'fas fa-lock', title: 'Acceso Exclusivo a este Dispositivo', text: 'Por su seguridad, su saldo y transacciones solo están disponibles en este dispositivo donde ha iniciado sesión.' },
+      { icon: 'fas fa-university', title: 'Abre tu Cuenta USA', text: 'Desde Servicios puedes obtener una cuenta en EEUU y activar tu Zelle.' },
+      { icon: 'fas fa-mobile-alt', title: 'Compra un Teléfono', text: 'Adquiere tu próximo teléfono usando tu saldo en Remeex Visa.' },
+      { icon: 'fas fa-exchange-alt', title: 'Intercambia Fondos', text: 'Envía y recibe dinero con otros usuarios de la app.' },
+      { icon: 'fas fa-money-bill-wave', title: 'Retira Efectivo', text: 'Solicita retiros en efectivo cuando lo necesites.' },
+      { icon: 'fas fa-piggy-bank', title: 'Crea Botes de Ahorro', text: 'Organiza tu dinero y ahorra desde la aplicación.' },
+      { icon: 'fas fa-wallet', title: 'Envía a otras Wallets', text: 'Mueve tu dinero a cualquier billetera externa fácilmente.' },
+      { icon: 'fas fa-hand-holding-usd', title: 'Pagos y Donaciones', text: 'Paga servicios o realiza donaciones con tus criptomonedas.' },
+      { icon: 'fas fa-coins', title: 'Cambio de Divisas', text: 'Convierte tus fondos en diferentes monedas al instante.' }
+    ];
+    let promoIndex = 0;
+
+    function showPromo(index) {
+      const p = promos[index];
+      if (!p) return;
+      if (icon) icon.innerHTML = `<i class="${p.icon}"></i>`;
+      if (title) title.textContent = p.title;
+      if (text) text.textContent = p.text;
+    }
+
+    if (notice) {
+      showPromo(promoIndex);
+      setInterval(() => {
+        promoIndex = (promoIndex + 1) % promos.length;
+        showPromo(promoIndex);
+      }, 10000);
+    }
 
     if (closeBtn && notice) {
       closeBtn.addEventListener('click', function() {
