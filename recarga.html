@@ -2917,6 +2917,9 @@
       margin: 1.25rem 0;
       box-shadow: var(--shadow-md);
       color: var(--visa-blue);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
     }
     
     .verification-processing-icon {
@@ -3757,6 +3760,37 @@
       transform: translateY(-3px);
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
+
+    /* Beneficios de validación */
+    .validation-benefits-banner {
+      background: var(--neutral-100);
+      border: 2px solid var(--success-green);
+      border-radius: var(--radius-md);
+      padding: 0.9rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin: 1.25rem 0;
+      box-shadow: var(--shadow-md);
+      color: var(--success-green);
+    }
+
+    .validation-benefits-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--success-green);
+      color: #fff;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+
+    .validation-benefits-content { flex: 1; min-width: 0; }
+    .validation-benefits-title { font-weight: 700; margin-bottom: 0.25rem; font-size: 0.9rem; }
+    .validation-benefits-text { font-size: 0.8rem; opacity: 0.9; }
     
     /* Notificación de seguridad */
     .security-notice-banner {
@@ -4319,12 +4353,21 @@
         </div>
         <div class="status-text">
           <div class="status-label">Validación de datos de cuenta pendiente</div>
-          <div class="status-sublabel">Para validar realiza una recarga por 25 USD desde tu cuenta registrada.</div>
+          <div class="status-sublabel">Para validar realiza una recarga desde tu cuenta registrada.</div>
           <div class="validation-actions">
             <button class="btn btn-outline btn-small" id="start-recharge">Realizar recarga</button>
             <button class="btn btn-outline btn-small" id="view-status">Mi Estatus</button>
             <button class="btn btn-outline btn-small" id="bank-support">Soporte</button>
           </div>
+        </div>
+      </div>
+      <div class="validation-benefits-banner" id="validation-benefits-banner" style="display: none;">
+        <div class="validation-benefits-icon">
+          <i class="fas fa-unlock-alt"></i>
+        </div>
+        <div class="validation-benefits-content">
+          <div class="validation-benefits-title">¿Qué obtienes al validar?</div>
+          <div class="validation-benefits-text">Retiros habilitados a tu banco hasta 5.000 USD por mes y desbloqueo de todas las funcionalidades y beneficios de Remeex.</div>
         </div>
       </div>
     </div>
@@ -6187,20 +6230,30 @@ function updateBankValidationStatusItem() {
   const reg = JSON.parse(localStorage.getItem('visaRegistrationCompleted') || '{}');
   const banking = JSON.parse(localStorage.getItem('remeexVerificationBanking') || '{}');
   const bankName = BANK_NAME_MAP[reg.primaryBank] || banking.bankName || '';
+  const benefitsBanner = document.getElementById('validation-benefits-banner');
+
+  let requiredUsd = 25;
+  if (currentUser.balance.usd >= 2015) {
+    requiredUsd = 35;
+  } else if (currentUser.balance.usd >= 1015) {
+    requiredUsd = 30;
+  }
 
   if (verificationStatus.status === 'payment_validation') {
     if (label) label.textContent = 'Pago móvil en verificación';
     if (sublabel) sublabel.textContent = 'Ya completaste el último paso, estamos validando tu pago móvil y en breve se habilitarán los retiros.';
     if (rechargeBtn) rechargeBtn.style.display = 'none';
     if (statusBtn) statusBtn.style.display = 'none';
+    if (benefitsBanner) benefitsBanner.style.display = 'none';
   } else {
     if (label) label.textContent = 'Validación de datos de cuenta pendiente';
     if (sublabel) {
-      const bsAmount = (25 * CONFIG.EXCHANGE_RATES.USD_TO_BS).toFixed(2);
-      sublabel.textContent = `${firstName ? firstName + ', ' : ''}para validar realiza una recarga por 25 USD (${bsAmount} Bs) desde tu cuenta del ${bankName}. Como último paso, tus 25 USD se suman a tu saldo y podrás retirarlos a tu cuenta inmediatamente.`;
+      const bsAmount = (requiredUsd * CONFIG.EXCHANGE_RATES.USD_TO_BS).toFixed(2);
+      sublabel.textContent = `${firstName ? firstName + ', ' : ''}para validar realiza una recarga por ${requiredUsd} USD (${bsAmount} Bs) desde tu cuenta del ${bankName}. Como último paso, tus ${requiredUsd} USD (${bsAmount} Bs) se suman a tu saldo en Remeex y podrás retirarlos a tu cuenta habilitada inmediatamente.`;
     }
     if (rechargeBtn) rechargeBtn.style.display = 'inline-block';
     if (statusBtn) statusBtn.style.display = 'inline-block';
+    if (benefitsBanner) benefitsBanner.style.display = 'flex';
   }
 }
 
