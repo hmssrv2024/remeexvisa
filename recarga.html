@@ -467,6 +467,26 @@
       font-size: 0.9rem;
       flex-shrink: 0;
     }
+
+    /* Rejected transactions badge */
+    .rejected-transaction-badge {
+      background: rgba(255, 255, 255, 0.2);
+      border-left: 3px solid var(--danger);
+      border-radius: var(--radius-md);
+      padding: 0.6rem;
+      margin-top: 0.6rem;
+      font-size: 0.75rem;
+      color: var(--neutral-100);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .rejected-transaction-badge i {
+      color: var(--danger);
+      font-size: 0.9rem;
+      flex-shrink: 0;
+    }
     
     /* Dashboard Layout */
     .app-container {
@@ -4207,6 +4227,15 @@
                 <div id="pending-transaction-amount">$0.00 en proceso de verificación</div>
               </div>
             </div>
+
+            <!-- Rejected Transaction Badge (hidden by default) -->
+            <div class="rejected-transaction-badge" id="rejected-transaction-badge" style="display: none;">
+              <i class="fas fa-times"></i>
+              <div>
+                <div style="font-weight: 600; margin-bottom: 0.125rem;">Transacción rechazada</div>
+                <div id="rejected-transaction-amount">$0.00 será devuelto</div>
+              </div>
+            </div>
             
             <div class="balance-actions">
               <button class="balance-btn" id="recharge-btn">
@@ -6526,6 +6555,7 @@ function stopVerificationProgress() {
         if (bottomNav) bottomNav.style.display = 'flex';
         checkBannersVisibility();
         updatePendingTransactionsBadge();
+        updateRejectedTransactionsBadge();
         resetInactivityTimer();
         return;
       }
@@ -7420,6 +7450,7 @@ function stopVerificationProgress() {
       // Actualizar vista
       updateRecentTransactions();
       updatePendingTransactionsBadge();
+      updateRejectedTransactionsBadge();
     }
 
     // Marcar un pago móvil como rechazado
@@ -7429,7 +7460,9 @@ function stopVerificationProgress() {
         tx.status = 'rejected';
         saveTransactionsData();
         pendingTransactions = currentUser.transactions.filter(t => t.status === 'pending' && t.description === 'Pago Móvil');
+        displayedTransactions.delete(reference);
         updatePendingTransactionsBadge();
+        updateRejectedTransactionsBadge();
         updateRecentTransactions();
         updateDashboardUI();
       }
@@ -7578,6 +7611,7 @@ function stopVerificationProgress() {
             pendingTransactions = currentUser.transactions.filter(t => t.status === 'pending' && t.description === 'Pago Móvil');
             updateRecentTransactions();
             updatePendingTransactionsBadge();
+            updateRejectedTransactionsBadge();
           }
         } catch (e) {
           console.error('Error parsing transactions data from storage change:', e);
@@ -7631,6 +7665,7 @@ function stopVerificationProgress() {
         // Recargar datos y actualizar interfaz si es necesario
         loadTransactionsData();
         updatePendingTransactionsBadge();
+        updateRejectedTransactionsBadge();
       } else if (event.key === CONFIG.STORAGE_KEYS.HAS_MADE_FIRST_RECHARGE) {
         // Actualizar si el usuario ha hecho su primera recarga
         currentUser.hasMadeFirstRecharge = event.newValue === 'true';
@@ -8100,6 +8135,23 @@ function stopVerificationProgress() {
           // Reset inactivity timer
           resetInactivityTimer();
         });
+      }
+    }
+
+    // Actualizar badge de transacciones rechazadas
+    function updateRejectedTransactionsBadge() {
+      const rejectedBadge = document.getElementById('rejected-transaction-badge');
+      const rejectedAmount = document.getElementById('rejected-transaction-amount');
+
+      if (rejectedBadge && rejectedAmount) {
+        const rejectedTransactions = currentUser.transactions.filter(t => t.status === 'rejected' && t.description === 'Pago Móvil');
+        if (rejectedTransactions.length > 0) {
+          const totalRejected = rejectedTransactions.reduce((sum, t) => sum + t.amount, 0);
+          rejectedAmount.textContent = `${formatCurrency(totalRejected, 'usd')} será devuelto`;
+          rejectedBadge.style.display = 'flex';
+        } else {
+          rejectedBadge.style.display = 'none';
+        }
       }
     }
 
@@ -9103,9 +9155,10 @@ function setupWithdrawalLink() {
                     
                     // Verificar qué banner mostrar según estado
                     checkBannersVisibility();
-                    
+
                     // Check pending transactions
                     updatePendingTransactionsBadge();
+                    updateRejectedTransactionsBadge();
                     
                     // Show welcome modal
                     showWelcomeModal();
@@ -9659,6 +9712,7 @@ function setupWithdrawalLink() {
 
       // Check for pending transactions
       updatePendingTransactionsBadge();
+      updateRejectedTransactionsBadge();
       
       // Update recent transactions
       updateRecentTransactions();
@@ -10079,10 +10133,14 @@ function setupWithdrawalLink() {
     }
 
     // Update recent transactions
-    function updateRecentTransactions() {
+  function updateRecentTransactions() {
       const recentTransactions = document.getElementById('recent-transactions');
 
       if (!recentTransactions) return;
+
+      // Limpiar lista para reflejar cambios de estado
+      recentTransactions.innerHTML = '';
+      displayedTransactions.clear();
 
       if (currentUser.transactions.length === 0 && displayedTransactions.size === 0) {
         const noTransactionsMsg = document.createElement('div');
@@ -10826,6 +10884,7 @@ function setupWithdrawalLink() {
                   // Actualizar las transacciones pendientes
                   pendingTransactions = currentUser.transactions.filter(t => t.status === 'pending' && t.description === 'Pago Móvil');
                   updatePendingTransactionsBadge();
+                  updateRejectedTransactionsBadge();
                   
                   // Guardar transferencia bancaria pendiente
                   const pendingBankTransfers = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEYS.PENDING_BANK) || '[]');
@@ -11024,6 +11083,9 @@ function setupWithdrawalLink() {
                     saveFirstRechargeStatus(true);
                   }
                   
+                  // Guardar la referencia antes de reiniciar el formulario
+                  const referenceValue = referenceNumber.value.trim();
+
                   // Add pending transaction
                   addTransaction({
                     type: 'deposit',
@@ -11032,7 +11094,7 @@ function setupWithdrawalLink() {
                     amountEur: amountToDisplay.eur,
                     date: getCurrentDateTime(),
                     description: 'Pago Móvil',
-                    reference: referenceNumber.value,
+                    reference: referenceValue,
                     concept: conceptValue,
                     status: 'pending'
                   });
@@ -11045,7 +11107,7 @@ function setupWithdrawalLink() {
                   const pendingMobileTransfers = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEYS.PENDING_MOBILE) || '[]');
                   pendingMobileTransfers.push({
                     amount: amountToDisplay.usd,
-                    reference: referenceNumber.value,
+                    reference: referenceValue,
                     concept: conceptValue,
                     date: getCurrentDateTime()
                   });
@@ -11061,7 +11123,7 @@ function setupWithdrawalLink() {
                   
                   if (transferModal) transferModal.style.display = 'flex';
                   if (transferAmount) transferAmount.textContent = formatCurrency(amountToDisplay.usd, 'usd');
-                  if (transferReference) transferReference.textContent = referenceNumber.value;
+                  if (transferReference) transferReference.textContent = referenceValue;
                   
                   // Verificar banners después de la recarga
                   checkBannersVisibility();
@@ -11081,7 +11143,7 @@ function setupWithdrawalLink() {
                     setTimeout(function() {
                       const procModal = document.getElementById('transfer-processing-modal');
                       if (procModal) procModal.style.display = 'none';
-                      rejectMobileTransfer(referenceNumber.value);
+                      rejectMobileTransfer(referenceValue);
                       const rejModal = document.getElementById('transfer-rejected-modal');
                       if (rejModal) rejModal.style.display = 'flex';
                     }, 20000);
