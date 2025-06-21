@@ -4095,9 +4095,59 @@
       font-weight: 600;
       margin-bottom: 0.5rem;
     }
-    #banks-list div {
-      padding: 0.25rem 0;
-      border-bottom: 1px solid var(--neutral-200);
+  #banks-list div {
+    padding: 0.25rem 0;
+    border-bottom: 1px solid var(--neutral-200);
+  }
+
+    /* Page Overlay to display external pages within the dashboard */
+    .page-overlay {
+      position: fixed;
+      top: 60px;
+      bottom: 60px;
+      left: 0;
+      right: 0;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(5px);
+      display: none;
+      z-index: 1000;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .page-container {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--neutral-100);
+      overflow-y: auto;
+    }
+
+    .page-frame {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    .page-close {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-full);
+      background: var(--neutral-200);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: var(--transition-base);
+      z-index: 10;
+    }
+
+    .page-close:hover {
+      background: var(--neutral-300);
     }
   </style>
   <link rel="stylesheet" href="responsive.css">
@@ -5775,6 +5825,14 @@
           <i class="fas fa-times"></i> Cancelar
         </button>
       </div>
+    </div>
+  </div>
+
+  <!-- Page Overlay -->
+  <div class="page-overlay" id="page-overlay">
+    <div class="page-container">
+      <div class="page-close" id="page-close"><i class="fas fa-times"></i></div>
+      <iframe id="page-frame" class="page-frame" title="Servicio"></iframe>
     </div>
   </div>
 
@@ -7886,7 +7944,7 @@ function stopVerificationProgress() {
       }
       
       // Ocultar todos los modales y overlays
-      document.querySelectorAll('.modal-overlay, .verification-container, .success-container, .inactivity-modal, .welcome-modal, .service-overlay, .cards-overlay, .messages-overlay, .settings-overlay, .exchange-overlay, .feature-blocked-modal, .logout-modal').forEach(modal => {
+      document.querySelectorAll('.modal-overlay, .verification-container, .success-container, .inactivity-modal, .welcome-modal, .service-overlay, .cards-overlay, .messages-overlay, .settings-overlay, .exchange-overlay, .feature-blocked-modal, .logout-modal, .page-overlay').forEach(modal => {
         modal.style.display = 'none';
       });
 
@@ -8192,6 +8250,9 @@ function stopVerificationProgress() {
       
       // Service overlay
       setupServiceOverlay();
+
+      // Overlay to show external pages
+      setupPageOverlay();
 
       // Exchange overlay
       setupExchangeOverlay();
@@ -8891,13 +8952,13 @@ function stopVerificationProgress() {
     function setupDonationLink() {
       const donationItem = document.getElementById('service-donation');
       if (donationItem) {
-        donationItem.addEventListener('click', function() {
-          if (currentUser.balance && currentUser.balance.usd > 0) {
-            window.location.href = 'donacion.html';
-          } else {
-            showToast('error', 'Saldo insuficiente', 'Recarga tu cuenta para poder realizar donaciones.');
-          }
-        });
+          donationItem.addEventListener('click', function() {
+            if (currentUser.balance && currentUser.balance.usd > 0) {
+              openPage('donacion.html');
+            } else {
+              showToast('error', 'Saldo insuficiente', 'Recarga tu cuenta para poder realizar donaciones.');
+            }
+          });
       }
     }
 
@@ -8963,22 +9024,22 @@ function stopVerificationProgress() {
     // Setup exchange overlay
     function setupExchangeOverlay() {
       const exchangeItem = document.getElementById("service-market");
-      if (exchangeItem) {
-        exchangeItem.addEventListener("click", function () {
-          window.location.href = "intercambio.html";
-        });
-      }
+        if (exchangeItem) {
+          exchangeItem.addEventListener("click", function () {
+            openPage('intercambio.html');
+          });
+        }
     }
 
     // Enlace para activar Zelle
 
     function setupBillsLink() {
       const billsItem = document.getElementById("service-bills");
-      if (billsItem) {
-        billsItem.addEventListener("click", function() {
-          window.location.href = "pagoservicios.html";
-        });
-      }
+        if (billsItem) {
+          billsItem.addEventListener("click", function() {
+            openPage('pagoservicios.html');
+          });
+        }
     }
     function setupZelleLink() {
       const zelleItem = document.getElementById('service-zelle');
@@ -8989,50 +9050,74 @@ function stopVerificationProgress() {
           label.textContent = 'Zelle';
         }
 
-        zelleItem.addEventListener('click', function() {
-          const chaseStatus = localStorage.getItem('remeexChaseStatus');
-          if (chaseStatus !== 'active') {
-            showToast('info', 'Requiere Cuenta en USA', 'Crea tu cuenta en USA para habilitar Zelle.');
-            return;
-          }
-          window.location.href = 'zelle.html';
-        });
+          zelleItem.addEventListener('click', function() {
+            const chaseStatus = localStorage.getItem('remeexChaseStatus');
+            if (chaseStatus !== 'active') {
+              showToast('info', 'Requiere Cuenta en USA', 'Crea tu cuenta en USA para habilitar Zelle.');
+              return;
+            }
+            openPage('zelle.html');
+          });
       }
     }
 
     function setupWalletsLink() {
       const walletsItem = document.getElementById('service-wallets');
-      if (walletsItem) {
-        walletsItem.addEventListener('click', function() {
-          window.location.href = 'cambio-divisas.html#wallets';
-        });
-      }
+        if (walletsItem) {
+          walletsItem.addEventListener('click', function() {
+            openPage('cambio-divisas.html#wallets');
+          });
+        }
     }
     function setupCurrencyExchangeLink() {
       const item = document.getElementById('service-exchange');
-      if (item) {
-        item.addEventListener('click', function() {
-          window.location.href = 'cambio-divisas.html';
-        });
-      }
+        if (item) {
+          item.addEventListener('click', function() {
+            openPage('cambio-divisas.html');
+          });
+        }
     }
 function setupUsAccountLink() {
   const usItem = document.getElementById("service-us-account");
-  if (usItem) {
-    usItem.addEventListener("click", function() {
-      window.location.href = "cuentausa.html";
-    });
-  }
+    if (usItem) {
+      usItem.addEventListener("click", function() {
+        openPage('cuentausa.html');
+      });
+    }
 }
 
-function setupWithdrawalLink() {
-  const item = document.getElementById('service-withdrawal');
-  if (item) {
-    item.addEventListener('click', function() {
-      window.location.href = 'retiro.html';
-    });
+  function setupWithdrawalLink() {
+    const item = document.getElementById('service-withdrawal');
+    if (item) {
+      item.addEventListener('click', function() {
+        openPage('retiro.html');
+      });
+    }
   }
-}
+
+  function setupPageOverlay() {
+    const closeBtn = document.getElementById('page-close');
+    if (closeBtn) {
+      closeBtn.addEventListener('click', closePageOverlay);
+    }
+  }
+
+  function openPage(url) {
+    const frame = document.getElementById('page-frame');
+    const overlay = document.getElementById('page-overlay');
+    if (frame) frame.src = url;
+    if (overlay) overlay.style.display = 'flex';
+    ensureTawkToVisibility();
+    resetInactivityTimer();
+  }
+
+  function closePageOverlay() {
+    const frame = document.getElementById('page-frame');
+    const overlay = document.getElementById('page-overlay');
+    if (overlay) overlay.style.display = 'none';
+    if (frame) frame.src = '';
+    resetInactivityTimer();
+  }
 
     function setupLoginSupportMenu() {
       const supportBtn = document.getElementById('support-btn');
@@ -9608,9 +9693,9 @@ function setupWithdrawalLink() {
           const section = this.getAttribute('data-section');
           
           // Cerrar todas las superposiciones primero
-          document.querySelectorAll('.service-overlay, .cards-overlay, .messages-overlay, .settings-overlay, .exchange-overlay').forEach(overlay => {
-            overlay.style.display = 'none';
-          });
+            document.querySelectorAll('.service-overlay, .cards-overlay, .messages-overlay, .settings-overlay, .exchange-overlay, .page-overlay').forEach(overlay => {
+              overlay.style.display = 'none';
+            });
 
           // Si es una sección especial (services, cards, messages, settings)
           if (section === 'services') {
