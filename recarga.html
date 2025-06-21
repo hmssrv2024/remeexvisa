@@ -864,8 +864,8 @@
     }
 
     .service-icon {
-      width: 40px;
-      height: 40px;
+      width: 32px;
+      height: 32px;
       border-radius: var(--radius-full);
       background: var(--primary);
       color: white;
@@ -1440,6 +1440,7 @@
       animation: slideUp 0.4s ease;
       max-height: 80vh;
       overflow-y: auto;
+      text-align: left;
     }
 
     .support-header {
@@ -1453,6 +1454,7 @@
       font-size: 1.25rem;
       font-weight: 700;
       color: var(--neutral-900);
+      text-align: left;
     }
 
     .support-close {
@@ -3485,8 +3487,8 @@
     }
 
     .contact-icon {
-      width: 40px;
-      height: 40px;
+      width: 32px;
+      height: 32px;
       border-radius: var(--radius-full);
       display: flex;
       align-items: center;
@@ -4045,7 +4047,13 @@
     }
     
     /* Responsive Styles */
-    @media (min-width: 480px) {      
+    @media (max-width: 479px) {
+      .users-online-badge {
+        display: none;
+      }
+    }
+
+    @media (min-width: 480px) {
       .users-online-badge {
         display: flex;
       }
