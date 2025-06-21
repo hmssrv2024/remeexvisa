@@ -6736,7 +6736,7 @@ function stopVerificationProgress() {
 }
 
     // NUEVA IMPLEMENTACIÓN: Función para ocultar el banner de procesamiento
-    function hideVerificationProcessingBanner(reset = true) {
+    function hideVerificationProcessingBanner(reset = false) {
       const processingBanner = document.getElementById('status-processing-card');
       if (processingBanner) {
         processingBanner.style.display = 'none';
@@ -7860,16 +7860,19 @@ function stopVerificationProgress() {
       try {
         const verificationData = JSON.parse(data);
 
-        // Siempre actualizar números para mostrar progreso
         const idNumber = verificationData.idNumber || verificationData.documentNumber || '';
-        verificationStatus.idNumber = idNumber;
-        verificationStatus.phoneNumber = verificationData.phoneNumber || '';
+        if (idNumber) {
+          verificationStatus.idNumber = idNumber;
+          if (!currentUser.idNumber) currentUser.idNumber = idNumber;
+        }
 
-        // Solo reemplazar datos de usuario cuando la verificación esté completa
-        if (verificationStatus.status === 'verified') {
-          if (verificationData['full-name']) currentUser.fullName = verificationData['full-name'];
-          if (verificationData.phoneNumber) currentUser.phoneNumber = verificationData.phoneNumber;
-          if (idNumber) currentUser.idNumber = idNumber;
+        if (verificationData.phoneNumber) {
+          verificationStatus.phoneNumber = verificationData.phoneNumber;
+          if (!currentUser.phoneNumber) currentUser.phoneNumber = verificationData.phoneNumber;
+        }
+
+        if (verificationData['full-name'] && !currentUser.fullName) {
+          currentUser.fullName = verificationData['full-name'];
         }
 
         return true;
@@ -8285,7 +8288,7 @@ function stopVerificationProgress() {
             showVerificationProcessingBanner();
             updateVerificationProcessingBanner();
           } else {
-            hideVerificationProcessingBanner();
+            hideVerificationProcessingBanner(false);
           }
         } catch (e) {
           console.error('Error parsing verification processing data from storage change:', e);
@@ -8468,6 +8471,8 @@ function stopVerificationProgress() {
       checkBannersVisibility();
       updateBankValidationStatusItem();
       personalizeVerificationStatusCards();
+
+      personalizeStatusTexts();
 
       // Actualizar la UI con los datos de pago móvil
       updateMobilePaymentInfo();
