@@ -3133,8 +3133,8 @@
   gap: 0.5rem;
 }
 
-/* New Verification Banner */
-.verificacion-banner {
+/* Verification Section */
+.verificacion-section {
   background: var(--neutral-100);
   border-radius: var(--radius-lg);
   padding: 1rem;
@@ -3142,16 +3142,25 @@
   margin-bottom: 1.25rem;
 }
 
-.verificacion-banner h3 {
-  margin-bottom: 0.25rem;
+.verificacion-titulo {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
   color: var(--visa-blue);
   font-size: 0.95rem;
+  margin-bottom: 0.25rem;
 }
 
-.verificacion-banner p {
+.verificacion-descripcion {
   font-size: 0.8rem;
   margin-bottom: 0.75rem;
 }
+
+.icono-titulo {
+  width: 20px;
+  height: 20px;
+}
+
 
 .verificacion-grid {
   display: flex;
@@ -3170,41 +3179,25 @@
   box-shadow: var(--shadow-sm);
 }
 
-.verificacion-card .icono {
-  font-size: 1.4rem;
-  line-height: 1;
-  color: var(--success-green);
-}
-
-.verificacion-card.pendiente .icono {
-  color: var(--warning-orange);
-}
-
-.verificacion-card .contenido {
-  flex: 1;
-}
-
-.verificacion-card .botones {
-  margin-top: 0.5rem;
+.verificacion-card .icono-estatus {
+  width: 24px;
+  height: 24px;
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
 }
 
-.verificacion-card .botones button {
+.verificacion-card .contenido-estatus {
   flex: 1;
-  padding: 0.4rem 0.6rem;
-  border: none;
-  background: var(--visa-blue);
-  color: #fff;
-  border-radius: var(--radius-sm);
-  font-size: 0.75rem;
-  cursor: pointer;
-  transition: var(--transition-base);
 }
 
-.verificacion-card .botones button:hover {
-  background: var(--primary-light);
+.verificacion-card.estatus-exitoso .icono-estatus svg {
+  stroke: var(--success-green);
+}
+
+.verificacion-card.estatus-pendiente .icono-estatus svg {
+  stroke: var(--warning-orange);
 }
 
 /* Pending validation card styled like transactions */
@@ -3260,7 +3253,7 @@
   display: flex;
   gap: 0.5rem;
   flex-wrap: wrap;
-  margin-top: 0.25rem;
+  margin-top: 0.5rem;
 }
 
 .botones-validacion button {
@@ -4590,47 +4583,64 @@
         </div>
 
        <!-- NUEVA IMPLEMENTACIÓN: Verification Processing Banner -->
-<div class="verificacion-banner">
-  <h3>✔️ Verificación en Progreso</h3>
-  <p>Henry, hemos completado la verificación de tus documentos. Falta un último paso para activar todas las funciones.</p>
+      <div class="verificacion-section">
 
-  <div class="verificacion-grid">
-    <!-- Tarjeta: Documentos -->
-    <div class="verificacion-card">
-      <div class="icono">✅</div>
-      <div class="contenido">
-        <strong>Documentos de Identidad</strong>
-        <p>Cédula XXXX | Titular Nombre</p>
-      </div>
-    </div>
+        <h3 class="verificacion-titulo">
+          <svg class="icono-titulo" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <path stroke="#1d4ed8" stroke-width="2" d="M5 13l4 4L19 7"/>
+          </svg>
+          Verificación en Progreso
+        </h3>
+        <p class="verificacion-descripcion">Henry, hemos completado la verificación de tus documentos. Falta un último paso para activar todas las funciones.</p>
 
-    <!-- Tarjeta: Cuenta de banco -->
-    <div class="verificacion-card">
-      <div class="icono">✅</div>
-      <div class="contenido">
-        <strong>Cuenta de banco registrada con éxito</strong>
-        <p>Banco | Cuenta Nº XXXX</p>
-      </div>
-    </div>
+        <div class="verificacion-grid">
+          <!-- Tarjeta 1: Documentos -->
+          <div class="verificacion-card estatus-exitoso">
+            <div class="icono-estatus">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="#10b981" width="24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            <div class="contenido-estatus">
+              <strong>Documentos de Identidad</strong>
+              <p>Cédula XXXX | Titular Nombre</p>
+            </div>
+          </div>
 
-    <!-- Tarjeta: Validación pendiente -->
-    <div class="tarjeta-validacion estilo-transaccion">
-      <div class="cabecera">
-        <span class="icono-validacion">⏳</span>
-        <div class="titulo">
-          <strong>Validación de datos de cuenta pendiente</strong>
-          <p>Para validar debes recargar desde tu propia cuenta y así habilitar tus retiros.</p>
+          <!-- Tarjeta 2: Cuenta bancaria -->
+          <div class="verificacion-card estatus-exitoso">
+            <div class="icono-estatus">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="#10b981" width="24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            <div class="contenido-estatus">
+              <strong>Cuenta de banco registrada con éxito</strong>
+              <p>Banco | Cuenta Nº XXXX</p>
+            </div>
+          </div>
+
+          <!-- Tarjeta 3: Validación pendiente -->
+          <div class="verificacion-card estatus-pendiente">
+            <div class="icono-estatus">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="#f59e0b" width="24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l2 2m-2 6a9 9 0 100-18 9 9 0 000 18z" />
+              </svg>
+            </div>
+            <div class="contenido-estatus">
+              <strong>Validación de datos de cuenta pendiente</strong>
+              <p>Para validar debes recargar desde tu propia cuenta y así habilitar tus retiros.</p>
+              <div class="botones-validacion">
+                <button class="btn btn-outline btn-small">Validar, realizar recarga</button>
+                <button class="btn btn-outline btn-small">Mi Estatus</button>
+                <button class="btn btn-outline btn-small">Soporte</button>
+              </div>
+            </div>
+          </div>
+
         </div>
-      </div>
 
-      <div class="botones-validacion">
-        <button class="btn btn-outline btn-small">Validar, realizar recarga</button>
-        <button class="btn btn-outline btn-small">Mi Estatus</button>
-        <button class="btn btn-outline btn-small">Soporte</button>
       </div>
-    </div>
-  </div>
-</div>
 
         <!-- First Recharge Banner (if no recharges yet) -->
         <div class="first-recharge-banner banner" id="first-recharge-banner" style="display: none;">
