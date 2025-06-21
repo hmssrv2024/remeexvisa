@@ -1291,6 +1291,21 @@
       box-shadow: var(--shadow-lg);
     }
 
+    .confirm-bank-logo {
+      width: 60px;
+      height: 60px;
+      object-fit: contain;
+      margin: 0 auto 1rem;
+      display: block;
+    }
+
+    .confirm-buttons {
+      margin-top: 1rem;
+      display: flex;
+      justify-content: space-between;
+      gap: 0.5rem;
+    }
+
 
     /* Toast Notifications */
     .toast-container {
@@ -1556,6 +1571,31 @@
       .btn {
         height: 44px;
         font-size: 0.85rem;
+      }
+
+      .verification-container {
+        transform: none;
+        padding-top: 60px;
+      }
+    }
+
+    @media (max-width: 360px) {
+      .card-title {
+        font-size: 1rem;
+      }
+
+      .form-control {
+        height: 40px;
+        font-size: 0.8rem;
+      }
+
+      .btn {
+        height: 40px;
+        font-size: 0.8rem;
+      }
+
+      .confirm-content {
+        padding: 1rem;
       }
     }
 
@@ -1907,7 +1947,7 @@
                   <i class="fas fa-hashtag"></i>
                   Número de Cuenta
                 </label>
-                <input type="text" class="form-control" id="account-number" placeholder="Ej: 01050123456789012345" required>
+                <input type="text" class="form-control" id="account-number" inputmode="numeric" pattern="[0-9]*" maxlength="20" placeholder="Ej: 01050123456789012345" required>
                 <div class="error-message" id="account-number-error">Por favor ingrese el número de cuenta</div>
               </div>
 
@@ -1924,7 +1964,7 @@
                         <i class="fas fa-mobile-alt"></i>
                         Teléfono Pago Móvil
                       </label>
-                      <input type="tel" class="form-control" id="pago-movil-phone" placeholder="0412-1234567">
+                      <input type="tel" class="form-control" id="pago-movil-phone" inputmode="numeric" pattern="[0-9]*" maxlength="11" placeholder="0412-1234567">
                       <div class="error-message" id="pago-movil-phone-error">Por favor ingrese el teléfono</div>
                     </div>
                   </div>
@@ -1934,7 +1974,7 @@
                         <i class="fas fa-id-card"></i>
                         Cédula Pago Móvil
                       </label>
-                      <input type="text" class="form-control" id="pago-movil-cedula" placeholder="V-12345678">
+                      <input type="text" class="form-control" id="pago-movil-cedula" inputmode="numeric" pattern="[0-9]*" maxlength="10" placeholder="V-12345678">
                       <div class="error-message" id="pago-movil-cedula-error">Por favor ingrese la cédula</div>
                     </div>
                   </div>
@@ -2179,12 +2219,13 @@
   <!-- Confirmation Overlay -->
   <div class="confirm-overlay" id="confirm-overlay">
     <div class="confirm-content">
+      <img class="confirm-bank-logo" id="confirm-bank-logo" src="" alt="Logo Banco">
       <h3>Confirme sus datos bancarios</h3>
       <p id="confirm-bank"></p>
       <p id="confirm-account"></p>
-      <div style="margin-top:1rem; display:flex; gap:0.5rem; justify-content:center;">
-        <button class="btn btn-success" id="confirm-accept">Confirmar</button>
+      <div class="confirm-buttons">
         <button class="btn btn-outline" id="confirm-edit">Editar</button>
+        <button class="btn btn-success" id="confirm-accept">Confirmar</button>
       </div>
     </div>
   </div>
@@ -3507,9 +3548,14 @@
       const overlay = document.getElementById('confirm-overlay');
       const bankLabel = document.getElementById('confirm-bank');
       const accLabel = document.getElementById('confirm-account');
+      const bankLogo = document.getElementById('confirm-bank-logo');
       if (overlay) {
-        bankLabel.textContent = selectedBank ? selectedBank.name : '';
-        accLabel.textContent = document.getElementById('account-number').value;
+        if (bankLabel) bankLabel.textContent = selectedBank ? selectedBank.name : '';
+        if (accLabel) accLabel.textContent = document.getElementById('account-number').value;
+        if (bankLogo) {
+          bankLogo.src = selectedBank ? selectedBank.logo : '';
+          bankLogo.alt = selectedBank ? selectedBank.name : 'Banco';
+        }
         overlay.style.display = 'flex';
         gsap.fromTo(overlay, { opacity: 0 }, { opacity: 1, duration: 0.3 });
       }
