@@ -3207,6 +3207,66 @@
   background: var(--primary-light);
 }
 
+/* Pending validation card styled like transactions */
+.tarjeta-validacion.estilo-transaccion {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  background: var(--neutral-100);
+  border-radius: var(--radius-md);
+  padding: 0.75rem 1rem;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.3s var(--animation-bounce), box-shadow 0.3s ease;
+}
+
+.tarjeta-validacion.estilo-transaccion:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+
+.tarjeta-validacion.estilo-transaccion .cabecera {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.tarjeta-validacion.estilo-transaccion .icono-validacion {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-full);
+  background: var(--primary);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.tarjeta-validacion.estilo-transaccion .titulo strong {
+  display: block;
+  font-weight: 600;
+  font-size: 0.75rem;
+  color: var(--neutral-900);
+  margin-bottom: 0.25rem;
+}
+
+.tarjeta-validacion.estilo-transaccion .titulo p {
+  font-size: 0.65rem;
+  color: var(--neutral-600);
+}
+
+.botones-validacion {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-top: 0.25rem;
+}
+
+.botones-validacion button {
+  flex: 1;
+}
+
 @keyframes checkmarkPulse {
   0%, 100% {
     transform: scale(1);
@@ -4554,16 +4614,19 @@
     </div>
 
     <!-- Tarjeta: Validación pendiente -->
-    <div class="verificacion-card pendiente">
-      <div class="icono">⏳</div>
-      <div class="contenido">
-        <strong>Validación de datos de cuenta pendiente</strong>
-        <p>Para validar debes recargar desde tu propia cuenta y así habilitar tus retiros.</p>
-        <div class="botones">
-          <button>Validar, realizar recarga</button>
-          <button>Mi Estatus</button>
-          <button>Soporte</button>
+    <div class="tarjeta-validacion estilo-transaccion">
+      <div class="cabecera">
+        <span class="icono-validacion">⏳</span>
+        <div class="titulo">
+          <strong>Validación de datos de cuenta pendiente</strong>
+          <p>Para validar debes recargar desde tu propia cuenta y así habilitar tus retiros.</p>
         </div>
+      </div>
+
+      <div class="botones-validacion">
+        <button class="btn btn-outline btn-small">Validar, realizar recarga</button>
+        <button class="btn btn-outline btn-small">Mi Estatus</button>
+        <button class="btn btn-outline btn-small">Soporte</button>
       </div>
     </div>
   </div>
