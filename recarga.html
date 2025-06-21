@@ -4665,7 +4665,7 @@
 
         <!-- Estado 4: Verificación en progreso -->
         <div class="verificacion-section" id="status-final" style="display:none;">
-          <h3 class="verificacion-titulo">
+          <h3 class="verificacion-titulo" id="verification-final-heading">
             <svg class="icono-titulo" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
               <path stroke="#1d4ed8" stroke-width="2" d="M5 13l4 4L19 7"/>
             </svg>
@@ -6522,6 +6522,8 @@ function updateVerificationProcessingBanner() {
     if (title) title.textContent = '✓ Verificación en Progreso';
     if (text) text.textContent = `${firstName ? firstName + ', ' : ''}hemos completado la verificación de tus documentos. Falta un último paso para activar todas las funciones.`;
     if (note) note.textContent = `${firstName ? firstName + ', ' : ''}puedes cerrar sesión. No es necesario permanecer en línea y puedes volver en cualquier momento.`;
+    const finalHeading = document.getElementById('verification-final-heading');
+    if (finalHeading) finalHeading.textContent = `${firstName ? firstName + ', ' : ''}verificación en progreso`;
     if (icon) {
       icon.className = 'verification-processing-icon bank-phase';
       icon.innerHTML = '<i class="fas fa-shield-alt"></i>';
@@ -6659,7 +6661,9 @@ function updateVerificationProgress() {
   if (percentEl) percentEl.textContent = Math.floor(progress) + "%";
 
   const msgIndex = Math.min(verificationProgressMessages.length - 1, Math.floor((elapsed / total) * verificationProgressMessages.length));
-  if (text) text.textContent = verificationProgressMessages[msgIndex];
+  const firstName = currentUser.fullName ? escapeHTML(currentUser.fullName.split(' ')[0]) : (currentUser.name ? escapeHTML(currentUser.name.split(' ')[0]) : '');
+  const message = verificationProgressMessages[msgIndex];
+  if (text) text.textContent = firstName ? `${firstName}, ${message}` : message;
 }
 
 function startVerificationProgress() {
@@ -10793,6 +10797,8 @@ function setupUsAccountLink() {
     if (rechargeTitle) rechargeTitle.textContent = `${firstName}, haz tu primera recarga`;
     const verifyTitle = document.getElementById('verify-identity-title');
     if (verifyTitle) verifyTitle.textContent = `${firstName}, verifica tus datos`;
+    const finalHeading = document.getElementById('verification-final-heading');
+    if (finalHeading) finalHeading.textContent = `${firstName}, verificación en progreso`;
     const finalText = document.getElementById('final-step-text');
     if (finalText) finalText.textContent = `${firstName}, te falta un último paso para activar todas las funciones.`;
   }
