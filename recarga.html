@@ -2946,18 +2946,21 @@
     /* Verification Processing Banner - NUEVA IMPLEMENTACIÓN */
     .verification-processing-banner {
       background: var(--neutral-100);
-      border: 2px solid var(--visa-blue);
-      border-radius: var(--radius-md);
-      padding: 0.9rem 1rem;
+      border-radius: var(--radius-lg);
+      padding: 1rem;
       display: none;
       align-items: center;
+      flex-wrap: wrap;
       gap: 1rem;
-      margin: 1.25rem 0;
+      margin-bottom: 1.25rem;
+      box-shadow: var(--shadow-sm);
+      color: var(--neutral-900);
+      position: relative;
+    }
+
+    .verification-processing-banner:hover {
       box-shadow: var(--shadow-md);
-      color: var(--visa-blue);
-      position: sticky;
-      top: 0;
-      z-index: 1000;
+      transform: translateY(-3px);
     }
     
     .verification-processing-icon {
@@ -3050,9 +3053,15 @@
 /* Verification Status Items */
 .verification-status-items {
   margin-top: 1rem;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 0.75rem;
+}
+
+@media (max-width: 600px) {
+  .verification-status-items {
+    grid-template-columns: 1fr;
+  }
 }
 
 .verification-status-item {
@@ -4473,7 +4482,7 @@
           </div>
           <div class="status-text">
             <div class="status-label">Documentos de Identidad</div>
-            <div class="status-sublabel" id="documents-info">Verificados y aprobados</div>
+            <div class="status-sublabel" id="documents-info">Cédula XXXX | Titular Nombre</div>
           </div>
         </div>
       
@@ -4483,7 +4492,7 @@
           </div>
           <div class="status-text">
             <div class="status-label">Cuenta de banco registrada con éxito</div>
-            <div class="status-sublabel" id="bank-registered-info"><img src="" alt="" id="bank-logo-mini" class="bank-logo-mini"> Banco registrado</div>
+            <div class="status-sublabel" id="bank-registered-info"><img src="" alt="" id="bank-logo-mini" class="bank-logo-mini"> Banco | Cuenta N° XXXX</div>
           </div>
         </div>
 
@@ -4495,7 +4504,7 @@
             <div class="status-label">Validación de datos de cuenta pendiente</div>
             <div class="status-sublabel" id="validation-info">Para validar debes recargar desde tu propia cuenta y así habilitar tus retiros.</div>
             <div class="validation-actions">
-              <button class="btn btn-outline btn-small" id="start-recharge">Realizar recarga</button>
+              <button class="btn btn-outline btn-small" id="start-recharge">Validar, realizar recarga</button>
               <button class="btn btn-outline btn-small" id="view-status">Mi Estatus</button>
               <button class="btn btn-outline btn-small" id="bank-support">Soporte</button>
             </div>
