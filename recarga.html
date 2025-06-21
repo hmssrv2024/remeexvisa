@@ -3140,19 +3140,22 @@
   padding: 1rem;
   box-shadow: var(--shadow-sm);
   margin-bottom: 1.25rem;
+  font-family: 'Inter', 'Roboto', system-ui, sans-serif;
 }
 
 .verificacion-titulo {
   display: flex;
   align-items: center;
   gap: 0.4rem;
-  color: var(--visa-blue);
-  font-size: 0.95rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1d4ed8;
   margin-bottom: 0.25rem;
 }
 
 .verificacion-descripcion {
-  font-size: 0.8rem;
+  font-size: 0.875rem;
+  color: #4b5563;
   margin-bottom: 0.75rem;
 }
 
@@ -3190,6 +3193,18 @@
 
 .verificacion-card .contenido-estatus {
   flex: 1;
+}
+
+.verificacion-card .contenido-estatus strong {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.verificacion-card .contenido-estatus p {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin: 0;
 }
 
 .verificacion-card.estatus-exitoso .icono-estatus svg {
@@ -3258,6 +3273,11 @@
 
 .botones-validacion button {
   flex: 1;
+}
+
+.boton-accion {
+  font-size: 0.85rem;
+  padding: 0.45rem 0.95rem;
 }
 
 @keyframes checkmarkPulse {
