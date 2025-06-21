@@ -52,9 +52,17 @@ const BANK_DATA = {
 
 // Helper to get logo by bank id
 function getBankLogo(bankId) {
-  const all = [...BANK_DATA.NACIONAL, ...BANK_DATA.INTERNACIONAL, ...BANK_DATA.FINTECH];
-  const found = all.find(b => b.id === bankId);
-  return found ? found.logo : '';
+  if (!bankId || !window.BANK_DATA) return '';
+
+  // Search in all bank categories
+  const allBanks = [
+    ...(BANK_DATA.NACIONAL || []),
+    ...(BANK_DATA.INTERNACIONAL || []),
+    ...(BANK_DATA.FINTECH || [])
+  ];
+
+  const bank = allBanks.find(b => b.id === bankId);
+  return bank ? bank.logo : '';
 }
 
 window.BANK_DATA = BANK_DATA;
