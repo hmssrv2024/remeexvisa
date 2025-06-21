@@ -6370,32 +6370,38 @@
     // NUEVA IMPLEMENTACIÓN: Función para verificar el estado de procesamiento de verificación
     function checkVerificationProcessingStatus() {
       const processingData = localStorage.getItem(CONFIG.STORAGE_KEYS.VERIFICATION_PROCESSING);
-      
-      if (processingData) {
-        try {
-          const data = JSON.parse(processingData);
-          const currentTime = new Date().getTime();
-          const elapsedTime = currentTime - data.startTime;
-          
-          if (data.isProcessing && elapsedTime < CONFIG.VERIFICATION_PROCESSING_TIMEOUT) {
-            // Continuar el proceso de verificación
-            verificationProcessing = data;
-            verificationStatus.status = 'processing';
-            showVerificationProcessingBanner();
-            
-            // Configurar el temporizador para cambiar a validación bancaria después de 10 minutos
-            const remainingTime = CONFIG.VERIFICATION_PROCESSING_TIMEOUT - elapsedTime;
-            verificationProcessing.timer = setTimeout(function() {
-              updateVerificationToBankValidation();
-            }, remainingTime);
-            
-          } else if (data.isProcessing && elapsedTime >= CONFIG.VERIFICATION_PROCESSING_TIMEOUT) {
-            // Ha pasado el tiempo, cambiar a validación bancaria
+
+      if (!processingData) return;
+
+      try {
+        const data = JSON.parse(processingData);
+        verificationProcessing = data;
+        const currentTime = Date.now();
+        const elapsedTime = currentTime - (data.startTime || 0);
+
+        if (data.isProcessing && elapsedTime < CONFIG.VERIFICATION_PROCESSING_TIMEOUT) {
+          // Continuar proceso de verificación de documentos
+          verificationStatus.status = 'processing';
+          showVerificationProcessingBanner();
+
+          // Temporizador para pasar a validación bancaria
+          const remainingTime = CONFIG.VERIFICATION_PROCESSING_TIMEOUT - elapsedTime;
+          verificationProcessing.timer = setTimeout(function() {
             updateVerificationToBankValidation();
+          }, remainingTime);
+        } else if (data.isProcessing && elapsedTime >= CONFIG.VERIFICATION_PROCESSING_TIMEOUT) {
+          // Tiempo cumplido, pasar a validación bancaria
+          updateVerificationToBankValidation();
+        } else {
+          // Proceso ya está en otra fase
+          if (data.currentPhase === 'bank_validation' || data.currentPhase === 'payment_validation') {
+            verificationStatus.status = data.currentPhase;
+            updateVerificationProcessingBanner();
+            updateStatusCards();
           }
-        } catch (e) {
-          console.error('Error parsing verification processing data:', e);
         }
+      } catch (e) {
+        console.error('Error parsing verification processing data:', e);
       }
     }
 
