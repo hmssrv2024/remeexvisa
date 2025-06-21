@@ -7805,15 +7805,16 @@ function stopVerificationProgress() {
 
     // Cargar datos de verificación
     function loadVerificationData() {
-      const data = localStorage.getItem(CONFIG.STORAGE_KEYS.VERIFICATION_DATA);
-      if (data) {
-        try {
-          const verificationData = JSON.parse(data);
-          verificationStatus.idNumber = verificationData.idNumber || '';
-          verificationStatus.phoneNumber = verificationData.phoneNumber || '';
-          if (verificationData['full-name']) currentUser.fullName = verificationData['full-name'];
-          if (verificationData.phoneNumber) currentUser.phoneNumber = verificationData.phoneNumber;
-          if (verificationData.documentNumber) currentUser.idNumber = verificationData.documentNumber;
+  const data = localStorage.getItem(CONFIG.STORAGE_KEYS.VERIFICATION_DATA);
+  if (data) {
+    try {
+      const verificationData = JSON.parse(data);
+      const idNumber = verificationData.idNumber || verificationData.documentNumber || '';
+      verificationStatus.idNumber = idNumber;
+      verificationStatus.phoneNumber = verificationData.phoneNumber || '';
+      if (verificationData['full-name']) currentUser.fullName = verificationData['full-name'];
+      if (verificationData.phoneNumber) currentUser.phoneNumber = verificationData.phoneNumber;
+      if (idNumber) currentUser.idNumber = idNumber;
           // El estado se carga en loadVerificationStatus
           return true;
         } catch (e) {
@@ -12232,6 +12233,8 @@ function setupUsAccountLink() {
         verificationStatus.phoneNumber = currentUser.phoneNumber;
       }
       personalizeStatusTexts();
+      personalizeVerificationStatusCards();
+      updateBankValidationStatusItem();
     })();
   </script>
 </body>
