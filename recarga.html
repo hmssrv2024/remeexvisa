@@ -3044,20 +3044,28 @@
     }
     
 /* Verification Status Cards */
+
 .verification-status-cards {
   margin-top: 1rem;
   display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 1rem;
+  width: 100%;
 }
 
-.verification-status-item {
+.verification-status-item,
+.verificacion-item {
   display: flex;
-  width: 100%;
-  align-items: flex-start;
-  gap: 0.5rem;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  flex: 1;
+  min-width: 30%;
+  gap: 0.75rem;
   background: var(--neutral-100);
-  padding: 0.5rem 0.75rem;
+  padding: 0.75rem 1rem;
   border-radius: var(--radius-md);
   color: var(--neutral-900);
   box-shadow: var(--shadow-sm);
@@ -4464,7 +4472,7 @@
 
 <!-- Status Cards -->
 <div class="verification-status-cards" id="verification-status-cards" style="display:none;">
-  <div class="verification-status-item card" id="status-documents">
+  <div class="verification-status-item verificacion-item card" id="status-documents">
     <div class="status-icon-container">
       <i class="fas fa-check-circle status-icon success"></i>
     </div>
@@ -4474,7 +4482,7 @@
     </div>
   </div>
 
-  <div class="verification-status-item card" id="status-bank">
+  <div class="verification-status-item verificacion-item card" id="status-bank">
     <div class="status-icon-container">
       <i class="fas fa-check-circle status-icon success"></i>
     </div>
@@ -4484,7 +4492,7 @@
     </div>
   </div>
 
-  <div class="verification-status-item card" id="status-bank-validation">
+  <div class="verification-status-item verificacion-item card" id="status-bank-validation">
     <div class="status-icon-container">
       <i class="fas fa-hourglass-half status-icon warning"></i>
     </div>
