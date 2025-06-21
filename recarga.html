@@ -8011,7 +8011,8 @@ function stopVerificationProgress() {
             showVerificationProcessingBanner();
             updateVerificationProcessingBanner();
           } else {
-            hideVerificationProcessingBanner();
+            // Ocultar el banner sin eliminar el estado guardado
+            hideVerificationProcessingBanner(false);
           }
         } catch (e) {
           console.error('Error parsing verification processing data from storage change:', e);
