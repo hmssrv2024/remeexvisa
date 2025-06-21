@@ -1,9 +1,12 @@
-html, body {
+html,
+body {
   max-width: 100%;
   overflow-x: hidden;
 }
 
-img, video, iframe {
+img,
+video,
+iframe {
   max-width: 100%;
   height: auto;
 }
@@ -12,10 +15,40 @@ img, video, iframe {
 .main-container {
   width: 100%;
   box-sizing: border-box;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+@media (max-width: 768px) {
+  .container,
+  .main-container {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+
+  .card {
+    padding: 1rem;
+  }
 }
 
 @media (max-width: 480px) {
   body {
     font-size: 14px;
+  }
+
+  .header-title,
+  .section-title {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 360px) {
+  body {
+    font-size: 12px;
+  }
+
+  .header-title,
+  .section-title {
+    font-size: 0.9rem;
   }
 }
