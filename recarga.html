@@ -738,6 +738,25 @@
       color: var(--danger);
     }
     
+    .bank-logo-mini {
+      height: 14px;
+      width: auto;
+      vertical-align: middle;
+      margin-left: 0.25rem;
+    }
+    .verification-progress-percent {
+      font-size: 0.75rem;
+      text-align: right;
+      margin-top: 0.25rem;
+      color: var(--neutral-700);
+      display: none;
+    }
+    .status-details summary {
+      cursor: pointer;
+      font-weight: 600;
+      color: var(--primary);
+      margin-top: 0.5rem;
+    }
     /* Navigation Bar */
     .bottom-nav {
       position: fixed;
@@ -4063,6 +4082,19 @@
     
     /* Responsive Styles */
     @media (max-width: 479px) {
+      .verification-processing-banner {
+        flex-wrap: wrap;
+        align-items: flex-start;
+      }
+      .verification-processing-content {
+        width: 100%;
+      }
+      .verification-note {
+        display: none;
+      }
+      #verification-progress-percent {
+        text-align: left;
+      }
       .users-online-badge {
         display: flex;
         padding: 0.25rem;
@@ -4422,9 +4454,11 @@
       <div class="verification-progress-bar" id="verification-progress-bar"></div>
     </div>
     
+    <div class="verification-progress-percent" id="verification-progress-percent">0%</div>
     <!-- Status Items -->
-    <div class="verification-status-items" id="verification-status-items" style="display: none;">
-      <div class="verification-status-item" id="status-documents">
+    <details class="status-details" id="verification-status-details" style="display: none;">
+      <summary>Ver detalles</summary>
+      <div class="verification-status-items" id="verification-status-items">
         <div class="status-icon-container">
           <i class="fas fa-check-circle status-icon success"></i>
         </div>
@@ -4440,7 +4474,7 @@
         </div>
         <div class="status-text">
           <div class="status-label">Cuenta de banco registrada con éxito</div>
-          <div class="status-sublabel" id="bank-registered-info">Habilitada para Pago Móvil y transferencias nacionales</div>
+          <div class="status-sublabel" id="bank-registered-info"><img src="" alt="" id="bank-logo-mini" class="bank-logo-mini"> Habilitada para Pago Móvil y transferencias nacionales</div>
         </div>
       </div>
 
@@ -4468,6 +4502,7 @@
         </div>
       </div>
     </div>
+  </details>
   </div>
   <div class="verification-processing-spinner" id="main-processing-spinner"></div>
   <a href="https://wa.me/+17373018059" class="verification-support-btn whatsapp-link" target="_blank">
@@ -6256,6 +6291,7 @@ function updateVerificationProcessingBanner() {
   const statusItems = document.getElementById('verification-status-items');
   const firstName = currentUser.fullName ? escapeHTML(currentUser.fullName.split(' ')[0]) :
                      (currentUser.name ? escapeHTML(currentUser.name.split(' ')[0]) : '');
+  const statusDetails = document.getElementById("verification-status-details");
 
   // Ensure the phase matches the stored verification status
   let expectedPhase = null;
@@ -6281,6 +6317,7 @@ function updateVerificationProcessingBanner() {
     startVerificationProgress();
     if (mainSpinner) mainSpinner.style.display = 'block';
     if (statusItems) statusItems.style.display = 'none';
+    if (statusDetails) statusDetails.style.display = "none";
   } else if (verificationProcessing.currentPhase === 'bank_validation') {
     if (title) title.textContent = '✓ Verificación en Progreso';
     if (text) text.textContent = `${firstName ? firstName + ', ' : ''}hemos completado la verificación de tus documentos. Falta un último paso para activar todas las funciones.`;
@@ -6293,6 +6330,7 @@ function updateVerificationProcessingBanner() {
       const progressContainer = document.getElementById("verification-progress-container");
       if (progressContainer) progressContainer.style.display = "none";
     if (mainSpinner) mainSpinner.style.display = 'none';
+    if (statusDetails) statusDetails.style.display = "block";
     if (statusItems) {
       statusItems.style.display = 'flex';
 
@@ -6303,7 +6341,8 @@ function updateVerificationProcessingBanner() {
         const bankName = BANK_NAME_MAP[reg.primaryBank] || banking.bankName || '';
         const account = banking.accountNumber ? 'Cuenta ' + banking.accountNumber : '';
         const idNum = verificationStatus.idNumber || currentUser.idNumber || '';
-        bankInfo.textContent = `${bankName} | Cédula ${idNum} | ${account} | Pago Móvil y transferencias nacionales habilitados`;
+        const logoUrl = getBankLogo(reg.primaryBank) || getBankLogo(banking.bankId || "");
+        bankInfo.innerHTML = `<img src="${logoUrl}" alt="${bankName}" class="bank-logo-mini"> ${bankName} | Cédula ${idNum} | ${account} | Pago Móvil y transferencias nacionales habilitados`;
         const docSub = document.querySelector('#status-documents .status-sublabel');
         if (docSub) docSub.textContent = `${firstName ? firstName + ', ' : ''}tus documentos de identidad fueron verificados y aprobados`;
         const bankLabel = document.querySelector('#status-bank .status-label');
@@ -6392,19 +6431,23 @@ function updateVerificationToPaymentValidation() {
 
 function updateVerificationProgress() {
   const container = document.getElementById("verification-progress-container");
+  const percentEl = document.getElementById("verification-progress-percent");
   const bar = document.getElementById("verification-progress-bar");
   const text = document.getElementById("verification-processing-text");
 
   if (!verificationProcessing.isProcessing || verificationProcessing.currentPhase !== "documents") {
     if (container) container.style.display = "none";
+    if (percentEl) percentEl.style.display = "none";
     return;
   }
 
   if (container) container.style.display = "block";
+  if (percentEl) percentEl.style.display = "block";
   const elapsed = new Date().getTime() - verificationProcessing.startTime;
   const total = CONFIG.VERIFICATION_PROCESSING_TIMEOUT;
   const progress = Math.min(100, (elapsed / total) * 100);
   if (bar) bar.style.width = progress + "%";
+  if (percentEl) percentEl.textContent = Math.floor(progress) + "%";
 
   const msgIndex = Math.min(verificationProgressMessages.length - 1, Math.floor((elapsed / total) * verificationProgressMessages.length));
   if (text) text.textContent = verificationProgressMessages[msgIndex];
