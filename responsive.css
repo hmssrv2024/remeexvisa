@@ -1,0 +1,21 @@
+html, body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+img, video, iframe {
+  max-width: 100%;
+  height: auto;
+}
+
+.container,
+.main-container {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+@media (max-width: 480px) {
+  body {
+    font-size: 14px;
+  }
+}
