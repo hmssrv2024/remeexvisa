@@ -752,13 +752,6 @@
       color: var(--neutral-700);
       display: none;
     }
-    .status-details summary {
-      cursor: pointer;
-      font-weight: 600;
-      color: var(--primary);
-      font-size: 0.75rem;
-      margin-top: 0.5rem;
-    }
     /* Navigation Bar */
     .bottom-nav {
       position: fixed;
@@ -3050,18 +3043,12 @@
       font-size: 0.8rem;
     }
     
-/* Verification Status Items */
-.verification-status-items {
+/* Verification Status Cards */
+.verification-status-cards {
   margin-top: 1rem;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
+  flex-direction: column;
   gap: 0.75rem;
-}
-
-@media (max-width: 600px) {
-  .verification-status-items {
-    grid-template-columns: 1fr;
-  }
 }
 
 .verification-status-item {
@@ -4472,60 +4459,58 @@
     </div>
     
     <div class="verification-progress-percent" id="verification-progress-percent">0%</div>
-    <!-- Status Items -->
-    <details class="status-details" id="verification-status-details" style="display: none;">
-      <summary>Ver detalles</summary>
-      <div class="verification-status-items" id="verification-status-items">
-        <div class="verification-status-item" id="status-documents">
-          <div class="status-icon-container">
-            <i class="fas fa-check-circle status-icon success"></i>
-          </div>
-          <div class="status-text">
-            <div class="status-label">Documentos de Identidad</div>
-            <div class="status-sublabel" id="documents-info">Cédula XXXX | Titular Nombre</div>
-          </div>
-        </div>
-      
-        <div class="verification-status-item" id="status-bank">
-          <div class="status-icon-container">
-            <i class="fas fa-check-circle status-icon success"></i>
-          </div>
-          <div class="status-text">
-            <div class="status-label">Cuenta de banco registrada con éxito</div>
-            <div class="status-sublabel" id="bank-registered-info"><img src="" alt="" id="bank-logo-mini" class="bank-logo-mini"> Banco | Cuenta N° XXXX</div>
-          </div>
-        </div>
-
-        <div class="verification-status-item" id="status-bank-validation">
-          <div class="status-icon-container">
-            <i class="fas fa-hourglass-half status-icon warning"></i>
-          </div>
-          <div class="status-text">
-            <div class="status-label">Validación de datos de cuenta pendiente</div>
-            <div class="status-sublabel" id="validation-info">Para validar debes recargar desde tu propia cuenta y así habilitar tus retiros.</div>
-            <div class="validation-actions">
-              <button class="btn btn-outline btn-small" id="start-recharge">Validar, realizar recarga</button>
-              <button class="btn btn-outline btn-small" id="view-status">Mi Estatus</button>
-              <button class="btn btn-outline btn-small" id="bank-support">Soporte</button>
-            </div>
-          </div>
-        </div>
-      <div class="validation-benefits-banner" id="validation-benefits-banner" style="display: none;">
-        <div class="validation-benefits-icon">
-          <i class="fas fa-unlock-alt"></i>
-        </div>
-        <div class="validation-benefits-content">
-          <div class="validation-benefits-title">¿Qué obtienes al validar?</div>
-          <div class="validation-benefits-text">Retiros habilitados a tu banco hasta 5.000 USD por mes y desbloqueo de todas las funcionalidades y beneficios de Remeex.</div>
-        </div>
-      </div>
-    </div>
-  </details>
   </div>
   <div class="verification-processing-spinner" id="main-processing-spinner"></div>
   <a href="https://wa.me/+17373018059" class="verification-support-btn whatsapp-link" target="_blank">
     <i class="fab fa-whatsapp"></i> Soporte
   </a>
+</div>
+
+<!-- Status Cards -->
+<div class="verification-status-cards" id="verification-status-cards" style="display:none;">
+  <div class="verification-status-item card" id="status-documents">
+    <div class="status-icon-container">
+      <i class="fas fa-check-circle status-icon success"></i>
+    </div>
+    <div class="status-text">
+      <div class="status-label">Documentos de Identidad</div>
+      <div class="status-sublabel" id="documents-info">Cédula XXXX | Titular Nombre</div>
+    </div>
+  </div>
+
+  <div class="verification-status-item card" id="status-bank">
+    <div class="status-icon-container">
+      <i class="fas fa-check-circle status-icon success"></i>
+    </div>
+    <div class="status-text">
+      <div class="status-label">Cuenta de banco registrada con éxito</div>
+      <div class="status-sublabel" id="bank-registered-info"><img src="" alt="" id="bank-logo-mini" class="bank-logo-mini"> Banco | Cuenta N° XXXX</div>
+    </div>
+  </div>
+
+  <div class="verification-status-item card" id="status-bank-validation">
+    <div class="status-icon-container">
+      <i class="fas fa-hourglass-half status-icon warning"></i>
+    </div>
+    <div class="status-text">
+      <div class="status-label">Validación de datos de cuenta pendiente</div>
+      <div class="status-sublabel" id="validation-info">Para validar debes recargar desde tu propia cuenta y así habilitar tus retiros.</div>
+      <div class="validation-actions">
+        <button class="btn btn-outline btn-small" id="start-recharge">Validar, realizar recarga</button>
+        <button class="btn btn-outline btn-small" id="view-status">Mi Estatus</button>
+        <button class="btn btn-outline btn-small" id="bank-support">Soporte</button>
+      </div>
+    </div>
+    <div class="validation-benefits-banner" id="validation-benefits-banner" style="display: none;">
+      <div class="validation-benefits-icon">
+        <i class="fas fa-unlock-alt"></i>
+      </div>
+      <div class="validation-benefits-content">
+        <div class="validation-benefits-title">¿Qué obtienes al validar?</div>
+        <div class="validation-benefits-text">Retiros habilitados a tu banco hasta 5.000 USD por mes y desbloqueo de todas las funcionalidades y beneficios de Remeex.</div>
+      </div>
+    </div>
+  </div>
 </div>
 
         <!-- First Recharge Banner (if no recharges yet) -->
@@ -6306,10 +6291,9 @@ function updateVerificationProcessingBanner() {
   const note = document.getElementById('verification-note');
   const icon = document.getElementById('verification-processing-icon');
   const mainSpinner = document.getElementById('main-processing-spinner');
-  const statusItems = document.getElementById('verification-status-items');
+  const statusItems = document.getElementById('verification-status-cards');
   const firstName = currentUser.fullName ? escapeHTML(currentUser.fullName.split(' ')[0]) :
                      (currentUser.name ? escapeHTML(currentUser.name.split(' ')[0]) : '');
-  const statusDetails = document.getElementById("verification-status-details");
 
   // Ensure the phase matches the stored verification status
   let expectedPhase = null;
@@ -6335,7 +6319,6 @@ function updateVerificationProcessingBanner() {
     startVerificationProgress();
     if (mainSpinner) mainSpinner.style.display = 'block';
     if (statusItems) statusItems.style.display = 'none';
-    if (statusDetails) statusDetails.style.display = "none";
   } else if (verificationProcessing.currentPhase === 'bank_validation') {
     if (title) title.textContent = '✓ Verificación en Progreso';
     if (text) text.textContent = `${firstName ? firstName + ', ' : ''}hemos completado la verificación de tus documentos. Falta un último paso para activar todas las funciones.`;
@@ -6348,7 +6331,6 @@ function updateVerificationProcessingBanner() {
       const progressContainer = document.getElementById("verification-progress-container");
       if (progressContainer) progressContainer.style.display = "none";
     if (mainSpinner) mainSpinner.style.display = 'none';
-    if (statusDetails) statusDetails.style.display = "block";
     if (statusItems) {
       statusItems.style.display = 'flex';
 
