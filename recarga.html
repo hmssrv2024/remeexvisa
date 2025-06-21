@@ -756,6 +756,7 @@
       cursor: pointer;
       font-weight: 600;
       color: var(--primary);
+      font-size: 0.75rem;
       margin-top: 0.5rem;
     }
     /* Navigation Bar */
@@ -3057,12 +3058,11 @@
 .verification-status-item {
   display: flex;
   align-items: center;
-  gap: 0.6rem;
+  gap: 0.5rem;
   background: var(--neutral-100);
-  border: 1px solid var(--neutral-300);
   padding: 0.6rem;
   border-radius: var(--radius-md);
-  color: var(--neutral-800);
+  color: var(--neutral-900);
   box-shadow: var(--shadow-sm);
   transition: all 0.3s ease;
 }
@@ -3112,12 +3112,12 @@
 
 .status-label {
   font-weight: 600;
-  font-size: 0.85rem;
+  font-size: 0.75rem;
   margin-bottom: 0.125rem;
 }
 
 .status-sublabel {
-  font-size: 0.7rem;
+  font-size: 0.65rem;
   opacity: 0.9;
 }
 
@@ -4483,7 +4483,7 @@
           </div>
           <div class="status-text">
             <div class="status-label">Cuenta de banco registrada con éxito</div>
-            <div class="status-sublabel" id="bank-registered-info"><img src="" alt="" id="bank-logo-mini" class="bank-logo-mini"> Habilitada para Pago Móvil y transferencias nacionales</div>
+            <div class="status-sublabel" id="bank-registered-info"><img src="" alt="" id="bank-logo-mini" class="bank-logo-mini"> Banco registrado</div>
           </div>
         </div>
 
@@ -4493,7 +4493,7 @@
           </div>
           <div class="status-text">
             <div class="status-label">Validación de datos de cuenta pendiente</div>
-            <div class="status-sublabel" id="validation-info">Para validar realiza una recarga desde tu cuenta registrada.</div>
+            <div class="status-sublabel" id="validation-info">Para validar debes recargar desde tu propia cuenta y así habilitar tus retiros.</div>
             <div class="validation-actions">
               <button class="btn btn-outline btn-small" id="start-recharge">Realizar recarga</button>
               <button class="btn btn-outline btn-small" id="view-status">Mi Estatus</button>
@@ -6351,7 +6351,7 @@ function updateVerificationProcessingBanner() {
         const account = banking.accountNumber ? 'Cuenta N° ' + banking.accountNumber : '';
         const idNum = verificationStatus.idNumber || currentUser.idNumber || '';
         const logoUrl = getBankLogo(reg.primaryBank) || getBankLogo(banking.bankId || "");
-        bankInfo.innerHTML = `<img src="${logoUrl}" alt="${bankName}" class="bank-logo-mini"> ${bankName} | ${account} | Cédula ${idNum}`;
+        bankInfo.innerHTML = `<img src="${logoUrl}" alt="${bankName}" class="bank-logo-mini"> ${bankName} | ${account}`;
         const docSub = document.querySelector('#status-documents .status-sublabel');
         if (docSub) {
           const fullName = escapeHTML(currentUser.fullName || currentUser.name || '');
@@ -6417,8 +6417,7 @@ function updateBankValidationStatusItem() {
   } else {
     if (label) label.textContent = 'Validación de datos de cuenta pendiente';
     if (sublabel) {
-      const bsAmount = (requiredUsd * CONFIG.EXCHANGE_RATES.USD_TO_BS).toFixed(2);
-      sublabel.textContent = `${firstName ? firstName + ', ' : ''}para validar debes recargar ${requiredUsd} USD (${bsAmount} Bs) desde tu propia cuenta del ${bankName}. Ese monto se sumará a tu saldo en Remeex y habilitará tus retiros.`;
+      sublabel.textContent = `${firstName ? firstName + ', ' : ''}para validar debes realizar una recarga desde tu propia cuenta del ${bankName} a tu perfil de Remeex. Tu saldo se sumará y habilitará tus retiros como medida de seguridad.`;
     }
     if (rechargeBtn) rechargeBtn.style.display = 'inline-block';
     if (statusBtn) statusBtn.style.display = 'inline-block';
