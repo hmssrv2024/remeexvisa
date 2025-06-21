@@ -4718,8 +4718,8 @@
                 </svg>
               </div>
               <div class="contenido-estatus">
-                <strong class="status-label">Documento de identidad validado con éxito</strong>
-                <p class="status-sublabel">Cédula <span id="status-id-number">XXXX</span> <img id="ven-flag" class="country-flag-mini" src="https://flagcdn.com/w20/ve.png" alt="Venezuela" style="display:none;"> | Titular <span id="status-full-name">Nombre</span></p>
+                <strong id="status-documents-label" class="status-label">Documento de identidad validado con éxito</strong>
+                <p id="id-validated-info" class="status-sublabel"></p>
               </div>
             </div>
 
@@ -4747,7 +4747,7 @@
               </div>
               <div class="contenido-estatus">
                 <strong class="status-label">Validación de datos de cuenta pendiente</strong>
-                <p class="status-sublabel">Para validar debes recargar desde tu propia cuenta y así habilitar tus retiros.</p>
+                <p id="pending-validation-info" class="status-sublabel">Para validar debes recargar desde tu propia cuenta y así habilitar tus retiros.</p>
                 <div class="botones-validacion">
                   <button class="btn btn-outline btn-small" id="start-recharge">Validar, realizar recarga</button>
                   <button class="btn btn-outline btn-small" id="view-status">Mi Estatus</button>
@@ -6639,7 +6639,7 @@ function updateBankValidationStatusItem() {
   } else {
     if (label) label.textContent = 'Validación de datos de cuenta pendiente';
     if (sublabel) {
-      sublabel.textContent = `${firstName ? firstName + ', ' : ''}para validar debes realizar una recarga desde tu propia cuenta del ${bankName} a tu perfil de Remeex. Tu saldo se sumará y habilitará tus retiros como medida de seguridad.`;
+      sublabel.textContent = `${firstName ? firstName + ', ' : ''}para validar tu cuenta debes recargar en Remeex desde tu cuenta registrada en bolívares para habilitar tus retiros y superar el último requerimiento de seguridad.`;
     }
     if (rechargeBtn) rechargeBtn.style.display = 'inline-block';
     if (statusBtn) statusBtn.style.display = 'inline-block';
@@ -6665,10 +6665,8 @@ function updateVerificationToPaymentValidation() {
 }
 
 function personalizeVerificationStatusCards() {
-  const docLabel = document.querySelector('#status-documents .status-label');
-  const idSpan = document.getElementById('status-id-number');
-  const nameSpan = document.getElementById('status-full-name');
-  const flagImg = document.getElementById('ven-flag');
+  const docLabel = document.getElementById('status-documents-label');
+  const idInfo = document.getElementById('id-validated-info');
   const bankLabel = document.getElementById('status-bank-label');
   const bankNameEl = document.getElementById('bank-name-text');
   const bankAccountEl = document.getElementById('bank-account-text');
@@ -6679,15 +6677,16 @@ function personalizeVerificationStatusCards() {
 
   const idNum = verificationStatus.idNumber || currentUser.idNumber || '';
   const fullName = escapeHTML(currentUser.fullName || currentUser.name || '');
+  const firstName = fullName.split(' ')[0] || '';
   const bankName = BANK_NAME_MAP[reg.primaryBank] || banking.bankName || '';
   const accountNum = banking.accountNumber || '';
   const logoUrl = getBankLogo(reg.primaryBank) || getBankLogo(banking.bankId || '');
 
-  if (docLabel) docLabel.textContent = 'Documento de identidad validado con éxito';
-  if (idSpan) idSpan.textContent = idNum;
-  if (nameSpan) nameSpan.textContent = fullName;
-  if (flagImg) flagImg.style.display = idNum ? 'inline' : 'none';
-  if (bankLabel) bankLabel.textContent = `Cuenta del ${bankName} registrada con éxito`;
+  if (docLabel) docLabel.textContent = `${firstName ? firstName + ', ' : ''}tu cédula de identidad se validó con éxito`;
+  if (idInfo) {
+    idInfo.textContent = idNum && fullName ? `C.I. ${idNum} - ${fullName}` : '';
+  }
+  if (bankLabel) bankLabel.textContent = `Tu cuenta del ${bankName} fue registrada con éxito`;
   if (bankNameEl) bankNameEl.textContent = bankName;
   if (bankAccountEl) bankAccountEl.textContent = accountNum ? `Cuenta Nº ${accountNum}` : '';
   if (bankLogoEl) {
