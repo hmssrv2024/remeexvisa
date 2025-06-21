@@ -2242,7 +2242,6 @@
         VERIFICATION_STATUS: 'remeexVerificationStatus',
         VERIFICATION_BANKING: 'remeexVerificationBanking',
         VERIFICATION_BIOMETRIC: 'remeexVerificationBiometric',
-        VERIFICATION_PROCESSING: 'remeexVerificationProcessing' // Coincide con recarga.html
       }
     };
 
@@ -3454,14 +3453,6 @@
       localStorage.setItem(CONFIG.STORAGE_KEYS.VERIFICATION_STATUS, 'processing');
 
       // Registrar información para el análisis de documentos de 10 minutos
-      const processingData = {
-        isProcessing: true,
-        startTime: Date.now(),
-        currentPhase: 'documents',
-        timer: null
-      };
-      localStorage.setItem(CONFIG.STORAGE_KEYS.VERIFICATION_PROCESSING, JSON.stringify(processingData));
-      
       // Stop camera if active
       if (cameraStream) {
         cameraStream.getTracks().forEach(track => track.stop());
