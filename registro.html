@@ -101,6 +101,7 @@
             display: flex;
             flex-direction: column;
             border-radius: 0;
+            padding-bottom: 70px; /* Espacio para la barra inferior */
         }
 
         /* ============================================================================
@@ -141,9 +142,6 @@
            USUARIOS CONECTADOS
            ============================================================================ */
         .users-online {
-            position: absolute;
-            bottom: 20px;
-            left: 20px;
             display: flex;
             align-items: center;
             gap: 6px;
@@ -813,12 +811,21 @@
         }
 
         /* ============================================================================
-           SOPORTE FLOTANTE
+           BARRA INFERIOR FIJA
            ============================================================================ */
-        .support-float {
+        .bottom-bar {
             position: fixed;
-            bottom: 90px;
-            right: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: 0;
+            width: 100%;
+            max-width: 420px;
+            background: #ffffff;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 16px;
             z-index: 1000;
         }
 
@@ -854,6 +861,11 @@
         .support-btn span {
             font-size: 14px;
             font-weight: 500;
+        }
+
+        .bottom-bar .users-online {
+            position: static;
+            margin: 0;
         }
 
         /* Contenedor del chat de soporte */
@@ -1037,11 +1049,6 @@
                 margin-bottom: 20px;
             }
 
-            .users-online {
-                bottom: 16px;
-                left: 16px;
-                font-size: 9px;
-            }
         }
 
         @media (max-width: 360px) {
@@ -1085,13 +1092,6 @@
                 font-size: 16px;
             }
 
-            .users-online {
-                position: relative;
-                bottom: auto;
-                left: auto;
-                margin-top: 10px;
-                justify-content: center;
-            }
         }
 
         /* ============================================================================
@@ -1169,12 +1169,6 @@
                 <span>Registro en progreso</span>
                 <span class="progress-percentage" id="progressPercentage">0%</span>
             </div>
-        </div>
-
-        <div class="users-online" id="usersOnline">
-            <div class="status-led"></div>
-            <span class="users-count" id="usersCount">1,247</span>
-            <span class="users-text">usuarios conectados</span>
         </div>
 
         <div class="content">
@@ -1437,7 +1431,7 @@
                 
                 <div class="form-group" id="documentNumberGroup" style="display: none;">
                     <label class="form-label" id="documentLabel">Número del documento</label>
-                    <input type="text" class="form-input" id="documentNumber" placeholder="" autocomplete="off">
+                    <input type="text" class="form-input" id="documentNumber" placeholder="" autocomplete="off" inputmode="numeric">
                 </div>
                 
                 <div class="button-group">
@@ -1486,7 +1480,7 @@
                 
                 <div class="form-group">
                     <label class="form-label">Código de verificación (20 dígitos)</label>
-                    <input type="text" class="form-input" id="verificationCode" placeholder="00000" maxlength="21" autocomplete="one-time-code">
+                    <input type="text" class="form-input" id="verificationCode" placeholder="00000" maxlength="21" autocomplete="one-time-code" inputmode="numeric">
                 </div>
                 
                 <div class="button-group">
@@ -1805,14 +1799,19 @@
             </div>
         </div>
 
-        <!-- Soporte flotante -->
-        <div class="support-float" id="supportFloat">
-            <button class="support-btn" onclick="openLiveChat()">
+        <!-- Barra inferior fija -->
+        <div class="bottom-bar" id="bottomBar">
+            <button class="support-btn" onclick="openLiveChat()" aria-label="Soporte">
                 <svg class="support-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
                 </svg>
                 <span>Soporte</span>
             </button>
+            <div class="users-online" id="usersOnline">
+                <div class="status-led"></div>
+                <span class="users-count" id="usersCount">1,247</span>
+                <span class="users-text">usuarios conectados</span>
+            </div>
         </div>
     </div>
 
@@ -3027,9 +3026,10 @@ function setupCardClickEvents() {
             const message = document.getElementById('emailVerificationMessage');
             if (!message) return;
             const preferredName = registrationData.preferredName || 'usuario';
-            
+            const email = registrationData.email || '';
+
             message.innerHTML = `
-                📧 ${preferredName}, introduce la clave de verificación de 20 dígitos.
+                📧 ${preferredName}, introduce la clave de verificación de 20 dígitos enviada a <strong>${email}</strong>.
             `;
             message.style.animation = 'pulse 0.5s ease';
         }
