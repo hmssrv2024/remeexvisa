@@ -745,7 +745,24 @@
       width: auto;
       vertical-align: middle;
       margin-left: 0.25rem;
+      display: inline-block;
     }
+
+    #id-validated-info {
+      font-size: 0.65rem;
+      color: var(--neutral-600);
+      margin-top: 0.125rem;
+    }
+
+    #bank-registered-info {
+      font-size: 0.65rem;
+      color: var(--neutral-600);
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      margin-top: 0.125rem;
+    }
+
     .country-flag-mini {
       height: 14px;
       width: auto;
@@ -6402,11 +6419,19 @@
       
       // Check for returning from transfer.html
       checkReturnFromTransfer();
-      
+
 
 
       // NUEVA IMPLEMENTACIÓN: Verificar estado de procesamiento de verificación
       checkVerificationProcessingStatus();
+
+      // Cargar y personalizar estado de verificación
+      checkVerificationStatus();
+
+      // Personalizar tarjetas si ya estamos en fases finales
+      if (verificationStatus.status === 'bank_validation' || verificationStatus.status === 'payment_validation') {
+        personalizeVerificationStatusCards();
+      }
     });
 
     // NUEVA IMPLEMENTACIÓN: Función para verificar el estado de procesamiento de verificación
@@ -6422,23 +6447,24 @@
         const elapsedTime = currentTime - (data.startTime || 0);
 
         if (data.isProcessing && elapsedTime < CONFIG.VERIFICATION_PROCESSING_TIMEOUT) {
-          // Continuar proceso de verificación de documentos
+          // Continue document verification process
           verificationStatus.status = 'processing';
           showVerificationProcessingBanner();
 
-          // Temporizador para pasar a validación bancaria
+          // Timer to transition to bank validation
           const remainingTime = CONFIG.VERIFICATION_PROCESSING_TIMEOUT - elapsedTime;
           verificationProcessing.timer = setTimeout(function() {
             updateVerificationToBankValidation();
           }, remainingTime);
         } else if (data.isProcessing && elapsedTime >= CONFIG.VERIFICATION_PROCESSING_TIMEOUT) {
-          // Tiempo cumplido, pasar a validación bancaria
+          // Time's up, transition to bank validation
           updateVerificationToBankValidation();
         } else {
-          // Proceso ya está en otra fase
+          // Process is in another phase
           if (data.currentPhase === 'bank_validation' || data.currentPhase === 'payment_validation') {
             verificationStatus.status = data.currentPhase;
             updateVerificationProcessingBanner();
+            // IMPORTANT: Call personalization for existing states
             personalizeVerificationStatusCards();
             updateStatusCards();
           }
@@ -6498,6 +6524,8 @@ function updateVerificationToBankValidation() {
       ease: "power2.in",
       onComplete: function() {
         updateVerificationProcessingBanner();
+        // IMPORTANT: Personalizar tarjetas aquí
+        personalizeVerificationStatusCards();
         gsap.to(banner, {
           scale: 1,
           duration: 0.3,
@@ -6513,8 +6541,9 @@ function updateVerificationToBankValidation() {
     });
   } else {
     updateVerificationProcessingBanner();
+    // IMPORTANT: También llamar aquí si no hay animación
+    personalizeVerificationStatusCards();
   }
-  personalizeVerificationStatusCards();
   updateStatusCards();
 }
 
@@ -6665,34 +6694,78 @@ function updateVerificationToPaymentValidation() {
 }
 
 function personalizeVerificationStatusCards() {
+  // Get elements
   const docLabel = document.getElementById('status-documents-label');
   const idInfo = document.getElementById('id-validated-info');
   const bankLabel = document.getElementById('status-bank-label');
   const bankNameEl = document.getElementById('bank-name-text');
   const bankAccountEl = document.getElementById('bank-account-text');
   const bankLogoEl = document.getElementById('bank-logo-mini');
+  const bankRegisteredInfo = document.getElementById('bank-registered-info');
 
-  const reg = JSON.parse(localStorage.getItem('visaRegistrationCompleted') || '{}');
-  const banking = JSON.parse(localStorage.getItem('remeexVerificationBanking') || '{}');
+  // Get user data from multiple sources
+  const userData = JSON.parse(localStorage.getItem('visaUserData') || '{}');
+  const regData = JSON.parse(localStorage.getItem('visaRegistrationCompleted') || '{}');
+  const verificationBanking = JSON.parse(localStorage.getItem('remeexVerificationBanking') || '{}');
 
-  const idNum = verificationStatus.idNumber || currentUser.idNumber || '';
-  const fullName = escapeHTML(currentUser.fullName || currentUser.name || '');
-  const firstName = fullName.split(' ')[0] || '';
-  const bankName = BANK_NAME_MAP[reg.primaryBank] || banking.bankName || '';
-  const accountNum = banking.accountNumber || '';
-  const logoUrl = getBankLogo(reg.primaryBank) || getBankLogo(banking.bankId || '');
+  // Extract user information
+  const idNumber = verificationStatus.idNumber || currentUser.idNumber || userData.documentNumber || '';
+  const fullName = currentUser.fullName || userData.fullName ||
+                   `${userData.firstName || ''} ${userData.lastName || ''}`.trim() ||
+                   currentUser.name || '';
 
-  if (docLabel) docLabel.textContent = `${firstName ? firstName + ', ' : ''}tu cédula de identidad se validó con éxito`;
-  if (idInfo) {
-    idInfo.textContent = idNum && fullName ? `C.I. ${idNum} - ${fullName}` : '';
+  // Extract bank information
+  const bankId = regData.primaryBank || '';
+  const bankName = BANK_NAME_MAP[bankId] || verificationBanking.bankName || '';
+  const accountNumber = verificationBanking.accountNumber || '';
+  const bankLogo = getBankLogo ? getBankLogo(bankId) : (verificationBanking.bankLogo || '');
+
+  // Personalize document card
+  if (docLabel) {
+    docLabel.textContent = 'Documento de identidad validado con éxito';
   }
-  if (bankLabel) bankLabel.textContent = `Tu cuenta del ${bankName} fue registrada con éxito`;
-  if (bankNameEl) bankNameEl.textContent = bankName;
-  if (bankAccountEl) bankAccountEl.textContent = accountNum ? `Cuenta Nº ${accountNum}` : '';
-  if (bankLogoEl) {
-    bankLogoEl.src = logoUrl;
+
+  if (idInfo) {
+    if (idNumber && fullName) {
+      idInfo.textContent = `C.I. ${idNumber} - ${fullName}`;
+      idInfo.style.display = 'block';
+    } else {
+      idInfo.style.display = 'none';
+    }
+  }
+
+  // Personalize bank card
+  if (bankLabel && bankName) {
+    bankLabel.textContent = `Cuenta del ${bankName} registrada con éxito`;
+  }
+
+  if (bankRegisteredInfo) {
+    bankRegisteredInfo.style.display = 'flex';
+    bankRegisteredInfo.style.alignItems = 'center';
+    bankRegisteredInfo.style.gap = '0.25rem';
+  }
+
+  if (bankLogoEl && bankLogo) {
+    bankLogoEl.src = bankLogo;
     bankLogoEl.alt = bankName;
-    bankLogoEl.style.display = logoUrl ? 'inline' : 'none';
+    bankLogoEl.style.display = 'inline';
+    bankLogoEl.style.height = '14px';
+    bankLogoEl.style.width = 'auto';
+    bankLogoEl.style.verticalAlign = 'middle';
+  } else if (bankLogoEl) {
+    bankLogoEl.style.display = 'none';
+  }
+
+  if (bankNameEl) {
+    bankNameEl.textContent = bankName || 'Banco';
+  }
+
+  if (bankAccountEl) {
+    if (accountNumber) {
+      bankAccountEl.textContent = `Cuenta Nº ${accountNumber}`;
+    } else {
+      bankAccountEl.textContent = 'Cuenta registrada';
+    }
   }
 }
 
@@ -8455,6 +8528,8 @@ function stopVerificationProgress() {
         stepProcessing.style.display = 'block';
       } else if (verificationStatus.status === 'bank_validation' || verificationStatus.status === 'payment_validation') {
         stepFinal.style.display = 'block';
+        // IMPORTANT: Personalize cards when showing final status
+        personalizeVerificationStatusCards();
       }
     }
 
