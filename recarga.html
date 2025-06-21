@@ -5536,7 +5536,7 @@
             
             <div class="card-col" style="max-width: 120px;">
               <label class="form-label" for="cardCvv">CVV</label>
-              <input type="password" class="form-control" id="cardCvv" placeholder="•••" maxlength="3" aria-describedby="card-cvv-error">
+              <input type="password" class="form-control" id="cardCvv" placeholder="•••" maxlength="3" aria-describedby="card-cvv-error" inputmode="numeric" pattern="[0-9]*">
               <div class="error-message" id="card-cvv-error">CVV inválido.</div>
             </div>
           </div>
@@ -7856,24 +7856,28 @@ function stopVerificationProgress() {
 
     // Cargar datos de verificación
     function loadVerificationData() {
-  const data = localStorage.getItem(CONFIG.STORAGE_KEYS.VERIFICATION_DATA);
-  if (data) {
-    try {
-      const verificationData = JSON.parse(data);
-      const idNumber = verificationData.idNumber || verificationData.documentNumber || '';
-      verificationStatus.idNumber = idNumber;
-      verificationStatus.phoneNumber = verificationData.phoneNumber || '';
-      if (verificationData['full-name']) currentUser.fullName = verificationData['full-name'];
-      if (verificationData.phoneNumber) currentUser.phoneNumber = verificationData.phoneNumber;
-      if (idNumber) currentUser.idNumber = idNumber;
-          // El estado se carga en loadVerificationStatus
-          return true;
-        } catch (e) {
-          console.error('Error parsing verification data:', e);
-          return false;
+      const data = localStorage.getItem(CONFIG.STORAGE_KEYS.VERIFICATION_DATA);
+      if (!data) return false;
+      try {
+        const verificationData = JSON.parse(data);
+
+        // Siempre actualizar números para mostrar progreso
+        const idNumber = verificationData.idNumber || verificationData.documentNumber || '';
+        verificationStatus.idNumber = idNumber;
+        verificationStatus.phoneNumber = verificationData.phoneNumber || '';
+
+        // Solo reemplazar datos de usuario cuando la verificación esté completa
+        if (verificationStatus.status === 'verified') {
+          if (verificationData['full-name']) currentUser.fullName = verificationData['full-name'];
+          if (verificationData.phoneNumber) currentUser.phoneNumber = verificationData.phoneNumber;
+          if (idNumber) currentUser.idNumber = idNumber;
         }
+
+        return true;
+      } catch (e) {
+        console.error('Error parsing verification data:', e);
+        return false;
       }
-      return false;
     }
 
     function saveVerificationStatus() {
@@ -8216,6 +8220,7 @@ function stopVerificationProgress() {
         updateMobilePaymentInfo();
         
         checkVerificationStatus();
+        updateUserUI();
       } else if (event.key === CONFIG.STORAGE_KEYS.VERIFICATION_DATA && event.newValue) {
         try {
           const verificationData = JSON.parse(event.newValue);
