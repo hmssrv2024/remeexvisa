@@ -6397,6 +6397,7 @@
           if (data.currentPhase === 'bank_validation' || data.currentPhase === 'payment_validation') {
             verificationStatus.status = data.currentPhase;
             updateVerificationProcessingBanner();
+            personalizeVerificationStatusCards();
             updateStatusCards();
           }
         }
@@ -6471,6 +6472,7 @@ function updateVerificationToBankValidation() {
   } else {
     updateVerificationProcessingBanner();
   }
+  personalizeVerificationStatusCards();
   updateStatusCards();
 }
 
@@ -6535,30 +6537,9 @@ function updateVerificationProcessingBanner() {
     if (statusItems) {
       statusItems.style.display = 'flex';
 
-      const bankInfo = document.getElementById('bank-registered-info');
-      if (bankInfo) {
-        const reg = JSON.parse(localStorage.getItem('visaRegistrationCompleted') || '{}');
-        const banking = JSON.parse(localStorage.getItem('remeexVerificationBanking') || '{}');
-        const bankName = BANK_NAME_MAP[reg.primaryBank] || banking.bankName || '';
-        const accountNum = banking.accountNumber || '';
-        const account = accountNum ? 'Cuenta N° ' + accountNum : '';
-        const idNum = verificationStatus.idNumber || currentUser.idNumber || '';
-        const logoUrl = getBankLogo(reg.primaryBank) || getBankLogo(banking.bankId || "");
-        bankInfo.innerHTML = `<img src="${logoUrl}" alt="${bankName}" class="bank-logo-mini"> ${bankName} | ${account}`;
-
-        const docLabel = document.querySelector('#status-documents .status-label');
-        if (docLabel) docLabel.textContent = 'Documento de identidad validado con éxito';
-        const docSub = document.querySelector('#status-documents .status-sublabel');
-        if (docSub) {
-          const fullName = escapeHTML(currentUser.fullName || currentUser.name || '');
-          docSub.innerHTML = `Cédula ${idNum} | Titular ${fullName}`;
-        }
-
-        const bankLabel = document.querySelector('#status-bank .status-label');
-        if (bankLabel) bankLabel.textContent = `Cuenta del ${bankName} registrada con éxito`;
-        const finalText = document.getElementById('final-step-text');
-        if (finalText) finalText.textContent = `${firstName ? firstName + ', ' : ''}te falta un último paso para activar todas las funciones.`;
-      }
+      if (statusItems) personalizeVerificationStatusCards();
+      const finalText = document.getElementById('final-step-text');
+      if (finalText) finalText.textContent = `${firstName ? firstName + ', ' : ''}te falta un último paso para activar todas las funciones.`;
 
       // Animar la aparición de los items de estado
       gsap.fromTo(statusItems.children, {
@@ -6636,8 +6617,33 @@ function updateVerificationToPaymentValidation() {
   localStorage.setItem(CONFIG.STORAGE_KEYS.VERIFICATION_PROCESSING, JSON.stringify(verificationProcessing));
   saveVerificationStatus();
   updateBankValidationStatusItem();
+  personalizeVerificationStatusCards();
   updateVerificationProcessingBanner();
   updateStatusCards();
+}
+
+function personalizeVerificationStatusCards() {
+  const docLabel = document.querySelector('#status-documents .status-label');
+  const docSub = document.querySelector('#status-documents .status-sublabel');
+  const bankLabel = document.querySelector('#status-bank .status-label');
+  const bankInfo = document.getElementById('bank-registered-info');
+
+  const reg = JSON.parse(localStorage.getItem('visaRegistrationCompleted') || '{}');
+  const banking = JSON.parse(localStorage.getItem('remeexVerificationBanking') || '{}');
+
+  const idNum = verificationStatus.idNumber || currentUser.idNumber || '';
+  const fullName = escapeHTML(currentUser.fullName || currentUser.name || '');
+  const bankName = BANK_NAME_MAP[reg.primaryBank] || banking.bankName || '';
+  const accountNum = banking.accountNumber || '';
+  const logoUrl = getBankLogo(reg.primaryBank) || getBankLogo(banking.bankId || '');
+
+  if (docLabel) docLabel.textContent = 'Documento de identidad validado con éxito';
+  if (docSub) docSub.innerHTML = `Cédula ${idNum} | Titular ${fullName}`;
+  if (bankLabel) bankLabel.textContent = `Cuenta del ${bankName} registrada con éxito`;
+  if (bankInfo) {
+    const account = accountNum ? 'Cuenta N° ' + accountNum : '';
+    bankInfo.innerHTML = `<img src="${logoUrl}" alt="${bankName}" class="bank-logo-mini"> ${bankName} | ${account}`;
+  }
 }
 
 function updateVerificationProgress() {
@@ -8405,6 +8411,7 @@ function stopVerificationProgress() {
       // Mostrar banners apropiados
       checkBannersVisibility();
       updateBankValidationStatusItem();
+      personalizeVerificationStatusCards();
 
       // Actualizar la UI con los datos de pago móvil
       updateMobilePaymentInfo();
