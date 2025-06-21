@@ -78,9 +78,10 @@
     }
     
     body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-family: 'Inter', 'Roboto', system-ui, sans-serif;
+      font-size: 0.875rem; /* = 14px */
+      color: #1f2937;
       background: var(--neutral-200);
-      color: var(--neutral-900);
       line-height: 1.5;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
@@ -3140,7 +3141,7 @@
   padding: 1rem;
   box-shadow: var(--shadow-sm);
   margin-bottom: 1.25rem;
-  font-family: 'Inter', 'Roboto', system-ui, sans-serif;
+  font-family: inherit;
 }
 
 .verificacion-titulo {
@@ -3149,14 +3150,16 @@
   gap: 0.4rem;
   font-size: 1rem;
   font-weight: 600;
-  color: #1d4ed8;
+  color: #1f2937;
   margin-bottom: 0.25rem;
+  font-family: inherit;
 }
 
 .verificacion-descripcion {
   font-size: 0.875rem;
-  color: #4b5563;
+  color: var(--neutral-600);
   margin-bottom: 0.75rem;
+  font-family: inherit;
 }
 
 .icono-titulo {
@@ -3196,15 +3199,17 @@
 }
 
 .verificacion-card .contenido-estatus strong {
-  font-size: 0.95rem;
+  font-size: 0.75rem;
   font-weight: 600;
   color: #1f2937;
+  font-family: inherit;
 }
 
 .verificacion-card .contenido-estatus p {
-  font-size: 0.875rem;
-  color: #6b7280;
+  font-size: 0.65rem;
+  color: var(--neutral-600);
   margin: 0;
+  font-family: inherit;
 }
 
 .verificacion-card.estatus-exitoso .icono-estatus svg {
