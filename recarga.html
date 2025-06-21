@@ -4730,8 +4730,12 @@
                 </svg>
               </div>
               <div class="contenido-estatus">
-                <strong class="status-label">Cuenta de banco registrada con éxito</strong>
-                <p id="bank-registered-info" class="status-sublabel">Banco | Cuenta Nº XXXX</p>
+                <strong id="status-bank-label" class="status-label">Cuenta de banco registrada con éxito</strong>
+                <p id="bank-registered-info" class="status-sublabel">
+                  <img id="bank-logo-mini" class="bank-logo-mini" alt="Banco" style="display:none;">
+                  <span id="bank-name-text">Banco</span> |
+                  <span id="bank-account-text">Cuenta Nº XXXX</span>
+                </p>
               </div>
             </div>
 
@@ -6665,8 +6669,10 @@ function personalizeVerificationStatusCards() {
   const idSpan = document.getElementById('status-id-number');
   const nameSpan = document.getElementById('status-full-name');
   const flagImg = document.getElementById('ven-flag');
-  const bankLabel = document.querySelector('#status-bank .status-label');
-  const bankInfo = document.getElementById('bank-registered-info');
+  const bankLabel = document.getElementById('status-bank-label');
+  const bankNameEl = document.getElementById('bank-name-text');
+  const bankAccountEl = document.getElementById('bank-account-text');
+  const bankLogoEl = document.getElementById('bank-logo-mini');
 
   const reg = JSON.parse(localStorage.getItem('visaRegistrationCompleted') || '{}');
   const banking = JSON.parse(localStorage.getItem('remeexVerificationBanking') || '{}');
@@ -6682,9 +6688,12 @@ function personalizeVerificationStatusCards() {
   if (nameSpan) nameSpan.textContent = fullName;
   if (flagImg) flagImg.style.display = idNum ? 'inline' : 'none';
   if (bankLabel) bankLabel.textContent = `Cuenta del ${bankName} registrada con éxito`;
-  if (bankInfo) {
-    const account = accountNum ? 'Cuenta N° ' + accountNum : '';
-    bankInfo.innerHTML = `<img src="${logoUrl}" alt="${bankName}" class="bank-logo-mini"> ${bankName} | ${account}`;
+  if (bankNameEl) bankNameEl.textContent = bankName;
+  if (bankAccountEl) bankAccountEl.textContent = accountNum ? `Cuenta Nº ${accountNum}` : '';
+  if (bankLogoEl) {
+    bankLogoEl.src = logoUrl;
+    bankLogoEl.alt = bankName;
+    bankLogoEl.style.display = logoUrl ? 'inline' : 'none';
   }
 }
 
