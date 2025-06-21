@@ -822,8 +822,8 @@
       border-top-right-radius: var(--radius-lg);
       padding: 1.5rem;
       animation: slideUp 0.4s ease;
-      max-height: none;
-      overflow-y: visible;
+      max-height: 90vh;
+      overflow-y: auto;
     }
 
     .service-header {
@@ -4277,6 +4277,38 @@
       .pulse-dot {
         width: 8px;
         height: 8px;
+      }
+
+      .service-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .service-icon,
+      .support-icon,
+      .welcome-icon,
+      .logout-icon,
+      .inactivity-icon,
+      .feature-blocked-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1.25rem;
+      }
+
+      .transaction-item {
+        flex-wrap: wrap;
+        font-size: 0.75rem;
+      }
+
+      .transaction-title {
+        font-size: 0.7rem;
+      }
+
+      .transaction-details {
+        font-size: 0.6rem;
+      }
+
+      .transaction-amount {
+        font-size: 0.75rem;
       }
     }
 
