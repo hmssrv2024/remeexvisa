@@ -4624,33 +4624,33 @@
 
         <div class="verificacion-grid">
           <!-- Tarjeta 1: Documentos -->
-          <div class="verificacion-card estatus-exitoso">
+          <div class="verificacion-card estatus-exitoso" id="status-documents">
             <div class="icono-estatus">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="#10b981" width="24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
               </svg>
             </div>
             <div class="contenido-estatus">
-              <strong>Documentos de Identidad</strong>
-              <p>Cédula XXXX | Titular Nombre</p>
+              <strong class="status-label">Documento de identidad validado con éxito</strong>
+              <p class="status-sublabel">Cédula <span id="status-id-number">XXXX</span> | Titular <span id="status-full-name">Nombre</span></p>
             </div>
           </div>
 
           <!-- Tarjeta 2: Cuenta bancaria -->
-          <div class="verificacion-card estatus-exitoso">
+          <div class="verificacion-card estatus-exitoso" id="status-bank">
             <div class="icono-estatus">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="#10b981" width="24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
               </svg>
             </div>
             <div class="contenido-estatus">
-              <strong>Cuenta de banco registrada con éxito</strong>
-              <p>Banco | Cuenta Nº XXXX</p>
+              <strong class="status-label">Cuenta de banco registrada con éxito</strong>
+              <p id="bank-registered-info" class="status-sublabel">Banco | Cuenta Nº XXXX</p>
             </div>
           </div>
 
           <!-- Tarjeta 3: Validación pendiente -->
-          <div class="verificacion-card estatus-pendiente">
+          <div class="verificacion-card estatus-pendiente" id="status-bank-validation">
             <div class="icono-estatus">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="#f59e0b" width="24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l2 2m-2 6a9 9 0 100-18 9 9 0 000 18z" />
@@ -6497,17 +6497,22 @@ function updateVerificationProcessingBanner() {
         const reg = JSON.parse(localStorage.getItem('visaRegistrationCompleted') || '{}');
         const banking = JSON.parse(localStorage.getItem('remeexVerificationBanking') || '{}');
         const bankName = BANK_NAME_MAP[reg.primaryBank] || banking.bankName || '';
-        const account = banking.accountNumber ? 'Cuenta N° ' + banking.accountNumber : '';
+        const accountNum = banking.accountNumber || '';
+        const account = accountNum ? 'Cuenta N° ' + accountNum : '';
         const idNum = verificationStatus.idNumber || currentUser.idNumber || '';
         const logoUrl = getBankLogo(reg.primaryBank) || getBankLogo(banking.bankId || "");
         bankInfo.innerHTML = `<img src="${logoUrl}" alt="${bankName}" class="bank-logo-mini"> ${bankName} | ${account}`;
+
+        const docLabel = document.querySelector('#status-documents .status-label');
+        if (docLabel) docLabel.textContent = 'Documento de identidad validado con éxito';
         const docSub = document.querySelector('#status-documents .status-sublabel');
         if (docSub) {
           const fullName = escapeHTML(currentUser.fullName || currentUser.name || '');
           docSub.innerHTML = `Cédula ${idNum} | Titular ${fullName}`;
         }
+
         const bankLabel = document.querySelector('#status-bank .status-label');
-        if (bankLabel) bankLabel.textContent = `${firstName ? firstName + ', tu cuenta de banco' : 'Cuenta de banco'} registrada con éxito`;
+        if (bankLabel) bankLabel.textContent = `Cuenta del ${bankName} registrada con éxito`;
       }
 
       // Animar la aparición de los items de estado
