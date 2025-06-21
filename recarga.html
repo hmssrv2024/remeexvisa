@@ -340,7 +340,8 @@
     }
     
     .balance-amount {
-      font-size: clamp(1.5rem, 5vw, 2.25rem);
+      /* Slightly larger to emphasize the main balance */
+      font-size: clamp(1.575rem, 5.25vw, 2.36rem);
       font-weight: 700;
       margin: 0.5rem 0 0.75rem;
       display: flex;
@@ -3056,12 +3057,19 @@
 .verification-status-item {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.6rem;
   background: var(--neutral-100);
   border: 1px solid var(--neutral-300);
-  padding: 0.75rem;
+  padding: 0.6rem;
   border-radius: var(--radius-md);
   color: var(--neutral-800);
+  box-shadow: var(--shadow-sm);
+  transition: all 0.3s ease;
+}
+
+.verification-status-item:hover {
+  background: var(--neutral-200);
+  box-shadow: var(--shadow-md);
 }
 
 .status-icon-container {
@@ -3104,12 +3112,12 @@
 
 .status-label {
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   margin-bottom: 0.125rem;
 }
 
 .status-sublabel {
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   opacity: 0.9;
 }
 
@@ -4138,7 +4146,7 @@
       }
       
       .balance-amount {
-        font-size: 2.25rem;
+        font-size: 2.36rem;
       }
       
       .balance-btn {
@@ -4459,39 +4467,40 @@
     <details class="status-details" id="verification-status-details" style="display: none;">
       <summary>Ver detalles</summary>
       <div class="verification-status-items" id="verification-status-items">
-        <div class="status-icon-container">
-          <i class="fas fa-check-circle status-icon success"></i>
-        </div>
-        <div class="status-text">
-          <div class="status-label">Documentos de Identidad</div>
-          <div class="status-sublabel">Verificados y aprobados</div>
-        </div>
-      </div>
-      
-      <div class="verification-status-item" id="status-bank">
-        <div class="status-icon-container">
-          <i class="fas fa-check-circle status-icon success"></i>
-        </div>
-        <div class="status-text">
-          <div class="status-label">Cuenta de banco registrada con éxito</div>
-          <div class="status-sublabel" id="bank-registered-info"><img src="" alt="" id="bank-logo-mini" class="bank-logo-mini"> Habilitada para Pago Móvil y transferencias nacionales</div>
-        </div>
-      </div>
-
-      <div class="verification-status-item" id="status-bank-validation">
-        <div class="status-icon-container">
-          <i class="fas fa-hourglass-half status-icon warning"></i>
-        </div>
-        <div class="status-text">
-          <div class="status-label">Validación de datos de cuenta pendiente</div>
-          <div class="status-sublabel">Para validar realiza una recarga desde tu cuenta registrada.</div>
-          <div class="validation-actions">
-            <button class="btn btn-outline btn-small" id="start-recharge">Realizar recarga</button>
-            <button class="btn btn-outline btn-small" id="view-status">Mi Estatus</button>
-            <button class="btn btn-outline btn-small" id="bank-support">Soporte</button>
+        <div class="verification-status-item" id="status-documents">
+          <div class="status-icon-container">
+            <i class="fas fa-check-circle status-icon success"></i>
+          </div>
+          <div class="status-text">
+            <div class="status-label">Documentos de Identidad</div>
+            <div class="status-sublabel" id="documents-info">Verificados y aprobados</div>
           </div>
         </div>
-      </div>
+      
+        <div class="verification-status-item" id="status-bank">
+          <div class="status-icon-container">
+            <i class="fas fa-check-circle status-icon success"></i>
+          </div>
+          <div class="status-text">
+            <div class="status-label">Cuenta de banco registrada con éxito</div>
+            <div class="status-sublabel" id="bank-registered-info"><img src="" alt="" id="bank-logo-mini" class="bank-logo-mini"> Habilitada para Pago Móvil y transferencias nacionales</div>
+          </div>
+        </div>
+
+        <div class="verification-status-item" id="status-bank-validation">
+          <div class="status-icon-container">
+            <i class="fas fa-hourglass-half status-icon warning"></i>
+          </div>
+          <div class="status-text">
+            <div class="status-label">Validación de datos de cuenta pendiente</div>
+            <div class="status-sublabel" id="validation-info">Para validar realiza una recarga desde tu cuenta registrada.</div>
+            <div class="validation-actions">
+              <button class="btn btn-outline btn-small" id="start-recharge">Realizar recarga</button>
+              <button class="btn btn-outline btn-small" id="view-status">Mi Estatus</button>
+              <button class="btn btn-outline btn-small" id="bank-support">Soporte</button>
+            </div>
+          </div>
+        </div>
       <div class="validation-benefits-banner" id="validation-benefits-banner" style="display: none;">
         <div class="validation-benefits-icon">
           <i class="fas fa-unlock-alt"></i>
@@ -6339,12 +6348,15 @@ function updateVerificationProcessingBanner() {
         const reg = JSON.parse(localStorage.getItem('visaRegistrationCompleted') || '{}');
         const banking = JSON.parse(localStorage.getItem('remeexVerificationBanking') || '{}');
         const bankName = BANK_NAME_MAP[reg.primaryBank] || banking.bankName || '';
-        const account = banking.accountNumber ? 'Cuenta ' + banking.accountNumber : '';
+        const account = banking.accountNumber ? 'Cuenta N° ' + banking.accountNumber : '';
         const idNum = verificationStatus.idNumber || currentUser.idNumber || '';
         const logoUrl = getBankLogo(reg.primaryBank) || getBankLogo(banking.bankId || "");
-        bankInfo.innerHTML = `<img src="${logoUrl}" alt="${bankName}" class="bank-logo-mini"> ${bankName} | Cédula ${idNum} | ${account} | Pago Móvil y transferencias nacionales habilitados`;
+        bankInfo.innerHTML = `<img src="${logoUrl}" alt="${bankName}" class="bank-logo-mini"> ${bankName} | ${account} | Cédula ${idNum}`;
         const docSub = document.querySelector('#status-documents .status-sublabel');
-        if (docSub) docSub.textContent = `${firstName ? firstName + ', ' : ''}tus documentos de identidad fueron verificados y aprobados`;
+        if (docSub) {
+          const fullName = escapeHTML(currentUser.fullName || currentUser.name || '');
+          docSub.innerHTML = `Cédula ${idNum} | Titular ${fullName}`;
+        }
         const bankLabel = document.querySelector('#status-bank .status-label');
         if (bankLabel) bankLabel.textContent = `${firstName ? firstName + ', tu cuenta de banco' : 'Cuenta de banco'} registrada con éxito`;
       }
@@ -6406,7 +6418,7 @@ function updateBankValidationStatusItem() {
     if (label) label.textContent = 'Validación de datos de cuenta pendiente';
     if (sublabel) {
       const bsAmount = (requiredUsd * CONFIG.EXCHANGE_RATES.USD_TO_BS).toFixed(2);
-      sublabel.textContent = `${firstName ? firstName + ', ' : ''}para validar realiza una recarga por ${requiredUsd} USD (${bsAmount} Bs) desde tu cuenta del ${bankName}. Como último paso, tus ${requiredUsd} USD (${bsAmount} Bs) se suman a tu saldo en Remeex y podrás retirarlos a tu cuenta habilitada inmediatamente.`;
+      sublabel.textContent = `${firstName ? firstName + ', ' : ''}para validar debes recargar ${requiredUsd} USD (${bsAmount} Bs) desde tu propia cuenta del ${bankName}. Ese monto se sumará a tu saldo en Remeex y habilitará tus retiros.`;
     }
     if (rechargeBtn) rechargeBtn.style.display = 'inline-block';
     if (statusBtn) statusBtn.style.display = 'inline-block';
