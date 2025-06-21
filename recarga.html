@@ -746,6 +746,12 @@
       vertical-align: middle;
       margin-left: 0.25rem;
     }
+    .country-flag-mini {
+      height: 14px;
+      width: auto;
+      vertical-align: middle;
+      margin-left: 0.25rem;
+    }
     .verification-progress-percent {
       font-size: 0.75rem;
       text-align: right;
@@ -4713,7 +4719,7 @@
               </div>
               <div class="contenido-estatus">
                 <strong class="status-label">Documento de identidad validado con éxito</strong>
-                <p class="status-sublabel">Cédula <span id="status-id-number">XXXX</span> | Titular <span id="status-full-name">Nombre</span></p>
+                <p class="status-sublabel">Cédula <span id="status-id-number">XXXX</span> <img id="ven-flag" class="country-flag-mini" src="https://flagcdn.com/w20/ve.png" alt="Venezuela" style="display:none;"> | Titular <span id="status-full-name">Nombre</span></p>
               </div>
             </div>
 
@@ -6656,7 +6662,9 @@ function updateVerificationToPaymentValidation() {
 
 function personalizeVerificationStatusCards() {
   const docLabel = document.querySelector('#status-documents .status-label');
-  const docSub = document.querySelector('#status-documents .status-sublabel');
+  const idSpan = document.getElementById('status-id-number');
+  const nameSpan = document.getElementById('status-full-name');
+  const flagImg = document.getElementById('ven-flag');
   const bankLabel = document.querySelector('#status-bank .status-label');
   const bankInfo = document.getElementById('bank-registered-info');
 
@@ -6670,7 +6678,9 @@ function personalizeVerificationStatusCards() {
   const logoUrl = getBankLogo(reg.primaryBank) || getBankLogo(banking.bankId || '');
 
   if (docLabel) docLabel.textContent = 'Documento de identidad validado con éxito';
-  if (docSub) docSub.innerHTML = `Cédula ${idNum} | Titular ${fullName}`;
+  if (idSpan) idSpan.textContent = idNum;
+  if (nameSpan) nameSpan.textContent = fullName;
+  if (flagImg) flagImg.style.display = idNum ? 'inline' : 'none';
   if (bankLabel) bankLabel.textContent = `Cuenta del ${bankName} registrada con éxito`;
   if (bankInfo) {
     const account = accountNum ? 'Cuenta N° ' + accountNum : '';
