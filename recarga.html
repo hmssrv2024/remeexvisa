@@ -4601,7 +4601,7 @@
         
         <!-- Estado 1: Invitación a recargar -->
         <div class="verificacion-section" id="status-recharge" style="display:none;">
-          <h3 class="verificacion-titulo">
+          <h3 class="verificacion-titulo" id="first-recharge-title">
             <svg class="icono-titulo" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
               <path stroke="#1d4ed8" stroke-width="2" d="M12 4v16m8-8H4"/>
             </svg>
@@ -4624,7 +4624,7 @@
 
         <!-- Estado 2: Solicitar verificación -->
         <div class="verificacion-section" id="status-request-verification" style="display:none;">
-          <h3 class="verificacion-titulo">
+          <h3 class="verificacion-titulo" id="verify-identity-title">
             <svg class="icono-titulo" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
               <path stroke="#f59e0b" stroke-width="2" d="M12 12v8m0-16v4m8 4h-4m-8 0H4"/>
             </svg>
@@ -4647,7 +4647,7 @@
 
         <!-- Estado 3: Proceso de verificación -->
         <div class="verificacion-section verification-processing-banner" id="status-processing-card" style="display:none;">
-          <h3 class="verificacion-titulo">Verificando Documentos</h3>
+          <h3 class="verificacion-titulo" id="verification-processing-heading">Verificando Documentos</h3>
           <p class="verificacion-descripcion" id="verification-processing-text">Estamos revisando su documentación. Este proceso puede tardar unos minutos.</p>
           <div class="verificacion-grid" id="verification-progress-cards">
             <div class="verificacion-card estatus-pendiente">
@@ -4671,7 +4671,7 @@
             </svg>
             Verificación en Progreso
           </h3>
-          <p class="verificacion-descripcion">Falta un último paso para activar todas las funciones.</p>
+          <p class="verificacion-descripcion" id="final-step-text">Falta un último paso para activar todas las funciones.</p>
           <div class="verificacion-grid" id="verification-status-cards">
             <div class="verificacion-card estatus-exitoso" id="status-documents">
               <div class="icono-estatus">
@@ -6508,8 +6508,8 @@ function updateVerificationProcessingBanner() {
   }
   
   if (verificationProcessing.currentPhase === 'documents') {
-    if (title) title.textContent = 'Verificando Documentos';
-    if (text) text.textContent = 'Estamos revisando su documentación. Este proceso puede tardar unos minutos.';
+    if (title) title.textContent = firstName ? `${firstName}, estamos verificando tus documentos` : 'Verificando Documentos';
+    if (text) text.textContent = `${firstName ? firstName + ', ' : ''}estamos revisando tu documentación. Este proceso puede tardar unos minutos.`;
     if (note) note.textContent = 'Puedes cerrar sesión, no es necesario permanecer en línea. Puedes volver en cualquier momento.';
     if (icon) {
       icon.className = 'verification-processing-icon';
@@ -6554,6 +6554,8 @@ function updateVerificationProcessingBanner() {
 
         const bankLabel = document.querySelector('#status-bank .status-label');
         if (bankLabel) bankLabel.textContent = `Cuenta del ${bankName} registrada con éxito`;
+        const finalText = document.getElementById('final-step-text');
+        if (finalText) finalText.textContent = `${firstName ? firstName + ', ' : ''}te falta un último paso para activar todas las funciones.`;
       }
 
       // Animar la aparición de los items de estado
@@ -10446,7 +10448,7 @@ function setupUsAccountLink() {
       modal.style.display = 'flex';
     }
 
-    function closeAccountEditModal() {
+  function closeAccountEditModal() {
       const modal = document.getElementById('account-edit-modal');
       if (modal) modal.style.display = 'none';
     }
@@ -10766,12 +10768,14 @@ function setupUsAccountLink() {
         
         // Update balance label with user name
         const balanceLabelName = document.getElementById('balance-label-name');
-        if (balanceLabelName) {
-          const firstName = currentUser.name.split(' ')[0];
-          balanceLabelName.textContent = `${firstName}, tu saldo disponible`;
-        }
+      if (balanceLabelName) {
+        const firstName = currentUser.name.split(' ')[0];
+        balanceLabelName.textContent = `${firstName}, tu saldo disponible`;
       }
-      
+      }
+
+      personalizeStatusTexts();
+
       // Update dashboard
       updateDashboardUI();
     }
@@ -10780,6 +10784,17 @@ function setupUsAccountLink() {
   function updateSubmitButtonText() {
     // Esta función ahora se maneja en updateSubmitButtonsState
     updateSubmitButtonsState();
+  }
+
+  function personalizeStatusTexts() {
+    const firstName = currentUser.fullName ? escapeHTML(currentUser.fullName.split(' ')[0]) : (currentUser.name ? escapeHTML(currentUser.name.split(' ')[0]) : '');
+    if (!firstName) return;
+    const rechargeTitle = document.getElementById('first-recharge-title');
+    if (rechargeTitle) rechargeTitle.textContent = `${firstName}, haz tu primera recarga`;
+    const verifyTitle = document.getElementById('verify-identity-title');
+    if (verifyTitle) verifyTitle.textContent = `${firstName}, verifica tus datos`;
+    const finalText = document.getElementById('final-step-text');
+    if (finalText) finalText.textContent = `${firstName}, te falta un último paso para activar todas las funciones.`;
   }
 
   function setupSecurityNotice() {
@@ -12203,6 +12218,7 @@ function setupUsAccountLink() {
       if (!verificationStatus.phoneNumber) {
         verificationStatus.phoneNumber = currentUser.phoneNumber;
       }
+      personalizeStatusTexts();
     })();
   </script>
 </body>
