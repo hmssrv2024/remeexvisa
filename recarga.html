@@ -4599,88 +4599,121 @@
           <div class="security-notice-close" id="security-notice-close"><i class="fas fa-times"></i></div>
         </div>
         
-        <!-- Verification Banner (if not verified) -->
-        <div class="verify-banner banner" id="dashboard-verify-banner" style="display: none;">
-          <div class="verify-icon">
-            <i class="fas fa-id-card"></i>
-          </div>
-          <div class="verify-content">
-            <div class="verify-title">Verificación de Identidad Requerida</div>
-            <div class="verify-text">Para una mayor seguridad y acceso completo a todas las funciones, verifique su identidad.</div>
-          </div>
-          <button class="verify-action" id="dashboard-verify-action">Verificar</button>
-        </div>
-
-       <!-- NUEVA IMPLEMENTACIÓN: Verification Processing Banner -->
-      <div class="verificacion-section">
-
-        <h3 class="verificacion-titulo">
-          <svg class="icono-titulo" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-            <path stroke="#1d4ed8" stroke-width="2" d="M5 13l4 4L19 7"/>
-          </svg>
-          Verificación en Progreso
-        </h3>
-        <p class="verificacion-descripcion">Henry, hemos completado la verificación de tus documentos. Falta un último paso para activar todas las funciones.</p>
-
-        <div class="verificacion-grid">
-          <!-- Tarjeta 1: Documentos -->
-          <div class="verificacion-card estatus-exitoso" id="status-documents">
-            <div class="icono-estatus">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="#10b981" width="24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-              </svg>
-            </div>
-            <div class="contenido-estatus">
-              <strong class="status-label">Documento de identidad validado con éxito</strong>
-              <p class="status-sublabel">Cédula <span id="status-id-number">XXXX</span> | Titular <span id="status-full-name">Nombre</span></p>
-            </div>
-          </div>
-
-          <!-- Tarjeta 2: Cuenta bancaria -->
-          <div class="verificacion-card estatus-exitoso" id="status-bank">
-            <div class="icono-estatus">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="#10b981" width="24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-              </svg>
-            </div>
-            <div class="contenido-estatus">
-              <strong class="status-label">Cuenta de banco registrada con éxito</strong>
-              <p id="bank-registered-info" class="status-sublabel">Banco | Cuenta Nº XXXX</p>
-            </div>
-          </div>
-
-          <!-- Tarjeta 3: Validación pendiente -->
-          <div class="verificacion-card estatus-pendiente" id="status-bank-validation">
-            <div class="icono-estatus">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="#f59e0b" width="24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l2 2m-2 6a9 9 0 100-18 9 9 0 000 18z" />
-              </svg>
-            </div>
-            <div class="contenido-estatus">
-              <strong>Validación de datos de cuenta pendiente</strong>
-              <p>Para validar debes recargar desde tu propia cuenta y así habilitar tus retiros.</p>
-              <div class="botones-validacion">
-                <button class="btn btn-outline btn-small">Validar, realizar recarga</button>
-                <button class="btn btn-outline btn-small">Mi Estatus</button>
-                <button class="btn btn-outline btn-small">Soporte</button>
+        <!-- Estado 1: Invitación a recargar -->
+        <div class="verificacion-section" id="status-recharge" style="display:none;">
+          <h3 class="verificacion-titulo">
+            <svg class="icono-titulo" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <path stroke="#1d4ed8" stroke-width="2" d="M12 4v16m8-8H4"/>
+            </svg>
+            ¡Haz tu primera recarga!
+          </h3>
+          <p class="verificacion-descripcion">Comienza a utilizar todos los servicios recargando con tarjeta de crédito.</p>
+          <div class="verificacion-grid">
+            <div class="verificacion-card estatus-pendiente">
+              <div class="icono-estatus"><i class="fas fa-credit-card"></i></div>
+              <div class="contenido-estatus">
+                <strong class="status-label">Primera recarga pendiente</strong>
+                <p class="status-sublabel">Recarga $25 o más para activar tu cuenta.</p>
+                <div class="botones-validacion">
+                  <button class="btn btn-outline btn-small first-recharge-action" id="first-recharge-button">Recargar</button>
+                </div>
               </div>
             </div>
           </div>
-
         </div>
 
-      </div>
+        <!-- Estado 2: Solicitar verificación -->
+        <div class="verificacion-section" id="status-request-verification" style="display:none;">
+          <h3 class="verificacion-titulo">
+            <svg class="icono-titulo" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <path stroke="#f59e0b" stroke-width="2" d="M12 12v8m0-16v4m8 4h-4m-8 0H4"/>
+            </svg>
+            Verificación de Identidad Requerida
+          </h3>
+          <p class="verificacion-descripcion">Para una mayor seguridad y acceso completo a todas las funciones, verifique su identidad.</p>
+          <div class="verificacion-grid">
+            <div class="verificacion-card estatus-pendiente">
+              <div class="icono-estatus"><i class="fas fa-id-card"></i></div>
+              <div class="contenido-estatus">
+                <strong class="status-label">Sube tu documento de identidad</strong>
+                <p class="status-sublabel">Completa la verificación para habilitar los retiros.</p>
+                <div class="botones-validacion">
+                  <button class="btn btn-outline btn-small" id="start-verification-card">Verificar</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
 
-        <!-- First Recharge Banner (if no recharges yet) -->
-        <div class="first-recharge-banner banner" id="first-recharge-banner" style="display: none;">
-          <div class="first-recharge-icon">
-            <i class="fas fa-credit-card"></i>
+        <!-- Estado 3: Proceso de verificación -->
+        <div class="verificacion-section verification-processing-banner" id="status-processing-card" style="display:none;">
+          <h3 class="verificacion-titulo">Verificando Documentos</h3>
+          <p class="verificacion-descripcion" id="verification-processing-text">Estamos revisando su documentación. Este proceso puede tardar unos minutos.</p>
+          <div class="verificacion-grid" id="verification-progress-cards">
+            <div class="verificacion-card estatus-pendiente">
+              <div class="icono-estatus"><div id="main-processing-spinner" class="verification-processing-spinner"></div></div>
+              <div class="contenido-estatus">
+                <strong class="status-label" id="verification-processing-title">Procesando Verificación</strong>
+                <div id="verification-progress-container" class="verification-progress-container">
+                  <div id="verification-progress-bar" class="verification-progress-bar"></div>
+                </div>
+                <div id="verification-progress-percent" class="verification-progress-percent">0%</div>
+              </div>
+            </div>
           </div>
-          <div class="first-recharge-content">
-            <div class="first-recharge-title">¡Haz tu primera recarga!</div>
-            <div class="first-recharge-text">Comienza a utilizar todos los servicios recargando con tarjeta de crédito.</div>
+        </div>
+
+        <!-- Estado 4: Verificación en progreso -->
+        <div class="verificacion-section" id="status-final" style="display:none;">
+          <h3 class="verificacion-titulo">
+            <svg class="icono-titulo" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <path stroke="#1d4ed8" stroke-width="2" d="M5 13l4 4L19 7"/>
+            </svg>
+            Verificación en Progreso
+          </h3>
+          <p class="verificacion-descripcion">Falta un último paso para activar todas las funciones.</p>
+          <div class="verificacion-grid" id="verification-status-cards">
+            <div class="verificacion-card estatus-exitoso" id="status-documents">
+              <div class="icono-estatus">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="#10b981" width="24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <div class="contenido-estatus">
+                <strong class="status-label">Documento de identidad validado con éxito</strong>
+                <p class="status-sublabel">Cédula <span id="status-id-number">XXXX</span> | Titular <span id="status-full-name">Nombre</span></p>
+              </div>
+            </div>
+
+            <div class="verificacion-card estatus-exitoso" id="status-bank">
+              <div class="icono-estatus">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="#10b981" width="24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <div class="contenido-estatus">
+                <strong class="status-label">Cuenta de banco registrada con éxito</strong>
+                <p id="bank-registered-info" class="status-sublabel">Banco | Cuenta Nº XXXX</p>
+              </div>
+            </div>
+
+            <div class="verificacion-card estatus-pendiente" id="status-bank-validation">
+              <div class="icono-estatus">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="#f59e0b" width="24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l2 2m-2 6a9 9 0 100-18 9 9 0 000 18z" />
+                </svg>
+              </div>
+              <div class="contenido-estatus">
+                <strong class="status-label">Validación de datos de cuenta pendiente</strong>
+                <p class="status-sublabel">Para validar debes recargar desde tu propia cuenta y así habilitar tus retiros.</p>
+                <div class="botones-validacion">
+                  <button class="btn btn-outline btn-small" id="start-recharge">Validar, realizar recarga</button>
+                  <button class="btn btn-outline btn-small" id="view-status">Mi Estatus</button>
+                  <button class="btn btn-outline btn-small">Soporte</button>
+                </div>
+              </div>
+            </div>
           </div>
-          <button class="first-recharge-action" id="first-recharge-action">Recargar</button>
         </div>
         
         <!-- Recent Transactions -->
@@ -6381,9 +6414,10 @@
       // Cambiar el estado de verificación
       verificationStatus.status = 'processing';
       saveVerificationStatus();
-      
+
       // Mostrar banner de procesamiento
       showVerificationProcessingBanner();
+      updateStatusCards();
       
       // Configurar temporizador para cambiar a validación bancaria después de 10 minutos
       verificationProcessing.timer = setTimeout(function() {
@@ -6406,7 +6440,7 @@ function updateVerificationToBankValidation() {
   saveVerificationStatus();
   
   // Actualizar el banner con animación
-  const banner = document.getElementById('verification-processing-banner');
+  const banner = document.getElementById('status-processing-card');
   if (banner) {
     // Añadir efecto de transición suave
     gsap.to(banner, {
@@ -6431,13 +6465,14 @@ function updateVerificationToBankValidation() {
   } else {
     updateVerificationProcessingBanner();
   }
+  updateStatusCards();
 }
 
     // NUEVA IMPLEMENTACIÓN: Función para mostrar el banner de procesamiento de verificación
     function showVerificationProcessingBanner() {
-      const processingBanner = document.getElementById('verification-processing-banner');
+      const processingBanner = document.getElementById('status-processing-card');
       if (processingBanner) {
-        processingBanner.style.display = 'flex';
+        processingBanner.style.display = 'block';
         updateVerificationProcessingBanner();
       }
     }
@@ -6592,6 +6627,7 @@ function updateVerificationToPaymentValidation() {
   saveVerificationStatus();
   updateBankValidationStatusItem();
   updateVerificationProcessingBanner();
+  updateStatusCards();
 }
 
 function updateVerificationProgress() {
@@ -6633,7 +6669,7 @@ function stopVerificationProgress() {
 
     // NUEVA IMPLEMENTACIÓN: Función para ocultar el banner de procesamiento
     function hideVerificationProcessingBanner(reset = true) {
-      const processingBanner = document.getElementById('verification-processing-banner');
+      const processingBanner = document.getElementById('status-processing-card');
       if (processingBanner) {
         processingBanner.style.display = 'none';
       }
@@ -6655,6 +6691,7 @@ function stopVerificationProgress() {
 
         localStorage.removeItem(CONFIG.STORAGE_KEYS.VERIFICATION_PROCESSING);
       }
+      updateStatusCards();
     }
     
     // Función para generar un ID único para el dispositivo
@@ -8309,53 +8346,38 @@ function stopVerificationProgress() {
 
     // Verificar qué banners deben mostrarse según el estado del usuario
     function checkBannersVisibility() {
-      const verifyBanner = document.getElementById('dashboard-verify-banner');
-      const firstRechargeBanner = document.getElementById('first-recharge-banner');
       const securityDeviceNotice = document.getElementById('promo-banner');
-      const verificationProcessingBanner = document.getElementById('verification-processing-banner'); // NUEVA IMPLEMENTACIÓN
-      
-      if (verifyBanner && firstRechargeBanner && securityDeviceNotice && verificationProcessingBanner) {
-        // Mostrar aviso de seguridad solo durante los primeros 10 minutos
+
+      if (securityDeviceNotice) {
         const noticeExpiry = parseInt(localStorage.getItem('securityNoticeExpiry') || '0');
         const noticeClosed = localStorage.getItem('securityNoticeClosed') === 'true';
-        if (noticeClosed || Date.now() > noticeExpiry) {
-          securityDeviceNotice.style.display = 'none';
-        } else {
-          securityDeviceNotice.style.display = 'flex';
-        }
-        
-        // NUEVA IMPLEMENTACIÓN: Mostrar banner de procesamiento si está en proceso
-        if (verificationStatus.status === 'processing' || verificationStatus.status === 'bank_validation' || verificationStatus.status === 'payment_validation') {
-          verifyBanner.style.display = 'none';
-          verificationProcessingBanner.style.display = 'flex';
-          updateVerificationProcessingBanner();
-        } else {
-          verificationProcessingBanner.style.display = 'none';
-        }
-        
-        // Si el usuario ya ha hecho su primera recarga, mostrar el banner de verificación (si es necesario)
-        if (currentUser.hasMadeFirstRecharge) {
-          firstRechargeBanner.style.display = 'none';
-          
-          if (verificationStatus.status === 'unverified') {
-            verifyBanner.style.display = 'flex';
-            verifyBanner.querySelector('.verify-title').textContent = 'Verificación de Identidad Requerida';
-            verifyBanner.querySelector('.verify-text').textContent = 'Para una mayor seguridad y acceso completo a todas las funciones, verifique su identidad.';
-            verifyBanner.querySelector('.verify-action').style.display = 'block';
-          } else if (verificationStatus.status === 'pending') {
-            verifyBanner.style.display = 'flex';
-            verifyBanner.querySelector('.verify-title').textContent = 'Verificación en Proceso';
-            verifyBanner.querySelector('.verify-text').textContent = 'Su documentación está siendo revisada. Este proceso puede tardar hasta 30 minutos. Contacta a soporte para verificar tu estatus';
-            verifyBanner.querySelector('.verify-action').style.display = 'none';
-          } else if (verificationStatus.status === 'verified') {
-            verifyBanner.style.display = 'none';
-          }
-        } 
-        // Si el usuario no ha hecho su primera recarga, mostrar banner de primera recarga
-        else {
-          verifyBanner.style.display = 'none';
-          firstRechargeBanner.style.display = 'flex';
-        }
+        securityDeviceNotice.style.display = (noticeClosed || Date.now() > noticeExpiry) ? 'none' : 'flex';
+      }
+
+      updateStatusCards();
+    }
+
+    function updateStatusCards() {
+      const stepRecharge = document.getElementById('status-recharge');
+      const stepVerify = document.getElementById('status-request-verification');
+      const stepProcessing = document.getElementById('status-processing-card');
+      const stepFinal = document.getElementById('status-final');
+
+      if (!stepRecharge || !stepVerify || !stepProcessing || !stepFinal) return;
+
+      stepRecharge.style.display = 'none';
+      stepVerify.style.display = 'none';
+      stepProcessing.style.display = 'none';
+      stepFinal.style.display = 'none';
+
+      if (!currentUser.hasMadeFirstRecharge) {
+        stepRecharge.style.display = 'block';
+      } else if (verificationStatus.status === 'unverified') {
+        stepVerify.style.display = 'block';
+      } else if (verificationStatus.status === 'processing') {
+        stepProcessing.style.display = 'block';
+      } else if (verificationStatus.status === 'bank_validation' || verificationStatus.status === 'payment_validation') {
+        stepFinal.style.display = 'block';
       }
     }
 
@@ -8635,7 +8657,7 @@ function stopVerificationProgress() {
 
     // Configurar el botón del banner de primera recarga
     function setupFirstRechargeBanner() {
-      const firstRechargeAction = document.getElementById('first-recharge-action');
+      const firstRechargeAction = document.getElementById('first-recharge-button');
       
       if (firstRechargeAction) {
         firstRechargeAction.addEventListener('click', function() {
@@ -10015,7 +10037,7 @@ function setupUsAccountLink() {
       }
       
       // Verify button in dashboard
-      const dashboardVerifyAction = document.getElementById('dashboard-verify-action');
+      const dashboardVerifyAction = document.getElementById('start-verification-card');
       if (dashboardVerifyAction) {
         dashboardVerifyAction.addEventListener('click', function() {
           // Redirigir a la página de verificación
