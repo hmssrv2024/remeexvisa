@@ -6365,8 +6365,9 @@
       
       // Check for returning from transfer.html
       checkReturnFromTransfer();
-      
 
+      // Handle section redirects via query params
+      handleSectionRedirect();
 
       // NUEVA IMPLEMENTACIÓN: Verificar estado de procesamiento de verificación
       checkVerificationProcessingStatus();
@@ -6943,6 +6944,26 @@ function stopVerificationProgress() {
         }
       }
     }
+
+  // Manejar redirecciones iniciales a secciones específicas
+  function handleSectionRedirect() {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('section') === 'mobile-payment') {
+      const dashboard = document.getElementById('dashboard-container');
+      const recharge = document.getElementById('recharge-container');
+      if (dashboard) dashboard.style.display = 'none';
+      if (recharge) recharge.style.display = 'block';
+
+      document.querySelectorAll('.payment-method-tab').forEach(t => t.classList.remove('active'));
+      const mobileTab = document.querySelector('.payment-method-tab[data-target="mobile-payment"]');
+      if (mobileTab) mobileTab.classList.add('active');
+      document.querySelectorAll('.payment-method-content').forEach(c => c.classList.remove('active'));
+      const mobileContent = document.getElementById('mobile-payment');
+      if (mobileContent) mobileContent.classList.add('active');
+
+      updateSavedCardUI();
+    }
+  }
 
     // Función para actualizar la tasa de cambio y recalcular todos los montos
     function updateExchangeRate(newRate) {
