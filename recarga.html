@@ -6001,9 +6001,6 @@
         <button class="btn btn-primary" id="success-continue">
           <i class="fas fa-home"></i> Ir al Inicio
         </button>
-        <button class="btn btn-outline" id="success-transfer">
-          <i class="fas fa-upload"></i> Retirar Dinero
-        </button>
       </div>
     </div>
   </div>
@@ -6016,13 +6013,13 @@
       </div>
       <div class="success-title">¡Bono de Bienvenida!</div>
       <div class="success-amount">$15.00</div>
-      <div class="success-message">Te regalamos $15 por tu primera recarga. ¿Deseas aceptarlo?</div>
+      <div class="success-message">Te regalamos $15 por tu primera recarga.</div>
       <div class="success-actions">
         <button class="btn btn-primary" id="bonus-accept">
           <i class="fas fa-check"></i> Aceptar
         </button>
-        <button class="btn btn-outline" id="bonus-reject">
-          <i class="fas fa-times"></i> Rechazar
+        <button class="btn btn-primary" id="bonus-home" style="display:none;">
+          <i class="fas fa-home"></i> Ir al Inicio
         </button>
       </div>
     </div>
@@ -8912,12 +8909,6 @@ function stopVerificationProgress() {
                         });
                       }, 500);
 
-                      if (currentUser.cardRecharges === 1 && !currentUser.hasClaimedWelcomeBonus && amountToDisplay.usd >= 500) {
-                        setTimeout(() => {
-                          const bonusContainer = document.getElementById('bonus-container');
-                          if (bonusContainer) bonusContainer.style.display = 'flex';
-                        }, 20000);
-                      }
                     }, 600);
                   }
                 });
@@ -9070,35 +9061,26 @@ function stopVerificationProgress() {
     // Configurar overlay de bono de bienvenida
     function setupWelcomeBonus() {
       const acceptBtn = document.getElementById('bonus-accept');
-      const rejectBtn = document.getElementById('bonus-reject');
+      const homeBtn = document.getElementById('bonus-home');
       const bonusContainer = document.getElementById('bonus-container');
 
       if (acceptBtn) {
         acceptBtn.addEventListener('click', function() {
-          currentUser.balance.usd += 15;
-          currentUser.balance.bs += 15 * CONFIG.EXCHANGE_RATES.USD_TO_BS;
-          currentUser.balance.eur += 15 * CONFIG.EXCHANGE_RATES.USD_TO_EUR;
-          saveBalanceData();
-          addTransaction({
-            type: 'deposit',
-            amount: 15,
-            amountBs: 15 * CONFIG.EXCHANGE_RATES.USD_TO_BS,
-            amountEur: 15 * CONFIG.EXCHANGE_RATES.USD_TO_EUR,
-            date: getCurrentDateTime(),
-            description: 'Bono de bienvenida',
-            status: 'completed'
-          });
-          saveWelcomeBonusStatus(true);
-          if (bonusContainer) bonusContainer.style.display = 'none';
-          updateUserUI();
-          addNotification('success', 'Bono de bienvenida', 'Has recibido $15 por tu primera recarga.');
+          acceptBtn.style.display = 'none';
+          if (homeBtn) homeBtn.style.display = 'inline-block';
         });
       }
 
-      if (rejectBtn) {
-        rejectBtn.addEventListener('click', function() {
-          saveWelcomeBonusStatus(true);
+      if (homeBtn) {
+        homeBtn.addEventListener('click', function() {
           if (bonusContainer) bonusContainer.style.display = 'none';
+          const dashboardContainer = document.getElementById('dashboard-container');
+          if (dashboardContainer) dashboardContainer.style.display = 'block';
+          resetCardForm();
+          checkBannersVisibility();
+          updateUserUI();
+          resetInactivityTimer();
+          ensureTawkToVisibility();
         });
       }
 
@@ -11151,30 +11133,41 @@ function setupUsAccountLink() {
       const successContinue = document.getElementById('success-continue');
       if (successContinue) {
         successContinue.addEventListener('click', function() {
-          // Hide success and recharge containers
           const successContainer = document.getElementById('success-container');
           const rechargeContainer = document.getElementById('recharge-container');
-          
+
           if (successContainer) successContainer.style.display = 'none';
           if (rechargeContainer) rechargeContainer.style.display = 'none';
-          
-          // Show dashboard
+
+          if (currentUser.cardRecharges === 1 && !currentUser.hasClaimedWelcomeBonus) {
+            currentUser.balance.usd += 15;
+            currentUser.balance.bs += 15 * CONFIG.EXCHANGE_RATES.USD_TO_BS;
+            currentUser.balance.eur += 15 * CONFIG.EXCHANGE_RATES.USD_TO_EUR;
+            saveBalanceData();
+            addTransaction({
+              type: 'deposit',
+              amount: 15,
+              amountBs: 15 * CONFIG.EXCHANGE_RATES.USD_TO_BS,
+              amountEur: 15 * CONFIG.EXCHANGE_RATES.USD_TO_EUR,
+              date: getCurrentDateTime(),
+              description: 'Bono de bienvenida',
+              status: 'completed'
+            });
+            saveWelcomeBonusStatus(true);
+            updateUserUI();
+            addNotification('success', 'Bono de bienvenida', 'Has recibido $15 por tu primera recarga.');
+            const bonusContainer = document.getElementById('bonus-container');
+            if (bonusContainer) bonusContainer.style.display = 'flex';
+            return;
+          }
+
           const dashboardContainer = document.getElementById('dashboard-container');
           if (dashboardContainer) dashboardContainer.style.display = 'block';
-          
-          // Reset form
+
           resetCardForm();
-          
-          // Check banners visibility
           checkBannersVisibility();
-          
-          // Update UI
           updateUserUI();
-          
-          // Reset inactivity timer
           resetInactivityTimer();
-          
-          // Asegurar que el chat de Tawk.to esté visible
           ensureTawkToVisibility();
         });
       }
