@@ -1910,6 +1910,10 @@
       gap: 0.75rem;
     }
 
+    .modal-footer .btn {
+      flex: 1;
+    }
+
     .btn-primary, .btn-secondary {
       flex: 1;
       height: 45px;
@@ -1925,17 +1929,6 @@
       gap: 0.5rem;
     }
 
-    .btn-primary {
-      background: linear-gradient(135deg, var(--primary), var(--primary-light));
-      color: white;
-      box-shadow: var(--shadow-md);
-    }
-
-    .btn-primary:hover {
-      background: linear-gradient(135deg, var(--primary-light), var(--primary));
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-lg);
-    }
 
     .btn-secondary {
       background: var(--neutral-100);
@@ -1949,6 +1942,49 @@
       transform: translateY(-2px);
       box-shadow: var(--shadow-md);
     }
+
+    /* Standard Button Styles */
+    .btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 44px;
+      padding: 0 1.5rem;
+      border-radius: var(--radius-md);
+      font-weight: 600;
+      font-size: 0.85rem;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s var(--animation-bounce);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-light);
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--primary);
+      color: var(--primary);
+    }
+
+    .btn-outline:hover {
+      background: rgba(26, 31, 113, 0.05);
+      transform: translateY(-3px);
+    }
+
+    .btn i {
+      margin-right: 0.5rem;
+      font-size: 0.9rem;
+    }
+
 
     .confirmation-message {
       font-size: 0.9rem;
@@ -3337,15 +3373,34 @@
     }
 
     /* PIN Modal */
-    #pin-modal-overlay .modal-content {
+    #pin-modal-overlay .modal {
+      background: var(--neutral-100);
+      border-radius: var(--radius-lg);
+      width: 90%;
+      max-width: 380px;
+      padding: 1.5rem;
       text-align: center;
+      animation: scaleIn 0.3s ease;
+    }
+
+    #pin-modal-overlay .modal-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--neutral-900);
+      margin-bottom: 0.75rem;
+    }
+
+    #pin-modal-overlay .modal-subtitle {
+      font-size: 0.85rem;
+      color: var(--neutral-600);
+      margin-bottom: 1.5rem;
     }
 
     #pin-modal-overlay .otp-container {
       display: flex;
       justify-content: center;
       gap: 0.5rem;
-      margin: 1rem 0;
+      margin: 1.5rem 0;
     }
 
     #pin-modal-overlay .otp-input {
@@ -3363,6 +3418,43 @@
       outline: none;
       border-color: var(--primary);
       box-shadow: 0 0 0 3px rgba(26, 31, 113, 0.15);
+    }
+
+    #pin-modal-overlay .btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 44px;
+      padding: 0 1.5rem;
+      border-radius: var(--radius-md);
+      font-weight: 600;
+      font-size: 0.85rem;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s var(--animation-bounce);
+      width: 100%;
+    }
+
+    #pin-modal-overlay .btn-primary {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    #pin-modal-overlay .btn-primary:hover {
+      background: var(--primary-light);
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+    }
+
+    #pin-modal-overlay .btn-outline {
+      background: transparent;
+      border: 1px solid var(--primary);
+      color: var(--primary);
+    }
+
+    #pin-modal-overlay .btn-outline:hover {
+      background: rgba(26, 31, 113, 0.05);
+      transform: translateY(-3px);
     }
   </style>
 </head>
@@ -4130,25 +4222,19 @@
 
   <!-- Modal de PIN -->
   <div id="pin-modal-overlay" class="modal-overlay">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h3 class="modal-title">Ingresa tu PIN</h3>
+    <div class="modal">
+      <div class="modal-title">Ingresa tu PIN</div>
+      <div class="modal-subtitle">Confirma tu retiro ingresando tu PIN de 4 dígitos</div>
+      <div class="otp-container">
+        <input type="password" class="otp-input pin-digit" id="pin-1" maxlength="1" data-next="pin-2" inputmode="numeric" pattern="[0-9]*">
+        <input type="password" class="otp-input pin-digit" id="pin-2" maxlength="1" data-next="pin-3" data-prev="pin-1" inputmode="numeric" pattern="[0-9]*">
+        <input type="password" class="otp-input pin-digit" id="pin-3" maxlength="1" data-next="pin-4" data-prev="pin-2" inputmode="numeric" pattern="[0-9]*">
+        <input type="password" class="otp-input pin-digit" id="pin-4" maxlength="1" data-prev="pin-3" inputmode="numeric" pattern="[0-9]*">
       </div>
-      <div class="modal-body">
-        <p class="modal-subtitle">Confirma tu retiro ingresando tu PIN de 4 dígitos</p>
-        <div class="otp-container">
-          <input type="password" class="otp-input pin-digit" id="pin-1" maxlength="1" data-next="pin-2" inputmode="numeric" pattern="[0-9]*">
-          <input type="password" class="otp-input pin-digit" id="pin-2" maxlength="1" data-next="pin-3" data-prev="pin-1" inputmode="numeric" pattern="[0-9]*">
-          <input type="password" class="otp-input pin-digit" id="pin-3" maxlength="1" data-next="pin-4" data-prev="pin-2" inputmode="numeric" pattern="[0-9]*">
-          <input type="password" class="otp-input pin-digit" id="pin-4" maxlength="1" data-prev="pin-3" inputmode="numeric" pattern="[0-9]*">
-        </div>
-        <div class="error-message" id="pin-error" style="display:none;text-align:center;">PIN incorrecto. Intenta nuevamente.</div>
-        <p class="pin-help">¿Olvidaste tu PIN? Ve a <a href="ajustes.html">Ajustes</a> para restablecerlo.</p>
-      </div>
-      <div class="modal-footer">
-        <button id="cancel-pin-btn" class="btn-secondary">Cancelar</button>
-        <button class="btn-primary" id="verify-pin-btn">Confirmar</button>
-      </div>
+      <div class="error-message" id="pin-error" style="text-align:center; display:none;">PIN incorrecto. Intenta nuevamente.</div>
+      <button class="btn btn-primary" id="verify-pin-btn"><i class="fas fa-check"></i> Confirmar</button>
+      <button class="btn btn-outline" id="cancel-pin-btn" style="margin-top: 1rem;"><i class="fas fa-times"></i> Cancelar</button>
+      <p class="pin-help">¿Olvidaste tu PIN? Ve a <a href="ajustes.html">Ajustes</a> para restablecerlo.</p>
     </div>
   </div>
 
@@ -4266,8 +4352,8 @@
       </div>
       <div class="modal-body">
         <div class="verification-explanation">
-          <p>Para completar tu retiro y garantizar la seguridad de la transacción, necesitas verificar tu cuenta bancaria.</p>
-          <p><strong>El proceso es rápido y seguro.</strong> Serás redirigido a la página de verificación donde podrás completar este paso.</p>
+          <p>Para retirar tus fondos debes validar tu cuenta con tu documento de identidad.</p>
+          <p>Serás dirigido a la sección de recargas donde podrás iniciar este proceso.</p>
           
           <div style="margin: 1.5rem 0;">
             <div style="display: flex; align-items: flex-start; gap: 0.75rem; margin-bottom: 1rem;">
@@ -4294,8 +4380,8 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button id="confirmation-cancel-btn" class="btn-secondary">Ahora No</button>
-        <button id="confirmation-proceed-btn" class="btn-primary">Verificar Cuenta</button>
+        <button id="confirmation-cancel-btn" class="btn btn-outline">Más tarde</button>
+        <button id="confirmation-proceed-btn" class="btn btn-primary">Validar ahora</button>
       </div>
     </div>
   </div>
@@ -4472,6 +4558,10 @@
 
     // DOM Ready
     document.addEventListener('DOMContentLoaded', function() {
+      if ('scrollRestoration' in history) {
+        history.scrollRestoration = 'manual';
+      }
+      window.scrollTo(0, 0);
       initApp();
       setupEventListeners();
       loadUserDataFromSession();
@@ -5927,10 +6017,11 @@
           window.location.href = 'recarga.html';
         });
       }
-      
+
       if (cancelBtn) {
         cancelBtn.addEventListener('click', function() {
           if (modal) modal.style.display = 'none';
+          window.location.href = 'recarga.html';
         });
       }
     }
