@@ -448,7 +448,7 @@
       display: none;
       flex: 1;
       overflow-y: auto;
-      padding-bottom: 1rem;
+      padding-bottom: calc(var(--wizard-nav-height) + 1rem);
     }
 
     .wizard-step.active {
@@ -479,22 +479,22 @@
     .method-selection-grid {
       display: grid;
       grid-template-columns: 1fr;
-      gap: 0.75rem;
-      margin-bottom: 1.5rem;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
     }
 
     .method-card {
       background: var(--neutral-100);
       border: 2px solid var(--neutral-300);
       border-radius: var(--radius-lg);
-      padding: 1rem;
+      padding: 0.75rem;
       cursor: pointer;
       transition: var(--transition-base);
       position: relative;
       overflow: hidden;
       display: flex;
       align-items: center;
-      gap: 1rem;
+      gap: 0.75rem;
     }
 
     .method-card:hover {
@@ -521,12 +521,12 @@
     }
 
     .method-icon {
-      font-size: 1.8rem;
+      font-size: 1.6rem;
       color: var(--primary);
       margin-bottom: 0;
       text-align: center;
-      width: 60px;
-      height: 60px;
+      width: 50px;
+      height: 50px;
       background: rgba(26, 31, 113, 0.1);
       border-radius: var(--radius-md);
       display: flex;
@@ -1887,16 +1887,34 @@
     }
 
     .logo-circle {
+      position: relative;
       width: 55px;
       height: 55px;
+      border-radius: 50%;
+      overflow: hidden;
+      margin: 0 auto;
+    }
+
+    .logo-circle img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .check-overlay {
+      position: absolute;
+      bottom: -4px;
+      right: -4px;
+      width: 20px;
+      height: 20px;
       border-radius: 50%;
       background: var(--success);
       color: white;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.6rem;
-      margin: 0 auto;
+      font-size: 0.75rem;
+      box-shadow: 0 0 0 2px var(--neutral-100);
     }
 
     .receipt-title {
@@ -3339,7 +3357,7 @@
               <p class="method-description">Directo a tu cuenta bancaria</p>
               <div class="method-limits">Límite: Bs 1.000.000</div>
             </div>
-            <div class="method-badge secure">Seguro</div>
+            <div class="method-badge instant">Instantáneo</div>
           </div>
 
           <div class="method-card" data-method="international">
@@ -3455,7 +3473,7 @@
 
           <div class="form-group">
             <label for="account-number" class="form-label">Número de Cuenta</label>
-            <input type="text" id="account-number" class="form-input" placeholder="01020123456789012345" maxlength="24" inputmode="numeric">
+            <input type="text" id="account-number" class="form-input" placeholder="01020123456789012345" maxlength="20" inputmode="numeric">
             <div id="account-number-error" class="form-error">Este campo es obligatorio</div>
             <div class="form-help">Ingresa tu número de cuenta completo (20 dígitos)</div>
           </div>
@@ -3784,7 +3802,7 @@
             
             <div class="form-group">
               <label class="form-label" for="classic-account-number">Número de Cuenta</label>
-              <input type="text" class="form-input" id="classic-account-number" placeholder="Ejemplo: 0105-0000-00-0000000000" inputmode="numeric">
+              <input type="text" class="form-input" id="classic-account-number" placeholder="Ejemplo: 0105-0000-00-0000000000" maxlength="20" inputmode="numeric">
               <div class="form-error" id="classic-account-number-error" style="display: none;">Por favor, introduce un número de cuenta válido.</div>
               <div class="form-help">Ingresa tu número de cuenta completo (20 dígitos)</div>
             </div>
@@ -4020,7 +4038,8 @@
       <div class="receipt-header">
         <div class="receipt-logo">
           <div class="logo-circle">
-            <i class="fas fa-check"></i>
+            <img id="receipt-bank-logo" src="" alt="Banco">
+            <i class="fas fa-check check-overlay"></i>
           </div>
         </div>
         <h3 class="receipt-title">¡Retiro Solicitado!</h3>
@@ -4685,9 +4704,12 @@
           limitsText.textContent = 'Retiros internacionales: sin límite en USD/EUR';
         } else {
           limitsText.textContent = `Pago Móvil: hasta ${formatCurrency(CONFIG.LIMITS.MOBILE, 'bs')} | Transferencia: hasta ${formatCurrency(CONFIG.LIMITS.BANK, 'bs')}`;
+
         }
       }
     }
+
+
 
     function updateNextButtonState() {
       const nextBtn = document.getElementById('next-step-btn');
@@ -5951,8 +5973,14 @@
       if (selectedMethod !== 'bank') return;
       const accountNumberEl = document.getElementById('account-number') || document.getElementById('classic-account-number');
       if (!accountNumberEl || !accountNumberEl.value) return;
+      const accountTypeEl = document.getElementById('account-type') || document.getElementById('classic-account-type');
+      const accountIdEl = document.getElementById('account-id') || document.getElementById('classic-account-id');
+      const accountNameEl = document.getElementById('account-name') || document.getElementById('classic-account-name');
       const data = {
         accountNumber: accountNumberEl.value.trim(),
+        accountType: accountTypeEl ? accountTypeEl.value : '',
+        accountId: accountIdEl ? accountIdEl.value.trim() : '',
+        accountName: accountNameEl ? accountNameEl.value.trim() : '',
         bankName: selectedBank ? selectedBank.name : '',
         bankLogo: selectedBank ? selectedBank.logo : '',
         bankId: selectedBank ? selectedBank.id : ''
@@ -6313,7 +6341,16 @@
         }
       }
     }
-    
+
+    const receiptLogo = document.getElementById('receipt-bank-logo');
+    if (receiptLogo) {
+      if (selectedBank && selectedBank.logo) {
+        receiptLogo.src = selectedBank.logo;
+      } else {
+        receiptLogo.src = '';
+      }
+    }
+
     function getInternationalMethodName(methodId) {
       const methodNames = {
         'zelle': 'Zelle',
