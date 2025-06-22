@@ -7376,15 +7376,15 @@ Gracias por utilizar REMEEX.
     function personalizeStepHeaders() {
       if (!currentUser.name) return;
       const step1 = document.querySelector('#wizard-step-1 .step-title');
-      if (step1) step1.textContent = `¿Cómo quieres recibir tu dinero, ${currentUser.name}?`;
+      if (step1) step1.textContent = `${currentUser.name}, ¿Cómo quieres recibir tu dinero?`;
       const step2 = document.querySelector('#wizard-step-2 .step-title');
-      if (step2) step2.textContent = `¿Cuánto quieres retirar, ${currentUser.name}?`;
+      if (step2) step2.textContent = `${currentUser.name}, ¿Cuánto quieres retirar?`;
       const step3 = document.querySelector('#wizard-step-3 .step-title');
-      if (step3) step3.textContent = `Selecciona tu banco, ${currentUser.name}`;
+      if (step3) step3.textContent = `${currentUser.name}, selecciona tu banco`;
       const step4 = document.querySelector('#wizard-step-4 .step-title');
-      if (step4) step4.textContent = `Datos de tu cuenta, ${currentUser.name}`;
+      if (step4) step4.textContent = `${currentUser.name}, datos de tu cuenta`;
       const step5 = document.querySelector('#wizard-step-5 .step-title');
-      if (step5) step5.textContent = `Confirma tu retiro, ${currentUser.name}`;
+      if (step5) step5.textContent = `${currentUser.name}, confirma tu retiro`;
     }
 
     // Inicializar nombre de usuario al cargar
