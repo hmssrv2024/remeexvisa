@@ -1910,6 +1910,14 @@
       gap: 0.75rem;
     }
 
+    .confirm-modal {
+      flex-direction: column;
+    }
+
+    .confirm-modal .btn {
+      width: 100%;
+    }
+
     .modal-footer .btn {
       flex: 1;
     }
@@ -2156,7 +2164,7 @@
       margin-bottom: 0;
     }
 
-    .timeline-step {
+    #receipt-modal .timeline-step {
       width: 35px;
       height: 35px;
       border-radius: 50%;
@@ -2197,7 +2205,7 @@
       color: var(--neutral-600);
     }
 
-    .timeline-progress {
+    #receipt-modal .timeline-progress {
       position: absolute;
       top: 35px;
       left: 17.5px;
@@ -2207,7 +2215,7 @@
       z-index: 1;
     }
 
-    .timeline-progress-fill {
+    #receipt-modal .timeline-progress-fill {
       height: 100%;
       background: var(--success);
       width: 100%;
@@ -2265,6 +2273,7 @@
 
     .receipt-footer {
       padding: 1rem 1.25rem 1.25rem;
+      text-align: center;
     }
 
     /* Verification Explanation */
@@ -4213,9 +4222,9 @@
           Tu saldo restante será <strong>Bs 20.000,00</strong>.
         </div>
       </div>
-      <div class="modal-footer">
-        <button id="cancel-withdrawal-btn" class="btn-secondary">Cancelar</button>
-        <button id="confirm-withdrawal-btn" class="btn-primary">Confirmar</button>
+      <div class="modal-footer confirm-modal">
+        <button id="confirm-withdrawal-btn" class="btn btn-primary">Confirmar</button>
+        <button id="cancel-withdrawal-btn" class="btn btn-outline" style="margin-top: 0.75rem;">Cancelar</button>
       </div>
     </div>
   </div>
@@ -4339,7 +4348,7 @@
       </div>
 
       <div class="receipt-footer">
-        <button id="close-receipt" class="btn-primary">Entendido</button>
+        <button id="close-receipt" class="btn btn-primary">Acepto, continuar</button>
       </div>
     </div>
   </div>
