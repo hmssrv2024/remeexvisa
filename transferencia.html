@@ -2063,6 +2063,14 @@
       display: block;
     }
 
+    .receipt-bank-logo {
+      width: 80px;
+      height: auto;
+      object-fit: contain;
+      margin: 0 auto 1rem;
+      display: block;
+    }
+
     .check-overlay {
       position: absolute;
       bottom: -4px;
@@ -2307,6 +2315,13 @@
     .receipt-footer {
       padding: 1rem 1.25rem 1.25rem;
       text-align: center;
+      display: flex;
+      justify-content: center;
+    }
+
+    .receipt-footer .btn {
+      width: 100%;
+      max-width: 220px;
     }
 
     /* Verification Explanation */
@@ -4291,10 +4306,7 @@
     <div class="modal-content modal-receipt">
       <div class="receipt-header">
         <div class="receipt-logo">
-          <div class="logo-circle">
-            <img id="receipt-bank-logo" src="" alt="Banco">
-            <i class="fas fa-check check-overlay"></i>
-          </div>
+          <img id="receipt-bank-logo" class="receipt-bank-logo" src="" alt="Banco">
         </div>
         <h3 class="receipt-title">¡Retiro Solicitado!</h3>
         <p class="receipt-subtitle">Tu solicitud ha sido recibida exitosamente</p>
@@ -4323,17 +4335,6 @@
         </div>
       </div>
 
-      <!-- Banner de Verificación en Recibo -->
-      <div id="verification-banner-receipt" class="verification-notice">
-        <div class="verification-icon">
-          <i class="fas fa-shield-alt"></i>
-        </div>
-        <div class="verification-content">
-          <h4>Verificación Requerida</h4>
-          <p>Para completar tu retiro, necesitas verificar tu cuenta bancaria</p>
-          <button id="verify-from-receipt" class="verify-btn-small">Verificar Ahora</button>
-        </div>
-      </div>
 
       <div class="receipt-timeline">
         <div class="timeline-item completed">
