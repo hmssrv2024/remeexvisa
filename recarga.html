@@ -1437,8 +1437,8 @@
       overflow-y: auto;
     }
 
-    /* Support Overlay */
-    .support-overlay {
+    /* Help Overlay */
+    .help-overlay {
       position: fixed;
       top: 0;
       left: 0;
@@ -1451,7 +1451,7 @@
       animation: fadeIn 0.3s ease;
     }
 
-    .support-container {
+    .help-container {
       position: absolute;
       bottom: 0;
       left: 0;
@@ -1461,26 +1461,26 @@
       border-top-right-radius: var(--radius-lg);
       padding: 1.5rem;
       animation: slideUp 0.4s ease;
-      max-height: 80vh;
+      max-height: 90vh;
       overflow-y: auto;
       text-align: left;
     }
 
-    .support-header {
+    .help-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 1.5rem;
     }
 
-    .support-title {
+    .help-title {
       font-size: 1.25rem;
       font-weight: 700;
       color: var(--neutral-900);
       text-align: left;
     }
 
-    .support-close {
+    .help-close {
       width: 32px;
       height: 32px;
       border-radius: var(--radius-full);
@@ -1492,8 +1492,61 @@
       transition: var(--transition-base);
     }
 
-    .support-close:hover {
+    .help-close:hover {
       background: var(--neutral-300);
+    }
+
+    .help-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+    }
+
+    .help-item {
+      background: var(--neutral-200);
+      border-radius: var(--radius-md);
+      padding: 0.75rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
+      transition: all 0.3s var(--animation-bounce);
+      text-align: center;
+    }
+
+    .help-item:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .help-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: var(--radius-full);
+      background: var(--primary);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+    }
+
+    .help-icon.primary-light { background: var(--primary-light); }
+    .help-icon.info { background: var(--info); }
+    .help-icon.success { background: var(--success); }
+    .help-icon.secondary { background: var(--secondary); }
+    .help-icon.accent { background: var(--accent); color: var(--neutral-900); }
+    .help-icon.warning { background: var(--warning); }
+
+    .help-name {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--neutral-900);
+    }
+
+    .help-description {
+      font-size: 0.7rem;
+      color: var(--neutral-600);
     }
 
     /* Settings Overlay */
@@ -1882,125 +1935,6 @@
       z-index: 1000;
     }
 
-    .support-menu {
-      display: none;
-      position: absolute;
-      bottom: calc(100% + 2rem);
-      left: 50%;
-      transform: translateX(-50%);
-      background: var(--neutral-100);
-      border: 1px solid var(--neutral-300);
-      border-radius: var(--radius-md);
-      box-shadow: var(--shadow-md);
-      width: 220px;
-      max-height: 70vh;
-      overflow-y: auto;
-      z-index: 1001;
-      padding: 1rem;
-    }
-
-    .support-menu-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 0.75rem;
-    }
-
-    .support-menu-title {
-      font-size: 1rem;
-      font-weight: 600;
-      color: var(--neutral-900);
-    }
-
-    .support-menu-close {
-      position: absolute;
-      top: 0.25rem;
-      right: 0.25rem;
-      width: 24px;
-      height: 24px;
-      border-radius: var(--radius-full);
-      background: var(--neutral-200);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: var(--transition-base);
-    }
-
-    .support-menu-close:hover {
-      background: var(--neutral-300);
-    }
-
-    .support-status {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.5rem 0;
-      font-size: 0.75rem;
-      border-bottom: 1px solid var(--neutral-300);
-      margin-bottom: 0.5rem;
-    }
-
-    .status-led {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--success);
-      animation: pulse 1.5s infinite;
-    }
-
-    .support-menu.open {
-      display: block;
-    }
-
-    .support-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      grid-auto-flow: column;
-      gap: 0.5rem;
-      width: 100%;
-    }
-
-    .support-option,
-    .access-option {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.5rem;
-      font-size: 0.8rem;
-      color: var(--neutral-900);
-      cursor: pointer;
-      text-align: center;
-      width: 100%;
-    }
-
-    .support-icon {
-      width: 28px;
-      height: 28px;
-      border-radius: var(--radius-full);
-      background: var(--primary);
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.85rem;
-      flex-shrink: 0;
-    }
-
-    .support-option:hover,
-    .access-option:hover {
-      background: var(--neutral-200);
-    }
-
-    .access-submenu {
-      display: none;
-      border-top: 1px solid var(--neutral-300);
-    }
-
-    .access-submenu.open {
-      display: block;
-    }
     
     .form-group {
       margin-bottom: 1.25rem;
@@ -3733,80 +3667,6 @@
       gap: 0.75rem;
     }
 
-    /* Contact Section */
-    .contact-options {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1rem;
-      margin-top: 1.25rem;
-    }
-
-    .contact-option {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.75rem;
-      padding: 0.75rem;
-      background: var(--neutral-200);
-      border-radius: var(--radius-md);
-      transition: all 0.3s var(--animation-bounce);
-      text-decoration: none;
-      color: var(--neutral-900);
-      text-align: center;
-    }
-
-    .contact-option:hover {
-      background: var(--neutral-300);
-      transform: translateY(-5px);
-      box-shadow: var(--shadow-md);
-    }
-
-    .contact-icon {
-      width: 17px;
-      height: 17px;
-      border-radius: var(--radius-full);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.675rem;
-      flex-shrink: 0;
-      color: white;
-    }
-    
-    .contact-icon.whatsapp {
-      background: #25D366;
-    }
-    
-    .contact-icon.email {
-      background: var(--primary);
-    }
-
-    .contact-icon.chat {
-      background: var(--info);
-    }
-
-    .contact-icon.reviews {
-      background: var(--warning);
-    }
-    
-    .contact-content {
-      text-align: center;
-    }
-    
-    .contact-title {
-      font-weight: 600;
-      font-size: 0.85rem;
-      margin-bottom: 0.2rem;
-    }
-    
-    .contact-description {
-      font-size: 0.75rem;
-      color: var(--neutral-600);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    
     /* Tawk.to */
     .tawkto-container {
       position: fixed;
@@ -3817,9 +3677,6 @@
       display: none;
     }
 
-    .contact-icon.live {
-      background: var(--success);
-    }
     
     /* Animations */
     @keyframes fadeIn {
@@ -4349,12 +4206,13 @@
         height: 8px;
       }
 
-      .service-grid {
+      .service-grid,
+      .help-grid {
         grid-template-columns: repeat(2, 1fr);
       }
 
       .service-icon,
-      .support-icon,
+      .help-icon,
       .welcome-icon,
       .logout-icon,
       .inactivity-icon,
@@ -4418,7 +4276,8 @@
         font-size: 0.85rem;
       }
 
-      .service-grid {
+      .service-grid,
+      .help-grid {
         grid-template-columns: repeat(4, 1fr);
       }
     }
@@ -4566,38 +4425,6 @@
       </div>
     </div>
 
-    <div class="support-container">
-      <button class="btn btn-outline" id="support-btn"><i class="fas fa-headset"></i> Soporte</button>
-      <div class="support-menu" id="support-menu">
-        <div class="support-menu-header">
-          <div class="support-menu-title">Ayuda</div>
-          <div class="support-menu-close" id="support-menu-close"><i class="fas fa-times"></i></div>
-        </div>
-        <div class="support-status"><span class="status-led"></span> tu ejecutivo de cuenta Carolina Subiyan de Remeex está en linea. Operadora #564664 Venezuela</div>
-        <div class="support-grid">
-          <a href="https://wa.me/+17373018059" class="support-option whatsapp-link" id="whatsapp-support" target="_blank">
-            <div class="support-icon"><i class="fab fa-whatsapp"></i></div>
-            <span>WhatsApp</span>
-          </a>
-          <div class="support-option" id="live-support-option">
-            <div class="support-icon"><i class="fas fa-headset"></i></div>
-            <span>Soporte en Vivo</span>
-          </div>
-          <div class="support-option" id="forum-chat-option">
-            <div class="support-icon"><i class="fas fa-comments"></i></div>
-            <span>Chat con Usuarios</span>
-          </div>
-          <a href="mailto:contactcenter@visa.com" class="support-option" id="email-support-option">
-            <div class="support-icon"><i class="fas fa-envelope"></i></div>
-            <span>Correo Electrónico</span>
-          </a>
-          <a href="opinionesremeex.html" class="support-option" id="reviews-support-option">
-            <div class="support-icon"><i class="fas fa-star"></i></div>
-            <span>Opiniones</span>
-          </a>
-        </div>
-      </div>
-    </div>
   </div>
 
   <!-- App Header (only visible after login) -->
@@ -5166,64 +4993,44 @@
     </div>
   </div>
 
-  <!-- Support Overlay -->
-  <div class="support-overlay" id="support-overlay">
-    <div class="support-container">
-      <div class="support-header">
-        <div class="support-title">Ayuda</div>
-        <div class="support-close" id="support-close"><i class="fas fa-times"></i></div>
+  <!-- Help Overlay -->
+  <div class="help-overlay" id="help-overlay" tabindex="-1">
+    <div class="help-container" role="dialog" aria-modal="true" aria-labelledby="help-title">
+      <div class="help-header">
+        <div class="help-title" id="help-title">Help &amp; Support</div>
+        <div class="help-close" id="help-close"><i class="fas fa-times"></i></div>
       </div>
-
-      <div class="contact-options">
-        <a href="https://wa.me/+17373018059" class="contact-option whatsapp-link" target="_blank">
-          <div class="contact-icon whatsapp">
-            <i class="fab fa-whatsapp"></i>
-          </div>
-          <div class="contact-content">
-            <div class="contact-title">WhatsApp</div>
-            <div class="contact-description">Atención 24/7 vía chat</div>
-          </div>
-        </a>
-
-        <a href="mailto:contactcenter@visa.com" class="contact-option">
-          <div class="contact-icon email">
-            <i class="fas fa-envelope"></i>
-          </div>
-          <div class="contact-content">
-            <div class="contact-title">Correo Electrónico</div>
-            <div class="contact-description">contactcenter@visa.com</div>
-          </div>
-        </a>
-
-        <a href="#" class="contact-option" id="forum-chat-link">
-          <div class="contact-icon chat">
-            <i class="fas fa-comments"></i>
-          </div>
-          <div class="contact-content">
-            <div class="contact-title">Chat con Usuarios</div>
-            <div class="contact-description">Conéctate con la comunidad</div>
-          </div>
-        </a>
-
-        <a href="#" class="contact-option" id="live-support-btn">
-          <div class="contact-icon live">
-            <i class="fas fa-headset"></i>
-          </div>
-          <div class="contact-content">
-            <div class="contact-title">Soporte en Vivo</div>
-            <div class="contact-description">Habla con un agente</div>
-          </div>
-        </a>
-
-        <a href="opinionesremeex.html" class="contact-option">
-          <div class="contact-icon reviews">
-            <i class="fas fa-star"></i>
-          </div>
-          <div class="contact-content">
-            <div class="contact-title">Opiniones</div>
-            <div class="contact-description">Experiencias de usuarios</div>
-          </div>
-        </a>
+      <div class="help-grid">
+        <div class="help-item" id="help-faq">
+          <div class="help-icon primary-light"><i class="fas fa-question"></i></div>
+          <div class="help-name">FAQ</div>
+          <div class="help-description">Common answers</div>
+        </div>
+        <div class="help-item" id="help-chat">
+          <div class="help-icon info"><i class="fas fa-comments"></i></div>
+          <div class="help-name">Live Chat</div>
+          <div class="help-description">24 / 7 agent</div>
+        </div>
+        <div class="help-item" id="help-whatsapp">
+          <div class="help-icon success"><i class="fab fa-whatsapp"></i></div>
+          <div class="help-name">WhatsApp</div>
+          <div class="help-description">+1 737-301-8059</div>
+        </div>
+        <div class="help-item" id="help-email">
+          <div class="help-icon secondary"><i class="fas fa-envelope"></i></div>
+          <div class="help-name">Email</div>
+          <div class="help-description">contactcenter@visa.com</div>
+        </div>
+        <div class="help-item" id="help-tutorials">
+          <div class="help-icon accent"><i class="fas fa-graduation-cap"></i></div>
+          <div class="help-name">Tutorials</div>
+          <div class="help-description">Step-by-step videos</div>
+        </div>
+        <div class="help-item" id="help-status">
+          <div class="help-icon warning"><i class="fas fa-clipboard-check"></i></div>
+          <div class="help-name">Ticket Status</div>
+          <div class="help-description">Track my requests</div>
+        </div>
       </div>
     </div>
   </div>
@@ -8419,7 +8226,7 @@ function stopVerificationProgress() {
       }
       
       // Ocultar todos los modales y overlays
-      document.querySelectorAll('.modal-overlay, .verification-container, .success-container, .inactivity-modal, .welcome-modal, .service-overlay, .cards-overlay, .messages-overlay, .settings-overlay, .exchange-overlay, .feature-blocked-modal, .logout-modal, .page-overlay').forEach(modal => {
+      document.querySelectorAll('.modal-overlay, .verification-container, .success-container, .inactivity-modal, .welcome-modal, .service-overlay, .cards-overlay, .messages-overlay, .settings-overlay, .exchange-overlay, .help-overlay, .feature-blocked-modal, .logout-modal, .page-overlay').forEach(modal => {
         modal.style.display = 'none';
       });
 
@@ -8666,7 +8473,6 @@ function stopVerificationProgress() {
     function setupEventListeners() {
       // Login form handler
       setupLoginForm();
-      setupLoginSupportMenu();
       setupPasswordToggles();
       
       // OTP verification
@@ -8742,7 +8548,7 @@ function stopVerificationProgress() {
       setupDonationLink();
 
       // Support overlay
-      setupSupportOverlay();
+      setupHelpOverlay();
 
       // Forum links
       setupForumLinks();
@@ -9412,55 +9218,87 @@ function stopVerificationProgress() {
       }
     }
 
-    // Setup support overlay
-    function setupSupportOverlay() {
+    // Setup help overlay
+    function setupHelpOverlay() {
       const supportNav = document.querySelector('.nav-item[data-section="support"]');
-      const supportOverlay = document.getElementById('support-overlay');
-      const supportClose = document.getElementById('support-close');
+      const helpOverlay = document.getElementById('help-overlay');
+      const helpContainer = document.querySelector('#help-overlay .help-container');
+      const helpClose = document.getElementById('help-close');
+      let removeTrap;
+
+      function escHandler(e) {
+        if (e.key === 'Escape') closeOverlay();
+      }
+
+      function closeOverlay() {
+        if (helpOverlay) helpOverlay.style.display = 'none';
+        if (removeTrap) { removeTrap(); removeTrap = null; }
+        document.removeEventListener('keydown', escHandler);
+        resetInactivityTimer();
+      }
 
       if (supportNav) {
         supportNav.addEventListener('click', function() {
-          if (supportOverlay) supportOverlay.style.display = 'flex';
+          if (helpOverlay) {
+            helpOverlay.style.display = 'flex';
+            removeTrap = trapFocus(helpContainer);
+            document.addEventListener('keydown', escHandler);
+          }
           resetInactivityTimer();
         });
       }
 
-      if (supportClose) {
-        supportClose.addEventListener('click', function() {
-          if (supportOverlay) supportOverlay.style.display = 'none';
-          resetInactivityTimer();
-        });
-      }
+      if (helpClose) helpClose.addEventListener('click', closeOverlay);
+      if (helpOverlay) helpOverlay.addEventListener('click', e => { if (e.target === helpOverlay) closeOverlay(); });
 
-      const liveSupportBtn = document.getElementById('live-support-btn');
-      const forumChatLink = document.getElementById('forum-chat-link');
-      if (liveSupportBtn) {
-        liveSupportBtn.addEventListener('click', function(e) {
-          e.preventDefault();
-          loadTawkTo();
-          if (supportOverlay) supportOverlay.style.display = 'none';
-          resetInactivityTimer();
-        });
-      }
+      const faq = document.getElementById('help-faq');
+      if (faq) faq.addEventListener('click', () => { openPage('faq.html'); closeOverlay(); });
 
-      if (forumChatLink) {
-        forumChatLink.addEventListener('click', function(e) {
-          e.preventDefault();
-          window.location.href = 'fororemeex.html';
-          if (supportOverlay) supportOverlay.style.display = 'none';
-          resetInactivityTimer();
-        });
-      }
+      const chat = document.getElementById('help-chat');
+      if (chat) chat.addEventListener('click', () => { loadTawkTo(); closeOverlay(); });
+
+      const whatsapp = document.getElementById('help-whatsapp');
+      if (whatsapp) whatsapp.addEventListener('click', () => { window.open('https://wa.me/+17373018059', '_blank'); closeOverlay(); });
+
+      const email = document.getElementById('help-email');
+      if (email) email.addEventListener('click', () => { window.location.href = 'mailto:contactcenter@visa.com'; closeOverlay(); });
+
+      const tutorials = document.getElementById('help-tutorials');
+      if (tutorials) tutorials.addEventListener('click', () => { openPage('tutorials.html'); closeOverlay(); });
+
+      const status = document.getElementById('help-status');
+      if (status) status.addEventListener('click', () => { openPage('status.html'); closeOverlay(); });
     }
 
-    function setupForumLinks() {
-      const badge = document.getElementById('online-users-link');
-      if (badge) {
-        badge.addEventListener('click', function() {
-          window.location.href = 'fororemeex.html';
-        });
+  function setupForumLinks() {
+    const badge = document.getElementById('online-users-link');
+    if (badge) {
+      badge.addEventListener('click', function() {
+        window.location.href = 'fororemeex.html';
+      });
+    }
+  }
+
+  function trapFocus(container) {
+    if (!container) return () => {};
+    const focusable = container.querySelectorAll('a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])');
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    function handle(e) {
+      if (e.key === 'Tab') {
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
       }
     }
+    container.addEventListener('keydown', handle);
+    if (first) first.focus();
+    return () => container.removeEventListener('keydown', handle);
+  }
 
 
     // Setup exchange overlay
@@ -9556,83 +9394,6 @@ function setupUsAccountLink() {
     resetInactivityTimer();
   }
 
-    function setupLoginSupportMenu() {
-      const supportBtn = document.getElementById('support-btn');
-      const menu = document.getElementById('support-menu');
-      const menuClose = document.getElementById('support-menu-close');
-      const whatsapp = document.getElementById('whatsapp-support');
-      const live = document.getElementById('live-support-option');
-      const forum = document.getElementById('forum-chat-option');
-      const email = document.getElementById('email-support-option');
-      const reviews = document.getElementById('reviews-support-option');
-
-      if (supportBtn) {
-        supportBtn.addEventListener('click', function() {
-          if (menu) {
-            menu.classList.toggle('open');
-          }
-        });
-      }
-
-      if (menuClose) {
-        menuClose.addEventListener('click', function() {
-          if (menu) menu.classList.remove('open');
-        });
-      }
-
-      // Cerrar el menú al hacer clic fuera o presionar ESC
-      document.addEventListener('click', function(e) {
-        if (menu && menu.classList.contains('open')) {
-          if (!menu.contains(e.target) && !supportBtn.contains(e.target)) {
-            menu.classList.remove('open');
-          }
-        }
-      });
-
-      document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && menu && menu.classList.contains('open')) {
-          menu.classList.remove('open');
-        }
-      });
-
-      function sendWhatsApp(msg) {
-        const encoded = encodeURIComponent(msg);
-        window.open(`https://wa.me/+17373018059?text=${encoded}`, '_blank');
-      }
-
-      if (whatsapp) {
-        whatsapp.addEventListener('click', function() {
-          sendWhatsApp('Hola, necesito ayuda con mi cuenta.');
-          if (menu) menu.classList.remove('open');
-        });
-      }
-      if (live) {
-        live.addEventListener('click', function() {
-          loadTawkTo();
-          if (menu) menu.classList.remove('open');
-        });
-      }
-
-      if (forum) {
-        forum.addEventListener('click', function() {
-          window.location.href = 'fororemeex.html';
-          if (menu) menu.classList.remove('open');
-        });
-      }
-
-      if (email) {
-        email.addEventListener('click', function() {
-          if (menu) menu.classList.remove('open');
-        });
-      }
-
-      if (reviews) {
-        reviews.addEventListener('click', function() {
-          window.location.href = 'opinionesremeex.html';
-          if (menu) menu.classList.remove('open');
-        });
-      }
-    }
 
     function setupPasswordToggles() {
       const toggles = [
@@ -10150,7 +9911,7 @@ function setupUsAccountLink() {
           const section = this.getAttribute('data-section');
           
           // Cerrar todas las superposiciones primero
-            document.querySelectorAll('.service-overlay, .cards-overlay, .messages-overlay, .settings-overlay, .exchange-overlay, .page-overlay').forEach(overlay => {
+            document.querySelectorAll('.service-overlay, .cards-overlay, .messages-overlay, .settings-overlay, .exchange-overlay, .help-overlay, .page-overlay').forEach(overlay => {
               overlay.style.display = 'none';
             });
 
