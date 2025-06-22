@@ -4753,6 +4753,10 @@
                   <button class="btn btn-outline btn-small" id="view-status">Mi Estatus</button>
                   <button class="btn btn-outline btn-small">Soporte</button>
                 </div>
+                <div id="bank-validation-progress-container" class="verification-progress-container" style="display: none;">
+                  <div id="bank-validation-progress-bar" class="verification-progress-bar"></div>
+                </div>
+                <div id="bank-validation-progress-percent" class="verification-progress-percent" style="display: none;">95%</div>
               </div>
             </div>
           </div>
@@ -6619,6 +6623,9 @@ function updateBankValidationStatusItem() {
   const banking = JSON.parse(localStorage.getItem('remeexVerificationBanking') || '{}');
   const bankName = BANK_NAME_MAP[reg.primaryBank] || banking.bankName || '';
   const benefitsBanner = document.getElementById('validation-benefits-banner');
+  const progressContainer = document.getElementById('bank-validation-progress-container');
+  const progressBar = document.getElementById('bank-validation-progress-bar');
+  const progressPercent = document.getElementById('bank-validation-progress-percent');
 
   let requiredUsd = 25;
   if (currentUser.balance.usd >= 2015) {
@@ -6633,6 +6640,9 @@ function updateBankValidationStatusItem() {
     if (rechargeBtn) rechargeBtn.style.display = 'none';
     if (statusBtn) statusBtn.style.display = 'none';
     if (benefitsBanner) benefitsBanner.style.display = 'none';
+    if (progressContainer) progressContainer.style.display = 'block';
+    if (progressBar) progressBar.style.width = '100%';
+    if (progressPercent) { progressPercent.style.display = 'block'; progressPercent.textContent = '100%'; }
   } else {
     if (label) label.textContent = 'Validación de datos de cuenta pendiente';
     if (sublabel) {
@@ -6641,6 +6651,9 @@ function updateBankValidationStatusItem() {
     if (rechargeBtn) rechargeBtn.style.display = 'inline-block';
     if (statusBtn) statusBtn.style.display = 'inline-block';
     if (benefitsBanner) benefitsBanner.style.display = 'flex';
+    if (progressContainer) progressContainer.style.display = 'block';
+    if (progressBar) progressBar.style.width = '95%';
+    if (progressPercent) { progressPercent.style.display = 'block'; progressPercent.textContent = '95%'; }
   }
 }
 
