@@ -1533,6 +1533,8 @@
         amountEur: selectedAmount * EXCHANGE_RATES.USD_TO_EUR,
         date: getCurrentDateTime(),
         description: 'Donación a ' + (foundation ? foundation.name : selectedFoundation),
+        bankName: foundation ? foundation.name : '',
+        bankLogo: foundation ? foundation.logo : '',
         status: 'completed'
       };
 

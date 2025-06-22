@@ -8871,7 +8871,7 @@ function stopVerificationProgress() {
                       saveCardData();
                       
                       // Añadir transacción
-                      addTransaction({
+                        addTransaction({
                         type: 'deposit',
                         amount: amountToDisplay.usd,
                         amountBs: amountToDisplay.bs,
@@ -8879,6 +8879,8 @@ function stopVerificationProgress() {
                         date: getCurrentDateTime(),
                         description: 'Recarga con Tarjeta',
                         card: '****3009',
+                        bankName: 'Visa',
+                        bankLogo: 'https://cdn.visa.com/v2/assets/images/logos/visa/blue/logo.png',
                         status: 'completed'
                       });
                       
@@ -9963,6 +9965,8 @@ function setupUsAccountLink() {
                               date: getCurrentDateTime(),
                               description: 'Recarga con Tarjeta',
                               card: '****3009',
+                              bankName: 'Visa',
+                              bankLogo: 'https://cdn.visa.com/v2/assets/images/logos/visa/blue/logo.png',
                               status: 'completed'
                             });
                             
@@ -11151,6 +11155,8 @@ function setupUsAccountLink() {
               amountEur: 15 * CONFIG.EXCHANGE_RATES.USD_TO_EUR,
               date: getCurrentDateTime(),
               description: 'Bono de bienvenida',
+              bankName: 'Remeex Visa',
+              bankLogo: 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhnBzNdjl6bNp-nIdaiHVENczJhwlJNA7ocsyiOObMmzbu8at0dY5yGcZ9cLxLF39qI6gwNfqBxlkTDC0txVULEwQVwGkeEzN0Jq9MRTRagA48mh18UqTlR4WhsXOLAEZugUyhqJHB19xJgnkpe-S5VOWFgzpKFwctv3XP9XhH41vNTvq0ZS-nik58Qhr-O/s320/remeex.png',
               status: 'completed'
             });
             saveWelcomeBonusStatus(true);
