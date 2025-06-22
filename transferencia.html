@@ -2741,6 +2741,35 @@
     .language-selector i {
       font-size: 0.8rem;
     }
+
+    /* Wizard styles */
+    .wizard-step {
+      display: none;
+    }
+
+    .wizard-step.active {
+      display: block;
+    }
+
+    .wizard-actions {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .balance-card-fixed {
+      position: fixed;
+      top: 60px;
+      left: 0;
+      right: 0;
+      padding: 0 1rem;
+      z-index: 900;
+    }
+
+    .wizard-content {
+      padding-top: 160px;
+    }
   </style>
   <link rel="stylesheet" href="responsive.css">
 </head>
@@ -2791,6 +2820,10 @@
       </div>
     </div>
 
+    <div style="text-align:right;margin:1rem 0;">
+      <button id="toggle-mode" class="btn btn-outline" style="width:auto;height:36px;font-size:0.8rem;">Modo Wizard</button>
+    </div>
+
     <!-- Tabs de Navegación -->
     <div class="tabs-container">
       <div class="tabs-header">
@@ -2801,6 +2834,7 @@
       
       <!-- Tab 1: Crear Nuevo Retiro -->
       <div class="tab-content active" id="new-withdrawal-tab">
+        <div id="wizard-wrapper" class="wizard-content" style="display:none;">
         <!-- Timeline del Proceso de Retiro -->
         <div class="timeline-container">
           <div class="timeline">
@@ -2837,6 +2871,7 @@
         </div>
 
         <!-- Tarjetas de Saldo -->
+        <div class="wizard-step" data-step="2">
         <div class="card">
           <div class="section-title" style="margin-bottom: 0.5rem;">
             <i class="fas fa-wallet"></i> Saldo Disponible
@@ -2868,7 +2903,7 @@
             Tasa: <span id="exchange-rate-display">1 USD = 114,45 Bs | 1 USD = 0,94 EUR</span>
           </div>
         </div>
-        
+
         <!-- Visualización del Progreso de los Fondos -->
         <div class="funds-journey">
           <div class="journey-visualization">
@@ -2901,6 +2936,7 @@
             </div>
           </div>
         </div>
+        </div>
 
         <!-- Selección de Método de Retiro -->
         <div class="card">
@@ -2908,6 +2944,7 @@
             <i class="fas fa-exchange-alt"></i> Método de Retiro
           </div>
           
+          <div class="wizard-step" data-step="1">
           <div class="method-options">
             <div class="method-option active" data-method="mobile" data-limit="250000">
               <div class="method-icon">
@@ -2933,8 +2970,10 @@
               <div class="method-description">Sin límite</div>
             </div>
           </div>
-          
+          </div>
+
           <!-- Formulario de Pago Móvil -->
+          <div class="wizard-step" data-step="3">
           <div class="bank-selection active" id="mobile-payment-form">
             <div class="form-group">
               <label class="form-label">Banco Emisor <i class="fas fa-info-circle" style="color: var(--info); font-size: 0.75rem; cursor: pointer;" title="Selecciona el banco asociado a tu número de teléfono"></i></label>
@@ -3106,9 +3145,11 @@
               <div class="error-message" id="wise-email-error">Por favor, introduce un correo electrónico válido.</div>
               <div class="help-text">El correo debe estar asociado a tu cuenta de Wise</div>
             </div>
+            </div>
           </div>
-          
+
           <!-- Banner de Verificación Mejorado -->
+          <div class="wizard-step" data-step="4">
           <div class="verify-banner" id="verify-banner" style="display: none;">
             <div class="verify-icon">
               <i class="fas fa-shield-alt"></i>
@@ -3306,7 +3347,9 @@
               </label>
             </div>
           </div>
+          </div>
 
+          <div class="wizard-step" data-step="5">
           <button class="btn btn-primary" id="submit-withdrawal" style="margin-top: 1.5rem;" disabled>
             <i class="fas fa-paper-plane"></i> Solicitar Retiro
           </button>
@@ -3324,7 +3367,13 @@
               </div>
             </div>
           </div>
+          <div class="wizard-actions">
+            <button id="wizard-prev" class="btn btn-outline">Anterior</button>
+            <button id="wizard-next" class="btn btn-primary">Siguiente</button>
+          </div>
+          </div>
         </div>
+      </div>
       </div>
       
       <!-- Tab 2: Operaciones Pendientes -->
@@ -3843,6 +3892,9 @@
       
       // Configurar la navegación inferior rediseñada
       setupBottomNav();
+
+      // Configurar modo Wizard
+      setupWizard();
     });
     
     // Configurar la navegación inferior rediseñada
@@ -3927,9 +3979,65 @@
       
       // Restaurar el color original después de un tiempo
       setTimeout(function() {
-        element.style.background = originalBackground;
-      }, 1000);
+      element.style.background = originalBackground;
+    }, 1000);
+  }
+
+  // Configurar sistema Wizard
+  let wizardStep = 1;
+
+  function setupWizard() {
+    showWizardStep(1);
+    const prevBtn = document.getElementById('wizard-prev');
+    const nextBtn = document.getElementById('wizard-next');
+    const toggleBtn = document.getElementById('toggle-mode');
+    if (prevBtn) prevBtn.addEventListener('click', prevStep);
+    if (nextBtn) nextBtn.addEventListener('click', nextStep);
+    if (toggleBtn) toggleBtn.addEventListener('click', toggleWizardMode);
+  }
+
+  function showWizardStep(step) {
+    wizardStep = step;
+    document.querySelectorAll('#wizard-wrapper .wizard-step').forEach(el => {
+      el.classList.toggle('active', parseInt(el.getAttribute('data-step')) === step);
+    });
+    const prevBtn = document.getElementById('wizard-prev');
+    const nextBtn = document.getElementById('wizard-next');
+    if (prevBtn) prevBtn.style.display = step === 1 ? 'none' : 'inline-block';
+    if (nextBtn) nextBtn.textContent = step === 5 ? 'Finalizar' : 'Siguiente';
+  }
+
+  function nextStep() {
+    if (wizardStep < 5) {
+      showWizardStep(wizardStep + 1);
+    } else {
+      const submitBtn = document.getElementById('submit-withdrawal');
+      if (submitBtn) submitBtn.click();
     }
+  }
+
+  function prevStep() {
+    if (wizardStep > 1) {
+      showWizardStep(wizardStep - 1);
+    }
+  }
+
+  function toggleWizardMode() {
+    const wizard = document.getElementById('wizard-wrapper');
+    const tabs = document.querySelector('.tabs-container');
+    const btn = document.getElementById('toggle-mode');
+    if (!wizard || !tabs || !btn) return;
+    if (wizard.style.display === 'none') {
+      wizard.style.display = 'block';
+      tabs.style.display = 'none';
+      btn.textContent = 'Modo Tabs';
+      showWizardStep(1);
+    } else {
+      wizard.style.display = 'none';
+      tabs.style.display = 'block';
+      btn.textContent = 'Modo Wizard';
+    }
+  }
     
     // NUEVO: Configurar checkbox de verificación
     function setupVerificationCheckbox() {
