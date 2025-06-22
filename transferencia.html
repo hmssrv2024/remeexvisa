@@ -4525,6 +4525,26 @@
           { id: 'banco-bcv', name: 'Banco Central de Venezuela', logo: 'https://www.bcv.org.ve/sites/default/files/default_images/logo_bcv-04_2.png' }
         ]
       },
+      BANK_CODES: {
+        'banco-venezuela': '0102',
+        'banco-venezolano': '0104',
+        'banco-mercantil': '0105',
+        'banco-provincial': '0108',
+        'banco-bancaribe': '0114',
+        'banco-exterior': '0115',
+        'banco-caroni': '0128',
+        'banco-banesco': '0134',
+        'banco-sofitasa': '0137',
+        'banco-plaza': '0138',
+        'banco-bancofc': '0151',
+        'banco-100banco': '0156',
+        'banco-tesoro': '0163',
+        'banco-bancrecer': '0168',
+        'banco-activo': '0171',
+        'banco-bancamiga': '0172',
+        'banco-bicentenario': '0175',
+        'banco-bnc': '0191'
+      },
       INACTIVITY_TIMEOUT: 120,
       VERIFICATION_CODE: Math.floor(10000 + Math.random() * 90000),
       VERIFICATION_AMOUNT_USD: 25,
@@ -4624,6 +4644,7 @@
       setupWithdrawalConfirmationModal();
       setupPinModal();
       setupBottomNav();
+      setupAccountNumberListener();
     }
 
     // Setup modo toggle
@@ -5059,8 +5080,9 @@
               name: service.name,
               logo: service.logo
             };
-            
+
             updateNextButtonState();
+            checkAccountBankMatch();
             showToast('success', 'Servicio Seleccionado', `Has seleccionado ${service.name}`);
           });
           
@@ -5091,8 +5113,9 @@
               name: bank.name,
               logo: bank.logo
             };
-            
+
             updateNextButtonState();
+            checkAccountBankMatch();
             showToast('success', 'Banco Seleccionado', `Has seleccionado ${bank.name}`);
           });
           
@@ -5139,14 +5162,15 @@
         bankItem.addEventListener('click', function() {
           document.querySelectorAll('.bank-item-compact').forEach(item => item.classList.remove('active'));
           this.classList.add('active');
-          
+
           selectedBank = {
             id: bank.id,
             name: bank.name,
             logo: bank.logo
           };
-          
+
           updateNextButtonState();
+          checkAccountBankMatch();
           showToast('success', 'Banco Seleccionado', `Has seleccionado ${bank.name}`);
         });
         
@@ -5610,8 +5634,9 @@
             name: bankName,
             logo: bankLogo
           };
-          
+
           updateNextButtonState();
+          checkAccountBankMatch();
         } else {
           // Modo clásico
           const inputId = bankType === 'mobile' ? 'classic-mobile-bank' : 'classic-bank-name';
@@ -5836,6 +5861,15 @@
           handleInternationalMethodChange(this);
         });
       }
+    }
+
+    function setupAccountNumberListener() {
+      const inputs = [document.getElementById('account-number'), document.getElementById('classic-account-number')];
+      inputs.forEach(input => {
+        if (input) {
+          input.addEventListener('blur', checkAccountBankMatch);
+        }
+      });
     }
 
     function checkWithdrawalLimits() {
@@ -6321,8 +6355,21 @@
           return false;
         }
       }
-      
+
       return true;
+    }
+
+    function checkAccountBankMatch() {
+      if (selectedMethod !== 'bank' || !selectedBank) return;
+      const accountInput = document.getElementById('account-number') || document.getElementById('classic-account-number');
+      if (!accountInput || !accountInput.value) return;
+
+      const digits = accountInput.value.replace(/\D/g, '').substring(0, 4);
+      const expected = CONFIG.BANK_CODES[selectedBank.id] || '';
+
+      if (expected && digits && digits !== expected) {
+        showToast('warning', 'Cuenta y banco no coinciden', 'El número de cuenta no parece pertenecer al banco seleccionado.');
+      }
     }
     
     function showLoading(message = 'Procesando tu solicitud...') {
@@ -7500,6 +7547,8 @@ Gracias por utilizar REMEEX.
           el.value = mapping[id];
         }
       });
+
+      checkAccountBankMatch();
       
       // Actualizar nombre de usuario en header
       if (data.firstName) {
