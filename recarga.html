@@ -252,6 +252,33 @@
     @keyframes shine {
       100% { left: 200%; }
     }
+
+    /* --- Partículas verde-neón sobre la tarjeta de saldo --- */
+    .particles-container{
+      position:absolute;
+      inset:0;
+      overflow:hidden;
+      z-index:1;
+    }
+    .particle{
+      position:absolute;
+      width:6px;height:6px;
+      background:radial-gradient(circle,rgba(0,230,118,1) 0%,rgba(0,230,118,.2) 70%);
+      border-radius:50%;
+      opacity:0;
+      pointer-events:none;
+      filter:drop-shadow(0 0 3px rgba(0,230,118,.8));
+    }
+    .particle.diamond{clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%);}
+    .particle.mini{width:3px;height:3px;}
+    .particle.trail::after{
+      content:'';
+      position:absolute;inset:0;
+      background:inherit;
+      filter:blur(2px);
+      opacity:.7;
+      transform:translateX(-5px);
+    }
     
     .card-decoration {
       position: absolute;
@@ -4481,6 +4508,8 @@
         <div class="balance-card">
           <div class="card-decoration"></div>
           <div class="card-decoration"></div>
+          <!-- Contenedor de partículas -->
+          <div class="particles-container" id="particlesContainer"></div>
           <div class="balance-content">
             <div class="balance-header">
               <div class="balance-label">
@@ -12195,6 +12224,51 @@ function setupUsAccountLink() {
       personalizeVerificationStatusCards();
       updateBankValidationStatusItem();
     })();
+  </script>
+  <script>
+  function createParticle(){
+    const box=document.getElementById('particlesContainer');
+    if(!box) return;
+    const n=Math.floor(Math.random()*3)+3;   // 3-5 partículas
+    for(let i=0;i<n;i++){
+      const p=document.createElement('div');
+      p.classList.add('particle');
+      const r=Math.random();
+      if(r<.2)       p.classList.add('diamond');
+      else if(r<.5)  p.classList.add('mini');
+      else if(r<.7)  p.classList.add('trail');
+
+      const startY=Math.random()*60+60;
+      const startX=r<.5 ? Math.random()*100+30 : Math.random()*180+10;
+      const size=Math.random()*6+2;
+      Object.assign(p.style,{
+        top :`${startY}px`,
+        left:`${startX}px`,
+        width:`${size}px`,
+        height:`${size}px`
+      });
+      box.appendChild(p);
+
+      const endY=Math.random()*140+10;
+      const duration=(Math.random()*3+1)*1000;
+      const curved=Math.random()<.7;
+      const keyframes=curved?[
+        {left:`${startX}px`, top:`${startY}px`, opacity:0,   transform:'scale(.3)'},
+        {left:`${startX+(350-startX)*.5}px`, top:`${startY-Math.random()*50}px`, opacity:.9, transform:'scale(1)', offset:.5},
+        {left:'calc(100% - 10px)', top:`${endY}px`, opacity:0,   transform:'scale(.5)'}
+      ]:[
+        {left:`${startX}px`, top:`${startY}px`, opacity:0,   transform:'scale(.3)'},
+        {opacity:.9, transform:'scale(1)', offset:.2},
+        {opacity:.7, offset:.7},
+        {left:'calc(100% - 10px)', top:`${endY}px`, opacity:0,   transform:'scale(.5)'}
+      ];
+      p.animate(keyframes,{duration,easing:'cubic-bezier(.25,.1,.25,1)',fill:'forwards'})
+       .onfinish=()=>p.remove();
+    }
+  }
+
+  /* Lanza la lluvia de puntos en cuanto cargue el DOM */
+  document.addEventListener('DOMContentLoaded',()=>setInterval(createParticle,300));
   </script>
 </body>
 </html>
