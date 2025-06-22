@@ -81,7 +81,7 @@
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
       overflow-x: hidden;
-      font-size: 95%;
+      font-size: 90%;
     }
 
     /* Header */
@@ -146,12 +146,12 @@
       padding-top: 70px;
       padding-bottom: 2rem;
       min-height: 100vh;
-      max-width: 900px;
-      width: 95%;
+      max-width: 700px;
+      width: 90%;
       margin: 0 auto;
       padding-left: 1rem;
       padding-right: 1rem;
-      transform: scale(0.95);
+      transform: scale(0.75);
       transform-origin: top center;
     }
 
@@ -159,110 +159,56 @@
        CORRECCIÓN CRÍTICA: Progress Steps Mejorados
        =============================================== */
     .progress-container {
+      padding: 12px 20px;
+      background: var(--neutral-100);
+      border-bottom: 1px solid var(--neutral-300);
+      flex-shrink: 0;
       margin-bottom: 2rem;
     }
 
-    .progress-steps {
+    .progress-bar {
+      width: 100%;
+      height: 6px;
+      background: var(--neutral-300);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 8px;
+      position: relative;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--gradient-primary);
+      border-radius: 12px;
+      transition: width 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      width: 0%;
+      position: relative;
+    }
+
+    .progress-fill::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+      animation: shimmer 2s infinite;
+    }
+
+    .progress-text {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--neutral-700);
+      text-align: center;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      position: relative;
-      margin-bottom: 1.5rem;
-      padding: 0 1rem;
     }
 
-    .progress-line {
-      position: absolute;
-      top: 50%;
-      left: 10%;
-      right: 10%;
-      height: 3px;
-      background: var(--neutral-300);
-      z-index: 1;
-      border-radius: var(--radius-full);
-    }
-
-    .progress-line-fill {
-      height: 100%;
-      background: var(--gradient-primary);
-      width: 0%;
-      transition: width 0.8s var(--animation-smooth);
-      border-radius: var(--radius-full);
-    }
-
-    /* CORRECCIÓN: Pasos con tamaños consistentes y fijos */
-    .progress-step {
-      position: relative;
-      z-index: 2;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      background: var(--gradient-card);
-      padding: 1rem;
-      border-radius: var(--radius-xl);
-      box-shadow: var(--shadow-md);
-      /* TAMAÑO FIJO para consistencia */
-      width: 120px;
-      min-height: 100px;
-      flex-shrink: 0;
-    }
-
-    .step-circle {
-      /* TAMAÑO FIJO para todos los círculos */
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      background: var(--neutral-300);
-      border: 3px solid var(--neutral-300);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 700;
-      font-size: 1.1rem;
-      color: var(--neutral-600);
-      margin-bottom: 0.5rem;
-      transition: all 0.4s var(--animation-bounce);
-      /* Centrado perfecto */
-      flex-shrink: 0;
-    }
-
-    .step-circle.active {
-      background: var(--gradient-primary);
-      border-color: var(--primary);
-      color: white;
-      transform: scale(1.1);
-      box-shadow: 0 0 0 4px rgba(26, 31, 113, 0.2);
-    }
-
-    .step-circle.completed {
-      background: var(--gradient-success);
-      border-color: var(--success);
-      color: white;
-      transform: scale(1.05);
-    }
-
-    .step-label {
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: var(--neutral-600);
-      line-height: 1.2;
-      /* Texto centrado y con altura fija */
-      text-align: center;
-      height: 2.4rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .step-label.active {
+    .progress-percentage {
       color: var(--primary);
       font-weight: 700;
-    }
-
-    .step-label.completed {
-      color: var(--success);
-      font-weight: 600;
     }
 
     /* Cards */
@@ -1398,35 +1344,12 @@
         min-width: auto;
       }
 
-      /* Progress Steps Responsive MEJORADO */
-      .progress-steps {
-        overflow-x: auto;
-        padding: 0 0.5rem 0.5rem;
-        margin: 0 -0.5rem 1.5rem;
-        justify-content: flex-start;
-        gap: 1rem;
+      /* Progress bar responsive adjustments */
+      .progress-bar {
+        height: 4px;
       }
-
-      .progress-step {
-        width: 100px; /* Más pequeño en móvil pero consistente */
-        min-height: 85px;
-        padding: 0.75rem;
-        flex-shrink: 0;
-      }
-
-      .step-circle {
-        width: 42px;
-        height: 42px;
-        font-size: 1rem;
-      }
-
-      .step-label {
+      .progress-text {
         font-size: 0.75rem;
-        height: 2rem;
-      }
-
-      .progress-line {
-        display: none; /* Ocultar línea en móvil */
       }
 
       .bank-grid {
@@ -1653,6 +1576,11 @@
       from { transform: rotate(0deg); }
       to { transform: rotate(360deg); }
     }
+
+    @keyframes shimmer {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
   </style>
   <link rel="stylesheet" href="responsive.css">
 </head>
@@ -1714,32 +1642,14 @@
 
     <!-- Main Verification Process -->
     <div id="verification-process">
-      <!-- Progress Steps -->
-      <div class="progress-container">
-        <div class="progress-steps">
-          <div class="progress-line">
-            <div class="progress-line-fill" id="progress-fill"></div>
-          </div>
-          
-          <div class="progress-step" data-step="1">
-            <div class="step-circle active" id="step-circle-1">1</div>
-            <div class="step-label active">Datos Personales</div>
-          </div>
-          
-          <div class="progress-step" data-step="2">
-            <div class="step-circle" id="step-circle-2">2</div>
-            <div class="step-label">Datos Bancarios</div>
-          </div>
-          
-          <div class="progress-step" data-step="3">
-            <div class="step-circle" id="step-circle-3">3</div>
-            <div class="step-label">Biometría</div>
-          </div>
-          
-          <div class="progress-step" data-step="4">
-            <div class="step-circle" id="step-circle-4">4</div>
-            <div class="step-label">Finalización</div>
-          </div>
+      <!-- Progress Bar -->
+      <div class="progress-container" id="progressContainer">
+        <div class="progress-bar">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div class="progress-text">
+          <span>Verificación en progreso</span>
+          <span class="progress-percentage" id="progressPercentage">0%</span>
         </div>
       </div>
 
@@ -3259,46 +3169,18 @@
 
     // Update progress indicator
     function updateProgress(step) {
-      // Update circles with animations
-      for (let i = 1; i <= totalSteps; i++) {
-        const circle = document.getElementById(`step-circle-${i}`);
-        const label = circle.parentElement.querySelector('.step-label');
-        
-        if (i < step) {
-          circle.classList.add('completed');
-          circle.classList.remove('active');
-          circle.innerHTML = '<i class="fas fa-check"></i>';
-          label.classList.add('completed');
-          label.classList.remove('active');
-          
-          // Animation for completed steps
-          gsap.to(circle, { scale: 1.05, duration: 0.3, yoyo: true, repeat: 1 });
-        } else if (i === step) {
-          circle.classList.add('active');
-          circle.classList.remove('completed');
-          circle.textContent = i;
-          label.classList.add('active');
-          label.classList.remove('completed');
-          
-          // Animation for active step
-          gsap.fromTo(circle, 
-            { scale: 1 }, 
-            { scale: 1.1, duration: 0.4, yoyo: true, repeat: 1 }
-          );
-        } else {
-          circle.classList.remove('active', 'completed');
-          circle.textContent = i;
-          label.classList.remove('active', 'completed');
-        }
-      }
+
       
-      // Update progress bar with animation
       const progressPercentage = ((step - 1) / (totalSteps - 1)) * 100;
-      gsap.to('#progress-fill', { 
-        width: `${progressPercentage}%`, 
-        duration: 0.8, 
-        ease: "power2.out" 
+      gsap.to('#progressFill', {
+        width: `${progressPercentage}%`,
+        duration: 0.8,
+        ease: "power2.out"
       });
+      const percentageEl = document.getElementById('progressPercentage');
+      if (percentageEl) {
+        percentageEl.textContent = `${Math.round(progressPercentage)}%`;
+      }
     }
 
     // CORRECCIÓN CRÍTICA: Complete verification con nueva pantalla de validación
