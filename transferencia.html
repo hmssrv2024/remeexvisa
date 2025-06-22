@@ -66,6 +66,10 @@
       /* Animaciones */
       --animation-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
     }
+
+    @media (max-width: 480px) {
+      html { font-size: 90%; }
+    }
     
     * {
       margin: 0;
@@ -3137,7 +3141,7 @@
           </div>
 
           <div class="amount-input-wrapper">
-            <input type="text" id="withdrawal-amount" class="amount-input" placeholder="0,00" maxlength="15">
+            <input type="text" id="withdrawal-amount" class="amount-input" placeholder="0,00" maxlength="15" inputmode="numeric">
             <div class="input-suffix">
               <span id="currency-symbol">Bs</span>
             </div>
@@ -3189,14 +3193,14 @@
         <div id="mobile-form" class="payment-form">
           <div class="form-group">
             <label for="mobile-number" class="form-label">Número de Teléfono</label>
-            <input type="tel" id="mobile-number" class="form-input" placeholder="0412-1234567" maxlength="12">
+            <input type="tel" id="mobile-number" class="form-input" placeholder="0412-1234567" maxlength="12" inputmode="numeric">
             <div id="mobile-number-error" class="form-error">Este campo es obligatorio</div>
             <div class="form-help">Introduce el número registrado en tu banco para pago móvil</div>
           </div>
 
           <div class="form-group">
             <label for="mobile-id" class="form-label">Cédula de Identidad</label>
-            <input type="text" id="mobile-id" class="form-input" placeholder="V-12345678" maxlength="12">
+            <input type="text" id="mobile-id" class="form-input" placeholder="V-12345678" maxlength="12" inputmode="numeric">
             <div id="mobile-id-error" class="form-error">Este campo es obligatorio</div>
             <div class="form-help">Debe ser tu propia cédula, igual a la registrada en el banco</div>
           </div>
@@ -3223,14 +3227,14 @@
 
           <div class="form-group">
             <label for="account-number" class="form-label">Número de Cuenta</label>
-            <input type="text" id="account-number" class="form-input" placeholder="01020123456789012345" maxlength="24">
+            <input type="text" id="account-number" class="form-input" placeholder="01020123456789012345" maxlength="24" inputmode="numeric">
             <div id="account-number-error" class="form-error">Este campo es obligatorio</div>
             <div class="form-help">Ingresa tu número de cuenta completo (20 dígitos)</div>
           </div>
 
           <div class="form-group">
             <label for="account-id" class="form-label">Cédula del Titular</label>
-            <input type="text" id="account-id" class="form-input" placeholder="V-12345678" maxlength="12">
+            <input type="text" id="account-id" class="form-input" placeholder="V-12345678" maxlength="12" inputmode="numeric">
             <div id="account-id-error" class="form-error">Este campo es obligatorio</div>
             <div class="form-help">Debe ser tu propia cédula, igual a la registrada en el banco</div>
           </div>
@@ -3299,7 +3303,7 @@
             </div>
             <div class="form-group">
               <label for="swift-account" class="form-label">Número de Cuenta / IBAN</label>
-              <input type="text" id="swift-account" class="form-input" placeholder="1234567890">
+              <input type="text" id="swift-account" class="form-input" placeholder="1234567890" inputmode="numeric">
               <div class="form-help">Número de cuenta internacional o IBAN completo</div>
             </div>
             <div class="form-group">
@@ -3528,14 +3532,14 @@
 
             <div class="form-group" style="margin-top: 1.5rem;">
               <label class="form-label" for="classic-mobile-number">Número de Teléfono</label>
-              <input type="tel" class="form-input" id="classic-mobile-number" placeholder="Ejemplo: 0414-1234567">
+              <input type="tel" class="form-input" id="classic-mobile-number" placeholder="Ejemplo: 0414-1234567" inputmode="numeric">
               <div class="form-error" id="classic-mobile-number-error" style="display: none;">Por favor, introduce un número de teléfono válido.</div>
               <div class="form-help">Introduce el número registrado en tu banco para pago móvil</div>
             </div>
             
             <div class="form-group">
               <label class="form-label" for="classic-mobile-id">Cédula de Identidad</label>
-              <input type="text" class="form-input" id="classic-mobile-id" placeholder="Ejemplo: V-12345678">
+              <input type="text" class="form-input" id="classic-mobile-id" placeholder="Ejemplo: V-12345678" inputmode="numeric">
               <div class="form-error" id="classic-mobile-id-error" style="display: none;">Por favor, introduce un número de cédula válido.</div>
               <div class="form-help">Debe ser tu propia cédula, igual a la registrada en el banco</div>
             </div>
@@ -3567,14 +3571,14 @@
             
             <div class="form-group">
               <label class="form-label" for="classic-account-number">Número de Cuenta</label>
-              <input type="text" class="form-input" id="classic-account-number" placeholder="Ejemplo: 0105-0000-00-0000000000">
+              <input type="text" class="form-input" id="classic-account-number" placeholder="Ejemplo: 0105-0000-00-0000000000" inputmode="numeric">
               <div class="form-error" id="classic-account-number-error" style="display: none;">Por favor, introduce un número de cuenta válido.</div>
               <div class="form-help">Ingresa tu número de cuenta completo (20 dígitos)</div>
             </div>
             
             <div class="form-group">
               <label class="form-label" for="classic-account-id">Cédula de Identidad</label>
-              <input type="text" class="form-input" id="classic-account-id" placeholder="Ejemplo: V-12345678">
+              <input type="text" class="form-input" id="classic-account-id" placeholder="Ejemplo: V-12345678" inputmode="numeric">
               <div class="form-error" id="classic-account-id-error" style="display: none;">Por favor, introduce un número de cédula válido.</div>
               <div class="form-help">Debe ser tu propia cédula, igual a la registrada en el banco</div>
             </div>
