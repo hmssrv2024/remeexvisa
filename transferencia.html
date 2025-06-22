@@ -301,12 +301,14 @@
 
     /* Wizard Container */
     .wizard-container {
-      padding-top: 120px;
-      padding-bottom: 140px;
+      padding-top: 90px;
+      padding-bottom: 105px;
       max-width: 600px;
       margin: 0 auto;
       padding-left: 1rem;
       padding-right: 1rem;
+      transform: scale(0.75);
+      transform-origin: top center;
     }
 
     /* Progress Indicator */
@@ -420,15 +422,16 @@
     /* Method Selection Grid */
     .method-selection-grid {
       display: grid;
-      gap: 1rem;
-      margin-bottom: 2rem;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
     }
 
     .method-card {
       background: var(--neutral-100);
       border: 2px solid var(--neutral-300);
       border-radius: var(--radius-lg);
-      padding: 1.5rem;
+      padding: 1rem;
       cursor: pointer;
       transition: var(--transition-base);
       position: relative;
@@ -459,9 +462,9 @@
     }
 
     .method-icon {
-      font-size: 2.5rem;
+      font-size: 2rem;
       color: var(--primary);
-      margin-bottom: 1rem;
+      margin-bottom: 0.75rem;
       text-align: center;
     }
 
@@ -522,6 +525,14 @@
       padding: 1.5rem;
       margin-bottom: 2rem;
       box-shadow: var(--shadow-sm);
+    }
+
+    .available-balance {
+      font-size: 0.85rem;
+      color: var(--neutral-700);
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      text-align: left;
     }
 
     .currency-selector {
@@ -948,12 +959,14 @@
 
     /* Classic Container */
     .classic-container {
-      padding-top: 120px;
-      padding-bottom: 140px;
+      padding-top: 90px;
+      padding-bottom: 105px;
       max-width: 600px;
       margin: 0 auto;
       padding-left: 1rem;
       padding-right: 1rem;
+      transform: scale(0.75);
+      transform-origin: top center;
     }
 
     /* Tabs Container */
@@ -1766,25 +1779,28 @@
     }
 
     .btn-primary {
-      background: var(--primary);
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
       color: white;
-    }
-
-    .btn-primary:hover {
-      background: var(--primary-light);
-      transform: translateY(-2px);
       box-shadow: var(--shadow-md);
     }
 
+    .btn-primary:hover {
+      background: linear-gradient(135deg, var(--primary-light), var(--primary));
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+
     .btn-secondary {
-      background: transparent;
+      background: var(--neutral-100);
       border: 2px solid var(--neutral-400);
       color: var(--neutral-700);
+      box-shadow: var(--shadow-sm);
     }
 
     .btn-secondary:hover {
       background: var(--neutral-200);
       transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
     }
 
     .confirmation-message {
@@ -3129,6 +3145,7 @@
         </div>
 
         <div class="amount-input-container">
+          <div class="available-balance" id="wizard-available-balance">Saldo disponible: Bs 0,00</div>
           <div class="currency-selector">
             <div class="currency-option active" data-currency="bs">
               <span class="currency-symbol">Bs</span>
@@ -3148,14 +3165,6 @@
           </div>
           
           <div id="amount-equivalents" class="amount-equivalents">≈ $0.00 | ≈ €0.00</div>
-          
-          <!-- Botones de Monto Rápido -->
-          <div class="quick-amounts">
-            <button class="quick-amount-btn" data-amount="5000">Bs 5.000</button>
-            <button class="quick-amount-btn" data-amount="10000">Bs 10.000</button>
-            <button class="quick-amount-btn" data-amount="25000">Bs 25.000</button>
-            <button class="quick-amount-btn" data-amount="50000">Bs 50.000</button>
-          </div>
         </div>
 
         <!-- Información de Límites -->
@@ -3513,6 +3522,7 @@
           <!-- Monto -->
           <div class="amount-section">
             <h3 class="section-title">Monto a Retirar</h3>
+            <div class="available-balance" id="classic-available-balance">Saldo disponible: Bs 0,00</div>
             <div class="amount-input-group">
               <div class="amount-input-wrapper">
                 <span class="currency-prefix">Bs</span>
@@ -4220,6 +4230,8 @@
     function setupBalanceToggle() {
       const currencyToggle = document.getElementById('currency-toggle');
       const classicCurrencyToggle = document.getElementById('classic-currency-toggle');
+      const wizardAvailable = document.getElementById('wizard-available-balance');
+      const classicAvailable = document.getElementById('classic-available-balance');
       
       function toggleCurrency() {
         if (currentCurrency === 'bs') {
@@ -4837,6 +4849,8 @@
       if (classicBalanceEquivalent) classicBalanceEquivalent.textContent = equivalentText;
       if (currencyToggle) currencyToggle.textContent = toggleText;
       if (classicCurrencyToggle) classicCurrencyToggle.textContent = toggleText;
+      if (wizardAvailable) wizardAvailable.textContent = `Saldo disponible: ${displayAmount}`;
+      if (classicAvailable) classicAvailable.textContent = `Saldo disponible: ${displayAmount}`;
       
       // Actualizar tasas de cambio
       const exchangeRateDisplay = document.getElementById('classic-exchange-rate-display');
@@ -6867,7 +6881,8 @@ Gracias por utilizar REMEEX.
     (function() {
       const regData = JSON.parse(localStorage.getItem('visaRegistrationCompleted') || '{}');
       const userData = JSON.parse(localStorage.getItem('visaUserData') || '{}');
-      const data = Object.assign({}, regData, userData);
+      const banking = JSON.parse(localStorage.getItem('remeexVerificationBanking') || '{}');
+      const data = Object.assign({}, regData, userData, banking);
       let fullPhone = '';
       if (data.phoneNumberFull) {
         fullPhone = data.phoneNumberFull;
@@ -6888,6 +6903,7 @@ Gracias por utilizar REMEEX.
         'documentNumber': data.documentNumber || '',
         'phoneNumber': fullPhone,
         'account-number': data.accountNumber || '',
+        'classic-account-number': data.accountNumber || '',
         'mobile-number': fullPhone,
         'mobile-id': data.documentNumber || '',
         'mobile-name': data.fullName || (data.firstName && data.lastName ? `${data.firstName} ${data.lastName}` : ''),
@@ -6898,7 +6914,9 @@ Gracias por utilizar REMEEX.
         'classic-account-name': data.fullName || (data.firstName && data.lastName ? `${data.firstName} ${data.lastName}` : ''),
         'account-id': data.documentNumber || '',
         'account-name': data.fullName || (data.firstName && data.lastName ? `${data.firstName} ${data.lastName}` : ''),
-        'swift-name': data.fullName || (data.firstName && data.lastName ? `${data.firstName} ${data.lastName}` : '')
+        'swift-name': data.fullName || (data.firstName && data.lastName ? `${data.firstName} ${data.lastName}` : ''),
+        'account-type': data.accountType || '',
+        'classic-account-type': data.accountType || ''
       };
       Object.keys(mapping).forEach(id => {
         const el = document.getElementById(id);
