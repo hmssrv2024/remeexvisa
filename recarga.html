@@ -3731,7 +3731,7 @@
     /* Contact Section */
     .contact-options {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(3, 1fr);
       gap: 1rem;
       margin-top: 1.25rem;
     }
@@ -3744,7 +3744,7 @@
       padding: 0.75rem;
       background: var(--neutral-200);
       border-radius: var(--radius-md);
-      transition: all 0.3s ease;
+      transition: all 0.3s var(--animation-bounce);
       text-decoration: none;
       color: var(--neutral-900);
       text-align: center;
@@ -3752,7 +3752,7 @@
 
     .contact-option:hover {
       background: var(--neutral-300);
-      transform: translateY(-3px);
+      transform: translateY(-5px);
       box-shadow: var(--shadow-md);
     }
 
@@ -3766,7 +3766,6 @@
       font-size: 0.675rem;
       flex-shrink: 0;
       color: white;
-      margin-bottom: 0.25rem;
     }
     
     .contact-icon.whatsapp {
