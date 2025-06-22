@@ -502,6 +502,9 @@
       flex: 1;
       overflow-y: auto;
       padding-bottom: calc(var(--wizard-nav-height) + 1rem);
+      max-width: 450px;
+      width: 100%;
+      margin: 0 auto;
     }
 
     .wizard-step.active {
@@ -542,6 +545,9 @@
       border-radius: var(--radius-lg);
       padding: 1.25rem;
       box-shadow: var(--shadow-sm);
+      max-width: 450px;
+      margin-left: auto;
+      margin-right: auto;
     }
 
     .method-card {
@@ -655,6 +661,9 @@
       padding: 1.25rem;
       margin-bottom: 1.5rem;
       box-shadow: var(--shadow-sm);
+      max-width: 450px;
+      margin-left: auto;
+      margin-right: auto;
     }
 
     .available-balance {
@@ -817,6 +826,9 @@
       border-radius: var(--radius-lg);
       padding: 1.25rem;
       box-shadow: var(--shadow-sm);
+      max-width: 450px;
+      margin-left: auto;
+      margin-right: auto;
     }
 
     .bank-item-compact {
@@ -878,6 +890,9 @@
       border-radius: var(--radius-lg);
       padding: 1.25rem;
       margin-bottom: 1.5rem;
+      max-width: 450px;
+      margin-left: auto;
+      margin-right: auto;
     }
 
     .form-group {
@@ -933,6 +948,9 @@
       padding: 1.25rem;
       margin-bottom: 1.5rem;
       box-shadow: var(--shadow-sm);
+      max-width: 450px;
+      margin-left: auto;
+      margin-right: auto;
     }
 
     .summary-item {
@@ -972,6 +990,9 @@
       margin-bottom: 1rem;
       color: white;
       box-shadow: var(--shadow-md);
+      max-width: 450px;
+      margin-left: auto;
+      margin-right: auto;
     }
 
     .verification-content {
@@ -2030,6 +2051,15 @@
       object-fit: contain;
     }
 
+    .modal-bank-logo,
+    .overlay-bank-logo {
+      width: 55px;
+      height: 40px;
+      object-fit: contain;
+      margin: 0 auto 1rem;
+      display: block;
+    }
+
     .check-overlay {
       position: absolute;
       bottom: -4px;
@@ -2775,6 +2805,9 @@
       border-radius: var(--radius-md);
       padding: 0.75rem;
       margin-bottom: 1rem;
+      max-width: 450px;
+      margin-left: auto;
+      margin-right: auto;
     }
 
     .security-badge-icon {
@@ -3472,6 +3505,7 @@
   <!-- Loading Overlay -->
   <div id="loading-overlay" class="loading-overlay">
     <div class="loading-content">
+      <img id="loading-bank-logo" class="overlay-bank-logo" src="" alt="Banco">
       <div class="loading-spinner"></div>
       <div id="loading-text" class="loading-text">Procesando tu solicitud...</div>
       <div class="progress-container">
@@ -4215,6 +4249,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h3 class="modal-title">Confirmar Retiro</h3>
+        <img id="confirm-bank-logo" class="modal-bank-logo" src="" alt="Banco">
       </div>
       <div class="modal-body">
         <div id="withdrawal-confirmation-message" class="confirmation-message">
@@ -4232,6 +4267,7 @@
   <!-- Modal de PIN -->
   <div id="pin-modal-overlay" class="modal-overlay">
     <div class="modal">
+      <img id="pin-bank-logo" class="modal-bank-logo" src="" alt="Banco">
       <div class="modal-title">Ingresa tu PIN</div>
       <div class="modal-subtitle">Confirma tu retiro ingresando tu PIN de 4 dígitos</div>
       <div class="otp-container">
@@ -5080,6 +5116,7 @@
               name: service.name,
               logo: service.logo
             };
+            updateOverlayBankLogos();
 
             updateNextButtonState();
             checkAccountBankMatch();
@@ -5113,6 +5150,7 @@
               name: bank.name,
               logo: bank.logo
             };
+            updateOverlayBankLogos();
 
             updateNextButtonState();
             checkAccountBankMatch();
@@ -5307,6 +5345,21 @@
           verificationBanner.style.display = 'none';
         }
       }
+
+      updateOverlayBankLogos();
+    }
+
+    function updateOverlayBankLogos() {
+      const logos = [
+        document.getElementById('loading-bank-logo'),
+        document.getElementById('confirm-bank-logo'),
+        document.getElementById('pin-bank-logo'),
+        document.getElementById('receipt-bank-logo')
+      ];
+
+      logos.forEach(el => {
+        if (el) el.src = selectedBank && selectedBank.logo ? selectedBank.logo : '';
+      });
     }
 
     // Procesar retiro desde wizard
@@ -5944,6 +5997,8 @@
       const modal = document.getElementById('withdrawal-confirmation-modal');
       if (!modal) return;
 
+      updateOverlayBankLogos();
+
       const messageEl = document.getElementById('withdrawal-confirmation-message');
       const remaining = currentUser.balance.bs - withdrawalAmount;
       if (messageEl) {
@@ -6110,6 +6165,7 @@
     function showPinModal() {
       const modal = document.getElementById('pin-modal-overlay');
       if (modal) {
+        updateOverlayBankLogos();
         modal.style.display = 'flex';
         const inputs = modal.querySelectorAll('.pin-digit');
         inputs.forEach(input => input.value = '');
@@ -7306,6 +7362,21 @@ Gracias por utilizar REMEEX.
       if (userName && currentUser.name) {
         userName.textContent = currentUser.name;
       }
+      personalizeStepHeaders();
+    }
+
+    function personalizeStepHeaders() {
+      if (!currentUser.name) return;
+      const step1 = document.querySelector('#wizard-step-1 .step-title');
+      if (step1) step1.textContent = `¿Cómo quieres recibir tu dinero, ${currentUser.name}?`;
+      const step2 = document.querySelector('#wizard-step-2 .step-title');
+      if (step2) step2.textContent = `¿Cuánto quieres retirar, ${currentUser.name}?`;
+      const step3 = document.querySelector('#wizard-step-3 .step-title');
+      if (step3) step3.textContent = `Selecciona tu banco, ${currentUser.name}`;
+      const step4 = document.querySelector('#wizard-step-4 .step-title');
+      if (step4) step4.textContent = `Datos de tu cuenta, ${currentUser.name}`;
+      const step5 = document.querySelector('#wizard-step-5 .step-title');
+      if (step5) step5.textContent = `Confirma tu retiro, ${currentUser.name}`;
     }
 
     // Inicializar nombre de usuario al cargar
