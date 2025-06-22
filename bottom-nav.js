@@ -4,5 +4,6 @@ window.addEventListener('DOMContentLoaded', () => {
     .then(html => {
       const container = document.getElementById('bottom-nav-container') || document.body;
       container.insertAdjacentHTML('beforeend', html);
+      document.dispatchEvent(new Event('bottomNavLoaded'));
     });
 });
