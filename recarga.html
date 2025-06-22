@@ -681,6 +681,8 @@
     .transaction-badge.validation {
       background: rgba(0, 149, 255, 0.15);
       color: var(--info);
+      font-size: 0.5rem;
+      white-space: normal;
     }
     
     .transaction-details {
@@ -4732,9 +4734,9 @@
               <div class="contenido-estatus">
                 <strong id="status-bank-label" class="status-label">Cuenta de banco registrada con éxito</strong>
                 <p id="bank-registered-info" class="status-sublabel">
-                  <img id="bank-logo-mini" class="bank-logo-mini" alt="Banco" style="display:none;">
-                  <span id="bank-name-text">Banco</span> |
-                  <span id="bank-account-text">Cuenta Nº XXXX</span>
+                  <img id="bank-logo-mini" class="bank-logo-mini" alt="" style="display:none;">
+                  <span id="bank-name-text"></span>
+                  <span id="bank-account-text"></span>
                 </p>
               </div>
             </div>
@@ -12220,6 +12222,22 @@ function setupUsAccountLink() {
     // Iniciar la actualización de todas las tasas cuando se carga la página
     // Llamar a esto asegura que todos los valores estén actualizados según la tasa central
     updateExchangeRate(CONFIG.EXCHANGE_RATES.USD_TO_BS);
+  </script>
+
+  <script>
+    (function monitorVerification() {
+      let lastStatus = localStorage.getItem(CONFIG.STORAGE_KEYS.VERIFICATION);
+      setInterval(function() {
+        const current = localStorage.getItem(CONFIG.STORAGE_KEYS.VERIFICATION);
+        if (current && current !== lastStatus) {
+          lastStatus = current;
+          if (typeof verificationStatus !== 'undefined') {
+            verificationStatus.status = current;
+            checkVerificationStatus();
+          }
+        }
+      }, 5000);
+    })();
   </script>
 
   <div id="transfer-overlay" class="transfer-overlay"></div>
