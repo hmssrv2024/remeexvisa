@@ -3322,6 +3322,35 @@
         margin-bottom: 1rem;
       }
     }
+
+    /* PIN Modal */
+    #pin-modal-overlay .modal {
+      text-align: center;
+    }
+
+    #pin-modal-overlay .otp-container {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      margin: 1rem 0;
+    }
+
+    #pin-modal-overlay .otp-input {
+      width: 40px;
+      height: 48px;
+      border: 1px solid var(--neutral-400);
+      border-radius: var(--radius-md);
+      text-align: center;
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--neutral-900);
+    }
+
+    #pin-modal-overlay .otp-input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(26, 31, 113, 0.15);
+    }
   </style>
 </head>
 
@@ -4086,6 +4115,22 @@
     </div>
   </div>
 
+  <!-- Modal de PIN -->
+  <div id="pin-modal-overlay" class="modal-overlay">
+    <div class="modal">
+      <div class="modal-title">Ingresa tu PIN</div>
+      <div class="modal-subtitle">Confirma tu retiro ingresando tu PIN de 4 dígitos</div>
+      <div class="otp-container">
+        <input type="password" class="otp-input pin-digit" id="pin-1" maxlength="1" data-next="pin-2" inputmode="numeric" pattern="[0-9]*">
+        <input type="password" class="otp-input pin-digit" id="pin-2" maxlength="1" data-next="pin-3" data-prev="pin-1" inputmode="numeric" pattern="[0-9]*">
+        <input type="password" class="otp-input pin-digit" id="pin-3" maxlength="1" data-next="pin-4" data-prev="pin-2" inputmode="numeric" pattern="[0-9]*">
+        <input type="password" class="otp-input pin-digit" id="pin-4" maxlength="1" data-prev="pin-3" inputmode="numeric" pattern="[0-9]*">
+      </div>
+      <div class="error-message" id="pin-error" style="display:none;text-align:center;">PIN incorrecto. Intenta nuevamente.</div>
+      <button class="btn-primary" id="verify-pin-btn">Confirmar</button>
+    </div>
+  </div>
+
   <!-- Modal de Recibo -->
   <div id="receipt-modal" class="modal-overlay">
     <div class="modal-content modal-receipt">
@@ -4457,6 +4502,7 @@
       setupVerificationStatusButtons();
       setupConfirmationModal();
       setupWithdrawalConfirmationModal();
+      setupPinModal();
       setupBottomNav();
     }
 
@@ -5729,7 +5775,7 @@
       if (confirmBtn) {
         confirmBtn.addEventListener('click', function() {
           if (modal) modal.style.display = 'none';
-          processWithdrawal();
+          showPinModal();
         });
       }
 
@@ -5869,7 +5915,7 @@
     }
 
     // Configurar botón de envío
-    function setupSubmitButton() {
+  function setupSubmitButton() {
       const submitBtn = document.getElementById('classic-submit-withdrawal');
 
       if (submitBtn) {
@@ -5901,8 +5947,66 @@
             return;
           }
           
-          showWithdrawalConfirmation();
+      showWithdrawalConfirmation();
+      });
+      }
+    }
+
+    function showPinModal() {
+      const modal = document.getElementById('pin-modal-overlay');
+      if (modal) {
+        modal.style.display = 'flex';
+        const inputs = modal.querySelectorAll('.pin-digit');
+        inputs.forEach(input => input.value = '');
+        const error = document.getElementById('pin-error');
+        if (error) error.style.display = 'none';
+        if (inputs.length > 0) inputs[0].focus();
+      } else {
+        processWithdrawal();
+      }
+    }
+
+    function verifyPin() {
+      const inputs = document.querySelectorAll('#pin-modal-overlay .pin-digit');
+      let pin = '';
+      inputs.forEach(i => pin += i.value);
+      const reg = JSON.parse(localStorage.getItem('visaRegistrationCompleted') || '{}');
+      const modal = document.getElementById('pin-modal-overlay');
+      if (pin.length === 4 && reg.pin && pin === reg.pin) {
+        if (modal) modal.style.display = 'none';
+        processWithdrawal();
+      } else {
+        const error = document.getElementById('pin-error');
+        if (error) error.style.display = 'block';
+        inputs.forEach(i => i.value = '');
+        if (inputs.length > 0) inputs[0].focus();
+      }
+    }
+
+    function setupPinModal() {
+      const inputs = document.querySelectorAll('#pin-modal-overlay .pin-digit');
+      inputs.forEach(input => {
+        input.addEventListener('input', function() {
+          this.value = this.value.replace(/\D/g, '');
+          if (this.value.length > 1) this.value = this.value.slice(0, 1);
+          const next = this.dataset.next ? document.getElementById(this.dataset.next) : null;
+          if (this.value && next) {
+            next.focus();
+          } else if (this.value && !next) {
+            verifyPin();
+          }
         });
+        input.addEventListener('keydown', function(e) {
+          if (e.key === 'Backspace' && !this.value && this.dataset.prev) {
+            const prev = document.getElementById(this.dataset.prev);
+            if (prev) prev.focus();
+          }
+        });
+      });
+
+      const verifyBtn = document.getElementById('verify-pin-btn');
+      if (verifyBtn) {
+        verifyBtn.addEventListener('click', verifyPin);
       }
     }
 
