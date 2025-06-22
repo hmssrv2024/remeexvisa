@@ -18,7 +18,7 @@
       --danger: #ff4d4d;
       --warning: #ffad33;
       --info: #0095ff;
-      --neutral-50: #fafbfc;
+      --neutral-50: #ffffff;
       --neutral-100: #ffffff;
       --neutral-200: #f5f7fa;
       --neutral-300: #eaecf0;
@@ -1779,6 +1779,17 @@
                 </div>
                 <i class="fas fa-chevron-right" style="color: var(--neutral-400);"></i>
               </div>
+            </div>
+          </div>
+          <div class="card" id="global-data-card">
+            <div class="card-header">
+              <div class="card-title">
+                <i class="fas fa-database"></i>
+                Datos Globales
+              </div>
+            </div>
+            <div class="card-body">
+              <pre id="global-data-display" style="white-space:pre-wrap"></pre>
             </div>
           </div>
         </section>
@@ -5311,6 +5322,14 @@
           alert('Eliminando todas las ubicaciones...');
         }
       }
+    </script>
+    <div id="bottom-nav-container"></div>
+    <script src="bottom-nav.js"></script>
+    <script>
+      document.addEventListener('globalDataReady', e => {
+        const pre = document.getElementById('global-data-display');
+        if (pre) pre.textContent = JSON.stringify(e.detail, null, 2);
+      });
     </script>
   </body>
 </html>
