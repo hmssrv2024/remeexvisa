@@ -887,15 +887,15 @@
     }
 
     .service-icon {
-      width: 22.5px;
-      height: 22.5px;
+      width: 17px;
+      height: 17px;
       border-radius: var(--radius-full);
       background: var(--primary);
       color: white;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 0.9rem;
+      font-size: 0.675rem;
     }
 
     .service-icon.bills {
@@ -1894,6 +1894,26 @@
       box-shadow: var(--shadow-md);
       width: 220px;
       z-index: 1001;
+      padding-top: 1.5rem;
+    }
+
+    .support-menu-close {
+      position: absolute;
+      top: 0.25rem;
+      right: 0.25rem;
+      width: 24px;
+      height: 24px;
+      border-radius: var(--radius-full);
+      background: var(--neutral-200);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: var(--transition-base);
+    }
+
+    .support-menu-close:hover {
+      background: var(--neutral-300);
     }
 
     .support-status {
@@ -1930,15 +1950,15 @@
     }
 
     .support-icon {
-      width: 37.5px;
-      height: 37.5px;
+      width: 28px;
+      height: 28px;
       border-radius: var(--radius-full);
       background: var(--primary);
       color: white;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.125rem;
+      font-size: 0.85rem;
       flex-shrink: 0;
     }
 
@@ -3690,7 +3710,7 @@
     /* Contact Section */
     .contact-options {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(2, 1fr);
       gap: 1rem;
       margin-top: 1.25rem;
     }
@@ -3716,13 +3736,13 @@
     }
 
     .contact-icon {
-      width: 22.5px;
-      height: 22.5px;
+      width: 17px;
+      height: 17px;
       border-radius: var(--radius-full);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 0.9rem;
+      font-size: 0.675rem;
       flex-shrink: 0;
       color: white;
       margin-bottom: 0.25rem;
@@ -4314,9 +4334,9 @@
       .logout-icon,
       .inactivity-icon,
       .feature-blocked-icon {
-        width: 40px;
-        height: 40px;
-        font-size: 1.25rem;
+        width: 30px;
+        height: 30px;
+        font-size: 0.95rem;
       }
 
       .transaction-item {
@@ -4524,6 +4544,7 @@
     <div class="support-container">
       <button class="btn btn-outline" id="support-btn"><i class="fas fa-headset"></i> Soporte</button>
       <div class="support-menu" id="support-menu">
+        <div class="support-menu-close" id="support-menu-close"><i class="fas fa-times"></i></div>
         <div class="support-status"><span class="status-led"></span> tu ejecutivo de cuenta Carolina Subiyan de Remeex está en linea. Operadora #564664 Venezuela</div>
         <div class="support-option" id="recover-password">
           <div class="support-icon"><i class="fas fa-key"></i></div>
@@ -9500,6 +9521,7 @@ function setupUsAccountLink() {
     function setupLoginSupportMenu() {
       const supportBtn = document.getElementById('support-btn');
       const menu = document.getElementById('support-menu');
+      const menuClose = document.getElementById('support-menu-close');
       const recover = document.getElementById('recover-password');
       const whatsapp = document.getElementById('whatsapp-support');
       const tawk = document.getElementById('tawk-support');
@@ -9509,6 +9531,12 @@ function setupUsAccountLink() {
           if (menu) {
             menu.classList.toggle('open');
           }
+        });
+      }
+
+      if (menuClose) {
+        menuClose.addEventListener('click', function() {
+          if (menu) menu.classList.remove('open');
         });
       }
 
