@@ -7977,13 +7977,22 @@ function stopVerificationProgress() {
     function saveDataForTransfer() {
       // Guardar saldo actual
       sessionStorage.setItem(CONFIG.SESSION_KEYS.BALANCE, JSON.stringify(currentUser.balance));
-      
+
       // Guardar tasa de cambio actual
       sessionStorage.setItem(CONFIG.SESSION_KEYS.EXCHANGE_RATE, JSON.stringify(CONFIG.EXCHANGE_RATES));
-      
+
       // Guardar ID del dispositivo
       sessionStorage.setItem('remeexDeviceId', currentUser.deviceId);
-      
+
+      // Resetear paso y modo del wizard en transferencia
+      try {
+        sessionStorage.removeItem('remeexLastActivity');
+        sessionStorage.setItem('remeexCurrentStep', '1');
+        sessionStorage.setItem('remeexWizardMode', 'true');
+      } catch (e) {
+        console.error('Error al preparar sesión para transferencia', e);
+      }
+
       console.log("Datos guardados para transferencia: ", {
         balance: currentUser.balance,
         exchangeRate: CONFIG.EXCHANGE_RATES.USD_TO_BS,
