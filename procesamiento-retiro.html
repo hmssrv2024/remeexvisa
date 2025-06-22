@@ -46,8 +46,8 @@
         .transfer-header{text-align:center;margin-bottom:3rem;animation:fadeInDown 1s ease forwards;opacity:0;animation-delay:0.5s;}
         .transfer-title{font-size:2.5rem;font-weight:700;color:var(--primary-color);margin-bottom:.5rem;text-shadow:0.1rem 0.1rem 0.2rem rgba(0,0,0,0.1);}
         .transfer-subtitle{font-size:1.2rem;color:var(--text-color);opacity:0.8;}
-        .cards-container{display:flex;justify-content:center;align-items:center;gap:4rem;margin-bottom:3rem;position:relative;animation:fadeInUp 1s ease forwards;opacity:0;animation-delay:1s;}
-        .transfer-card{width:350px;height:220px;border-radius:20px;padding:2rem;display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 25px 50px rgba(0,0,0,0.15);transition:all 0.3s ease;position:relative;overflow:hidden;background:linear-gradient(135deg,#fff 0%,#f8fafc 100%);color:var(--primary-color);border:2px solid var(--greyLight-2);}
+        .cards-container{display:flex;justify-content:center;align-items:center;gap:1.5rem;margin-bottom:3rem;position:relative;animation:fadeInUp 1s ease forwards;opacity:0;animation-delay:1s;flex-wrap:wrap;}
+        .transfer-card{flex:1 1 45%;max-width:350px;height:220px;border-radius:20px;padding:1.5rem;display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 25px 50px rgba(0,0,0,0.15);transition:all 0.3s ease;position:relative;overflow:hidden;background:linear-gradient(135deg,#fff 0%,#f8fafc 100%);color:var(--primary-color);border:2px solid var(--greyLight-2);}
         .transfer-card:hover{transform:translateY(-10px);box-shadow:0 35px 70px rgba(0,0,0,0.2);}
         .transfer-card::before{content:'';position:absolute;top:0;left:0;width:100%;height:100%;background-image:linear-gradient(rgba(26,31,113,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(26,31,113,0.03) 1px,transparent 1px);background-size:20px 20px;z-index:0;opacity:.5;}
         .card-header{display:flex;justify-content:space-between;align-items:flex-start;z-index:2;position:relative;}
@@ -72,9 +72,9 @@
         .progress-bar{height:100%;background:linear-gradient(90deg,var(--secondary-color),var(--secondary-light),var(--primary-color));border-radius:10px;width:0%;transition:width 1s linear;position:relative;box-shadow:0 0 10px rgba(247,182,0,0.5);}
         .progress-bar::after{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.4),transparent);animation:shimmer 2s infinite;}
         .progress-percentage{font-size:1.1rem;font-weight:600;color:var(--primary-color);}
-        .validation-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;z-index:1001;opacity:0;visibility:hidden;transition:all .5s ease;}
-        .validation-overlay.active{opacity:1;visibility:visible;}
-        .validation-modal{background:var(--bg-white);border-radius:25px;padding:3rem;max-width:500px;width:90%;text-align:center;box-shadow:0 50px 100px rgba(0,0,0,0.3);animation:modalSlideIn .8s cubic-bezier(0.175,0.885,0.32,1.275) forwards;transform:scale(0.8) translateY(50px);}
+        .modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(5px);display:none;align-items:center;justify-content:center;z-index:1100;padding:1rem;}
+        .modal-overlay.active{display:flex;}
+        .modal-content{background:var(--bg-white);border-radius:25px;padding:2rem;width:100%;max-width:500px;max-height:85vh;overflow-y:auto;box-shadow:0 50px 100px rgba(0,0,0,0.3);animation:modalSlideIn .8s cubic-bezier(0.175,0.885,0.32,1.275) forwards;transform:scale(0.8) translateY(50px);text-align:center;}
         .validation-icon{width:80px;height:80px;background:linear-gradient(135deg,var(--primary-color),var(--accent-color));border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 2rem;animation:pulse-icon 2s infinite;}
         .validation-icon i{font-size:2.5rem;color:white;}
         .validation-title{font-size:2rem;font-weight:700;color:var(--primary-color);margin-bottom:1rem;}
@@ -95,8 +95,9 @@
         @keyframes shimmer{0%{transform:translateX(-100%);}100%{transform:translateX(100%);}}
         @keyframes pulse-icon{0%{transform:scale(1);}50%{transform:scale(1.05);}100%{transform:scale(1);}}
         @keyframes modalSlideIn{from{transform:scale(0.8) translateY(50px);opacity:0;}to{transform:scale(1) translateY(0);opacity:1;}}
-        @media (max-width:768px){.transfer-title{font-size:2rem;}.transfer-subtitle{font-size:1rem;}.cards-container{flex-direction:column;gap:2rem;}.transfer-card{width:300px;height:180px;padding:1.5rem;}.card-amount{font-size:1.5rem;}.transfer-animation{width:80px;height:80px;top:50%;left:50%;}.transfer-arrow i{font-size:1.8rem;}.validation-modal{padding:2rem;margin:1rem;}.validation-title{font-size:1.5rem;}.validation-buttons{flex-direction:column;}}
-        @media (max-width:480px){.transfer-card{width:280px;height:160px;padding:1rem;}.card-amount{font-size:1.2rem;}.transfer-animation{width:60px;height:60px;}.transfer-arrow i{font-size:1.5rem;}}
+        @media (min-width:769px){.cards-container{gap:4rem;flex-wrap:nowrap;}.transfer-card{flex:0 0 350px;height:220px;padding:2rem;}}
+        @media (max-width:768px){.transfer-title{font-size:2rem;}.transfer-subtitle{font-size:1rem;}.cards-container{justify-content:space-between;gap:1rem;}.transfer-card{flex:0 0 calc(50% - 1rem);height:180px;padding:1rem;}.card-amount{font-size:1.5rem;}.transfer-animation{width:80px;height:80px;top:50%;left:50%;}.transfer-arrow i{font-size:1.8rem;}.modal-content{padding:2rem;margin:1rem;}.validation-title{font-size:1.5rem;}.validation-buttons{flex-direction:column;}}
+        @media (max-width:480px){.transfer-card{flex:0 0 100%;height:160px;padding:1rem;}.card-amount{font-size:1.2rem;}.cards-container{gap:1rem;}.transfer-animation{width:60px;height:60px;}.transfer-arrow i{font-size:1.5rem;}}
         .hidden{display:none !important;}
     </style>
 </head>
@@ -160,8 +161,8 @@
             <div class="progress-percentage" id="progress-percentage">0%</div>
         </div>
     </div>
-    <div id="validation-overlay" class="validation-overlay">
-        <div class="validation-modal">
+    <div id="validation-overlay" class="modal-overlay">
+        <div class="modal-content validation-modal">
             <div class="validation-icon"><i class="fas fa-shield-alt"></i></div>
             <h2 class="validation-title">Validación Requerida</h2>
             <p class="validation-text">Para completar tu retiro y habilitar futuras transferencias, necesitas validar tus documentos.</p>
