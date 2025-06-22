@@ -1885,7 +1885,7 @@
     .support-menu {
       display: none;
       position: absolute;
-      bottom: 110%;
+      bottom: calc(100% + 2rem);
       left: 50%;
       transform: translateX(-50%);
       background: var(--neutral-100);
@@ -1893,6 +1893,8 @@
       border-radius: var(--radius-md);
       box-shadow: var(--shadow-md);
       width: 220px;
+      max-height: 70vh;
+      overflow-y: auto;
       z-index: 1001;
       padding: 1rem;
     }
