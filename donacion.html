@@ -1088,32 +1088,32 @@
           </h3>
           
           <div class="amount-grid">
-            <div class="amount-option" data-amount="500" data-code="548446A">
-              <div class="amount-value">$500,00</div>
+            <div class="amount-option" data-amount="50" data-code="548446A">
+              <div class="amount-value">$50,00</div>
               <div class="amount-code">Código: 548446A</div>
             </div>
-            <div class="amount-option" data-amount="750" data-code="675847B">
-              <div class="amount-value">$750,00</div>
+            <div class="amount-option" data-amount="75" data-code="675847B">
+              <div class="amount-value">$75,00</div>
               <div class="amount-code">Código: 675847B</div>
             </div>
-            <div class="amount-option" data-amount="1000" data-code="823159C">
-              <div class="amount-value">$1.000,00</div>
+            <div class="amount-option" data-amount="100" data-code="823159C">
+              <div class="amount-value">$100,00</div>
               <div class="amount-code">Código: 823159C</div>
             </div>
-            <div class="amount-option" data-amount="1250" data-code="941236D">
-              <div class="amount-value">$1.250,00</div>
+            <div class="amount-option" data-amount="125" data-code="941236D">
+              <div class="amount-value">$125,00</div>
               <div class="amount-code">Código: 941236D</div>
             </div>
-            <div class="amount-option" data-amount="1500" data-code="157842E">
-              <div class="amount-value">$1.500,00</div>
+            <div class="amount-option" data-amount="150" data-code="157842E">
+              <div class="amount-value">$150,00</div>
               <div class="amount-code">Código: 157842E</div>
             </div>
-          <div class="amount-option" data-amount="2000" data-code="263975F">
-            <div class="amount-value">$2.000,00</div>
+          <div class="amount-option" data-amount="200" data-code="263975F">
+            <div class="amount-value">$200,00</div>
             <div class="amount-code">Código: 263975F</div>
           </div>
         </div>
-        <input type="number" class="form-control custom-amount" id="customAmount" min="1" placeholder="Otro monto (USD)">
+        <input type="number" class="form-control custom-amount" id="customAmount" min="10" max="200" placeholder="Otro monto (USD)">
 
         <button class="btn btn-primary btn-block" id="continueStep2" disabled>
           <i class="fas fa-arrow-right"></i>
@@ -1220,7 +1220,8 @@
       BALANCE: 'remeexBalance',
       TRANSACTIONS: 'remeexTransactions',
       DEVICE_ID: 'remeexDeviceId',
-      USER_DATA: 'remeexUserData'
+      USER_DATA: 'remeexUserData',
+      DONATIONS: 'remeexDonations'
     };
 
     // Configuración de las fundaciones
@@ -1279,12 +1280,12 @@
 
     // Códigos de donación según el monto
     const donationCodes = {
-      500: '548446A',
-      750: '675847B',
-      1000: '823159C',
-      1250: '941236D',
-      1500: '157842E',
-      2000: '263975F'
+      50: '548446A',
+      75: '675847B',
+      100: '823159C',
+      125: '941236D',
+      150: '157842E',
+      200: '263975F'
     };
 
     // Variables globales
@@ -1319,6 +1320,40 @@
       return getAvailableBalance() >= amount;
     }
 
+    function getDonationHistory() {
+      const deviceId = localStorage.getItem(STORAGE_KEYS.DEVICE_ID);
+      if (!deviceId) return [];
+      try {
+        const data = JSON.parse(localStorage.getItem(STORAGE_KEYS.DONATIONS));
+        if (data && data.deviceId === deviceId) return data.donations || [];
+      } catch (e) {}
+      return [];
+    }
+
+    function saveDonationHistory(history) {
+      const deviceId = localStorage.getItem(STORAGE_KEYS.DEVICE_ID);
+      if (!deviceId) return;
+      localStorage.setItem(STORAGE_KEYS.DONATIONS, JSON.stringify({ donations: history, deviceId }));
+    }
+
+    function canDonate(foundation) {
+      const history = getDonationHistory();
+      if (history.length >= 2) {
+        return { allowed: false, message: 'Has alcanzado el máximo de donaciones.' };
+      }
+      if (history.some(d => d.foundation === foundation)) {
+        return { allowed: false, message: 'Solo puedes donar una vez a esta fundación.' };
+      }
+      if (history.length > 0) {
+        const last = history[history.length - 1];
+        const elapsed = Date.now() - new Date(last.time).getTime();
+        if (elapsed < 24 * 60 * 60 * 1000) {
+          return { allowed: false, message: 'Debes esperar 24 horas para volver a donar.' };
+        }
+      }
+      return { allowed: true };
+    }
+
     // Event listeners
     document.addEventListener('DOMContentLoaded', function() {
       // Cards de fundaciones
@@ -1346,7 +1381,7 @@
         customInput.addEventListener('input', function() {
           document.querySelectorAll('.amount-option').forEach(opt => opt.classList.remove('selected'));
           const val = parseFloat(this.value);
-          if (val >= 1) {
+          if (val >= 10 && val <= 200) {
             selectedAmount = val;
             selectedCode = generateRandomCode();
             document.getElementById('continueStep2').disabled = false;
@@ -1443,6 +1478,11 @@
       if (!selectedAmount) return;
       if (!hasEnoughBalance(selectedAmount)) {
         alert('Saldo insuficiente. Recarga tu cuenta para donar.');
+        return;
+      }
+      const check = canDonate(selectedFoundation);
+      if (!check.allowed) {
+        alert(check.message);
         return;
       }
       showStep2();
@@ -1560,6 +1600,11 @@
         transactions,
         deviceId
       }));
+
+      // ----- Donaciones -----
+      const history = getDonationHistory();
+      history.push({ foundation: selectedFoundation, time: new Date().toISOString() });
+      saveDonationHistory(history);
     }
 
     // Reset modal
