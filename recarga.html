@@ -4615,6 +4615,25 @@
             </div>
           </div>
         </div>
+        <!-- Estado 1b: Recarga exitosa -->
+        <div class="verificacion-section" id="status-recharge-success" style="display:none;">
+          <h3 class="verificacion-titulo">
+            <svg class="icono-titulo" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <path stroke="#10b981" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+            ¡Recarga Exitosa!
+          </h3>
+          <p class="verificacion-descripcion">Tu saldo ha sido actualizado correctamente.</p>
+          <div class="verificacion-grid">
+            <div class="verificacion-card estatus-exitoso">
+              <div class="icono-estatus"><i class="fas fa-check-circle"></i></div>
+              <div class="contenido-estatus">
+                <strong class="status-label">Recarga completada</strong>
+                <p class="status-sublabel">Explora las funciones de la aplicación.</p>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <!-- Estado 2: Solicitar verificación -->
         <div class="verificacion-section" id="status-request-verification" style="display:none;">
@@ -8389,19 +8408,23 @@ function stopVerificationProgress() {
 
     function updateStatusCards() {
       const stepRecharge = document.getElementById('status-recharge');
+      const stepSuccess = document.getElementById('status-recharge-success');
       const stepVerify = document.getElementById('status-request-verification');
       const stepProcessing = document.getElementById('status-processing-card');
       const stepFinal = document.getElementById('status-final');
 
-      if (!stepRecharge || !stepVerify || !stepProcessing || !stepFinal) return;
+      if (!stepRecharge || !stepSuccess || !stepVerify || !stepProcessing || !stepFinal) return;
 
       stepRecharge.style.display = 'none';
+      stepSuccess.style.display = 'none';
       stepVerify.style.display = 'none';
       stepProcessing.style.display = 'none';
       stepFinal.style.display = 'none';
 
       if (!currentUser.hasMadeFirstRecharge) {
         stepRecharge.style.display = 'block';
+      } else if (!localStorage.getItem('firstWithdrawalDone')) {
+        stepSuccess.style.display = 'block';
       } else if (verificationStatus.status === 'unverified') {
         stepVerify.style.display = 'block';
       } else if (verificationStatus.status === 'processing') {

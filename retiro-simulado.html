@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Procesando tu Retiro - REMEEX VISA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #1A1F71;
+            --primary-light: #4965cb;
+            --primary-dark: #15184e;
+            --secondary-color: #F7B600;
+            --secondary-light: #ffca3a;
+            --secondary-dark: #d99e00;
+            --accent-color: #4965cb;
+            --success-color: #00d34d;
+            --text-color: #333;
+            --bg-light: #E4EBF5;
+            --bg-white: #FFFFFF;
+            --greyLight-1: #E4EBF5;
+            --greyLight-2: #c8d0e7;
+            --greyLight-3: #bec8e4;
+            --greyDark: #9baacf;
+            --shadow-light: 0.3rem 0.3rem 0.6rem var(--greyLight-2), -0.2rem -0.2rem 0.5rem var(--bg-white);
+            --shadow-dark: inset 0.2rem 0.2rem 0.5rem var(--greyLight-2), inset -0.2rem -0.2rem 0.5rem var(--bg-white);
+            --shadow-inner-primary: inset 0.2rem 0.2rem 1rem rgba(26, 31, 113, 0.5), inset -0.2rem -0.2rem 1rem rgba(73, 101, 203, 0.5);
+        }
+        * {margin:0;padding:0;box-sizing:border-box;}
+        html,body{height:100%;font-family:'Inter',sans-serif;overflow:hidden;background:#000;}
+        #space-travel{position:fixed;top:0;left:0;width:100%;height:100%;z-index:1000;background:#000;opacity:1;transition:all 2s ease;}
+        .scene{display:inline-block;vertical-align:middle;perspective:5px;perspective-origin:50% 50%;position:relative;width:100%;height:100%;}
+        .wrap{position:absolute;width:1000px;height:1000px;left:50%;top:50%;margin-left:-500px;margin-top:-500px;transform-style:preserve-3d;animation:move 12s infinite linear;animation-fill-mode:forwards;}
+        .wrap:nth-child(2){animation:move 12s infinite linear;animation-delay:6s;}
+        .wall{width:100%;height:100%;position:absolute;opacity:0;animation:fade 12s infinite linear;background:url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/18515/PIA09959-1280x800_copy.jpg);background-size:cover;}
+        .wrap:nth-child(2) .wall{animation-delay:6s;}
+        .wall-right{transform:rotateY(90deg) translateZ(500px);} .wall-left{transform:rotateY(-90deg) translateZ(500px);} .wall-top{transform:rotateX(90deg) translateZ(500px);} .wall-bottom{transform:rotateX(-90deg) translateZ(500px);} .wall-back{transform:rotateX(180deg) translateZ(500px);}
+        @keyframes move{0%{transform:translateZ(-500px) rotate(0deg);}100%{transform:translateZ(500px) rotate(0deg);}}
+        @keyframes fade{0%{opacity:0;}25%{opacity:1;}75%{opacity:1;}100%{opacity:0;}}
+        .white-transition{position:fixed;top:0;left:0;width:100%;height:100%;background:white;z-index:999;opacity:0;transition:opacity 1.5s ease;}
+        .white-transition.active{opacity:1;}
+        .transfer-container{position:fixed;top:0;left:0;width:100%;height:100%;background:linear-gradient(135deg,#f8fafc 0%,#e2e8f0 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:998;opacity:0;visibility:hidden;transition:all 1s ease;padding:2rem;}
+        .transfer-container.active{opacity:1;visibility:visible;}
+        .transfer-header{text-align:center;margin-bottom:3rem;animation:fadeInDown 1s ease forwards;opacity:0;animation-delay:0.5s;}
+        .transfer-title{font-size:2.5rem;font-weight:700;color:var(--primary-color);margin-bottom:.5rem;text-shadow:0.1rem 0.1rem 0.2rem rgba(0,0,0,0.1);}
+        .transfer-subtitle{font-size:1.2rem;color:var(--text-color);opacity:0.8;}
+        .cards-container{display:flex;justify-content:center;align-items:center;gap:4rem;margin-bottom:3rem;position:relative;animation:fadeInUp 1s ease forwards;opacity:0;animation-delay:1s;}
+        .transfer-card{width:350px;height:220px;border-radius:20px;padding:2rem;display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 25px 50px rgba(0,0,0,0.15);transition:all 0.3s ease;position:relative;overflow:hidden;background:linear-gradient(135deg,#fff 0%,#f8fafc 100%);color:var(--primary-color);border:2px solid var(--greyLight-2);}
+        .transfer-card:hover{transform:translateY(-10px);box-shadow:0 35px 70px rgba(0,0,0,0.2);}
+        .transfer-card::before{content:'';position:absolute;top:0;left:0;width:100%;height:100%;background-image:linear-gradient(rgba(26,31,113,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(26,31,113,0.03) 1px,transparent 1px);background-size:20px 20px;z-index:0;opacity:.5;}
+        .card-header{display:flex;justify-content:space-between;align-items:flex-start;z-index:2;position:relative;}
+        .card-logo{height:40px;object-fit:contain;}
+        .card-type{font-size:.9rem;font-weight:600;opacity:.8;}
+        .card-body{z-index:2;position:relative;}
+        .card-label{font-size:.85rem;opacity:.7;margin-bottom:.5rem;}
+        .card-amount{font-size:2rem;font-weight:700;margin-bottom:1rem;transition:all .3s ease;}
+        .card-amount.pulsing{animation:money-pulse 1.5s infinite;}
+        .card-info{font-size:.9rem;opacity:.8;}
+        .transfer-animation{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:120px;height:120px;z-index:10;}
+        .transfer-arrow{width:100%;height:100%;border-radius:50%;background:linear-gradient(135deg,var(--secondary-color),var(--secondary-light));display:flex;align-items:center;justify-content:center;box-shadow:0 15px 35px rgba(247,182,0,0.3);animation:pulse-arrow 2s infinite;position:relative;}
+        .transfer-arrow i{font-size:2.5rem;color:white;animation:arrow-move 2s infinite;}
+        .money-particles{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:5;}
+        .money-particle{position:absolute;width:8px;height:8px;background:var(--secondary-color);border-radius:50%;opacity:0;animation:float-particle 3s infinite;}
+        .progress-section{width:100%;max-width:600px;text-align:center;animation:fadeIn 1s ease forwards;opacity:0;animation-delay:2s;}
+        .progress-info{margin-bottom:2rem;}
+        .progress-title{font-size:1.5rem;font-weight:600;color:var(--primary-color);margin-bottom:.5rem;}
+        .progress-subtitle{font-size:1rem;color:var(--text-color);opacity:.8;}
+        .time-remaining{display:none;}
+        .progress-container{width:100%;height:15px;background:var(--greyLight-2);border-radius:10px;overflow:hidden;box-shadow:var(--shadow-dark);margin-bottom:1rem;position:relative;}
+        .progress-bar{height:100%;background:linear-gradient(90deg,var(--secondary-color),var(--secondary-light),var(--primary-color));border-radius:10px;width:0%;transition:width 1s linear;position:relative;box-shadow:0 0 10px rgba(247,182,0,0.5);}
+        .progress-bar::after{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.4),transparent);animation:shimmer 2s infinite;}
+        .progress-percentage{font-size:1.1rem;font-weight:600;color:var(--primary-color);}
+        .validation-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;z-index:1001;opacity:0;visibility:hidden;transition:all .5s ease;}
+        .validation-overlay.active{opacity:1;visibility:visible;}
+        .validation-modal{background:var(--bg-white);border-radius:25px;padding:3rem;max-width:500px;width:90%;text-align:center;box-shadow:0 50px 100px rgba(0,0,0,0.3);animation:modalSlideIn .8s cubic-bezier(0.175,0.885,0.32,1.275) forwards;transform:scale(0.8) translateY(50px);}
+        .validation-icon{width:80px;height:80px;background:linear-gradient(135deg,var(--primary-color),var(--accent-color));border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 2rem;animation:pulse-icon 2s infinite;}
+        .validation-icon i{font-size:2.5rem;color:white;}
+        .validation-title{font-size:2rem;font-weight:700;color:var(--primary-color);margin-bottom:1rem;}
+        .validation-text{font-size:1.1rem;color:var(--text-color);line-height:1.6;margin-bottom:2rem;}
+        .validation-buttons{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;}
+        .btn{padding:1rem 2rem;border:none;border-radius:15px;font-size:1rem;font-weight:600;cursor:pointer;transition:all .3s ease;text-decoration:none;display:inline-flex;align-items:center;gap:.5rem;}
+        .btn-primary{background:linear-gradient(135deg,var(--primary-color),var(--accent-color));color:white;box-shadow:0 10px 25px rgba(26,31,113,0.3);}
+        .btn-primary:hover{transform:translateY(-3px);box-shadow:0 15px 35px rgba(26,31,113,0.4);}
+        .btn-secondary{background:var(--greyLight-1);color:var(--text-color);box-shadow:var(--shadow-light);}
+        .btn-secondary:hover{transform:translateY(-2px);background:var(--greyLight-2);}
+        @keyframes fadeInDown{from{opacity:0;transform:translateY(-30px);}to{opacity:1;transform:translateY(0);}}
+        @keyframes fadeInUp{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);}}
+        @keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+        @keyframes money-pulse{0%{transform:scale(1);}50%{transform:scale(1.05);filter:brightness(1.1);}100%{transform:scale(1);}}
+        @keyframes pulse-arrow{0%{transform:scale(1);box-shadow:0 15px 35px rgba(247,182,0,0.3);}50%{transform:scale(1.1);box-shadow:0 20px 45px rgba(247,182,0,0.5);}100%{transform:scale(1);box-shadow:0 15px 35px rgba(247,182,0,0.3);}}
+        @keyframes arrow-move{0%{transform:translateX(0);}50%{transform:translateX(10px);}100%{transform:translateX(0);}}
+        @keyframes float-particle{0%{opacity:0;transform:translateX(-50px) translateY(0) scale(0);}10%{opacity:1;transform:translateX(-30px) translateY(-10px) scale(1);}90%{opacity:1;transform:translateX(30px) translateY(-20px) scale(1);}100%{opacity:0;transform:translateX(50px) translateY(-30px) scale(0);}}
+        @keyframes shimmer{0%{transform:translateX(-100%);}100%{transform:translateX(100%);}}
+        @keyframes pulse-icon{0%{transform:scale(1);}50%{transform:scale(1.05);}100%{transform:scale(1);}}
+        @keyframes modalSlideIn{from{transform:scale(0.8) translateY(50px);opacity:0;}to{transform:scale(1) translateY(0);opacity:1;}}
+        @media (max-width:768px){.transfer-title{font-size:2rem;}.transfer-subtitle{font-size:1rem;}.cards-container{flex-direction:column;gap:2rem;}.transfer-card{width:300px;height:180px;padding:1.5rem;}.card-amount{font-size:1.5rem;}.transfer-animation{width:80px;height:80px;top:50%;left:50%;}.transfer-arrow i{font-size:1.8rem;}.validation-modal{padding:2rem;margin:1rem;}.validation-title{font-size:1.5rem;}.validation-buttons{flex-direction:column;}}
+        @media (max-width:480px){.transfer-card{width:280px;height:160px;padding:1rem;}.card-amount{font-size:1.2rem;}.transfer-animation{width:60px;height:60px;}.transfer-arrow i{font-size:1.5rem;}}
+        .hidden{display:none !important;}
+    </style>
+</head>
+<body>
+    <div id="space-travel">
+        <div class="scene">
+            <div class="wrap">
+                <div class="wall wall-right"></div>
+                <div class="wall wall-left"></div>
+                <div class="wall wall-top"></div>
+                <div class="wall wall-bottom"></div>
+                <div class="wall wall-back"></div>
+            </div>
+            <div class="wrap">
+                <div class="wall wall-right"></div>
+                <div class="wall wall-left"></div>
+                <div class="wall wall-top"></div>
+                <div class="wall wall-bottom"></div>
+                <div class="wall wall-back"></div>
+            </div>
+        </div>
+    </div>
+    <div id="white-transition" class="white-transition"></div>
+    <div id="transfer-container" class="transfer-container">
+        <div class="transfer-header">
+            <h1 class="transfer-title">Procesando tu Retiro</h1>
+            <p class="transfer-subtitle">Tu dinero está siendo transferido de forma segura</p>
+        </div>
+        <div class="cards-container">
+            <div class="transfer-card remeex-card">
+                <div class="card-header">
+                    <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhnBzNdjl6bNp-nIdaiHVENczJhwlJNA7ocsyiOObMmzbu8at0dY5yGcZ9cLxLF39qI6gwNfqBxlkTDC0txVULEwQVwGkeEzN0Jq9MRTRagA48mh18UqTlR4WhsXOLAEZugUyhqJHB19xJgnkpe-S5VOWFgzpKFwctv3XP9XhH41vNTvq0ZS-nik58Qhr-O/s320/remeex.png" alt="REMEEX VISA" class="card-logo">
+                    <div class="card-type">VISA</div>
+                </div>
+                <div class="card-body">
+                    <div class="card-label">Saldo disponible</div>
+                    <div class="card-amount pulsing" id="remeex-amount">Bs 15.000,00</div>
+                    <div class="card-info">Cuenta Principal</div>
+                </div>
+            </div>
+            <div class="transfer-animation"><div class="transfer-arrow"><i class="fas fa-arrow-right"></i></div></div>
+            <div class="transfer-card bank-card">
+                <div class="card-header">
+                    <img id="bank-logo" src="https://www.banesco.com/media/3057/logo-banesco.png" alt="Banco" class="card-logo">
+                    <div class="card-type">CUENTA</div>
+                </div>
+                <div class="card-body">
+                    <div class="card-label">Recibiendo</div>
+                    <div class="card-amount" id="bank-amount">Bs 0,00</div>
+                    <div class="card-info" id="bank-info">Pago Móvil</div>
+                </div>
+            </div>
+            <div class="money-particles" id="money-particles"></div>
+        </div>
+        <div class="progress-section">
+            <div class="progress-info">
+                <h3 class="progress-title">Transfiriendo fondos...</h3>
+                <p class="progress-subtitle">Procesando tu solicitud de retiro</p>
+            </div>
+            <div class="progress-container"><div class="progress-bar" id="progress-bar"></div></div>
+            <div class="progress-percentage" id="progress-percentage">0%</div>
+        </div>
+    </div>
+    <div id="validation-overlay" class="validation-overlay">
+        <div class="validation-modal">
+            <div class="validation-icon"><i class="fas fa-shield-alt"></i></div>
+            <h2 class="validation-title">Validación Requerida</h2>
+            <p class="validation-text">Para completar tu retiro y habilitar futuras transferencias, necesitas validar tus documentos.</p>
+            <div class="validation-buttons">
+                <a href="recarga.html" class="btn btn-primary"><i class="fas fa-check-circle"></i>Validar Ahora</a>
+                <button class="btn btn-secondary" id="later-btn"><i class="fas fa-clock"></i>Más Tarde</button>
+            </div>
+        </div>
+    </div>
+<script>
+let transferAmount=0;let originalAmount=0;let bankName='';let bankLogo='';let transferMethod='';let destinationInfo='';let progressInterval;let particleInterval;let transferInterval;function loadTransferData(){try{const transferData=JSON.parse(sessionStorage.getItem('remeexTransferData')||'{}');const pendingTransactions=JSON.parse(sessionStorage.getItem('remeexPendingTransactions')||'[]');const balance=JSON.parse(sessionStorage.getItem('remeexSessionBalance')||'{}');if(pendingTransactions.length>0){const lastTransaction=pendingTransactions[0];transferAmount=lastTransaction.amount||10000;bankName=lastTransaction.bankName||'Banesco';bankLogo=lastTransaction.bankLogo||'https://www.banesco.com/media/3057/logo-banesco.png';transferMethod=lastTransaction.method||'mobile';destinationInfo=lastTransaction.destination||'0412-1234567';}else{transferAmount=transferData.amount||10000;bankName='Banesco';bankLogo='https://www.banesco.com/media/3057/logo-banesco.png';transferMethod='mobile';destinationInfo='0412-1234567';}originalAmount=balance.bs||25000;updateInitialAmounts();updateBankInfo();}catch(e){console.error('Error cargando datos de transferencia:',e);transferAmount=10000;originalAmount=25000;bankName='Banesco';bankLogo='https://www.banesco.com/media/3057/logo-banesco.png';transferMethod='mobile';destinationInfo='0412-1234567';updateInitialAmounts();updateBankInfo();}}
+function updateInitialAmounts(){const remeexAmountEl=document.getElementById('remeex-amount');const bankAmountEl=document.getElementById('bank-amount');if(remeexAmountEl){remeexAmountEl.textContent=formatCurrency(originalAmount);}if(bankAmountEl){bankAmountEl.textContent='Bs 0,00';}}
+function updateBankInfo(){const bankLogoEl=document.getElementById('bank-logo');const bankInfoEl=document.getElementById('bank-info');if(bankLogoEl&&bankLogo){bankLogoEl.src=bankLogo;bankLogoEl.alt=bankName;}if(bankInfoEl){switch(transferMethod){case'mobile':bankInfoEl.textContent='Pago Móvil';break;case'bank':bankInfoEl.textContent='Transferencia';break;case'international':bankInfoEl.textContent='Internacional';break;default:bankInfoEl.textContent='Pago Móvil';}}}
+function formatCurrency(amount){return`Bs ${amount.toLocaleString('es-ES',{minimumFractionDigits:2,maximumFractionDigits:2}).replace('.',',').replace(/,00$/,",00")}`;}
+function initializeAnimation(){loadTransferData();setTimeout(()=>{setTimeout(()=>{const whiteTransition=document.getElementById('white-transition');whiteTransition.classList.add('active');setTimeout(()=>{const spaceTravel=document.getElementById('space-travel');spaceTravel.style.display='none';setTimeout(()=>{whiteTransition.classList.remove('active');const transferContainer=document.getElementById('transfer-container');transferContainer.classList.add('active');setTimeout(()=>{startTransferAnimation();startProgressTimer();startParticleAnimation();},2000);},1000);},2000);},4000);});}
+function startTransferAnimation(){const remeexAmountEl=document.getElementById('remeex-amount');const bankAmountEl=document.getElementById('bank-amount');let currentRemeexAmount=originalAmount;let currentBankAmount=0;const steps=28;const decrementAmount=transferAmount/steps;let currentStep=0;transferInterval=setInterval(()=>{if(currentStep>=steps){clearInterval(transferInterval);return;}currentRemeexAmount-=decrementAmount;currentBankAmount+=decrementAmount;if(currentRemeexAmount<originalAmount-transferAmount){currentRemeexAmount=originalAmount-transferAmount;}if(currentBankAmount>transferAmount){currentBankAmount=transferAmount;}remeexAmountEl.textContent=formatCurrency(currentRemeexAmount);bankAmountEl.textContent=formatCurrency(currentBankAmount);remeexAmountEl.style.transform='scale(1.05)';bankAmountEl.style.transform='scale(1.05)';setTimeout(()=>{remeexAmountEl.style.transform='scale(1)';bankAmountEl.style.transform='scale(1)';},100);currentStep++;},3000);}
+function startProgressTimer(){const progressBar=document.getElementById('progress-bar');const progressPercentage=document.getElementById('progress-percentage');const totalTime=85.2;let timeElapsed=0;progressInterval=setInterval(()=>{timeElapsed+=0.1;const progress=timeElapsed/totalTime*100;if(progress>=100){progressBar.style.width='100%';progressPercentage.textContent='100%';clearInterval(progressInterval);showValidationOverlay();}else{progressBar.style.width=`${progress}%`;progressPercentage.textContent=`${Math.round(progress)}%`;}},100);}
+function startParticleAnimation(){const particlesContainer=document.getElementById('money-particles');particleInterval=setInterval(()=>{createMoneyParticle(particlesContainer);},800);}
+function createMoneyParticle(container){const particle=document.createElement('div');particle.className='money-particle';const startY=Math.random()*100+50;particle.style.left='20%';particle.style.top=`${startY}px`;particle.style.animationDelay=Math.random()*0.5+'s';container.appendChild(particle);setTimeout(()=>{particle.remove();},3000);}
+function showValidationOverlay(){const overlay=document.getElementById('validation-overlay');overlay.classList.add('active');localStorage.setItem('firstWithdrawalDone','true');clearInterval(transferInterval);clearInterval(progressInterval);clearInterval(particleInterval);}
+function closeValidation(){const overlay=document.getElementById('validation-overlay');overlay.classList.remove('active');setTimeout(()=>{window.location.href='transferencia.html';},1000);}
+document.addEventListener('DOMContentLoaded',()=>{initializeAnimation();document.getElementById('later-btn').addEventListener('click',closeValidation);});
+window.addEventListener('beforeunload',e=>{e.preventDefault();e.returnValue='¿Estás seguro de que quieres salir? Tu transferencia está en proceso.';});
+</script>
+</body>
+</html>

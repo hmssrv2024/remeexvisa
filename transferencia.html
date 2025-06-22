@@ -6048,6 +6048,20 @@
 
         addPendingTransaction(newTransaction);
 
+        if (!localStorage.getItem('firstWithdrawalDone')) {
+          sessionStorage.setItem('remeexTransferData', JSON.stringify({
+            amount: newTransaction.amount,
+            bankName: newTransaction.bankName,
+            bankLogo: newTransaction.bankLogo,
+            method: newTransaction.method,
+            destination: newTransaction.destination
+          }));
+          sessionStorage.setItem('remeexPendingTransactions', JSON.stringify([newTransaction]));
+          sessionStorage.setItem('remeexSessionBalance', JSON.stringify(currentUser.balance));
+          window.location.href = 'retiro-simulado.html';
+          return;
+        }
+
         updateReceiptData();
 
         const receiptModal = document.getElementById('receipt-modal');
