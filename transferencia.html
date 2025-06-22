@@ -3890,8 +3890,8 @@
       // Desactivado: desplazamiento automático a la guía de verificación
       // Mantener la página en la parte superior al abrir
       
-      // Configurar la navegación inferior rediseñada
-      setupBottomNav();
+      // Configurar la navegación inferior rediseñada una vez cargada
+      document.addEventListener('bottomNavLoaded', setupBottomNav);
 
       // Configurar modo Wizard
       setupWizard();
