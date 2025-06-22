@@ -6828,6 +6828,9 @@
         closeReceiptBtn.addEventListener('click', function() {
           const receiptModal = document.getElementById('receipt-modal');
           if (receiptModal) receiptModal.style.display = 'none';
+
+          // Mostrar instrucciones de verificación al continuar
+          showVerificationConfirmation();
         });
       }
       
