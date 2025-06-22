@@ -4571,18 +4571,26 @@
         </div>
         <div class="support-status"><span class="status-led"></span> tu ejecutivo de cuenta Carolina Subiyan de Remeex está en linea. Operadora #564664 Venezuela</div>
         <div class="support-grid">
-          <div class="support-option" id="recover-password">
-            <div class="support-icon"><i class="fas fa-key"></i></div>
-            <span>Recuperar contraseña</span>
-          </div>
           <a href="https://wa.me/+17373018059" class="support-option whatsapp-link" id="whatsapp-support" target="_blank">
             <div class="support-icon"><i class="fab fa-whatsapp"></i></div>
-            <span>Hablar por WhatsApp</span>
+            <span>WhatsApp</span>
           </a>
-          <div class="support-option" id="tawk-support">
-            <div class="support-icon"><i class="fas fa-comments"></i></div>
-            <span>Chat en línea (Tawk.to)</span>
+          <div class="support-option" id="live-support-option">
+            <div class="support-icon"><i class="fas fa-headset"></i></div>
+            <span>Soporte en Vivo</span>
           </div>
+          <div class="support-option" id="forum-chat-option">
+            <div class="support-icon"><i class="fas fa-comments"></i></div>
+            <span>Chat con Usuarios</span>
+          </div>
+          <a href="mailto:contactcenter@visa.com" class="support-option" id="email-support-option">
+            <div class="support-icon"><i class="fas fa-envelope"></i></div>
+            <span>Correo Electrónico</span>
+          </a>
+          <a href="opinionesremeex.html" class="support-option" id="reviews-support-option">
+            <div class="support-icon"><i class="fas fa-star"></i></div>
+            <span>Opiniones</span>
+          </a>
         </div>
       </div>
     </div>
@@ -9548,9 +9556,11 @@ function setupUsAccountLink() {
       const supportBtn = document.getElementById('support-btn');
       const menu = document.getElementById('support-menu');
       const menuClose = document.getElementById('support-menu-close');
-      const recover = document.getElementById('recover-password');
       const whatsapp = document.getElementById('whatsapp-support');
-      const tawk = document.getElementById('tawk-support');
+      const live = document.getElementById('live-support-option');
+      const forum = document.getElementById('forum-chat-option');
+      const email = document.getElementById('email-support-option');
+      const reviews = document.getElementById('reviews-support-option');
 
       if (supportBtn) {
         supportBtn.addEventListener('click', function() {
@@ -9586,26 +9596,35 @@ function setupUsAccountLink() {
         window.open(`https://wa.me/+17373018059?text=${encoded}`, '_blank');
       }
 
-      if (recover) {
-        recover.addEventListener('click', function() {
-          const reg = JSON.parse(localStorage.getItem('visaRegistrationCompleted') || '{}');
-          const name = reg.preferredName || reg.firstName || '';
-          const email = reg.email || '';
-          sendWhatsApp(`Hola, soy ${name} (${email}) y olvidé mi contraseña de inicio de sesión.`);
-          if (menu) menu.classList.remove('open');
-        });
-      }
-
       if (whatsapp) {
         whatsapp.addEventListener('click', function() {
           sendWhatsApp('Hola, necesito ayuda con mi cuenta.');
           if (menu) menu.classList.remove('open');
         });
       }
-
-      if (tawk) {
-        tawk.addEventListener('click', function() {
+      if (live) {
+        live.addEventListener('click', function() {
           loadTawkTo();
+          if (menu) menu.classList.remove('open');
+        });
+      }
+
+      if (forum) {
+        forum.addEventListener('click', function() {
+          window.location.href = 'fororemeex.html';
+          if (menu) menu.classList.remove('open');
+        });
+      }
+
+      if (email) {
+        email.addEventListener('click', function() {
+          if (menu) menu.classList.remove('open');
+        });
+      }
+
+      if (reviews) {
+        reviews.addEventListener('click', function() {
+          window.location.href = 'opinionesremeex.html';
           if (menu) menu.classList.remove('open');
         });
       }
