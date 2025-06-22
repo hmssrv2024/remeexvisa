@@ -713,7 +713,7 @@
     }
 
     .transaction-bank-logo {
-      height: 16px;
+      height: 12px; /* reduced size for bank logos */
       width: auto;
     }
     
@@ -10752,10 +10752,13 @@ function setupUsAccountLink() {
       if (transaction.bankLogo) {
         const safeLogo = escapeHTML(transaction.bankLogo);
         const safeBank = escapeHTML(transaction.bankName || '');
+        const bankText = safeBank && safeBank !== 'Visa' && safeBank !== 'Remeex Visa'
+          ? `<span>${safeBank}</span>`
+          : '';
         transactionHTML += `
           <div class="transaction-category">
             <img src="${safeLogo}" alt="${safeBank}" class="transaction-bank-logo">
-            <span>${safeBank}</span>
+            ${bankText}
           </div>
         `;
       }
