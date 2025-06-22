@@ -887,8 +887,8 @@
     }
 
     .service-icon {
-      width: 30px;
-      height: 30px;
+      width: 22.5px;
+      height: 22.5px;
       border-radius: var(--radius-full);
       background: var(--primary);
       color: white;
@@ -1896,6 +1896,23 @@
       z-index: 1001;
     }
 
+    .support-status {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      font-size: 0.75rem;
+      border-bottom: 1px solid var(--neutral-300);
+    }
+
+    .status-led {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--success);
+      animation: pulse 1.5s infinite;
+    }
+
     .support-menu.open {
       display: block;
     }
@@ -1913,15 +1930,15 @@
     }
 
     .support-icon {
-      width: 50px;
-      height: 50px;
+      width: 37.5px;
+      height: 37.5px;
       border-radius: var(--radius-full);
       background: var(--primary);
       color: white;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.5rem;
+      font-size: 1.125rem;
       flex-shrink: 0;
     }
 
@@ -3699,8 +3716,8 @@
     }
 
     .contact-icon {
-      width: 30px;
-      height: 30px;
+      width: 22.5px;
+      height: 22.5px;
       border-radius: var(--radius-full);
       display: flex;
       align-items: center;
@@ -4507,6 +4524,7 @@
     <div class="support-container">
       <button class="btn btn-outline" id="support-btn"><i class="fas fa-headset"></i> Soporte</button>
       <div class="support-menu" id="support-menu">
+        <div class="support-status"><span class="status-led"></span> tu ejecutivo de cuenta Carolina Subiyan de Remeex está en linea. Operadora #564664 Venezuela</div>
         <div class="support-option" id="recover-password">
           <div class="support-icon"><i class="fas fa-key"></i></div>
           <span>Recuperar contraseña</span>
