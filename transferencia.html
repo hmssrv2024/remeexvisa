@@ -367,6 +367,59 @@
       flex-shrink: 0;
     }
 
+    /* Barra de progreso para el wizard */
+    .progress-container-wizard {
+      padding: 0.75rem;
+      background: var(--neutral-100);
+      border-bottom: 1px solid var(--neutral-300);
+      flex-shrink: 0;
+    }
+
+    .progress-bar-wizard {
+      width: 100%;
+      height: 6px;
+      background: var(--neutral-300);
+      border-radius: var(--radius-full);
+      overflow: hidden;
+      margin-bottom: 0.5rem;
+      position: relative;
+    }
+
+    .progress-fill-wizard {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), var(--primary-light), var(--accent));
+      border-radius: var(--radius-full);
+      transition: width 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      width: 0%;
+      position: relative;
+    }
+
+    .progress-fill-wizard::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+      animation: shimmer 2s infinite;
+    }
+
+    .progress-text-wizard {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--neutral-900);
+      text-align: center;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .progress-percentage-wizard {
+      color: var(--primary);
+      font-weight: 700;
+    }
+
     .progress-steps {
       display: flex;
       justify-content: space-between;
@@ -455,6 +508,10 @@
       display: flex;
       flex-direction: column;
       animation: fadeInUp 0.3s ease;
+    }
+
+    .wizard-step.no-scroll {
+      overflow-y: hidden;
     }
 
     .step-header {
@@ -626,6 +683,11 @@
     .currency-option.active {
       background: white;
       box-shadow: var(--shadow-sm);
+    }
+
+    .currency-option.disabled {
+      opacity: 0.5;
+      pointer-events: none;
     }
 
     .currency-symbol {
@@ -3299,37 +3361,19 @@
 
     <!-- Wizard Container -->
     <div id="wizard-container" class="wizard-container">
-      <!-- Indicador de Progreso -->
-      <div class="progress-indicator">
-        <div class="progress-steps">
-          <div class="progress-step active" data-step="1">
-            <div class="step-number">1</div>
-            <div class="step-label">Método</div>
-          </div>
-          <div class="progress-step" data-step="2">
-            <div class="step-number">2</div>
-            <div class="step-label">Monto</div>
-          </div>
-          <div class="progress-step" data-step="3">
-            <div class="step-number">3</div>
-            <div class="step-label">Banco</div>
-          </div>
-          <div class="progress-step" data-step="4">
-            <div class="step-number">4</div>
-            <div class="step-label">Datos</div>
-          </div>
-          <div class="progress-step" data-step="5">
-            <div class="step-number">5</div>
-            <div class="step-label">Confirmar</div>
-          </div>
+      <!-- Barra de progreso -->
+      <div class="progress-container-wizard" id="progressContainer">
+        <div class="progress-bar-wizard">
+          <div class="progress-fill-wizard" id="progressFill"></div>
         </div>
-        <div class="progress-line">
-          <div id="progress-line-fill" class="progress-line-fill"></div>
+        <div class="progress-text-wizard">
+          <span>Retiro en progreso</span>
+          <span class="progress-percentage-wizard" id="progressPercentage">0%</span>
         </div>
       </div>
 
       <!-- Paso 1: Selección de Método -->
-      <div id="wizard-step-1" class="wizard-step active">
+      <div id="wizard-step-1" class="wizard-step active no-scroll">
         <div class="step-header">
           <h2 class="step-title">¿Cómo quieres recibir tu dinero?</h2>
           <p class="step-subtitle">Selecciona el método que prefieras</p>
@@ -3587,7 +3631,7 @@
       </div>
 
       <!-- Paso 5: Confirmación -->
-      <div id="wizard-step-5" class="wizard-step">
+      <div id="wizard-step-5" class="wizard-step no-scroll">
         <div class="step-header">
           <h2 class="step-title">Confirma tu retiro</h2>
           <p class="step-subtitle">Revisa los datos antes de continuar</p>
@@ -4359,6 +4403,7 @@
       setupInactivityTimer();
       loadTransactionHistory();
       updateWizardStep();
+      updateCurrencyOptions();
       updateBalanceDisplay();
     });
 
@@ -4532,12 +4577,15 @@
           this.classList.add('active');
           
           selectedMethod = this.getAttribute('data-method');
-          
+
           // Habilitar siguiente paso
           updateNextButtonState();
-          
+
           // Actualizar subtítulo del paso 3
           updateStep3Subtitle();
+
+          // Actualizar opciones de moneda
+          updateCurrencyOptions();
         });
       });
       
@@ -4622,6 +4670,40 @@
       }
     }
 
+    function updateProgressBar() {
+      const progress = Math.round(((currentStep - 1) / (maxSteps - 1)) * 100);
+      const fill = document.getElementById('progressFill');
+      const percentage = document.getElementById('progressPercentage');
+      if (fill) fill.style.width = `${progress}%`;
+      if (percentage) percentage.textContent = `${progress}%`;
+    }
+
+    function updateCurrencyOptions() {
+      const bsOption = document.querySelector('.currency-option[data-currency="bs"]');
+      const usdOption = document.querySelector('.currency-option[data-currency="usd"]');
+      const currencySymbol = document.getElementById('currency-symbol');
+
+      if (!bsOption || !usdOption || !currencySymbol) return;
+
+      if (selectedMethod === 'international') {
+        selectedCurrency = 'usd';
+        usdOption.classList.remove('disabled');
+        usdOption.classList.add('active');
+        bsOption.classList.add('disabled');
+        bsOption.classList.remove('active');
+        currencySymbol.textContent = '$';
+      } else {
+        selectedCurrency = 'bs';
+        bsOption.classList.remove('disabled');
+        bsOption.classList.add('active');
+        usdOption.classList.add('disabled');
+        usdOption.classList.remove('active');
+        currencySymbol.textContent = 'Bs';
+      }
+
+      convertAmount();
+    }
+
     // Actualizar paso del wizard
     function updateWizardStep() {
       // Ocultar todos los pasos
@@ -4634,25 +4716,8 @@
         currentStepElement.classList.add('active');
       }
       
-      // Actualizar indicador de progreso
-      const progressSteps = document.querySelectorAll('.progress-step');
-      progressSteps.forEach((step, index) => {
-        const stepNumber = index + 1;
-        step.classList.remove('active', 'completed');
-        
-        if (stepNumber < currentStep) {
-          step.classList.add('completed');
-        } else if (stepNumber === currentStep) {
-          step.classList.add('active');
-        }
-      });
-
-      // Actualizar línea de progreso
-      const progressLineFill = document.getElementById('progress-line-fill');
-      if (progressLineFill) {
-        const progress = ((currentStep - 1) / (maxSteps - 1)) * 100;
-        progressLineFill.style.width = `${progress}%`;
-      }
+      // Actualizar barra de progreso
+      updateProgressBar();
       
       // Actualizar botones de navegación
       const prevBtn = document.getElementById('prev-step-btn');
