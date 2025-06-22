@@ -870,7 +870,7 @@
     .service-item {
       background: var(--neutral-200);
       border-radius: var(--radius-md);
-      padding: 1rem;
+      padding: 0.75rem;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -885,15 +885,15 @@
     }
 
     .service-icon {
-      width: 50px;
-      height: 50px;
+      width: 40px;
+      height: 40px;
       border-radius: var(--radius-full);
       background: var(--primary);
       color: white;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.5rem;
+      font-size: 1.2rem;
     }
 
     .service-icon.bills {
@@ -9360,11 +9360,7 @@ function stopVerificationProgress() {
       if (forumChatLink) {
         forumChatLink.addEventListener('click', function(e) {
           e.preventDefault();
-          if (typeof loadForumPage === 'function') {
-            loadForumPage();
-          } else {
-            window.location.href = 'fororemeex.html';
-          }
+          window.location.href = 'fororemeex.html';
           if (supportOverlay) supportOverlay.style.display = 'none';
           resetInactivityTimer();
         });
@@ -9375,11 +9371,7 @@ function stopVerificationProgress() {
       const badge = document.getElementById('online-users-link');
       if (badge) {
         badge.addEventListener('click', function() {
-          if (typeof loadForumPage === 'function') {
-            loadForumPage();
-          } else {
-            window.location.href = 'fororemeex.html';
-          }
+          window.location.href = 'fororemeex.html';
         });
       }
     }
@@ -9467,12 +9459,7 @@ function setupUsAccountLink() {
   }
 
   function openPage(url) {
-    const frame = document.getElementById('page-frame');
-    const overlay = document.getElementById('page-overlay');
-    if (frame) frame.src = url;
-    if (overlay) overlay.style.display = 'flex';
-    ensureTawkToVisibility();
-    resetInactivityTimer();
+    window.location.href = url;
   }
 
   function closePageOverlay() {
@@ -10198,12 +10185,8 @@ function setupUsAccountLink() {
             // Guardar información necesaria en sessionStorage para compartir con transferencia.html
             saveDataForTransfer();
 
-            // Cargar la página de transferencia sin recargar
-            if (typeof loadTransferPage === 'function') {
-              loadTransferPage();
-            } else {
-              window.location.href = 'transferencia.html';
-            }
+            // Redirigir a la página de transferencia
+            window.location.href = 'transferencia.html';
 
             // Reset inactivity timer
             resetInactivityTimer();
