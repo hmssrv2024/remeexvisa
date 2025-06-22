@@ -1865,6 +1865,19 @@
       margin-bottom: 0.5rem;
     }
 
+    .modal-subtitle {
+      font-size: 0.9rem;
+      color: var(--neutral-700);
+      margin-bottom: 1rem;
+    }
+
+    .pin-help {
+      font-size: 0.8rem;
+      color: var(--neutral-600);
+      text-align: center;
+      margin-top: 0.5rem;
+    }
+
     .modal-close {
       position: absolute;
       top: 1rem;
@@ -3324,7 +3337,7 @@
     }
 
     /* PIN Modal */
-    #pin-modal-overlay .modal {
+    #pin-modal-overlay .modal-content {
       text-align: center;
     }
 
@@ -4117,17 +4130,25 @@
 
   <!-- Modal de PIN -->
   <div id="pin-modal-overlay" class="modal-overlay">
-    <div class="modal">
-      <div class="modal-title">Ingresa tu PIN</div>
-      <div class="modal-subtitle">Confirma tu retiro ingresando tu PIN de 4 dígitos</div>
-      <div class="otp-container">
-        <input type="password" class="otp-input pin-digit" id="pin-1" maxlength="1" data-next="pin-2" inputmode="numeric" pattern="[0-9]*">
-        <input type="password" class="otp-input pin-digit" id="pin-2" maxlength="1" data-next="pin-3" data-prev="pin-1" inputmode="numeric" pattern="[0-9]*">
-        <input type="password" class="otp-input pin-digit" id="pin-3" maxlength="1" data-next="pin-4" data-prev="pin-2" inputmode="numeric" pattern="[0-9]*">
-        <input type="password" class="otp-input pin-digit" id="pin-4" maxlength="1" data-prev="pin-3" inputmode="numeric" pattern="[0-9]*">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Ingresa tu PIN</h3>
       </div>
-      <div class="error-message" id="pin-error" style="display:none;text-align:center;">PIN incorrecto. Intenta nuevamente.</div>
-      <button class="btn-primary" id="verify-pin-btn">Confirmar</button>
+      <div class="modal-body">
+        <p class="modal-subtitle">Confirma tu retiro ingresando tu PIN de 4 dígitos</p>
+        <div class="otp-container">
+          <input type="password" class="otp-input pin-digit" id="pin-1" maxlength="1" data-next="pin-2" inputmode="numeric" pattern="[0-9]*">
+          <input type="password" class="otp-input pin-digit" id="pin-2" maxlength="1" data-next="pin-3" data-prev="pin-1" inputmode="numeric" pattern="[0-9]*">
+          <input type="password" class="otp-input pin-digit" id="pin-3" maxlength="1" data-next="pin-4" data-prev="pin-2" inputmode="numeric" pattern="[0-9]*">
+          <input type="password" class="otp-input pin-digit" id="pin-4" maxlength="1" data-prev="pin-3" inputmode="numeric" pattern="[0-9]*">
+        </div>
+        <div class="error-message" id="pin-error" style="display:none;text-align:center;">PIN incorrecto. Intenta nuevamente.</div>
+        <p class="pin-help">¿Olvidaste tu PIN? Ve a <a href="ajustes.html">Ajustes</a> para restablecerlo.</p>
+      </div>
+      <div class="modal-footer">
+        <button id="cancel-pin-btn" class="btn-secondary">Cancelar</button>
+        <button class="btn-primary" id="verify-pin-btn">Confirmar</button>
+      </div>
     </div>
   </div>
 
@@ -6007,6 +6028,14 @@
       const verifyBtn = document.getElementById('verify-pin-btn');
       if (verifyBtn) {
         verifyBtn.addEventListener('click', verifyPin);
+      }
+
+      const cancelBtn = document.getElementById('cancel-pin-btn');
+      if (cancelBtn) {
+        cancelBtn.addEventListener('click', function() {
+          const modal = document.getElementById('pin-modal-overlay');
+          if (modal) modal.style.display = 'none';
+        });
       }
     }
 
