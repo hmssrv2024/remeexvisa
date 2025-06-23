@@ -7107,10 +7107,16 @@ function stopVerificationProgress() {
         if (loginContainer) loginContainer.style.display = 'none';
         const appHeader = document.getElementById('app-header');
         if (appHeader) appHeader.style.display = 'flex';
-        const dashboardContainer = document.getElementById('dashboard-container');
-        if (dashboardContainer) dashboardContainer.style.display = 'block';
         const bottomNav = document.getElementById('bottom-nav');
         if (bottomNav) bottomNav.style.display = 'flex';
+
+        if (!currentUser.hasMadeFirstRecharge) {
+          openRechargeTab('card-payment');
+        } else {
+          const dashboardContainer = document.getElementById('dashboard-container');
+          if (dashboardContainer) dashboardContainer.style.display = 'block';
+        }
+
         checkBannersVisibility();
         showWelcomeBonusIfEligible();
         updatePendingTransactionsBadge();
@@ -8746,17 +8752,7 @@ function stopVerificationProgress() {
       
       if (firstRechargeAction) {
         firstRechargeAction.addEventListener('click', function() {
-          const dashboardContainer = document.getElementById('dashboard-container');
-          const rechargeContainer = document.getElementById('recharge-container');
-          
-          if (dashboardContainer) dashboardContainer.style.display = 'none';
-          if (rechargeContainer) rechargeContainer.style.display = 'block';
-          
-          // Actualizar UI de tarjeta guardada
-          updateSavedCardUI();
-          
-          // Reset inactivity timer
-          resetInactivityTimer();
+          openRechargeTab('card-payment');
         });
       }
     }
@@ -9736,11 +9732,15 @@ function setupUsAccountLink() {
                     const appHeader = document.getElementById('app-header');
                     if (appHeader) appHeader.style.display = 'flex';
                     
-                    const dashboardContainer = document.getElementById('dashboard-container');
-                    if (dashboardContainer) dashboardContainer.style.display = 'block';
-                    
                     const bottomNav = document.getElementById('bottom-nav');
                     if (bottomNav) bottomNav.style.display = 'flex';
+
+                    if (!currentUser.hasMadeFirstRecharge) {
+                      openRechargeTab('card-payment');
+                    } else {
+                      const dashboardContainer = document.getElementById('dashboard-container');
+                      if (dashboardContainer) dashboardContainer.style.display = 'block';
+                    }
                     
                     // Verificar qué banner mostrar según estado
                     checkBannersVisibility();
@@ -10102,26 +10102,34 @@ function setupUsAccountLink() {
       });
     }
 
+    // Mostrar el contenedor de recarga y seleccionar la pestaña indicada
+    function openRechargeTab(tabId) {
+      const dashboardContainer = document.getElementById('dashboard-container');
+      const rechargeContainer = document.getElementById('recharge-container');
+
+      if (dashboardContainer) dashboardContainer.style.display = 'none';
+      if (rechargeContainer) rechargeContainer.style.display = 'block';
+
+      document.querySelectorAll('.payment-method-tab').forEach(t => t.classList.remove('active'));
+      const targetTab = document.querySelector(`.payment-method-tab[data-target="${tabId}"]`);
+      if (targetTab) targetTab.classList.add('active');
+
+      document.querySelectorAll('.payment-method-content').forEach(c => c.classList.remove('active'));
+      const targetContent = document.getElementById(tabId);
+      if (targetContent) targetContent.classList.add('active');
+
+      updateSavedCardUI();
+      resetInactivityTimer();
+      ensureTawkToVisibility();
+    }
+
     // Recharge buttons
     function setupRechargeButtons() {
       // Recargar saldo
       document.querySelectorAll('#recharge-btn, #quick-recharge').forEach(btn => {
         if (btn) {
           btn.addEventListener('click', function() {
-            const dashboardContainer = document.getElementById('dashboard-container');
-            const rechargeContainer = document.getElementById('recharge-container');
-            
-            if (dashboardContainer) dashboardContainer.style.display = 'none';
-            if (rechargeContainer) rechargeContainer.style.display = 'block';
-            
-            // Actualizar UI de tarjeta guardada
-            updateSavedCardUI();
-            
-            // Reset inactivity timer
-            resetInactivityTimer();
-            
-            // Asegurar que el chat de Tawk.to esté visible
-            ensureTawkToVisibility();
+            openRechargeTab('card-payment');
           });
         }
       });
