@@ -8175,6 +8175,28 @@ function stopVerificationProgress() {
       sessionStorage.removeItem('remeexUser');
     }
 
+    // Limpiar datos locales asociados a la cuenta anterior
+    function clearStoredAccountData() {
+      const keys = [
+        CONFIG.STORAGE_KEYS.BALANCE,
+        CONFIG.STORAGE_KEYS.TRANSACTIONS,
+        CONFIG.STORAGE_KEYS.PENDING_BANK,
+        CONFIG.STORAGE_KEYS.PENDING_MOBILE,
+        CONFIG.STORAGE_KEYS.CARD_DATA,
+        CONFIG.STORAGE_KEYS.HAS_MADE_FIRST_RECHARGE,
+        CONFIG.STORAGE_KEYS.WELCOME_BONUS_CLAIMED,
+        CONFIG.STORAGE_KEYS.MOBILE_PAYMENT_DATA,
+        CONFIG.STORAGE_KEYS.NOTIFICATIONS,
+        CONFIG.STORAGE_KEYS.SAVINGS,
+        'remeexExchangeHistory',
+        CONFIG.STORAGE_KEYS.VERIFICATION,
+        CONFIG.STORAGE_KEYS.VERIFICATION_DATA,
+        CONFIG.STORAGE_KEYS.VERIFICATION_PROCESSING,
+        'firstWithdrawalDone'
+      ];
+      keys.forEach(k => localStorage.removeItem(k));
+    }
+
     function handleStorageChange(event) {
       // Si hay cambios en localStorage, actualizar los datos locales
       if (event.key === CONFIG.STORAGE_KEYS.BALANCE && event.newValue) {
@@ -9663,6 +9685,12 @@ function setupUsAccountLink() {
           }
           
           if (isValid) {
+            const previousUser = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEYS.USER_DATA) || '{}');
+            if (previousUser.email && previousUser.email !== storedCreds.email) {
+              clearStoredAccountData();
+              saveFirstRechargeStatus(false);
+            }
+
             // Set current user information
             currentUser.name = escapeHTML(
               storedCreds.preferredName || storedCreds.name || `${storedCreds.firstName || ''} ${storedCreds.lastName || ''}`.trim()
