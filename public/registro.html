@@ -101,7 +101,7 @@
             display: flex;
             flex-direction: column;
             border-radius: 0;
-            padding-bottom: 70px; /* Espacio para la barra inferior */
+            /* padding-bottom removed as bottom nav was eliminated */
         }
 
         /* ============================================================================
@@ -1516,7 +1516,7 @@
                 <div class="form-group">
                     <label class="form-label">Operadora</label>
                     <div class="select-grid">
-                        <div class="option-card" data-operator="movistar" data-prefix="0414">
+                        <div class="option-card" data-operator="movistar" data-prefix="0414,0424">
                             <img class="logo" src="https://upload.wikimedia.org/wikipedia/commons/d/d9/Movistar%2B_Logo.png" alt="Movistar logo" />
                             <span class="label">Movistar</span>
                         </div>
@@ -1524,7 +1524,7 @@
                             <img class="logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Logo_DIGITEL.png/960px-Logo_DIGITEL.png" alt="Digitel logo" />
                             <span class="label">Digitel</span>
                         </div>
-                        <div class="option-card" data-operator="movilnet" data-prefix="0416">
+                        <div class="option-card" data-operator="movilnet" data-prefix="0416,0426">
                             <img class="logo" src="https://images.seeklogo.com/logo-png/61/2/movilnet-logo-png_seeklogo-618763.png" alt="Movilnet logo" />
                             <span class="label">Movilnet</span>
                         </div>
@@ -1534,7 +1534,7 @@
                 <div class="form-group" id="phoneGroup" style="display: none;">
                     <label class="form-label">Número de teléfono</label>
                     <div class="input-group">
-                        <input type="text" class="form-input" id="phonePrefix" readonly style="flex: 0 0 80px;">
+                        <select class="form-input" id="phonePrefix" style="flex: 0 0 80px;"></select>
                         <input type="tel" class="form-input" id="phoneNumber" placeholder="1234567" maxlength="7" autocomplete="tel" inputmode="numeric">
                     </div>
                 </div>
@@ -2042,6 +2042,7 @@
             }
             
             const phoneNumber = document.getElementById('phoneNumber');
+            const phonePrefix = document.getElementById('phonePrefix');
             if (phoneNumber) {
                 phoneNumber.addEventListener('input', function() {
                     this.value = this.value.replace(/\D/g, '');
@@ -2049,6 +2050,13 @@
                         this.value = this.value.slice(0, 7);
                     }
                     validatePhoneNumber.call(this);
+                });
+            }
+            if (phonePrefix) {
+                phonePrefix.addEventListener('change', function() {
+                    registrationData.phonePrefix = this.value;
+                    registrationData.fullPhoneNumber = this.value + (registrationData.phoneNumber || '');
+                    if (phoneNumber) validatePhoneNumber.call(phoneNumber);
                 });
             }
             
@@ -3070,8 +3078,9 @@ function setupCardClickEvents() {
             }
             
             registrationData.operator = operator;
-            registrationData.phonePrefix = prefix;
-            
+
+            const prefixes = prefix.split(',');
+
             const phoneGroup = document.getElementById('phoneGroup');
             const phonePrefix = document.getElementById('phonePrefix');
             const phoneNumber = document.getElementById('phoneNumber');
@@ -3081,8 +3090,17 @@ function setupCardClickEvents() {
             
             phoneGroup.style.display = 'block';
             phoneGroup.style.animation = 'slideInDown 0.3s ease';
-            phonePrefix.value = prefix;
-            
+
+            phonePrefix.innerHTML = '';
+            prefixes.forEach(p => {
+                const opt = document.createElement('option');
+                opt.value = p.trim();
+                opt.textContent = p.trim();
+                phonePrefix.appendChild(opt);
+            });
+            phonePrefix.value = prefixes[0].trim();
+            registrationData.phonePrefix = phonePrefix.value;
+
             phoneNumber.value = '';
             enableNextButton('phoneNext', false);
             
@@ -3634,8 +3652,6 @@ function setupCardClickEvents() {
             initializeViewport();
         });
     </script>
-<div id="bottom-nav-container"></div>
-<script src="bottom-nav.js"></script>
 </body>
 </html>
        
