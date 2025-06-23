@@ -1517,7 +1517,7 @@
                     <label class="form-label">Operadora</label>
                     <div class="select-grid">
                         <div class="option-card" data-operator="movistar" data-prefix="0414">
-                            <img class="logo" src="https://static.wikia.nocookie.net/logopedia/images/5/52/Movistar_2020.svg/revision/latest?cb=20200616003208&path-prefix=es" alt="Movistar logo" />
+                            <img class="logo" src="https://upload.wikimedia.org/wikipedia/commons/d/d9/Movistar%2B_Logo.png" alt="Movistar logo" />
                             <span class="label">Movistar</span>
                         </div>
                         <div class="option-card" data-operator="digitel" data-prefix="0412">
@@ -1525,7 +1525,7 @@
                             <span class="label">Digitel</span>
                         </div>
                         <div class="option-card" data-operator="movilnet" data-prefix="0416">
-                            <img class="logo" src="http://www.movilnet.com.ve/sitio/imagesGenerales/logo.png" alt="Movilnet logo" />
+                            <img class="logo" src="https://images.seeklogo.com/logo-png/61/2/movilnet-logo-png_seeklogo-618763.png" alt="Movilnet logo" />
                             <span class="label">Movilnet</span>
                         </div>
                     </div>
@@ -2928,16 +2928,19 @@ function setupCardClickEvents() {
                     documentLabel.textContent = 'Número de cédula';
                     documentNumber.value = 'V-';
                     documentNumber.placeholder = 'V-12345678';
+                    documentNumber.maxLength = 10; // V- + 8 dígitos
                     break;
                 case 'passport':
                     documentLabel.textContent = 'Número de pasaporte';
                     documentNumber.value = 'P-';
                     documentNumber.placeholder = 'P-12345678';
+                    documentNumber.removeAttribute('maxLength');
                     break;
                 case 'license':
                     documentLabel.textContent = 'Número de licencia';
                     documentNumber.value = 'L-';
                     documentNumber.placeholder = 'L-12345678';
+                    documentNumber.removeAttribute('maxLength');
                     break;
             }
             
@@ -2965,16 +2968,23 @@ function setupCardClickEvents() {
             const documentNext = document.getElementById('documentNext');
             if (!documentNext) return;
             
-            const expectedPrefix = registrationData.documentType === 'ci' ? 'V-' : 
+            const isCI = registrationData.documentType === 'ci';
+            const expectedPrefix = isCI ? 'V-' :
                                   registrationData.documentType === 'passport' ? 'P-' : 'L-';
-            
+
             if (!this.value.startsWith(expectedPrefix)) {
-                this.value = expectedPrefix;
+                this.value = expectedPrefix + this.value.replace(/\D/g, '');
             }
-            
+
+            let digits = this.value.slice(expectedPrefix.length).replace(/\D/g, '');
+            if (isCI && digits.length > 8) {
+                digits = digits.slice(0, 8);
+            }
+
+            this.value = expectedPrefix + digits;
             registrationData.documentNumber = this.value;
-            
-            const isValid = this.value.length >= 6; // Prefijo + al menos 4 caracteres
+
+            const isValid = isCI ? digits.length === 8 : digits.length >= 4;
             
             console.log('Validando documento:', {
                 value: this.value,
