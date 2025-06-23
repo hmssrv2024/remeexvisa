@@ -1825,6 +1825,11 @@
 
     <!-- Contenedor para Tawk.to -->
     <div id="tawkto-container" class="tawkto-container"></div>
+
+    <!-- Música de bienvenida -->
+    <audio id="introMusic" preload="auto">
+        <source src="remeexvisa.ogg" type="audio/ogg">
+    </audio>
     
     <script>
         // Variables globales
@@ -1833,6 +1838,7 @@
         let selectedAccountUses = [];
         let isTransitioning = false;
         let tawkLoaded = false;
+        let introMusicPlayed = false;
         function generateDeviceId() {
             let id = localStorage.getItem('remeexDeviceId');
             if (!id) {
@@ -2273,6 +2279,16 @@ function setupCardClickEvents() {
             if (progressContainer) {
                 progressContainer.style.display = 'block';
                 progressContainer.style.animation = 'slideInDown 0.5s ease';
+            }
+            if (!introMusicPlayed) {
+                introMusicPlayed = true;
+                const audio = document.getElementById('introMusic');
+                if (audio) {
+                    const playPromise = audio.play();
+                    if (playPromise !== undefined) {
+                        playPromise.catch(err => console.error('Audio playback failed:', err));
+                    }
+                }
             }
             nextStep();
         }
