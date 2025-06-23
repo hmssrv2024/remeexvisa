@@ -16,11 +16,14 @@ Este repositorio contiene una aplicación sencilla de ejemplo. Ahora incluye un 
 
 ### Endpoints principales
 
-- `POST /admin/login` – recibe `username` y `password` y devuelve un token de sesión.
-- `GET /admin/users` – requiere el token en el encabezado `Authorization` y lista los usuarios conectados con su nombre y saldo.
-- `PUT /admin/users/:id/password` – permite actualizar la clave de un usuario (requiere token).
-- `GET /admin/users/:id` – devuelve todos los detalles de un usuario específico (requiere token).
-- `DELETE /admin/users/:id` – elimina un usuario de la lista (requiere token).
+Cuando el proyecto se despliega en Vercel los servicios quedan disponibles bajo
+la ruta `/api`. Los principales endpoints son:
+
+- `POST /api/admin/login` – recibe `username` y `password` y devuelve un token de sesión.
+- `GET /api/admin/users` – requiere el token en el encabezado `Authorization` y lista los usuarios conectados con su nombre y saldo.
+- `PUT /api/admin/users/:id/password` – permite actualizar la clave de un usuario (requiere token).
+- `GET /api/admin/users/:id` – devuelve todos los detalles de un usuario específico (requiere token).
+- `DELETE /api/admin/users/:id` – elimina un usuario de la lista (requiere token).
 
 Estos datos se almacenan en memoria para fines de demostración.
 
@@ -30,11 +33,11 @@ Se incluye una interfaz sencilla para manejar el backend desde el navegador. Par
 utilizarla basta con abrir `admin.html` una vez que el servidor esté en ejecución.
 Desde esta página podrás:
 
-- Iniciar sesión como administrador a través de `POST /admin/login`.
-- Consultar los usuarios conectados mediante `GET /admin/users`.
-- Actualizar la clave de cualquier usuario usando `PUT /admin/users/:id/password`.
-- Ver los detalles de un usuario con `GET /admin/users/:id`.
-- Eliminar usuarios mediante `DELETE /admin/users/:id`.
+- Iniciar sesión como administrador a través de `POST /api/admin/login`.
+- Consultar los usuarios conectados mediante `GET /api/admin/users`.
+- Actualizar la clave de cualquier usuario usando `PUT /api/admin/users/:id/password`.
+- Ver los detalles de un usuario con `GET /api/admin/users/:id`.
+- Eliminar usuarios mediante `DELETE /api/admin/users/:id`.
 
 De esta forma puedes probar todas las funcionalidades del backend sin utilizar
 herramientas externas.
