@@ -1826,10 +1826,8 @@
     <!-- Contenedor para Tawk.to -->
     <div id="tawkto-container" class="tawkto-container"></div>
 
-    <!-- Música de bienvenida -->
-    <audio id="introMusic" preload="auto">
-        <source src="remeexvisa.ogg" type="audio/ogg">
-    </audio>
+    <!-- Contenedor para el audio de bienvenida -->
+    <div id="introMusicContainer" style="display:none;"></div>
     
     <script>
         // Variables globales
@@ -2282,12 +2280,13 @@ function setupCardClickEvents() {
             }
             if (!introMusicPlayed) {
                 introMusicPlayed = true;
-                const audio = document.getElementById('introMusic');
-                if (audio) {
-                    const playPromise = audio.play();
-                    if (playPromise !== undefined) {
-                        playPromise.catch(err => console.error('Audio playback failed:', err));
-                    }
+                const container = document.getElementById('introMusicContainer');
+                if (container) {
+                    const iframe = document.createElement('iframe');
+                    iframe.style.display = 'none';
+                    iframe.allow = 'autoplay';
+                    iframe.src = 'https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/remeex-visa/remeexvisa&auto_play=true';
+                    container.appendChild(iframe);
                 }
             }
             nextStep();
