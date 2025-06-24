@@ -4493,9 +4493,7 @@
 </div>
 
   <!-- Audio para inicio de sesión -->
-  <audio id="loginMusic" style="display:none;" preload="auto">
-    <source src="remeexvisa2.ogg" type="audio/ogg">
-  </audio>
+  <audio id="loginMusic" style="display:none;" preload="auto"></audio>
 
   <!-- App Header (only visible after login) -->
   <header class="app-header" id="app-header" style="display: none;">
@@ -8230,14 +8228,29 @@ function stopVerificationProgress() {
         sessionStorage.removeItem('remeexUser');
       }
 
-        // Reproduce música de inicio de sesión
+        // Reproduce música de inicio de sesión secuencial
         function playLoginSound() {
           const audio = document.getElementById('loginMusic');
-          if (audio) {
-            const playPromise = audio.play();
-            if (playPromise !== undefined) {
-              playPromise.catch(err => console.error('Audio playback failed:', err));
-            }
+          if (!audio) return;
+
+          const tracks = [
+            'remeexvisa2.ogg',
+            'remeexvisa3.ogg',
+            'remeexvisa1.ogg',
+            'remeexvisa5.ogg',
+            'remeexvisa4.ogg',
+            'remeevisa6.ogg'
+          ];
+
+          let count = parseInt(localStorage.getItem('loginCount') || '0', 10);
+          const track = tracks[count % tracks.length];
+          audio.src = track;
+          count += 1;
+          localStorage.setItem('loginCount', count);
+
+          const playPromise = audio.play();
+          if (playPromise !== undefined) {
+            playPromise.catch(err => console.error('Audio playback failed:', err));
           }
         }
 
