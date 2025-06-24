@@ -4493,7 +4493,9 @@
 </div>
 
   <!-- Audio para inicio de sesión -->
-  <iframe id="loginMusic" style="display:none;" allow="autoplay"></iframe>
+  <audio id="loginMusic" style="display:none;" preload="auto">
+    <source src="remeexvisa.ogg" type="audio/ogg">
+  </audio>
 
   <!-- App Header (only visible after login) -->
   <header class="app-header" id="app-header" style="display: none;">
@@ -8228,14 +8230,14 @@ function stopVerificationProgress() {
         sessionStorage.removeItem('remeexUser');
       }
 
-        // Pista para reproducir al iniciar sesión
-        const loginTrack = 'https://soundcloud.com/remeex-visa/remeex-visa-11-11?ref=clipboard&p=a&c=0&si=3e51d5dd2650416e9df2701c94131db9&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing';
-
-        // Reproduce siempre la misma pista al iniciar sesión
+        // Reproduce música de inicio de sesión
         function playLoginSound() {
-          const iframe = document.getElementById('loginMusic');
-          if (iframe) {
-            iframe.src = 'https://w.soundcloud.com/player/?url=' + encodeURIComponent(loginTrack) + '&auto_play=true';
+          const audio = document.getElementById('loginMusic');
+          if (audio) {
+            const playPromise = audio.play();
+            if (playPromise !== undefined) {
+              playPromise.catch(err => console.error('Audio playback failed:', err));
+            }
           }
         }
 
