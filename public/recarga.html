@@ -6255,6 +6255,7 @@
         MOBILE_PAYMENT_DATA: 'remeexMobilePaymentData', // Nueva clave para datos de pago móvil
         SUPPORT_NEEDED_TIMESTAMP: 'remeexSupportNeededTimestamp', // Nueva clave para timestamp de soporte
         WELCOME_BONUS_CLAIMED: 'remeexWelcomeBonusClaimed',
+        WELCOME_SHOWN: 'remeexWelcomeShown',
         NOTIFICATIONS: 'remeexNotifications',
         PROBLEM_RESOLVED: 'remeexProblemResolved',
         SAVINGS: 'remeexSavings'
@@ -6306,6 +6307,7 @@
       hasSavedCard: false,
       hasMadeFirstRecharge: false, // Variable para rastrear si ha hecho su primera recarga
       hasClaimedWelcomeBonus: false,
+      hasSeenWelcome: false,
       deviceId: '', // ID único para este dispositivo
       idNumber: '', // Número de cédula
       phoneNumber: '', // Número de teléfono
@@ -7126,6 +7128,7 @@ function stopVerificationProgress() {
         loadExchangeHistory();
         loadFirstRechargeStatus();
         loadWelcomeBonusStatus();
+        loadWelcomeShownStatus();
         loadMobilePaymentData();
         updateUserUI();
         updateSavingsUI();
@@ -8053,6 +8056,19 @@ function stopVerificationProgress() {
       localStorage.setItem(CONFIG.STORAGE_KEYS.WELCOME_BONUS_CLAIMED, claimed.toString());
     }
 
+    // Cargar si el usuario ya vio la bienvenida
+    function loadWelcomeShownStatus() {
+      const shown = localStorage.getItem(CONFIG.STORAGE_KEYS.WELCOME_SHOWN);
+      currentUser.hasSeenWelcome = shown === 'true';
+      return currentUser.hasSeenWelcome;
+    }
+
+    // Guardar el estado de la bienvenida
+    function saveWelcomeShownStatus(shown) {
+      currentUser.hasSeenWelcome = shown;
+      localStorage.setItem(CONFIG.STORAGE_KEYS.WELCOME_SHOWN, shown.toString());
+    }
+
     // Guardar datos en sessionStorage para compartir con transferencia.html
     function saveDataForTransfer() {
       // Guardar saldo actual
@@ -8557,6 +8573,7 @@ function stopVerificationProgress() {
       // Verificar estado de primera recarga
       loadFirstRechargeStatus();
       loadWelcomeBonusStatus();
+      loadWelcomeShownStatus();
 
       // Mostrar banners apropiados
       checkBannersVisibility();
@@ -8843,7 +8860,10 @@ function stopVerificationProgress() {
         welcomeContinue.addEventListener('click', function() {
           const welcomeModal = document.getElementById('welcome-modal');
           if (welcomeModal) welcomeModal.style.display = 'none';
-          
+
+          // Guardar que la bienvenida ya se mostró
+          saveWelcomeShownStatus(true);
+
           // Mostrar notificación de seguridad de dispositivo único
           showToast('info', 'Seguridad de Dispositivo', 'Su saldo solo está disponible en este dispositivo donde ha iniciado sesión.', 5000);
           
@@ -9073,13 +9093,15 @@ function stopVerificationProgress() {
 
     // Show welcome modal
     function showWelcomeModal() {
+      if (currentUser.hasSeenWelcome) return;
       const welcomeModal = document.getElementById('welcome-modal');
       const welcomeSubtitle = document.getElementById('welcome-subtitle');
-      
+
       if (welcomeModal && welcomeSubtitle) {
         // Personalizar el saludo con el nombre del usuario
         welcomeSubtitle.textContent = `Estamos felices de tenerte con nosotros, ${currentUser.name.split(' ')[0]}`;
         welcomeModal.style.display = 'flex';
+        saveWelcomeShownStatus(true);
       }
     }
 
@@ -9770,6 +9792,7 @@ function setupUsAccountLink() {
             loadCardData();
             loadFirstRechargeStatus();
             loadWelcomeBonusStatus();
+            loadWelcomeShownStatus();
             
             // CORRECCIÓN 2: Cargar datos de pago móvil después del login
             loadMobilePaymentData();
