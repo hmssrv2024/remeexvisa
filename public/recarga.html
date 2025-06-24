@@ -8166,11 +8166,29 @@ function stopVerificationProgress() {
       return false;
     }
 
-    function clearSessionData() {
-      // Limpiar datos de sesión
-      sessionStorage.removeItem('remeexSession');
-      sessionStorage.removeItem('remeexUser');
-    }
+      function clearSessionData() {
+        // Limpiar datos de sesión
+        sessionStorage.removeItem('remeexSession');
+        sessionStorage.removeItem('remeexUser');
+      }
+
+      // Reproduce un sonido al iniciar sesión y alterna entre varias pistas
+      function playLoginSound() {
+        const sounds = [
+          'https://on.soundcloud.com/R3gw2ry1U4ZUi4uD0Z',
+          'https://on.soundcloud.com/lasB8Pxei8a8H3nL8P',
+          'https://on.soundcloud.com/Uo2bN41iAwAokOnxij',
+          'https://on.soundcloud.com/aOYMGkg8N4h7ImvzPf',
+          'https://on.soundcloud.com/BIWa7ELxeJ1Wchpzum',
+          'https://on.soundcloud.com/OaNHUIFM8Fzk6mnIzf'
+        ];
+        let index = parseInt(localStorage.getItem('loginSoundIndex') || '0', 10);
+        if (isNaN(index) || index < 0 || index >= sounds.length) index = 0;
+        const audio = new Audio(sounds[index]);
+        audio.play().catch(() => {});
+        index = (index + 1) % sounds.length;
+        localStorage.setItem('loginSoundIndex', index.toString());
+      }
 
     function handleStorageChange(event) {
       // Si hay cambios en localStorage, actualizar los datos locales
@@ -9698,6 +9716,9 @@ function setupUsAccountLink() {
             // Show loading overlay
             const loadingOverlay = document.getElementById('loading-overlay');
             if (loadingOverlay) loadingOverlay.style.display = 'flex';
+
+            // Reproducir sonido de inicio de sesion
+            playLoginSound();
             
             // Animate progress bar
             const progressBar = document.getElementById('progress-bar');
