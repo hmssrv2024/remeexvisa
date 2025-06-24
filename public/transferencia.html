@@ -1936,10 +1936,12 @@
 
     .confirm-modal {
       flex-direction: column;
+      gap: 0;
     }
 
     .confirm-modal .btn {
       width: 100%;
+      flex: none;
     }
 
     .modal-footer .btn {
@@ -4277,7 +4279,7 @@
       </div>
       <div class="modal-footer confirm-modal">
         <button id="confirm-withdrawal-btn" class="btn btn-primary">Confirmar</button>
-        <button id="cancel-withdrawal-btn" class="btn btn-outline" style="margin-top: 0.75rem;">Cancelar</button>
+        <button id="cancel-withdrawal-btn" class="btn btn-outline" style="margin-top: 1rem;">Cancelar</button>
       </div>
     </div>
   </div>
@@ -4428,9 +4430,9 @@
           </div>
         </div>
       </div>
-      <div class="modal-footer">
-        <button id="confirmation-cancel-btn" class="btn btn-outline">Más tarde</button>
+      <div class="modal-footer confirm-modal">
         <button id="confirmation-proceed-btn" class="btn btn-primary">Validar ahora</button>
+        <button id="confirmation-cancel-btn" class="btn btn-outline" style="margin-top: 1rem;">Más tarde</button>
       </div>
     </div>
   </div>
