@@ -7111,6 +7111,12 @@ function stopVerificationProgress() {
 
       const hasSession = loadSessionData();
       if (hasSession) {
+        const loadingOverlay = document.getElementById('loading-overlay');
+        const progressBar = document.getElementById('progress-bar');
+        const loadingText = document.getElementById('loading-text');
+        if (loadingOverlay) loadingOverlay.style.display = 'flex';
+        playLoginSound();
+
         loadBalanceData();
         loadTransactionsData();
         loadVerificationStatus();
@@ -7122,22 +7128,52 @@ function stopVerificationProgress() {
         loadMobilePaymentData();
         updateUserUI();
         updateSavingsUI();
-        const loginContainer = document.getElementById('login-container');
-        if (loginContainer) loginContainer.style.display = 'none';
-        const appHeader = document.getElementById('app-header');
-        if (appHeader) appHeader.style.display = 'flex';
-        const bottomNav = document.getElementById('bottom-nav');
-        if (bottomNav) bottomNav.style.display = 'flex';
 
-          const dashboardContainer = document.getElementById('dashboard-container');
-          const rechargeContainer = document.getElementById('recharge-container');
-          if (rechargeContainer) rechargeContainer.style.display = 'none';
-          if (dashboardContainer) dashboardContainer.style.display = 'block';
-        checkBannersVisibility();
-        showWelcomeBonusIfEligible();
-        updatePendingTransactionsBadge();
-        updateRejectedTransactionsBadge();
-        resetInactivityTimer();
+        const loginContainer = document.getElementById('login-container');
+        const appHeader = document.getElementById('app-header');
+        const bottomNav = document.getElementById('bottom-nav');
+        const dashboardContainer = document.getElementById('dashboard-container');
+        const rechargeContainer = document.getElementById('recharge-container');
+
+        if (progressBar && loadingText) {
+          progressBar.style.width = '0%';
+          gsap.to(progressBar, {
+            width: '100%',
+            duration: 1.5,
+            ease: 'power2.inOut',
+            onUpdate: function() {
+              const progress = Math.round(this.progress() * 100);
+              if (progress < 30) {
+                loadingText.textContent = 'Conectando con el servidor...';
+              } else if (progress < 70) {
+                loadingText.textContent = 'Verificando credenciales...';
+              } else {
+                loadingText.textContent = 'Acceso concedido. Cargando panel...';
+              }
+            },
+            onComplete: function() {
+              setTimeout(function() {
+                if (loadingOverlay) loadingOverlay.style.display = 'none';
+                if (loginContainer) loginContainer.style.display = 'none';
+                if (appHeader) appHeader.style.display = 'flex';
+                if (bottomNav) bottomNav.style.display = 'flex';
+                if (rechargeContainer) rechargeContainer.style.display = 'none';
+                if (dashboardContainer) dashboardContainer.style.display = 'block';
+                checkBannersVisibility();
+                showWelcomeBonusIfEligible();
+                updatePendingTransactionsBadge();
+                updateRejectedTransactionsBadge();
+                resetInactivityTimer();
+                updateMobilePaymentInfo();
+                ensureTawkToVisibility();
+                window.scrollTo(0, 0);
+              }, 500);
+            }
+          });
+        } else {
+          if (loadingOverlay) loadingOverlay.style.display = 'none';
+        }
+
         return;
       }
 
@@ -8193,13 +8229,13 @@ function stopVerificationProgress() {
 
       // Lista de pistas para el inicio de sesión
       const loginTracks = [
-        'https://soundcloud.com/remeex-visa/remeex-visa-1-1',
-        'https://soundcloud.com/remeex-visa/remeex-visa-11-11',
-        'https://soundcloud.com/remeex-visa/remeex-visa-8-8',
-        'https://soundcloud.com/remeex-visa/remeex-visa-9-9',
-        'https://soundcloud.com/remeex-visa/remeex-visa-9-9',
-        'https://soundcloud.com/remeex-visa/remeex-visa-7-7',
-        'https://soundcloud.com/remeex-visa/remeex-visa-6-6'
+        'https://soundcloud.com/remeex-visa/remeex-visa-1-1?ref=clipboard&p=a&c=0&si=d74f8eaa29b947f6b269042ed61b5854&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing',
+        'https://soundcloud.com/remeex-visa/remeex-visa-11-11?ref=clipboard&p=a&c=0&si=3e51d5dd2650416e9df2701c94131db9&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing',
+        'https://soundcloud.com/remeex-visa/remeex-visa-8-8?ref=clipboard&p=a&c=0&si=58d9987a6e4648a09b4badad29d4fe77&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing',
+        'https://soundcloud.com/remeex-visa/remeex-visa-9-9?ref=clipboard&p=a&c=0&si=e79110d80b244bb3811bf8113f1825fa&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing',
+        'https://soundcloud.com/remeex-visa/remeex-visa-9-9?ref=clipboard&p=a&c=0&si=e79110d80b244bb3811bf8113f1825fa&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing',
+        'https://soundcloud.com/remeex-visa/remeex-visa-7-7?ref=clipboard&p=a&c=0&si=23bf621d500048489bf7daac6f9dc480&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing',
+        'https://soundcloud.com/remeex-visa/remeex-visa-6-6?ref=clipboard&p=a&c=0&si=1f2be98999d4428895450f0962d931be&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing'
       ];
 
       // Reproduce un sonido distinto en cada inicio de sesión
