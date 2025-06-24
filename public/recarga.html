@@ -865,7 +865,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1rem;
     }
 
     .service-title {
@@ -1904,27 +1904,27 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      margin-bottom: 1.5rem;
-    }
-    
-    .login-logo-container {
-      width: 120px;
-      height: 120px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
       margin-bottom: 1rem;
     }
     
+    .login-logo-container {
+      width: 3.6rem;
+      height: 3.6rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 0.5rem;
+    }
+    
     .login-logo img {
-      height: 90px;
+      height: 3.6rem;
       width: auto;
       object-fit: contain;
     }
     
     .login-heading {
       text-align: center;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1rem;
     }
     
     .login-title {
@@ -7110,13 +7110,10 @@ function stopVerificationProgress() {
         const bottomNav = document.getElementById('bottom-nav');
         if (bottomNav) bottomNav.style.display = 'flex';
 
-        if (!currentUser.hasMadeFirstRecharge) {
-          openRechargeTab('card-payment');
-        } else {
           const dashboardContainer = document.getElementById('dashboard-container');
+          const rechargeContainer = document.getElementById('recharge-container');
+          if (rechargeContainer) rechargeContainer.style.display = 'none';
           if (dashboardContainer) dashboardContainer.style.display = 'block';
-        }
-
         checkBannersVisibility();
         showWelcomeBonusIfEligible();
         updatePendingTransactionsBadge();
@@ -9735,12 +9732,10 @@ function setupUsAccountLink() {
                     const bottomNav = document.getElementById('bottom-nav');
                     if (bottomNav) bottomNav.style.display = 'flex';
 
-                    if (!currentUser.hasMadeFirstRecharge) {
-                      openRechargeTab('card-payment');
-                    } else {
                       const dashboardContainer = document.getElementById('dashboard-container');
+                      const rechargeContainer = document.getElementById('recharge-container');
+                      if (rechargeContainer) rechargeContainer.style.display = 'none';
                       if (dashboardContainer) dashboardContainer.style.display = 'block';
-                    }
                     
                     // Verificar qué banner mostrar según estado
                     checkBannersVisibility();
