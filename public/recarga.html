@@ -1880,13 +1880,16 @@
     
     /* Login Page */
     .login-container {
-      min-height: 100vh;
+      position: fixed;
+      inset: 0;
+      z-index: 2000;
       display: flex;
       align-items: center;
       justify-content: center;
       padding: 1.5rem;
       background: var(--neutral-200);
       background-image: linear-gradient(135deg, rgba(26, 31, 113, 0.05) 0%, rgba(26, 31, 113, 0.02) 100%);
+      overflow-y: auto;
     }
     
     .login-card {
