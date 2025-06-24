@@ -4413,6 +4413,69 @@
       gap: 0.5rem;
       margin-top: 1rem;
     }
+
+    /* Overlay de video de bienvenida */
+    .welcome-video-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(10, 15, 30, 0.9);
+      z-index: 1300;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    .welcome-video-overlay.active {
+      display: flex;
+      opacity: 1;
+    }
+
+    .welcome-video-container {
+      position: relative;
+      width: 90%;
+      max-width: 800px;
+      max-height: 80vh;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+    }
+
+    .welcome-video-close {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%) scale(0);
+      padding: 10px 20px;
+      border-radius: 30px;
+      background: rgba(255, 255, 255, 0.9);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: var(--primary);
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 600;
+      z-index: 10;
+      transition: all 0.3s ease;
+      opacity: 0;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    }
+
+    .welcome-video-close.visible {
+      opacity: 1;
+      transform: translateX(-50%) scale(1);
+    }
+
+    .welcome-video-close:hover {
+      background: rgba(255, 255, 255, 1);
+      transform: translateX(-50%) scale(1.05);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5);
+    }
   </style>
   <link rel="stylesheet" href="responsive.css">
 </head>
@@ -6094,6 +6157,23 @@
     </div>
   </div>
 
+  <!-- Welcome Video Overlay -->
+  <div class="welcome-video-overlay" id="welcome-video-overlay">
+    <div class="welcome-video-container">
+      <div style="padding:53.91% 0 0 0;position:relative;">
+        <iframe src="https://player.vimeo.com/video/1095929386?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479"
+                frameborder="0"
+                allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
+                style="position:absolute;top:0;left:0;width:100%;height:100%;"
+                title="visa"></iframe>
+      </div>
+      <div class="welcome-video-close" id="welcome-video-close">
+        <i class="fas fa-times" style="margin-right:5px;"></i> Cerrar
+      </div>
+    </div>
+  </div>
+  <script src="https://player.vimeo.com/api/player.js"></script>
+
   <!-- Mobile Transfer Rechazado Modal -->
   <div class="modal-overlay" id="transfer-rejected-modal" style="display: none;">
     <div class="modal">
@@ -6256,6 +6336,7 @@
         SUPPORT_NEEDED_TIMESTAMP: 'remeexSupportNeededTimestamp', // Nueva clave para timestamp de soporte
         WELCOME_BONUS_CLAIMED: 'remeexWelcomeBonusClaimed',
         WELCOME_SHOWN: 'remeexWelcomeShown',
+        WELCOME_VIDEO_SHOWN: 'remeexWelcomeVideoShown',
         NOTIFICATIONS: 'remeexNotifications',
         PROBLEM_RESOLVED: 'remeexProblemResolved',
         SAVINGS: 'remeexSavings'
@@ -6308,6 +6389,7 @@
       hasMadeFirstRecharge: false, // Variable para rastrear si ha hecho su primera recarga
       hasClaimedWelcomeBonus: false,
       hasSeenWelcome: false,
+      hasSeenWelcomeVideo: false,
       deviceId: '', // ID único para este dispositivo
       idNumber: '', // Número de cédula
       phoneNumber: '', // Número de teléfono
@@ -6363,6 +6445,8 @@
     let savings = { pots: [], nextId: 1 };
     let exchangeHistory = [];
     let mobilePaymentTimer = null; // Temporizador para mostrar el mensaje de soporte
+    let welcomeVideoPlayer = null;
+    let welcomeVideoTimer = null;
     let selectedBalanceCurrency = 'bs';
     let isBalanceHidden = false;
     let notifications = [];
@@ -7129,6 +7213,7 @@ function stopVerificationProgress() {
         loadFirstRechargeStatus();
         loadWelcomeBonusStatus();
         loadWelcomeShownStatus();
+        loadWelcomeVideoStatus();
         loadMobilePaymentData();
         updateUserUI();
         updateSavingsUI();
@@ -8069,6 +8154,17 @@ function stopVerificationProgress() {
       localStorage.setItem(CONFIG.STORAGE_KEYS.WELCOME_SHOWN, shown.toString());
     }
 
+    function loadWelcomeVideoStatus() {
+      const shown = localStorage.getItem(CONFIG.STORAGE_KEYS.WELCOME_VIDEO_SHOWN);
+      currentUser.hasSeenWelcomeVideo = shown === 'true';
+      return currentUser.hasSeenWelcomeVideo;
+    }
+
+    function saveWelcomeVideoStatus(shown) {
+      currentUser.hasSeenWelcomeVideo = shown;
+      localStorage.setItem(CONFIG.STORAGE_KEYS.WELCOME_VIDEO_SHOWN, shown.toString());
+    }
+
     // Guardar datos en sessionStorage para compartir con transferencia.html
     function saveDataForTransfer() {
       // Guardar saldo actual
@@ -8574,6 +8670,7 @@ function stopVerificationProgress() {
       loadFirstRechargeStatus();
       loadWelcomeBonusStatus();
       loadWelcomeShownStatus();
+      loadWelcomeVideoStatus();
 
       // Mostrar banners apropiados
       checkBannersVisibility();
@@ -8770,6 +8867,7 @@ function stopVerificationProgress() {
       
       // Welcome modal button
       setupWelcomeModal();
+      setupWelcomeVideo();
 
       // Botón de pago directo con tarjeta guardada
       setupSavedCardPayButton();
@@ -8866,7 +8964,9 @@ function stopVerificationProgress() {
 
           // Mostrar notificación de seguridad de dispositivo único
           showToast('info', 'Seguridad de Dispositivo', 'Su saldo solo está disponible en este dispositivo donde ha iniciado sesión.', 5000);
-          
+
+          showWelcomeVideo();
+
           // Reset inactivity timer
           resetInactivityTimer();
         });
@@ -9102,6 +9202,52 @@ function stopVerificationProgress() {
         welcomeSubtitle.textContent = `Estamos felices de tenerte con nosotros, ${currentUser.name.split(' ')[0]}`;
         welcomeModal.style.display = 'flex';
         saveWelcomeShownStatus(true);
+      }
+    }
+
+    function showWelcomeVideo() {
+      if (currentUser.hasSeenWelcomeVideo) return;
+      const overlay = document.getElementById('welcome-video-overlay');
+      const closeBtn = document.getElementById('welcome-video-close');
+      const iframe = document.querySelector('#welcome-video-overlay iframe');
+      if (!overlay || !closeBtn || !iframe) return;
+
+      overlay.classList.add('active');
+      closeBtn.classList.remove('visible');
+
+      if (!welcomeVideoPlayer) {
+        welcomeVideoPlayer = new Vimeo.Player(iframe);
+      }
+
+      if (welcomeVideoTimer) {
+        clearTimeout(welcomeVideoTimer);
+        welcomeVideoTimer = null;
+      }
+
+      welcomeVideoPlayer.on('play', function handlePlay() {
+        welcomeVideoPlayer.off('play', handlePlay);
+        welcomeVideoTimer = setTimeout(function() {
+          closeBtn.classList.add('visible');
+        }, 8000);
+      });
+    }
+
+    function setupWelcomeVideo() {
+      const closeBtn = document.getElementById('welcome-video-close');
+      if (closeBtn) {
+        closeBtn.addEventListener('click', function() {
+          const overlay = document.getElementById('welcome-video-overlay');
+          if (overlay) overlay.classList.remove('active');
+          if (welcomeVideoTimer) {
+            clearTimeout(welcomeVideoTimer);
+            welcomeVideoTimer = null;
+          }
+          if (welcomeVideoPlayer) {
+            welcomeVideoPlayer.pause().catch(() => {});
+          }
+          closeBtn.classList.remove('visible');
+          saveWelcomeVideoStatus(true);
+        });
       }
     }
 
@@ -9793,7 +9939,8 @@ function setupUsAccountLink() {
             loadFirstRechargeStatus();
             loadWelcomeBonusStatus();
             loadWelcomeShownStatus();
-            
+            loadWelcomeVideoStatus();
+
             // CORRECCIÓN 2: Cargar datos de pago móvil después del login
             loadMobilePaymentData();
             
