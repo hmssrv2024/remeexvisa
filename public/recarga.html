@@ -4468,12 +4468,17 @@
       </button>
       
 
-      <div style="text-align:center; margin-top:1rem;">
-        <a href="https://home.remeexvisa.com" target="_blank" class="btn btn-outline">Ir a Remeex Visa</a>
-      </div>
-    </div>
-
+  <div style="text-align:center; margin-top:1rem;">
+    <a href="https://home.remeexvisa.com" target="_blank" class="btn btn-outline">Ir a Remeex Visa</a>
   </div>
+  </div>
+
+</div>
+
+  <!-- Audio para inicio de sesión -->
+  <audio id="loginMusic" preload="auto" style="display:none;">
+    <source src="remeexvisa.ogg" type="audio/ogg">
+  </audio>
 
   <!-- App Header (only visible after login) -->
   <header class="app-header" id="app-header" style="display: none;">
@@ -8172,22 +8177,16 @@ function stopVerificationProgress() {
         sessionStorage.removeItem('remeexUser');
       }
 
-      // Reproduce un sonido al iniciar sesión y alterna entre varias pistas
+      // Reproduce un sonido al iniciar sesión
       function playLoginSound() {
-        const sounds = [
-          'https://on.soundcloud.com/R3gw2ry1U4ZUi4uD0Z',
-          'https://on.soundcloud.com/lasB8Pxei8a8H3nL8P',
-          'https://on.soundcloud.com/Uo2bN41iAwAokOnxij',
-          'https://on.soundcloud.com/aOYMGkg8N4h7ImvzPf',
-          'https://on.soundcloud.com/BIWa7ELxeJ1Wchpzum',
-          'https://on.soundcloud.com/OaNHUIFM8Fzk6mnIzf'
-        ];
-        let index = parseInt(localStorage.getItem('loginSoundIndex') || '0', 10);
-        if (isNaN(index) || index < 0 || index >= sounds.length) index = 0;
-        const audio = new Audio(sounds[index]);
-        audio.play().catch(() => {});
-        index = (index + 1) % sounds.length;
-        localStorage.setItem('loginSoundIndex', index.toString());
+        const audio = document.getElementById('loginMusic');
+        if (audio) {
+          audio.currentTime = 0;
+          const playPromise = audio.play();
+          if (playPromise !== undefined) {
+            playPromise.catch(() => {});
+          }
+        }
       }
 
     function handleStorageChange(event) {
