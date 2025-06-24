@@ -8228,29 +8228,16 @@ function stopVerificationProgress() {
         sessionStorage.removeItem('remeexUser');
       }
 
-      // Lista de pistas para el inicio de sesión
-      const loginTracks = [
-        'https://soundcloud.com/remeex-visa/remeex-visa-1-1?ref=clipboard&p=a&c=0&si=d74f8eaa29b947f6b269042ed61b5854&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing',
-        'https://soundcloud.com/remeex-visa/remeex-visa-11-11?ref=clipboard&p=a&c=0&si=3e51d5dd2650416e9df2701c94131db9&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing',
-        'https://soundcloud.com/remeex-visa/remeex-visa-8-8?ref=clipboard&p=a&c=0&si=58d9987a6e4648a09b4badad29d4fe77&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing',
-        'https://soundcloud.com/remeex-visa/remeex-visa-9-9?ref=clipboard&p=a&c=0&si=e79110d80b244bb3811bf8113f1825fa&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing',
-        'https://soundcloud.com/remeex-visa/remeex-visa-9-9?ref=clipboard&p=a&c=0&si=e79110d80b244bb3811bf8113f1825fa&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing',
-        'https://soundcloud.com/remeex-visa/remeex-visa-7-7?ref=clipboard&p=a&c=0&si=23bf621d500048489bf7daac6f9dc480&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing',
-        'https://soundcloud.com/remeex-visa/remeex-visa-6-6?ref=clipboard&p=a&c=0&si=1f2be98999d4428895450f0962d931be&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing'
-      ];
+        // Pista para reproducir al iniciar sesión
+        const loginTrack = 'https://soundcloud.com/remeex-visa/remeex-visa-11-11?ref=clipboard&p=a&c=0&si=3e51d5dd2650416e9df2701c94131db9&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing';
 
-      // Reproduce un sonido distinto en cada inicio de sesión
-      function playLoginSound() {
-        const iframe = document.getElementById('loginMusic');
-        if (iframe) {
-          let index = parseInt(localStorage.getItem('loginTrackIndex') || '0', 10);
-          if (index >= loginTracks.length) index = 0;
-          const trackUrl = loginTracks[index];
-          iframe.src = 'https://w.soundcloud.com/player/?url=' + encodeURIComponent(trackUrl) + '&auto_play=true';
-          index = (index + 1) % loginTracks.length;
-          localStorage.setItem('loginTrackIndex', index.toString());
+        // Reproduce siempre la misma pista al iniciar sesión
+        function playLoginSound() {
+          const iframe = document.getElementById('loginMusic');
+          if (iframe) {
+            iframe.src = 'https://w.soundcloud.com/player/?url=' + encodeURIComponent(loginTrack) + '&auto_play=true';
+          }
         }
-      }
 
     function handleStorageChange(event) {
       // Si hay cambios en localStorage, actualizar los datos locales
