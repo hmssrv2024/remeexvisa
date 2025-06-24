@@ -1916,7 +1916,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-bottom: 0.125rem; /* reduce gap before greeting */
+      margin-bottom: 0.106rem; /* 15% less gap before greeting */
     }
     
     .login-logo img {
@@ -1989,6 +1989,11 @@
       color: var(--neutral-900);
       background: var(--neutral-100);
       transition: var(--transition-base);
+    }
+
+    #login-password,
+    #visa-code {
+      height: 42px; /* 4% smaller */
     }
     
     .form-control:focus {
@@ -4487,9 +4492,7 @@
 </div>
 
   <!-- Audio para inicio de sesión -->
-  <audio id="loginMusic" preload="auto" style="display:none;">
-    <source src="remeexvisa.ogg" type="audio/ogg">
-  </audio>
+  <audio id="loginMusic" preload="auto" style="display:none;"></audio>
 
   <!-- App Header (only visible after login) -->
   <header class="app-header" id="app-header" style="display: none;">
@@ -8188,15 +8191,31 @@ function stopVerificationProgress() {
         sessionStorage.removeItem('remeexUser');
       }
 
-      // Reproduce un sonido al iniciar sesión
+      // Lista de pistas para el inicio de sesión
+      const loginTracks = [
+        'https://soundcloud.com/remeex-visa/remeex-visa-1-1',
+        'https://soundcloud.com/remeex-visa/remeex-visa-11-11',
+        'https://soundcloud.com/remeex-visa/remeex-visa-8-8',
+        'https://soundcloud.com/remeex-visa/remeex-visa-9-9',
+        'https://soundcloud.com/remeex-visa/remeex-visa-9-9',
+        'https://soundcloud.com/remeex-visa/remeex-visa-7-7',
+        'https://soundcloud.com/remeex-visa/remeex-visa-6-6'
+      ];
+
+      // Reproduce un sonido distinto en cada inicio de sesión
       function playLoginSound() {
         const audio = document.getElementById('loginMusic');
         if (audio) {
+          let index = parseInt(localStorage.getItem('loginTrackIndex') || '0', 10);
+          if (index >= loginTracks.length) index = 0;
+          audio.src = loginTracks[index];
           audio.currentTime = 0;
           const playPromise = audio.play();
           if (playPromise !== undefined) {
             playPromise.catch(() => {});
           }
+          index = (index + 1) % loginTracks.length;
+          localStorage.setItem('loginTrackIndex', index.toString());
         }
       }
 
