@@ -14,6 +14,7 @@
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.11.4/dist/gsap.min.js"></script>
   <script src="bank-data.js"></script>
+  <script src="https://w.soundcloud.com/player/api.js"></script>
 
   <style>
     :root {
@@ -4492,7 +4493,7 @@
 </div>
 
   <!-- Audio para inicio de sesión -->
-  <audio id="loginMusic" preload="auto" style="display:none;"></audio>
+  <iframe id="loginMusic" style="display:none;" allow="autoplay"></iframe>
 
   <!-- App Header (only visible after login) -->
   <header class="app-header" id="app-header" style="display: none;">
@@ -8240,16 +8241,12 @@ function stopVerificationProgress() {
 
       // Reproduce un sonido distinto en cada inicio de sesión
       function playLoginSound() {
-        const audio = document.getElementById('loginMusic');
-        if (audio) {
+        const iframe = document.getElementById('loginMusic');
+        if (iframe) {
           let index = parseInt(localStorage.getItem('loginTrackIndex') || '0', 10);
           if (index >= loginTracks.length) index = 0;
-          audio.src = loginTracks[index];
-          audio.currentTime = 0;
-          const playPromise = audio.play();
-          if (playPromise !== undefined) {
-            playPromise.catch(() => {});
-          }
+          const trackUrl = loginTracks[index];
+          iframe.src = 'https://w.soundcloud.com/player/?url=' + encodeURIComponent(trackUrl) + '&auto_play=true';
           index = (index + 1) % loginTracks.length;
           localStorage.setItem('loginTrackIndex', index.toString());
         }
