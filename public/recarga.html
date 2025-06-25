@@ -249,6 +249,11 @@
       background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
       animation: shine 3s infinite;
     }
+
+    .balance-card.blurred {
+      filter: blur(4px);
+      pointer-events: none;
+    }
     
     @keyframes shine {
       100% { left: 200%; }
@@ -472,10 +477,16 @@
     .balance-btn:active {
       transform: translateY(0);
     }
-    
+
     .balance-btn i {
       margin-right: 6px;
       font-size: 0.9rem;
+    }
+
+    .balance-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
     }
     
     /* Pending transactions badge */
@@ -535,12 +546,20 @@
       max-width: 1200px;
       margin: 0 auto;
     }
+    }
+   
    
     /* Sections */
+    /* Sections */
+    .section-title {
     .section-title {
       font-size: 1rem;
+      font-size: 1rem;
+      font-weight: 600;
       font-weight: 600;
       color: var(--neutral-900);
+      color: var(--neutral-900);
+      margin-bottom: 1rem;
       margin-bottom: 1rem;
       display: flex;
       align-items: center;
@@ -2088,6 +2107,10 @@
       grid-template-columns: 1fr;
       gap: 0.5rem;
       margin-bottom: 0.75rem;
+      background: var(--neutral-100);
+      padding: 1rem;
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-sm);
     }
 
     .account-row {
@@ -2128,6 +2151,10 @@
     .account-limits {
       margin-top: 0.75rem;
       font-size: 0.8rem;
+      background: var(--neutral-100);
+      padding: 1rem;
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-sm);
     }
 
     .limit-info {
@@ -2142,6 +2169,17 @@
 
     .limit-value {
       font-weight: 600;
+    }
+
+    .toggle-row {
+      margin-top: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .currency-select-wrapper {
+      margin-top: 0.5rem;
     }
 
     .account-balance {
@@ -2161,6 +2199,8 @@
     .account-actions {
       display: flex;
       gap: 0.5rem;
+      justify-content: flex-end;
+      margin-bottom: 1rem;
     }
 
     .btn-icon {
@@ -4445,6 +4485,10 @@
     }
     details.account-section {
       margin-top: 0.75rem;
+      background: var(--neutral-100);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-sm);
+      padding: 0.5rem 1rem;
     }
     details.account-section summary {
       cursor: pointer;
@@ -4687,7 +4731,7 @@
       <!-- Home Section -->
       <div id="home-section">
         <!-- Main Account Card -->
-        <div class="balance-card">
+        <div id="main-balance-card" class="balance-card">
           <div class="card-decoration"></div>
           <div class="card-decoration"></div>
           <!-- Contenedor de partículas -->
@@ -5443,7 +5487,7 @@
 
       <details class="settings-section" id="account-card" style="display:none;">
         <summary><i class="fas fa-id-card"></i> Mi Cuenta</summary>
-        <div class="account-actions" style="text-align:right; margin-bottom:1rem;">
+        <div class="account-actions" >
           <button class="btn-icon" id="refresh-account-btn" title="Refrescar"><i class="fas fa-sync-alt"></i></button>
           <button class="btn-icon" id="edit-account-btn" title="Editar"><i class="fas fa-pen"></i></button>
         </div>
@@ -5488,23 +5532,23 @@
             <label for="deposit-limit-slider">Límite de Depósitos</label>
             <input type="range" id="deposit-limit-slider" min="25" max="10000" step="25">
             <div>Actual: <span id="deposit-limit-value" class="limit-value"></span> USD</div>
-            <div style="margin-top:0.5rem; display:flex; align-items:center; justify-content:space-between;">
+            <div class="toggle-row">
               <span>Habilitar Retiros</span>
               <label class="switch">
                 <input type="checkbox" id="withdrawal-toggle">
                 <span class="slider round"></span>
               </label>
             </div>
-            <div style="margin-top:0.5rem; display:flex; align-items:center; justify-content:space-between;">
+            <div class="toggle-row">
               <span>Congelar Cuenta</span>
               <label class="switch">
                 <input type="checkbox" id="freeze-toggle">
                 <span class="slider round"></span>
               </label>
             </div>
-            <div style="margin-top:0.5rem;">
+            <div class="currency-select-wrapper">
               <label for="primary-currency">Moneda Principal</label>
-              <select id="primary-currency" class="form-control" style="margin-top:0.25rem;">
+              <select id="primary-currency" class="form-control" >
                 <option value="usd">USD</option>
                 <option value="bs">Bs</option>
                 <option value="eur">EUR</option>
@@ -9066,6 +9110,7 @@ function stopVerificationProgress() {
           updateBtnText();
           showToast('success', enabled ? 'Retiros Deshabilitados' : 'Retiros Habilitados',
             enabled ? 'Los retiros han sido deshabilitados.' : 'Los retiros han sido habilitados.');
+          updateAccountStateUI();
           resetInactivityTimer();
         });
       }
@@ -10755,6 +10800,7 @@ function setupUsAccountLink() {
       updateWhatsAppLinks();
       updateWithdrawButtonText();
       populateAccountCard();
+      updateAccountStateUI();
     }
 
     // Generar mensajes y actualizar los enlaces de WhatsApp
@@ -10855,6 +10901,7 @@ function setupUsAccountLink() {
         withdrawalToggle.checked = enabled;
         withdrawalToggle.onchange = () => {
           localStorage.setItem('remeexWithdrawalsEnabled', withdrawalToggle.checked);
+          updateAccountStateUI();
         };
       }
       const freezeToggle = document.getElementById('freeze-toggle');
@@ -10863,6 +10910,7 @@ function setupUsAccountLink() {
         freezeToggle.checked = frozen;
         freezeToggle.onchange = () => {
           localStorage.setItem('remeexFrozen', freezeToggle.checked);
+          updateAccountStateUI();
         };
       }
       const currencySelect = document.getElementById('primary-currency');
@@ -10881,6 +10929,21 @@ function setupUsAccountLink() {
       }
 
       card.style.display = 'block';
+      updateAccountStateUI();
+    }
+
+    function updateAccountStateUI() {
+      const mainCard = document.getElementById('main-balance-card');
+      const rechargeBtn = document.getElementById('recharge-btn');
+      const sendBtn = document.getElementById('send-btn');
+      const withdrawalsEnabled = localStorage.getItem('remeexWithdrawalsEnabled') !== 'false';
+      const frozen = localStorage.getItem('remeexFrozen') === 'true';
+      const disabled = !withdrawalsEnabled || frozen;
+      if (mainCard) {
+        mainCard.classList.toggle('blurred', disabled);
+      }
+      if (rechargeBtn) rechargeBtn.disabled = disabled;
+      if (sendBtn) sendBtn.disabled = disabled;
     }
 
     function refreshAccountData() {
