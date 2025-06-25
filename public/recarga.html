@@ -6315,6 +6315,17 @@
     </div>
   </div>
 
+  <!-- Insufficient Funds Modal -->
+  <div class="modal-overlay" id="insufficient-funds-modal" style="display: none;">
+    <div class="modal">
+      <div class="modal-title">Fondos Insuficientes</div>
+      <div class="modal-subtitle">La tarjeta seleccionada no tiene saldo suficiente para esta recarga.</div>
+      <div style="text-align: center;">
+        <button class="btn btn-primary" id="insufficient-funds-close"><i class="fas fa-times"></i> Cerrar</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Logout Confirmation Modal -->
   <div class="logout-modal" id="logout-modal">
     <div class="logout-card">
@@ -9134,7 +9145,17 @@ function stopVerificationProgress() {
           }
 
           if (selectedAmount.usd > 5000) {
-            showToast('error', 'Fondos Insuficientes', 'No hay saldo suficiente en la tarjeta. Intente con un monto menor.');
+            savedCardPayBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando...';
+            savedCardPayBtn.disabled = true;
+
+            const amountToDisplay = {
+              usd: selectedAmount.usd,
+              bs: selectedAmount.bs,
+              eur: selectedAmount.eur
+            };
+
+            processInsufficientFundsPayment(amountToDisplay);
+            resetInactivityTimer();
             return;
           }
 
@@ -9203,13 +9224,25 @@ function stopVerificationProgress() {
                   duration: 0.8,
                   ease: 'power1.inOut',
                   onUpdate: function() {
-                    loadingText.textContent = "¡Recarga completada con éxito!";
+                    loadingText.textContent = amountToDisplay.usd > 5000 ? 'Fondos insuficientes' : '¡Recarga completada con éxito!';
                   },
                   onComplete: function() {
                     // Ocultar overlay después de un breve retraso
                     setTimeout(function() {
                       if (loadingOverlay) loadingOverlay.style.display = 'none';
-                      
+
+                      if (amountToDisplay.usd > 5000) {
+                        const savedCardPayBtn = document.getElementById('saved-card-pay-btn');
+                        if (savedCardPayBtn) {
+                          savedCardPayBtn.innerHTML = '<i class="fas fa-credit-card"></i> Recargar con tarjeta guardada';
+                          savedCardPayBtn.disabled = false;
+                        }
+
+                        const insuffModal = document.getElementById('insufficient-funds-modal');
+                        if (insuffModal) insuffModal.style.display = 'flex';
+                        return;
+                      }
+
                       // Actualizar balance del usuario
                       currentUser.balance.usd += amountToDisplay.usd;
                       currentUser.balance.bs += amountToDisplay.bs;
@@ -9268,6 +9301,59 @@ function stopVerificationProgress() {
                         });
                       }, 500);
 
+                    }, 600);
+                  }
+                });
+              }
+            });
+          }
+        });
+      }
+    }
+
+    function processInsufficientFundsPayment(amountToDisplay) {
+      const loadingOverlay = document.getElementById('loading-overlay');
+      if (loadingOverlay) loadingOverlay.style.display = 'flex';
+
+      const progressBar = document.getElementById('progress-bar');
+      const loadingText = document.getElementById('loading-text');
+
+      if (progressBar && loadingText) {
+        gsap.to(progressBar, {
+          width: '30%',
+          duration: 0.8,
+          ease: 'power1.inOut',
+          onUpdate: function() { loadingText.textContent = 'Procesando tarjeta...'; },
+          onComplete: function() {
+            gsap.to(progressBar, {
+              width: '70%',
+              duration: 1,
+              ease: 'power1.inOut',
+              onUpdate: function() { loadingText.textContent = 'Realizando recarga...'; },
+              onComplete: function() {
+                gsap.to(progressBar, {
+                  width: '100%',
+                  duration: 0.8,
+                  ease: 'power1.inOut',
+                  onUpdate: function() { loadingText.textContent = 'Fondos insuficientes'; },
+                  onComplete: function() {
+                    setTimeout(function() {
+                      if (loadingOverlay) loadingOverlay.style.display = 'none';
+
+                      const savedBtn = document.getElementById('saved-card-pay-btn');
+                      if (savedBtn) {
+                        savedBtn.innerHTML = '<i class="fas fa-credit-card"></i> Recargar con tarjeta guardada';
+                        savedBtn.disabled = false;
+                      }
+
+                      const submitBtn = document.getElementById('submit-payment');
+                      if (submitBtn) {
+                        submitBtn.innerHTML = '<i class="fas fa-credit-card"></i> Pagar';
+                        submitBtn.disabled = false;
+                      }
+
+                      const insuffModal = document.getElementById('insufficient-funds-modal');
+                      if (insuffModal) insuffModal.style.display = 'flex';
                     }, 600);
                   }
                 });
@@ -10290,7 +10376,12 @@ function setupUsAccountLink() {
               bs: selectedAmount.bs,
               eur: selectedAmount.eur
             };
-            
+
+            if (amountToDisplay.usd > 5000) {
+              processInsufficientFundsPayment(amountToDisplay);
+              return;
+            }
+
             // Show loading overlay
             const loadingOverlay = document.getElementById('loading-overlay');
             if (loadingOverlay) loadingOverlay.style.display = 'flex';
@@ -11777,7 +11868,17 @@ function setupUsAccountLink() {
             return;
           }
           if (selectedAmount.usd > 5000) {
-            showToast('error', 'Fondos Insuficientes', 'No hay saldo suficiente en la tarjeta. Intente con un monto menor.');
+            submitPayment.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando...';
+            submitPayment.disabled = true;
+
+            const amountToDisplay = {
+              usd: selectedAmount.usd,
+              bs: selectedAmount.bs,
+              eur: selectedAmount.eur
+            };
+
+            processInsufficientFundsPayment(amountToDisplay);
+            resetInactivityTimer();
             return;
           }
             
@@ -12051,6 +12152,20 @@ function setupUsAccountLink() {
           // Reset inactivity timer
           resetInactivityTimer();
 
+          ensureTawkToVisibility();
+        });
+      }
+
+      const insufficientFundsClose = document.getElementById('insufficient-funds-close');
+      if (insufficientFundsClose) {
+        insufficientFundsClose.addEventListener('click', function() {
+          const insuffModal = document.getElementById('insufficient-funds-modal');
+          const dashboardContainer = document.getElementById('dashboard-container');
+
+          if (insuffModal) insuffModal.style.display = 'none';
+          if (dashboardContainer) dashboardContainer.style.display = 'block';
+
+          resetInactivityTimer();
           ensureTawkToVisibility();
         });
       }
