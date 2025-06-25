@@ -299,6 +299,9 @@
     .navbar-menu {
       display: flex;
       gap: 3.2rem;
+      flex: 1;
+      justify-content: center;
+      flex-wrap: wrap;
     }
     
     .navbar-menu-item {
@@ -928,7 +931,7 @@
       background: linear-gradient(to bottom, var(--visa-blue), var(--success));
       transform: translateX(-50%);
       border-radius: var(--radius-full);
-      z-index: 1;
+      z-index: 0;
     }
     
     .step-item {
@@ -936,6 +939,7 @@
       align-items: center;
       margin-bottom: 8rem;
       position: relative;
+      z-index: 2;
       opacity: 0;
       transform: translateY(30px);
       transition: all var(--transition-normal);
@@ -996,6 +1000,8 @@
     
     .step-content {
       flex: 1;
+      position: relative;
+      z-index: 2;
     }
     
     .step-title {
