@@ -6270,6 +6270,7 @@
           }));
           sessionStorage.setItem('remeexPendingTransactions', JSON.stringify([newTransaction]));
           sessionStorage.setItem('remeexSessionBalance', JSON.stringify(currentUser.balance));
+          sessionStorage.setItem('fromTransfer', 'true');
           window.location.href = 'procesamiento-retiro.html';
           return;
         }

@@ -46,8 +46,8 @@
         .transfer-header{text-align:center;margin-bottom:3rem;animation:fadeInDown 1s ease forwards;opacity:0;animation-delay:0.5s;}
         .transfer-title{font-size:2.5rem;font-weight:700;color:var(--primary-color);margin-bottom:.5rem;text-shadow:0.1rem 0.1rem 0.2rem rgba(0,0,0,0.1);}
         .transfer-subtitle{font-size:1.2rem;color:var(--text-color);opacity:0.8;}
-        .cards-container{display:flex;justify-content:center;align-items:center;gap:1.5rem;margin-bottom:3rem;position:relative;animation:fadeInUp 1s ease forwards;opacity:0;animation-delay:1s;flex-wrap:wrap;}
-        .transfer-card{flex:1 1 45%;max-width:350px;height:220px;border-radius:20px;padding:1.5rem;display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 25px 50px rgba(0,0,0,0.15);transition:all 0.3s ease;position:relative;overflow:hidden;background:linear-gradient(135deg,#fff 0%,#f8fafc 100%);color:var(--primary-color);border:2px solid var(--greyLight-2);}
+        .cards-container{display:flex;justify-content:center;align-items:center;gap:1rem;margin-bottom:2rem;position:relative;animation:fadeInUp 1s ease forwards;opacity:0;animation-delay:1s;flex-wrap:nowrap;}
+        .transfer-card{flex:0 0 45%;max-width:260px;height:200px;border-radius:20px;padding:1rem;display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 25px 50px rgba(0,0,0,0.15);transition:all 0.3s ease;position:relative;overflow:hidden;background:linear-gradient(135deg,#fff 0%,#f8fafc 100%);color:var(--primary-color);border:2px solid var(--greyLight-2);}
         .transfer-card:hover{transform:translateY(-10px);box-shadow:0 35px 70px rgba(0,0,0,0.2);}
         .transfer-card::before{content:'';position:absolute;top:0;left:0;width:100%;height:100%;background-image:linear-gradient(rgba(26,31,113,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(26,31,113,0.03) 1px,transparent 1px);background-size:20px 20px;z-index:0;opacity:.5;}
         .card-header{display:flex;justify-content:space-between;align-items:flex-start;z-index:2;position:relative;}
@@ -95,9 +95,9 @@
         @keyframes shimmer{0%{transform:translateX(-100%);}100%{transform:translateX(100%);}}
         @keyframes pulse-icon{0%{transform:scale(1);}50%{transform:scale(1.05);}100%{transform:scale(1);}}
         @keyframes modalSlideIn{from{transform:scale(0.8) translateY(50px);opacity:0;}to{transform:scale(1) translateY(0);opacity:1;}}
-        @media (min-width:769px){.cards-container{gap:4rem;flex-wrap:nowrap;}.transfer-card{flex:0 0 350px;height:220px;padding:2rem;}}
-        @media (max-width:768px){.transfer-title{font-size:2rem;}.transfer-subtitle{font-size:1rem;}.cards-container{justify-content:space-between;gap:1rem;}.transfer-card{flex:0 0 calc(50% - 1rem);height:180px;padding:1rem;}.card-amount{font-size:1.5rem;}.transfer-animation{width:80px;height:80px;top:50%;left:50%;}.transfer-arrow i{font-size:1.8rem;}.modal-content{padding:2rem;margin:1rem;}.validation-title{font-size:1.5rem;}.validation-buttons{flex-direction:column;}}
-        @media (max-width:480px){.transfer-card{flex:0 0 100%;height:160px;padding:1rem;}.card-amount{font-size:1.2rem;}.cards-container{gap:1rem;}.transfer-animation{width:60px;height:60px;}.transfer-arrow i{font-size:1.5rem;}}
+        @media (min-width:769px){.cards-container{gap:4rem;}.transfer-card{flex:0 0 320px;height:220px;padding:2rem;}}
+        @media (max-width:768px){.transfer-title{font-size:2rem;}.transfer-subtitle{font-size:1rem;}.cards-container{gap:0.5rem;}.transfer-card{flex:0 0 45%;height:170px;padding:0.8rem;}.card-amount{font-size:1.5rem;}.transfer-animation{width:80px;height:80px;top:50%;left:50%;}.transfer-arrow i{font-size:1.8rem;}.modal-content{padding:2rem;margin:1rem;}.validation-title{font-size:1.5rem;}.validation-buttons{flex-direction:column;}}
+        @media (max-width:480px){.transfer-card{flex:0 0 45%;max-width:140px;height:150px;padding:0.5rem;}.card-amount{font-size:1.2rem;}.cards-container{gap:0.5rem;}.transfer-animation{width:60px;height:60px;}.transfer-arrow i{font-size:1.3rem;}}
         .hidden{display:none !important;}
     </style>
 </head>
@@ -184,7 +184,16 @@ function startParticleAnimation(){const particlesContainer=document.getElementBy
 function createMoneyParticle(container){const particle=document.createElement('div');particle.className='money-particle';const startY=Math.random()*100+50;particle.style.left='20%';particle.style.top=`${startY}px`;particle.style.animationDelay=Math.random()*0.5+'s';container.appendChild(particle);setTimeout(()=>{particle.remove();},3000);}
 function showValidationOverlay(){const overlay=document.getElementById('validation-overlay');overlay.classList.add('active');localStorage.setItem('firstWithdrawalDone','true');clearInterval(transferInterval);clearInterval(progressInterval);clearInterval(particleInterval);}
 function closeValidation(){const overlay=document.getElementById('validation-overlay');overlay.classList.remove('active');setTimeout(()=>{window.location.href='transferencia.html';},1000);}
-document.addEventListener('DOMContentLoaded',()=>{initializeAnimation();document.getElementById('later-btn').addEventListener('click',closeValidation);});
+document.addEventListener('DOMContentLoaded',()=>{
+    const fromTransfer = sessionStorage.getItem('fromTransfer');
+    if (!fromTransfer || localStorage.getItem('firstWithdrawalDone')) {
+        window.location.replace('transferencia.html');
+        return;
+    }
+    sessionStorage.removeItem('fromTransfer');
+    initializeAnimation();
+    document.getElementById('later-btn').addEventListener('click',closeValidation);
+});
 window.addEventListener('beforeunload',e=>{e.preventDefault();e.returnValue='¿Estás seguro de que quieres salir? Tu transferencia está en proceso.';});
 </script>
 </body>
