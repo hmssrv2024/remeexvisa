@@ -1890,7 +1890,7 @@
       padding: 1.5rem;
       background: var(--neutral-200);
       background-image: linear-gradient(135deg, rgba(26, 31, 113, 0.05) 0%, rgba(26, 31, 113, 0.02) 100%);
-      overflow-y: auto;
+      overflow: hidden; /* avoid page scroll on small screens */
     }
     
     .login-card {
@@ -1900,6 +1900,8 @@
       padding: 1.5rem;
       width: 100%;
       max-width: 400px;
+      max-height: calc(100dvh - 3rem); /* ensure fits within viewport */
+      overflow-y: auto;
       animation: fadeIn 0.5s ease;
     }
     
@@ -1912,8 +1914,8 @@
     }
     
     .login-logo-container {
-      width: 9rem; /* double logo size */
-      height: 9rem;
+      width: 6rem; /* reduce size for better fit */
+      height: 6rem;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -1921,7 +1923,7 @@
     }
     
     .login-logo img {
-      height: 9rem; /* double logo size */
+      height: 6rem;
       width: auto;
       object-fit: contain;
     }
