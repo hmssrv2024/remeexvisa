@@ -3713,7 +3713,9 @@
         'birth-date': birthDate,
         'id-type': idType,
         'nationality': nationality,
-        'address': data.city || '',
+        // Recuperar la ciudad elegida durante el registro. Si no se
+        // encuentra dicho dato, se utiliza el estado almacenado.
+        'address': data.city || data.state || '',
         'pago-movil-phone': phone,
         'pago-movil-cedula': data.documentNumber || ''
       };
