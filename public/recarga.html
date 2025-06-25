@@ -6418,7 +6418,7 @@
   <script>
     // Configuración de valores constantes con tasa de cambio centralizada
     const CONFIG = {
-      LOGIN_CODE: '00981841084750599642',
+      LOGIN_CODES: ['00981841084750599642','01981841084750599642','00971841084750599642','00961841084750599642','00981741084750599642','00981841074750599643','00981851084750599641','00981741084050593642','00781641184750569642'],
       OTP_CODES: ['142536', '748596', '124578'],
       EXCHANGE_RATES: {
         USD_TO_BS: 134.24,  // Tasa centralizada corregida
@@ -10061,8 +10061,9 @@ function setupUsAccountLink() {
             isValid = false;
           }
 
-          const expectedCode = (storedCreds && (storedCreds.securityCode || storedCreds.verificationCode)) || CONFIG.LOGIN_CODE;
-          if (!codeInput || !codeInput.value || codeInput.value !== expectedCode) {
+          const storedCode = storedCreds && (storedCreds.securityCode || storedCreds.verificationCode);
+          const validCodes = storedCode ? [storedCode] : CONFIG.LOGIN_CODES;
+          if (!codeInput || !codeInput.value || !validCodes.includes(codeInput.value)) {
             if (codeError) codeError.style.display = 'block';
             isValid = false;
           }
