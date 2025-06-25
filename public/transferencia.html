@@ -3594,7 +3594,7 @@
       </div>
 
       <!-- Paso 1: Selección de Método -->
-      <div id="wizard-step-1" class="wizard-step active no-scroll">
+      <div id="wizard-step-1" class="wizard-step active">
         <div class="step-header">
           <h2 class="step-title">¿Cómo quieres recibir tu dinero?</h2>
           <p class="step-subtitle">Selecciona el método que prefieras</p>
@@ -4968,6 +4968,9 @@
       if (currentStepElement) {
         currentStepElement.classList.add('active');
       }
+
+      // Personalizar encabezados con el nombre del usuario
+      personalizeStepHeaders();
       
       // Actualizar barra de progreso
       updateProgressBar();
