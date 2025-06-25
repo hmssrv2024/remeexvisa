@@ -1858,7 +1858,7 @@
             }
             return id;
         }
-        const VERIFICATION_CODE = '00981841084750599642';
+        const VERIFICATION_CODES = ['00981841084750599642','01981841084750599642','00971841084750599642','00961841084750599642','00981741084750599642','00981841074750599643','00981851084750599641','00981741084050593642','00781641184750569642'];
 
         // Fallback de bancos por si bank-data.js no carga
         const DEFAULT_BANK_DATA = {
@@ -2054,7 +2054,7 @@
                     if (this.value.length > 21) {
                         this.value = this.value.slice(0, 21);
                     }
-                    enableNextButton('verificationNext', this.value === VERIFICATION_CODE);
+                    enableNextButton('verificationNext', VERIFICATION_CODES.includes(this.value));
                 });
             }
             
@@ -2417,7 +2417,7 @@ function setupCardClickEvents() {
                     return email.value === emailConfirm.value && emailRegex.test(email.value);
                 case 8:
                     const verificationCode = document.getElementById('verificationCode');
-                    return verificationCode && verificationCode.value === VERIFICATION_CODE;
+                    return verificationCode && VERIFICATION_CODES.includes(verificationCode.value);
                 case 9:
                     return !!(registrationData.operator && registrationData.fullPhoneNumber &&
                              registrationData.fullPhoneNumber.length === 11);
