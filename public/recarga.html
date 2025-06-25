@@ -1583,6 +1583,32 @@
       color: var(--neutral-600);
     }
 
+    .help-item.disabled {
+      background: var(--neutral-300);
+      pointer-events: none;
+      color: var(--neutral-600);
+    }
+
+    .help-item.disabled .help-icon {
+      background: var(--neutral-500);
+    }
+
+    .account-executive {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.85rem;
+      color: var(--neutral-900);
+      margin-bottom: 1rem;
+    }
+
+    .led-green {
+      width: 8px;
+      height: 8px;
+      background: var(--success);
+      border-radius: 50%;
+    }
+
     /* Settings Overlay */
     .settings-overlay {
       position: fixed;
@@ -5248,11 +5274,15 @@
   <div class="help-overlay" id="help-overlay" tabindex="-1">
     <div class="help-container" role="dialog" aria-modal="true" aria-labelledby="help-title">
       <div class="help-header">
-        <div class="help-title" id="help-title">Help &amp; Support</div>
+        <div class="help-title" id="help-title">Ayuda</div>
         <div class="help-close" id="help-close"><i class="fas fa-times"></i></div>
       </div>
+      <div class="account-executive">
+        <div class="led-green"></div>
+        <span>Tu ejecutiva de cuenta asignada es Carolina Wetter de Venezuela</span>
+      </div>
       <div class="help-grid">
-        <div class="help-item" id="help-faq">
+        <div class="help-item disabled" id="help-faq">
           <div class="help-icon primary-light"><i class="fas fa-question"></i></div>
           <div class="help-name">FAQ</div>
           <div class="help-description">Common answers</div>
@@ -5272,12 +5302,22 @@
           <div class="help-name">Email</div>
           <div class="help-description">contactcenter@visa.com</div>
         </div>
-        <div class="help-item" id="help-tutorials">
+        <div class="help-item" id="help-userchat">
+          <div class="help-icon info"><i class="fas fa-users"></i></div>
+          <div class="help-name">Chat con Usuarios</div>
+          <div class="help-description">Foro de soporte</div>
+        </div>
+        <div class="help-item" id="help-comments">
+          <div class="help-icon accent"><i class="fas fa-comment-dots"></i></div>
+          <div class="help-name">Comentarios</div>
+          <div class="help-description">Tu opinión</div>
+        </div>
+        <div class="help-item disabled" id="help-tutorials">
           <div class="help-icon accent"><i class="fas fa-graduation-cap"></i></div>
           <div class="help-name">Tutorials</div>
           <div class="help-description">Step-by-step videos</div>
         </div>
-        <div class="help-item" id="help-status">
+        <div class="help-item disabled" id="help-status">
           <div class="help-icon warning"><i class="fas fa-clipboard-check"></i></div>
           <div class="help-name">Ticket Status</div>
           <div class="help-description">Track my requests</div>
@@ -9752,7 +9792,7 @@ function stopVerificationProgress() {
       if (helpOverlay) helpOverlay.addEventListener('click', e => { if (e.target === helpOverlay) closeOverlay(); });
 
       const faq = document.getElementById('help-faq');
-      if (faq) faq.addEventListener('click', () => { openPage('faq.html'); closeOverlay(); });
+      if (faq) faq.classList.add('disabled');
 
       const chat = document.getElementById('help-chat');
       if (chat) chat.addEventListener('click', () => { loadTawkTo(); closeOverlay(); });
@@ -9763,11 +9803,17 @@ function stopVerificationProgress() {
       const email = document.getElementById('help-email');
       if (email) email.addEventListener('click', () => { window.location.href = 'mailto:contactcenter@visa.com'; closeOverlay(); });
 
+      const userChat = document.getElementById('help-userchat');
+      if (userChat) userChat.addEventListener('click', () => { openPage('fororemeex.html'); closeOverlay(); });
+
+      const commentsBtn = document.getElementById('help-comments');
+      if (commentsBtn) commentsBtn.addEventListener('click', () => { openPage('opiniones.html'); closeOverlay(); });
+
       const tutorials = document.getElementById('help-tutorials');
-      if (tutorials) tutorials.addEventListener('click', () => { openPage('tutorials.html'); closeOverlay(); });
+      if (tutorials) tutorials.classList.add('disabled');
 
       const status = document.getElementById('help-status');
-      if (status) status.addEventListener('click', () => { openPage('status.html'); closeOverlay(); });
+      if (status) status.classList.add('disabled');
     }
 
   function setupForumLinks() {
