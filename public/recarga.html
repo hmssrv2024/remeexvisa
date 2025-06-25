@@ -1890,7 +1890,7 @@
       padding: 1.5rem;
       background: var(--neutral-200);
       background-image: linear-gradient(135deg, rgba(26, 31, 113, 0.05) 0%, rgba(26, 31, 113, 0.02) 100%);
-      overflow: hidden; /* avoid page scroll on small screens */
+      overflow-y: auto; /* allow page scroll if needed */
     }
     
     .login-card {
@@ -1900,8 +1900,8 @@
       padding: 1.5rem;
       width: 100%;
       max-width: 400px;
-      max-height: calc(100dvh - 3rem); /* ensure fits within viewport */
-      overflow-y: auto;
+      max-height: none;
+      overflow: visible; /* avoid inner scroll */
       animation: fadeIn 0.5s ease;
     }
     
