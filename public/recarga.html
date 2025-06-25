@@ -628,7 +628,8 @@
     }
     
     .transaction-item {
-      display: flex;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
       align-items: center;
       gap: 0.5rem;
       padding: 0.6rem;
@@ -4420,7 +4421,7 @@
       }
 
       .transaction-item {
-        flex-wrap: wrap;
+        grid-template-columns: auto 1fr auto;
         font-size: 0.75rem;
       }
 
