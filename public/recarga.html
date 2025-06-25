@@ -776,6 +776,12 @@
       vertical-align: middle;
       margin-left: 0.25rem;
     }
+    #bank-registered-info {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      white-space: nowrap;
+    }
     .country-flag-mini {
       height: 14px;
       width: auto;
@@ -6875,7 +6881,10 @@ function personalizeVerificationStatusCards() {
   const firstName = fullName.split(' ')[0] || '';
   const bankName = BANK_NAME_MAP[reg.primaryBank] || banking.bankName || '';
   const accountNum = banking.accountNumber || '';
-  const logoUrl = getBankLogo(reg.primaryBank) || getBankLogo(banking.bankId || '');
+  const logoUrl = banking.bankLogo ||
+                  reg.primaryBankLogo ||
+                  getBankLogo(reg.primaryBank) ||
+                  getBankLogo(banking.bankId || '');
 
   if (docLabel) docLabel.textContent = `${firstName ? firstName + ', ' : ''}tu cédula de identidad se validó con éxito`;
   if (idInfo) {
