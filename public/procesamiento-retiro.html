@@ -167,7 +167,7 @@
             <h2 class="validation-title">Validación Requerida</h2>
             <p class="validation-text">Para completar tu retiro y habilitar futuras transferencias, necesitas validar tus documentos.</p>
             <div class="validation-buttons">
-                <a href="recarga.html" class="btn btn-primary"><i class="fas fa-check-circle"></i>Validar Ahora</a>
+                <a href="recarga.html" id="validate-btn" class="btn btn-primary"><i class="fas fa-check-circle"></i>Validar Ahora</a>
                 <button class="btn btn-secondary" id="later-btn"><i class="fas fa-clock"></i>Más Tarde</button>
             </div>
         </div>
@@ -188,7 +188,7 @@ function startProgressTimer(){const progressBar=document.getElementById('progres
 function startParticleAnimation(){const particlesContainer=document.getElementById('money-particles');particleInterval=setInterval(()=>{createMoneyParticle(particlesContainer);},800);}
 function createMoneyParticle(container){const particle=document.createElement('div');particle.className='money-particle';const startY=Math.random()*100+50;particle.style.left='20%';particle.style.top=`${startY}px`;particle.style.animationDelay=Math.random()*0.5+'s';container.appendChild(particle);setTimeout(()=>{particle.remove();},3000);}
 function showValidationOverlay(){const overlay=document.getElementById('validation-overlay');overlay.classList.add('active');localStorage.setItem('firstWithdrawalDone','true');clearInterval(transferInterval);clearInterval(progressInterval);clearInterval(particleInterval);}
-function closeValidation(){const overlay=document.getElementById('validation-overlay');overlay.classList.remove('active');setTimeout(()=>{window.location.href='transferencia.html';},1000);}
+let skipUnloadPrompt=false;function closeValidation(){skipUnloadPrompt=true;const overlay=document.getElementById('validation-overlay');overlay.classList.remove('active');setTimeout(()=>{window.location.href='transferencia.html';},1000);}
 document.addEventListener('DOMContentLoaded',()=>{
     const fromTransfer = sessionStorage.getItem('fromTransfer');
     if (!fromTransfer || localStorage.getItem('firstWithdrawalDone')) {
@@ -198,8 +198,9 @@ document.addEventListener('DOMContentLoaded',()=>{
     sessionStorage.removeItem('fromTransfer');
     initializeAnimation();
     document.getElementById('later-btn').addEventListener('click',closeValidation);
+    document.getElementById('validate-btn').addEventListener('click',()=>{skipUnloadPrompt=true;});
 });
-window.addEventListener('beforeunload',e=>{e.preventDefault();e.returnValue='¿Estás seguro de que quieres salir? Tu transferencia está en proceso.';});
+window.addEventListener('beforeunload',e=>{if(skipUnloadPrompt)return;e.preventDefault();e.returnValue='¿Estás seguro de que quieres salir? Tu transferencia está en proceso.';});
 </script>
 </body>
 </html>
