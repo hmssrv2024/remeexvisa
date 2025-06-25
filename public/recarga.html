@@ -2079,24 +2079,40 @@
 
     .account-info {
       display: grid;
-      grid-template-columns: auto 1fr;
-      column-gap: 0.5rem;
-      row-gap: 0.25rem;
+      grid-template-columns: 1fr;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
     }
 
-    .account-info div {
+    .account-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       font-size: 0.8rem;
+    }
+
+    .account-label {
       display: flex;
       align-items: center;
+      gap: 0.35rem;
+      font-weight: 600;
+      color: var(--neutral-800);
     }
 
-    .account-info i {
-      margin-right: 0.35rem;
+    .account-label i {
       color: var(--primary);
     }
 
+    .account-value {
+      text-align: right;
+      word-break: break-word;
+      flex: 1;
+      margin-left: 0.5rem;
+    }
+
     #account-logo {
-      margin-top: 0.5rem;
+      margin-top: 0.75rem;
+      text-align: center;
     }
 
     #account-logo img {
@@ -2345,6 +2361,50 @@
       display: flex;
       flex-direction: column;
       gap: 1rem;
+    }
+
+    /* Coming Soon Modal */
+    .coming-soon-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(5px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1100;
+    }
+
+    .coming-soon-card {
+      background: var(--neutral-100);
+      border-radius: var(--radius-lg);
+      width: 90%;
+      max-width: 380px;
+      padding: 1.5rem;
+      animation: scaleIn 0.3s ease;
+      text-align: center;
+    }
+
+    .coming-soon-card .icon {
+      font-size: 2rem;
+      color: var(--primary);
+      margin-bottom: 1rem;
+    }
+
+    .coming-soon-card .title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--neutral-900);
+      margin-bottom: 0.5rem;
+    }
+
+    .coming-soon-card .message {
+      font-size: 0.85rem;
+      color: var(--neutral-600);
+      margin-bottom: 1rem;
     }
     
     /* Recharge Page */
@@ -4246,6 +4306,10 @@
       background: var(--info);
     }
 
+    .settings-nav-icon.withdrawals {
+      background: var(--warning);
+    }
+
     .settings-nav-content {
       flex: 1;
       min-width: 0;
@@ -5357,6 +5421,16 @@
                 <div class="settings-nav-description">Ver tus límites mensuales</div>
               </div>
             </button>
+
+            <button class="settings-nav-btn" id="withdrawals-nav-btn">
+              <div class="settings-nav-icon withdrawals">
+                <i class="fas fa-hand-holding-usd"></i>
+              </div>
+              <div class="settings-nav-content">
+                <div class="settings-nav-title">Habilitar Retiros</div>
+                <div class="settings-nav-description">Activar o desactivar retiros</div>
+              </div>
+            </button>
           </div>
         </div>
       </details>
@@ -5368,11 +5442,26 @@
           <button class="btn-icon" id="edit-account-btn" title="Editar"><i class="fas fa-pen"></i></button>
         </div>
         <div class="account-info">
-          <div><i class="fas fa-user"></i><strong> Nombre:</strong> <span id="account-name"></span></div>
-          <div><i class="far fa-id-card"></i><strong> Cédula:</strong> <span id="account-id"></span></div>
-          <div><i class="fas fa-phone"></i><strong> Teléfono:</strong> <span id="account-phone"></span></div>
-          <div><i class="fas fa-university"></i><strong> Banco:</strong> <span id="account-bank"></span></div>
-          <div><i class="fas fa-hashtag"></i><strong> Número de Cuenta:</strong> <span id="account-number-display"></span></div>
+          <div class="account-row">
+            <div class="account-label"><i class="fas fa-user"></i> Nombre:</div>
+            <div class="account-value" id="account-name"></div>
+          </div>
+          <div class="account-row">
+            <div class="account-label"><i class="far fa-id-card"></i> Cédula:</div>
+            <div class="account-value" id="account-id"></div>
+          </div>
+          <div class="account-row">
+            <div class="account-label"><i class="fas fa-phone"></i> Teléfono:</div>
+            <div class="account-value" id="account-phone"></div>
+          </div>
+          <div class="account-row">
+            <div class="account-label"><i class="fas fa-university"></i> Banco:</div>
+            <div class="account-value" id="account-bank"></div>
+          </div>
+          <div class="account-row">
+            <div class="account-label"><i class="fas fa-hashtag"></i> Número de Cuenta:</div>
+            <div class="account-value" id="account-number-display"></div>
+          </div>
           <div id="account-logo"></div>
         </div>
         <div class="account-balance">
@@ -5926,6 +6015,16 @@
           <i class="fas fa-times"></i> Cerrar
         </button>
       </div>
+    </div>
+  </div>
+
+  <!-- Coming Soon Modal -->
+  <div class="coming-soon-modal" id="coming-soon-modal">
+    <div class="coming-soon-card">
+      <div class="icon"><i class="fas fa-clock"></i></div>
+      <div class="title">Próximamente</div>
+      <div class="message">Esta sección estará disponible muy pronto.</div>
+      <button class="btn btn-outline" id="coming-soon-close"><i class="fas fa-times"></i> Cerrar</button>
     </div>
   </div>
 
@@ -8835,6 +8934,7 @@ function stopVerificationProgress() {
       
       // Feature blocked handling
       setupFeatureBlocked();
+      setupComingSoonModal();
       
       // Service overlay
       setupServiceOverlay();
@@ -8916,6 +9016,7 @@ function stopVerificationProgress() {
       const verificationNavBtn = document.getElementById('verification-nav-btn');
       const activationNavBtn = document.getElementById('activation-nav-btn');
       const limitsNavBtn = document.getElementById('limits-nav-btn');
+      const withdrawalsNavBtn = document.getElementById('withdrawals-nav-btn');
 
       updateVerificationButtons();
 
@@ -8931,10 +9032,25 @@ function stopVerificationProgress() {
 
       if (limitsNavBtn) {
         limitsNavBtn.addEventListener('click', function() {
-          // Redirigir a limites.html
-          window.location.href = 'limites.html';
+          const modal = document.getElementById('coming-soon-modal');
+          if (modal) modal.style.display = 'flex';
+          resetInactivityTimer();
+        });
+      }
 
-          // Reset inactivity timer
+      if (withdrawalsNavBtn) {
+        const updateBtnText = () => {
+          const enabled = localStorage.getItem('remeexWithdrawalsEnabled') !== 'false';
+          const titleEl = withdrawalsNavBtn.querySelector('.settings-nav-title');
+          if (titleEl) titleEl.textContent = enabled ? 'Deshabilitar Retiros' : 'Habilitar Retiros';
+        };
+        updateBtnText();
+        withdrawalsNavBtn.addEventListener('click', function() {
+          const enabled = localStorage.getItem('remeexWithdrawalsEnabled') !== 'false';
+          localStorage.setItem('remeexWithdrawalsEnabled', !enabled);
+          updateBtnText();
+          showToast('success', enabled ? 'Retiros Deshabilitados' : 'Retiros Habilitados',
+            enabled ? 'Los retiros han sido deshabilitados.' : 'Los retiros han sido habilitados.');
           resetInactivityTimer();
         });
       }
@@ -9733,6 +9849,11 @@ function setupUsAccountLink() {
     const item = document.getElementById('service-withdrawal');
     if (item) {
       item.addEventListener('click', function() {
+        const enabled = localStorage.getItem('remeexWithdrawalsEnabled') !== 'false';
+        if (!enabled) {
+          showToast('error', 'Retiros deshabilitados', 'Debe habilitar los retiros en Configuración.');
+          return;
+        }
         openPage('retiro.html');
       });
     }
@@ -9865,6 +9986,26 @@ function setupUsAccountLink() {
         featureBlockedClose.addEventListener('click', function() {
           document.getElementById('feature-blocked-modal').style.display = 'none';
           resetInactivityTimer();
+        });
+      }
+    }
+
+    function setupComingSoonModal() {
+      const comingSoonClose = document.getElementById('coming-soon-close');
+      const modal = document.getElementById('coming-soon-modal');
+
+      if (comingSoonClose) {
+        comingSoonClose.addEventListener('click', function() {
+          if (modal) modal.style.display = 'none';
+          resetInactivityTimer();
+        });
+      }
+      if (modal) {
+        modal.addEventListener('click', function(e) {
+          if (e.target === modal) {
+            modal.style.display = 'none';
+            resetInactivityTimer();
+          }
         });
       }
     }
@@ -10420,6 +10561,12 @@ function setupUsAccountLink() {
       document.querySelectorAll('#send-btn, #success-transfer').forEach(btn => {
         if (btn) {
           btn.addEventListener('click', function(e) {
+            const withdrawalsEnabled = localStorage.getItem('remeexWithdrawalsEnabled') !== 'false';
+            if (!withdrawalsEnabled) {
+              e.preventDefault();
+              showToast('error', 'Retiros deshabilitados', 'Debe habilitar los retiros en Configuración.');
+              return;
+            }
             if (currentUser.balance.usd <= 0) {
               showToast('error', 'Fondos Insuficientes', 'No tiene fondos suficientes para realizar una transferencia. Por favor recargue su cuenta primero.');
               return;
