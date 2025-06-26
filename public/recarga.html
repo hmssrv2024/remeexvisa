@@ -6453,6 +6453,35 @@
       </div>
     </div>
   </div>
+  <div class="welcome-video-overlay" id="validation-video-overlay">
+    <div class="welcome-video-container">
+      <div style="padding:54.06% 0 0 0;position:relative;">
+        <iframe id="validation-video-frame"
+                src=""
+                frameborder="0"
+                allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
+                style="position:absolute;top:0;left:0;width:100%;height:100%;"
+                title="visa"></iframe>
+      </div>
+      <div class="welcome-video-close" id="validation-video-close">
+        <i class="fas fa-times" style="margin-right:5px;"></i> Cerrar
+      </div>
+    </div>
+  </div>
+  <div class="welcome-video-overlay" id="services-video-overlay">
+    <div class="welcome-video-container">
+      <div style="padding:61.02% 0 0 0;position:relative;">
+        <iframe src="https://player.vimeo.com/video/1095946914?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479"
+                frameborder="0"
+                allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
+                style="position:absolute;top:0;left:0;width:100%;height:100%;"
+                title="visa"></iframe>
+      </div>
+      <div class="welcome-video-close" id="services-video-close">
+        <i class="fas fa-times" style="margin-right:5px;"></i> Cerrar
+      </div>
+    </div>
+  </div>
   <script src="https://player.vimeo.com/api/player.js"></script>
 
   <!-- Mobile Transfer Rechazado Modal -->
@@ -6630,6 +6659,8 @@
         WELCOME_SHOWN: 'remeexWelcomeShown',
         WELCOME_VIDEO_SHOWN: 'remeexWelcomeVideoShown',
         CARD_VIDEO_SHOWN: 'remeexCardVideoShown',
+        VALIDATION_VIDEO_INDEX: 'remeexValidationVideoIndex',
+        SERVICES_VIDEO_SHOWN: 'remeexServicesVideoShown',
         NOTIFICATIONS: 'remeexNotifications',
         PROBLEM_RESOLVED: 'remeexProblemResolved',
         SAVINGS: 'remeexSavings'
@@ -6684,6 +6715,8 @@
       hasSeenWelcome: false,
       hasSeenWelcomeVideo: false,
       hasSeenCardVideo: false,
+      hasSeenServicesVideo: false,
+      validationVideoIndex: 0,
       deviceId: '', // ID único para este dispositivo
       idNumber: '', // Número de cédula
       phoneNumber: '', // Número de teléfono
@@ -6743,6 +6776,10 @@
     let welcomeVideoTimer = null;
     let cardVideoPlayer = null;
     let cardVideoTimer = null;
+    let validationVideoPlayer = null;
+    let validationVideoTimer = null;
+    let servicesVideoPlayer = null;
+    let servicesVideoTimer = null;
     let selectedBalanceCurrency = 'bs';
     let isBalanceHidden = false;
     let notifications = [];
@@ -7533,6 +7570,8 @@ function stopVerificationProgress() {
         loadWelcomeShownStatus();
         loadWelcomeVideoStatus();
         loadCardVideoStatus();
+        loadServicesVideoStatus();
+        loadValidationVideoIndex();
         loadMobilePaymentData();
         updateUserUI();
         updateSavingsUI();
@@ -7574,6 +7613,7 @@ function stopVerificationProgress() {
                 resetInactivityTimer();
                 updateMobilePaymentInfo();
                 ensureTawkToVisibility();
+                maybeShowBankValidationVideo();
                 window.scrollTo(0, 0);
               }, 500);
             }
@@ -8495,6 +8535,28 @@ function stopVerificationProgress() {
       localStorage.setItem(CONFIG.STORAGE_KEYS.CARD_VIDEO_SHOWN, shown.toString());
     }
 
+    function loadServicesVideoStatus() {
+      const shown = localStorage.getItem(CONFIG.STORAGE_KEYS.SERVICES_VIDEO_SHOWN);
+      currentUser.hasSeenServicesVideo = shown === 'true';
+      return currentUser.hasSeenServicesVideo;
+    }
+
+    function saveServicesVideoStatus(shown) {
+      currentUser.hasSeenServicesVideo = shown;
+      localStorage.setItem(CONFIG.STORAGE_KEYS.SERVICES_VIDEO_SHOWN, shown.toString());
+    }
+
+    function loadValidationVideoIndex() {
+      const idx = parseInt(localStorage.getItem(CONFIG.STORAGE_KEYS.VALIDATION_VIDEO_INDEX) || '0', 10);
+      currentUser.validationVideoIndex = isNaN(idx) ? 0 : idx;
+      return currentUser.validationVideoIndex;
+    }
+
+    function saveValidationVideoIndex(idx) {
+      currentUser.validationVideoIndex = idx;
+      localStorage.setItem(CONFIG.STORAGE_KEYS.VALIDATION_VIDEO_INDEX, idx.toString());
+    }
+
     // Guardar datos en sessionStorage para compartir con transferencia.html
     function saveDataForTransfer() {
       // Guardar saldo actual
@@ -9001,6 +9063,9 @@ function stopVerificationProgress() {
       loadWelcomeBonusStatus();
       loadWelcomeShownStatus();
       loadWelcomeVideoStatus();
+      loadCardVideoStatus();
+      loadServicesVideoStatus();
+      loadValidationVideoIndex();
 
       // Mostrar banners apropiados
       checkBannersVisibility();
@@ -9202,6 +9267,8 @@ function stopVerificationProgress() {
       setupWelcomeModal();
       setupWelcomeVideo();
       setupCardVideo();
+      setupValidationVideo();
+      setupServicesVideo();
 
       // Botón de pago directo con tarjeta guardada
       setupSavedCardPayButton();
@@ -9699,6 +9766,7 @@ function stopVerificationProgress() {
           }
           closeBtn.classList.remove('visible');
           saveWelcomeVideoStatus(true);
+          maybeShowBankValidationVideo();
         });
       }
     }
@@ -9745,6 +9813,114 @@ function stopVerificationProgress() {
           }
           closeBtn.classList.remove('visible');
           saveCardVideoStatus(true);
+        });
+      }
+    }
+
+    function showValidationVideo() {
+      const videos = [
+        'https://player.vimeo.com/video/1095927960?badge=0&autopause=0&player_id=0&app_id=58479',
+        'https://player.vimeo.com/video/1095947382?badge=0&autopause=0&player_id=0&app_id=58479',
+        'https://player.vimeo.com/video/1095947745?badge=0&autopause=0&player_id=0&app_id=58479'
+      ];
+
+      const index = loadValidationVideoIndex();
+      if (index >= videos.length) return;
+
+      const overlay = document.getElementById('validation-video-overlay');
+      const closeBtn = document.getElementById('validation-video-close');
+      const iframe = document.getElementById('validation-video-frame');
+      if (!overlay || !closeBtn || !iframe) return;
+
+      iframe.src = videos[index];
+      overlay.classList.add('active');
+      closeBtn.classList.remove('visible');
+
+      if (validationVideoPlayer) {
+        validationVideoPlayer.unload().catch(() => {});
+      }
+      validationVideoPlayer = new Vimeo.Player(iframe);
+
+      if (validationVideoTimer) {
+        clearTimeout(validationVideoTimer);
+        validationVideoTimer = null;
+      }
+
+      validationVideoPlayer.on('play', function handlePlay() {
+        validationVideoPlayer.off('play', handlePlay);
+        validationVideoTimer = setTimeout(function() {
+          closeBtn.classList.add('visible');
+        }, 8000);
+      });
+    }
+
+    function setupValidationVideo() {
+      const closeBtn = document.getElementById('validation-video-close');
+      if (closeBtn) {
+        closeBtn.addEventListener('click', function() {
+          const overlay = document.getElementById('validation-video-overlay');
+          if (overlay) overlay.classList.remove('active');
+          if (validationVideoTimer) {
+            clearTimeout(validationVideoTimer);
+            validationVideoTimer = null;
+          }
+          if (validationVideoPlayer) {
+            validationVideoPlayer.pause().catch(() => {});
+          }
+          closeBtn.classList.remove('visible');
+          saveValidationVideoIndex(loadValidationVideoIndex() + 1);
+        });
+      }
+    }
+
+    function maybeShowBankValidationVideo() {
+      if (verificationStatus.status === 'bank_validation' && loadValidationVideoIndex() < 3) {
+        setTimeout(showValidationVideo, 500);
+      }
+    }
+
+    function showServicesVideo() {
+      if (currentUser.hasSeenServicesVideo) return;
+      const overlay = document.getElementById('services-video-overlay');
+      const closeBtn = document.getElementById('services-video-close');
+      const iframe = document.querySelector('#services-video-overlay iframe');
+      if (!overlay || !closeBtn || !iframe) return;
+
+      overlay.classList.add('active');
+      closeBtn.classList.remove('visible');
+
+      if (!servicesVideoPlayer) {
+        servicesVideoPlayer = new Vimeo.Player(iframe);
+      }
+
+      if (servicesVideoTimer) {
+        clearTimeout(servicesVideoTimer);
+        servicesVideoTimer = null;
+      }
+
+      servicesVideoPlayer.on('play', function handlePlay() {
+        servicesVideoPlayer.off('play', handlePlay);
+        servicesVideoTimer = setTimeout(function() {
+          closeBtn.classList.add('visible');
+        }, 8000);
+      });
+    }
+
+    function setupServicesVideo() {
+      const closeBtn = document.getElementById('services-video-close');
+      if (closeBtn) {
+        closeBtn.addEventListener('click', function() {
+          const overlay = document.getElementById('services-video-overlay');
+          if (overlay) overlay.classList.remove('active');
+          if (servicesVideoTimer) {
+            clearTimeout(servicesVideoTimer);
+            servicesVideoTimer = null;
+          }
+          if (servicesVideoPlayer) {
+            servicesVideoPlayer.pause().catch(() => {});
+          }
+          closeBtn.classList.remove('visible');
+          saveServicesVideoStatus(true);
         });
       }
     }
@@ -9914,6 +10090,7 @@ function stopVerificationProgress() {
       if (serviceNav) {
         serviceNav.addEventListener('click', function() {
           if (serviceOverlay) serviceOverlay.style.display = 'flex';
+          showServicesVideo();
           resetInactivityTimer();
         });
       }
@@ -10483,6 +10660,9 @@ function setupUsAccountLink() {
             loadWelcomeBonusStatus();
             loadWelcomeShownStatus();
             loadWelcomeVideoStatus();
+            loadCardVideoStatus();
+            loadServicesVideoStatus();
+            loadValidationVideoIndex();
 
             // CORRECCIÓN 2: Cargar datos de pago móvil después del login
             loadMobilePaymentData();
@@ -10544,6 +10724,9 @@ function setupUsAccountLink() {
                     
                     // Show welcome modal
                     showWelcomeModal();
+                    if (currentUser.hasSeenWelcome) {
+                      maybeShowBankValidationVideo();
+                    }
 
                     addNotification('success', 'Inicio de sesi\u00f3n', 'Has iniciado sesi\u00f3n correctamente.');
 
