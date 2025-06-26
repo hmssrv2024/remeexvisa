@@ -4673,32 +4673,6 @@
       box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5);
     }
 
-    /* Theme styles */
-    body.dark-mode {
-      --neutral-100: #1a1f37;
-      --neutral-200: #293249;
-      --neutral-300: #4f5d75;
-      --neutral-900: #ffffff;
-      background: #121212;
-      color: var(--neutral-100);
-    }
-
-    body.silver-mode {
-      --neutral-100: rgba(255, 255, 255, 0.8);
-      --neutral-200: rgba(255, 255, 255, 0.6);
-      --neutral-300: rgba(255, 255, 255, 0.4);
-      --neutral-900: #1a1f37;
-      backdrop-filter: blur(10px);
-      background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(230,240,255,0.8));
-    }
-
-    body.silver-mode .card,
-    body.silver-mode .settings-container,
-    body.silver-mode .bottom-nav,
-    body.silver-mode .app-header {
-      background: rgba(255, 255, 255, 0.5);
-      backdrop-filter: blur(10px);
-    }
   </style>
   <link rel="stylesheet" href="responsive.css">
   <link rel="stylesheet" href="theme.css">
@@ -11625,9 +11599,7 @@ function setupUsAccountLink() {
     }
 
     function applySavedTheme() {
-      const theme = localStorage.getItem('remeexTheme');
-      document.body.classList.toggle('dark-mode', theme === 'dark');
-      document.body.classList.toggle('silver-mode', theme === 'silver');
+      if (window.applyTheme) applyTheme();
     }
 
     function setupThemeToggles() {
