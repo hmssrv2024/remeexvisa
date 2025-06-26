@@ -4297,9 +4297,24 @@
         <button id="cancel-withdrawal-btn" class="btn btn-outline" style="margin-top: 1rem;">Cancelar</button>
       </div>
     </div>
-  </div>
+    </div>
 
-  <!-- Modal de PIN -->
+    <!-- Advertencia Límite Pago Móvil -->
+    <div id="mobile-limit-overlay" class="modal-overlay">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title">Límite de Pago Móvil</h3>
+        </div>
+        <div class="modal-body">
+          <p>Solo puedes retirar hasta <strong>Bs 250.000,00</strong> por Pago Móvil. Si necesitas retirar más, utiliza la opción de transferencia bancaria.</p>
+        </div>
+        <div class="modal-footer confirm-modal">
+          <button id="mobile-limit-ok-btn" class="btn btn-primary">Entendido</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal de PIN -->
   <div id="pin-modal-overlay" class="modal-overlay">
     <div class="modal">
       <img id="pin-bank-logo" class="modal-bank-logo" src="" alt="Banco">
@@ -4424,9 +4439,9 @@
           <div style="margin: 1.5rem 0;">
             <div style="display: flex; align-items: flex-start; gap: 0.75rem; margin-bottom: 1rem;">
               <div style="width: 25px; height: 25px; border-radius: 50%; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 0.85rem; flex-shrink: 0;">1</div>
-              <div style="font-size: 0.9rem; color: var(--neutral-800); line-height: 1.4;">
-                Te dirigiremos a la página de <strong>Recargar Saldo</strong> para realizar un depósito de verificación de <strong>Bs 2.845,50</strong> ($25 USD).
-              </div>
+                <div style="font-size: 0.9rem; color: var(--neutral-800); line-height: 1.4;">
+                  Te dirigiremos a la página de <strong>Recargar Saldo</strong> para realizar un depósito de verificación de <strong id="verification-amount-bs">Bs 0,00</strong> (equivalente a $25 USD).
+                </div>
             </div>
             
             <div style="display: flex; align-items: flex-start; gap: 0.75rem; margin-bottom: 1rem;">
@@ -4653,11 +4668,12 @@
       loadUserDataFromSession();
       populateBankLogos();
       setupInactivityTimer();
-      loadTransactionHistory();
-      updateWizardStep();
-      updateCurrencyOptions();
-      updateBalanceDisplay();
-    });
+        loadTransactionHistory();
+        updateWizardStep();
+        updateCurrencyOptions();
+        updateBalanceDisplay();
+        updateVerificationAmountText();
+      });
 
     // Inicialización de la aplicación
     function initApp() {
@@ -4698,8 +4714,9 @@
       setupFaqButtons();
       setupVerificationStatusButtons();
       setupConfirmationModal();
-      setupWithdrawalConfirmationModal();
-      setupPinModal();
+        setupWithdrawalConfirmationModal();
+        setupMobileLimitOverlay();
+        setupPinModal();
       setupBottomNav();
       setupAccountNumberListener();
     }
@@ -4900,7 +4917,8 @@
         withdrawalAmountEur = withdrawalAmountUsd * CONFIG.EXCHANGE_RATES.USD_TO_EUR;
         updateEquivalentsDisplay();
         saveTransferData();
-        
+        checkWithdrawalLimits();
+
         // Validar para habilitar botón siguiente
         updateNextButtonState();
       });
@@ -5397,7 +5415,7 @@
     }
 
     // Actualizar display de balance
-    function updateBalanceDisplay() {
+      function updateBalanceDisplay() {
       const balanceValue = document.getElementById('balance-value');
       const classicBalanceValue = document.getElementById('classic-balance-value');
       const balanceEquivalent = document.getElementById('balance-equivalent-display');
@@ -5440,8 +5458,15 @@
       
       const rateText = `1 USD = ${CONFIG.EXCHANGE_RATES.USD_TO_BS.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).replace(".", ",").replace(/,00$/, ",00")} Bs | 1 USD = ${CONFIG.EXCHANGE_RATES.USD_TO_EUR.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).replace(".", ",").replace(/,00$/, ",00")} EUR`;
       
-      if (exchangeRateDisplay) exchangeRateDisplay.textContent = rateText;
-    }
+        if (exchangeRateDisplay) exchangeRateDisplay.textContent = rateText;
+      }
+
+      function updateVerificationAmountText() {
+        const amountSpan = document.getElementById('verification-amount-bs');
+        if (amountSpan) {
+          amountSpan.textContent = formatCurrency(Number(CONFIG.VERIFICATION_AMOUNT_BS), 'bs');
+        }
+      }
 
     // Configurar la navegación inferior
     function setupBottomNav() {
@@ -5823,13 +5848,14 @@
       const amountInput = document.getElementById('classic-withdrawal-amount');
       if (!amountInput) return;
 
-      amountInput.addEventListener('input', function() {
-        withdrawalAmount = parseUserAmount(this.value);
-        withdrawalAmountUsd = withdrawalAmount / CONFIG.EXCHANGE_RATES.USD_TO_BS;
-        withdrawalAmountEur = withdrawalAmountUsd * CONFIG.EXCHANGE_RATES.USD_TO_EUR;
-        updateEquivalentsDisplay();
-        saveTransferData();
-      });
+        amountInput.addEventListener('input', function() {
+          withdrawalAmount = parseUserAmount(this.value);
+          withdrawalAmountUsd = withdrawalAmount / CONFIG.EXCHANGE_RATES.USD_TO_BS;
+          withdrawalAmountEur = withdrawalAmountUsd * CONFIG.EXCHANGE_RATES.USD_TO_EUR;
+          updateEquivalentsDisplay();
+          saveTransferData();
+          checkWithdrawalLimits();
+        });
 
       amountInput.addEventListener('blur', function() {
         this.value = withdrawalAmount ? formatNumberWithCommas(withdrawalAmount) : '';
@@ -5951,24 +5977,29 @@
       });
     }
 
-    function checkWithdrawalLimits() {
-      const methodElement = document.querySelector(`.method-option[data-method="${selectedMethod}"]`);
-      
-      if (methodElement) {
-        const limit = parseFloat(methodElement.getAttribute('data-limit')) || 0;
-        
-        if (limit > 0 && withdrawalAmount > limit) {
-          showToast('warning', 'Límite Excedido', `El monto máximo para ${methodElement.querySelector('.method-label').textContent} es ${formatCurrency(limit, 'bs')}`);
-          
-          const amountInput = isWizardMode ? document.getElementById('withdrawal-amount') : document.getElementById('classic-withdrawal-amount');
-          if (amountInput) {
-            amountInput.value = formatNumberWithCommas(limit);
-            const event = new Event('input');
-            amountInput.dispatchEvent(event);
+      function checkWithdrawalLimits() {
+        const methodElement = document.querySelector(`.method-option[data-method="${selectedMethod}"]`);
+
+        if (methodElement) {
+          const limit = parseFloat(methodElement.getAttribute('data-limit')) || 0;
+
+          if (limit > 0 && withdrawalAmount > limit) {
+            if (selectedMethod === 'mobile') {
+              const overlay = document.getElementById('mobile-limit-overlay');
+              if (overlay) overlay.style.display = 'flex';
+            } else {
+              showToast('warning', 'Límite Excedido', `El monto máximo para ${methodElement.querySelector('.method-label').textContent} es ${formatCurrency(limit, 'bs')}`);
+            }
+
+            const amountInput = isWizardMode ? document.getElementById('withdrawal-amount') : document.getElementById('classic-withdrawal-amount');
+            if (amountInput) {
+              amountInput.value = formatNumberWithCommas(limit);
+              const event = new Event('input');
+              amountInput.dispatchEvent(event);
+            }
           }
         }
       }
-    }
 
     // Configurar botones de verificación
     function setupVerificationButtons() {
@@ -6019,9 +6050,9 @@
       }
     }
 
-    function showWithdrawalConfirmation() {
-      const modal = document.getElementById('withdrawal-confirmation-modal');
-      if (!modal) return;
+      function showWithdrawalConfirmation() {
+        const modal = document.getElementById('withdrawal-confirmation-modal');
+        if (!modal) return;
 
       updateOverlayBankLogos();
 
@@ -6031,8 +6062,18 @@
         messageEl.innerHTML = `Vas a retirar <strong>${formatCurrency(withdrawalAmount, 'bs')}</strong>.<br>Tu saldo restante será <strong>${formatCurrency(remaining, 'bs')}</strong>.`;
       }
 
-      modal.style.display = 'flex';
-    }
+        modal.style.display = 'flex';
+      }
+
+      function setupMobileLimitOverlay() {
+        const overlay = document.getElementById('mobile-limit-overlay');
+        const okBtn = document.getElementById('mobile-limit-ok-btn');
+        if (okBtn && overlay) {
+          okBtn.addEventListener('click', function() {
+            overlay.style.display = 'none';
+          });
+        }
+      }
 
     // Configurar botones de información de seguridad
     function setupSecurityInfoButtons() {
