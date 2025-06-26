@@ -10098,9 +10098,9 @@ function stopVerificationProgress() {
         });
       }
       
-      // Bloquear servicios hasta verificación excepto Intercambio, Donación, Zelle, Wallets, Mi cuenta en USA y Mis ahorros
+      // Bloquear servicios hasta verificación excepto Intercambio, Donación, Zelle, Mi cuenta en USA y Mis ahorros
       document.querySelectorAll('.service-item').forEach(item => {
-          if (item.id !== 'service-market' && item.id !== 'service-donation' && item.id !== 'service-zelle' && item.id !== 'service-us-account' && item.id !== 'service-bills' && item.id !== 'service-exchange' && item.id !== 'service-wallets' && item.id !== 'service-savings') {
+          if (item.id !== 'service-market' && item.id !== 'service-donation' && item.id !== 'service-zelle' && item.id !== 'service-us-account' && item.id !== 'service-savings') {
           item.addEventListener('click', function() {
             showFeatureBlockedModal();
             resetInactivityTimer();
@@ -10353,7 +10353,7 @@ function stopVerificationProgress() {
       const billsItem = document.getElementById("service-bills");
         if (billsItem) {
           billsItem.addEventListener("click", function() {
-            openPage('pagoservicios.html');
+            showFeatureBlockedModal();
           });
         }
     }
@@ -10381,7 +10381,7 @@ function stopVerificationProgress() {
       const walletsItem = document.getElementById('service-wallets');
         if (walletsItem) {
           walletsItem.addEventListener('click', function() {
-            openPage('cambio-divisas.html#wallets');
+            showFeatureBlockedModal();
           });
         }
     }
@@ -10389,7 +10389,7 @@ function stopVerificationProgress() {
       const item = document.getElementById('service-exchange');
         if (item) {
           item.addEventListener('click', function() {
-            openPage('cambio-divisas.html');
+            showFeatureBlockedModal();
           });
         }
     }
@@ -10403,17 +10403,12 @@ function setupUsAccountLink() {
 }
 
   function setupWithdrawalLink() {
-    const item = document.getElementById('service-withdrawal');
-    if (item) {
-      item.addEventListener('click', function() {
-        const enabled = localStorage.getItem('remeexWithdrawalsEnabled') !== 'false';
-        if (!enabled) {
-          showToast('error', 'Retiros deshabilitados', 'Debe habilitar los retiros en Configuración.');
-          return;
-        }
-        openPage('retiro.html');
-      });
-    }
+  const item = document.getElementById('service-withdrawal');
+  if (item) {
+    item.addEventListener('click', function() {
+      showFeatureBlockedModal();
+    });
+  }
   }
 
   function setupPageOverlay() {
