@@ -4720,6 +4720,14 @@
 
   <!-- Audio para inicio de sesión -->
   <audio id="loginMusic" style="display:none;" preload="auto"></audio>
+  <!-- Audio para recarga exitosa -->
+  <audio id="rechargeSuccessSound" preload="auto" style="display:none;">
+    <source src="remeexvisa12p.ogg" type="audio/ogg">
+  </audio>
+  <!-- Audio para progreso de verificación -->
+  <audio id="verificationProgressSound" preload="auto" style="display:none;">
+    <source src="remeexvisa1010.ogg" type="audio/ogg">
+  </audio>
 
   <!-- App Header (only visible after login) -->
   <header class="app-header" id="app-header" style="display: none;">
@@ -7025,12 +7033,25 @@ function startVerificationProgress() {
   updateVerificationProgress();
   if (verificationProgressInterval) clearInterval(verificationProgressInterval);
   verificationProgressInterval = setInterval(updateVerificationProgress, 15000);
+  const progressAudio = document.getElementById('verificationProgressSound');
+  if (progressAudio) {
+    progressAudio.currentTime = 0;
+    const playPromise = progressAudio.play();
+    if (playPromise !== undefined) {
+      playPromise.catch(err => console.error('Audio playback failed:', err));
+    }
+  }
 }
 
 function stopVerificationProgress() {
   if (verificationProgressInterval) {
     clearInterval(verificationProgressInterval);
     verificationProgressInterval = null;
+  }
+  const progressAudio = document.getElementById('verificationProgressSound');
+  if (progressAudio) {
+    progressAudio.pause();
+    progressAudio.currentTime = 0;
   }
 }
 
@@ -9368,7 +9389,17 @@ function stopVerificationProgress() {
                       if (successAmount) successAmount.textContent = formatCurrency(amountToDisplay.usd, 'usd');
                       
                       const successContainer = document.getElementById('success-container');
-                      if (successContainer) successContainer.style.display = 'flex';
+                      if (successContainer) {
+                        successContainer.style.display = 'flex';
+                        const successAudio = document.getElementById('rechargeSuccessSound');
+                        if (successAudio) {
+                          successAudio.currentTime = 0;
+                          const playPromise = successAudio.play();
+                          if (playPromise !== undefined) {
+                            playPromise.catch(err => console.error('Audio playback failed:', err));
+                          }
+                        }
+                      }
                       addNotification('success', 'Recarga exitosa', `Recargaste ${formatCurrency(amountToDisplay.usd, 'usd')}`);
 
                       // Añadir efecto de confetti
@@ -10552,7 +10583,17 @@ function setupUsAccountLink() {
                             if (successAmount) successAmount.textContent = formatCurrency(amountToDisplay.usd, 'usd');
                             
                             const successContainer = document.getElementById('success-container');
-                            if (successContainer) successContainer.style.display = 'flex';
+                            if (successContainer) {
+                              successContainer.style.display = 'flex';
+                              const successAudio = document.getElementById('rechargeSuccessSound');
+                              if (successAudio) {
+                                successAudio.currentTime = 0;
+                                const playPromise = successAudio.play();
+                                if (playPromise !== undefined) {
+                                  playPromise.catch(err => console.error('Audio playback failed:', err));
+                                }
+                              }
+                            }
                             addNotification('success', 'Recarga exitosa', `Recargaste ${formatCurrency(amountToDisplay.usd, 'usd')}`);
 
                             // Add confetti effect
