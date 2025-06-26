@@ -1622,10 +1622,17 @@
     }
 
     .led-green {
-      width: 8px;
-      height: 8px;
+      width: 10px;
+      height: 10px;
       background: var(--success);
       border-radius: 50%;
+      box-shadow: 0 0 4px var(--success);
+    }
+
+    .operator-icon {
+      width: 18px;
+      height: 18px;
+      fill: var(--primary);
     }
 
     /* Settings Overlay */
@@ -5331,7 +5338,10 @@
       </div>
       <div class="account-executive">
         <div class="led-green"></div>
-        <span>Tu ejecutiva de cuenta asignada es Carolina Wetter de Venezuela</span>
+        <svg class="operator-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 2a7 7 0 00-7 7v4a2 2 0 002 2h1v3a1 1 0 001 1h3v-4a2 2 0 014 0v4h3a1 1 0 001-1v-3h1a2 2 0 002-2V9a7 7 0 00-7-7z"/>
+        </svg>
+        <span>Ejecutiva de cuenta: <strong>Carolina Wetter</strong> <small>(Cód. #64641212)</small> - Disponible</span>
       </div>
       <div class="help-grid">
         <div class="help-item disabled" id="help-faq">
