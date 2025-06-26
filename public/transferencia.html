@@ -4546,6 +4546,21 @@
       </div>
     </div>
   </div>
+  
+  <!-- Modal Video de Verificación -->
+  <div id="verification-video-modal" class="modal-overlay">
+    <div class="modal-content">
+      <button id="close-verification-video" class="modal-close">
+        <i class="fas fa-times"></i>
+      </button>
+      <div class="modal-body">
+        <div style="padding:54.16% 0 0 0;position:relative;">
+          <iframe src="https://player.vimeo.com/video/1095930230?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" style="position:absolute;top:0;left:0;width:100%;height:100%;" title="visa"></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="https://player.vimeo.com/api/player.js"></script>
 
   <!-- Toast Container -->
   <div id="toast-container" class="toast-container"></div>
@@ -6170,23 +6185,45 @@
       }
     }
 
+    // Mostrar video antes de redirigir
+    function showVerificationVideo(redirectUrl) {
+      const videoModal = document.getElementById('verification-video-modal');
+      const closeBtn = document.getElementById('close-verification-video');
+
+      if (!videoModal) {
+        window.location.href = redirectUrl;
+        return;
+      }
+
+      videoModal.dataset.redirect = redirectUrl;
+      videoModal.style.display = 'flex';
+
+      if (closeBtn) {
+        closeBtn.onclick = function() {
+          videoModal.style.display = 'none';
+          const url = videoModal.dataset.redirect || redirectUrl;
+          window.location.href = url;
+        };
+      }
+    }
+
     // Configurar modal de confirmación
     function setupConfirmationModal() {
       const modal = document.getElementById('verification-confirmation-modal');
       const proceedBtn = document.getElementById('confirmation-proceed-btn');
       const cancelBtn = document.getElementById('confirmation-cancel-btn');
-      
+
       if (proceedBtn) {
         proceedBtn.addEventListener('click', function() {
           if (modal) modal.style.display = 'none';
-          window.location.href = 'recarga.html?section=mobile-payment';
+          showVerificationVideo('recarga.html?section=mobile-payment');
         });
       }
 
       if (cancelBtn) {
         cancelBtn.addEventListener('click', function() {
           if (modal) modal.style.display = 'none';
-          window.location.href = 'recarga.html';
+          showVerificationVideo('recarga.html');
         });
       }
     }
