@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+  <script src="repair.js"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>REMEEX Visa Banking</title>
@@ -4389,6 +4390,10 @@
       background: var(--warning);
     }
 
+    .settings-nav-icon.repair {
+      background: var(--danger);
+    }
+
     .settings-nav-content {
       flex: 1;
       min-width: 0;
@@ -5537,6 +5542,16 @@
               <div class="settings-nav-content">
                 <div class="settings-nav-title">Habilitar Retiros</div>
                 <div class="settings-nav-description">Activar o desactivar retiros</div>
+              </div>
+            </button>
+
+            <button class="settings-nav-btn" id="repair-btn">
+              <div class="settings-nav-icon repair">
+                <i class="fas fa-tools"></i>
+              </div>
+              <div class="settings-nav-content">
+                <div class="settings-nav-title">Reparar</div>
+                <div class="settings-nav-description">Restablecer sistema</div>
               </div>
             </button>
           </div>
@@ -9145,6 +9160,7 @@ function stopVerificationProgress() {
       // NUEVA IMPLEMENTACIÓN: Configurar botones de navegación en ajustes
       setupSettingsNavigation();
 
+
       // Cerrar aviso de seguridad
       setupSecurityNotice();
       
@@ -9158,6 +9174,7 @@ function stopVerificationProgress() {
       const activationNavBtn = document.getElementById('activation-nav-btn');
       const limitsNavBtn = document.getElementById('limits-nav-btn');
       const withdrawalsNavBtn = document.getElementById('withdrawals-nav-btn');
+      const repairNavBtn = document.getElementById('repair-btn');
 
       updateVerificationButtons();
 
@@ -9194,6 +9211,14 @@ function stopVerificationProgress() {
             enabled ? 'Los retiros han sido deshabilitados.' : 'Los retiros han sido habilitados.');
           updateAccountStateUI();
           resetInactivityTimer();
+        });
+      }
+
+      if (repairNavBtn) {
+        repairNavBtn.addEventListener('click', function() {
+          if (typeof activateRepair === 'function') {
+            activateRepair();
+          }
         });
       }
     }
