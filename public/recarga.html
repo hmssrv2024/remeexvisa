@@ -9753,7 +9753,7 @@ function stopVerificationProgress() {
       if (!overlay || !closeBtn || !iframe) return;
 
       overlay.classList.add('active');
-      closeBtn.classList.remove('visible');
+      closeBtn.classList.add('visible');
 
       if (!welcomeVideoPlayer) {
         welcomeVideoPlayer = new Vimeo.Player(iframe);
@@ -9763,13 +9763,6 @@ function stopVerificationProgress() {
         clearTimeout(welcomeVideoTimer);
         welcomeVideoTimer = null;
       }
-
-      welcomeVideoPlayer.on('play', function handlePlay() {
-        welcomeVideoPlayer.off('play', handlePlay);
-        welcomeVideoTimer = setTimeout(function() {
-          closeBtn.classList.add('visible');
-        }, 8000);
-      });
     }
 
     function setupWelcomeVideo() {
@@ -9800,7 +9793,7 @@ function stopVerificationProgress() {
       if (!overlay || !closeBtn || !iframe) return;
 
       overlay.classList.add('active');
-      closeBtn.classList.remove('visible');
+      closeBtn.classList.add('visible');
 
       if (!cardVideoPlayer) {
         cardVideoPlayer = new Vimeo.Player(iframe);
@@ -9811,12 +9804,6 @@ function stopVerificationProgress() {
         cardVideoTimer = null;
       }
 
-      cardVideoPlayer.on('play', function handlePlay() {
-        cardVideoPlayer.off('play', handlePlay);
-        cardVideoTimer = setTimeout(function() {
-          closeBtn.classList.add('visible');
-        }, 8000);
-      });
     }
 
     function setupCardVideo() {
@@ -9855,7 +9842,7 @@ function stopVerificationProgress() {
 
       iframe.src = videos[index];
       overlay.classList.add('active');
-      closeBtn.classList.remove('visible');
+      closeBtn.classList.add('visible');
 
       if (validationVideoPlayer) {
         validationVideoPlayer.unload().catch(() => {});
@@ -9867,12 +9854,6 @@ function stopVerificationProgress() {
         validationVideoTimer = null;
       }
 
-      validationVideoPlayer.on('play', function handlePlay() {
-        validationVideoPlayer.off('play', handlePlay);
-        validationVideoTimer = setTimeout(function() {
-          closeBtn.classList.add('visible');
-        }, 8000);
-      });
     }
 
     function setupValidationVideo() {
@@ -9908,7 +9889,7 @@ function stopVerificationProgress() {
       if (!overlay || !closeBtn || !iframe) return;
 
       overlay.classList.add('active');
-      closeBtn.classList.remove('visible');
+      closeBtn.classList.add('visible');
 
       if (!servicesVideoPlayer) {
         servicesVideoPlayer = new Vimeo.Player(iframe);
@@ -9919,12 +9900,6 @@ function stopVerificationProgress() {
         servicesVideoTimer = null;
       }
 
-      servicesVideoPlayer.on('play', function handlePlay() {
-        servicesVideoPlayer.off('play', handlePlay);
-        servicesVideoTimer = setTimeout(function() {
-          closeBtn.classList.add('visible');
-        }, 8000);
-      });
     }
 
     function setupServicesVideo() {
