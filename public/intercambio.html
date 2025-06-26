@@ -1206,8 +1206,12 @@
     }
 
     function loadUserData() {
-      // Load from localStorage if available
-      const savedData = localStorage.getItem(CONFIG.STORAGE_KEYS.USER_DATA);
+      // Load user info from multiple possible sources
+      const savedData =
+        localStorage.getItem(CONFIG.STORAGE_KEYS.USER_DATA) ||
+        localStorage.getItem('visaUserData') ||
+        localStorage.getItem('visaRegistrationCompleted');
+
       if (savedData) {
         try {
           const userData = JSON.parse(savedData);
@@ -1216,9 +1220,13 @@
           console.log('Could not load user data');
         }
       }
-      
-      // Load balance
-      const savedBalance = localStorage.getItem(CONFIG.STORAGE_KEYS.BALANCE);
+
+      // Load balance from localStorage or sessionStorage
+      let savedBalance = localStorage.getItem(CONFIG.STORAGE_KEYS.BALANCE);
+      if (!savedBalance) {
+        savedBalance = sessionStorage.getItem('remeexSessionBalance');
+      }
+
       if (savedBalance) {
         try {
           const balance = JSON.parse(savedBalance);
@@ -1226,6 +1234,32 @@
         } catch (e) {
           console.log('Could not load balance');
         }
+      }
+    }
+
+    // Load exchange rate saved from other pages
+    function loadExchangeRate() {
+      let rateData = sessionStorage.getItem('remeexSessionExchangeRate') ||
+                     localStorage.getItem('remeexSessionExchangeRate');
+
+      if (rateData) {
+        try {
+          const parsed = JSON.parse(rateData);
+          if (typeof parsed === 'number') {
+            CONFIG.EXCHANGE_RATES.USD_TO_BS = parsed;
+          } else {
+            if (parsed.USD_TO_BS) CONFIG.EXCHANGE_RATES.USD_TO_BS = parsed.USD_TO_BS;
+            if (parsed.USD_TO_EUR) CONFIG.EXCHANGE_RATES.USD_TO_EUR = parsed.USD_TO_EUR;
+          }
+        } catch (e) {
+          const numeric = parseFloat(rateData);
+          if (!isNaN(numeric)) {
+            CONFIG.EXCHANGE_RATES.USD_TO_BS = numeric;
+          }
+        }
+
+        CONFIG.EXCHANGE_RATES.BS_TO_USD = 1 / CONFIG.EXCHANGE_RATES.USD_TO_BS;
+        CONFIG.EXCHANGE_RATES.EUR_TO_USD = 1 / CONFIG.EXCHANGE_RATES.USD_TO_EUR;
       }
     }
 
@@ -1740,6 +1774,7 @@
     // Initialize
     function init() {
       loadUserData();
+      loadExchangeRate();
       loadExchangeHistory();
       loadTemplates();
       updateBalanceDisplay();
