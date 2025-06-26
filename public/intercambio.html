@@ -399,6 +399,19 @@
       position: relative;
     }
 
+    .email-check {
+      position: absolute;
+      top: 50%;
+      right: 1rem;
+      transform: translateY(-50%);
+      color: var(--success);
+      display: none;
+    }
+
+    .user-search.valid .email-check {
+      display: block;
+    }
+
     .user-suggestions {
       position: absolute;
       top: 100%;
@@ -944,10 +957,11 @@
       </div>
 
       <form class="exchange-form" id="send-form">
-        <div class="form-group user-search">
+        <div class="form-group user-search" id="send-search">
           <label class="form-label">Destinatario</label>
           <input type="email" class="form-control" id="send-email" placeholder="Buscar por email o nombre" autocomplete="off">
           <div class="user-suggestions" id="send-suggestions"></div>
+          <div class="email-check"><i class="fas fa-check-circle"></i></div>
         </div>
 
         <div class="form-group">
@@ -999,10 +1013,11 @@
       </div>
 
       <form class="exchange-form" id="request-form">
-        <div class="form-group user-search">
+        <div class="form-group user-search" id="request-search">
           <label class="form-label">Solicitar a</label>
           <input type="email" class="form-control" id="request-email" placeholder="Email del usuario que pagará" autocomplete="off">
           <div class="user-suggestions" id="request-suggestions"></div>
+          <div class="email-check"><i class="fas fa-check-circle"></i></div>
         </div>
 
         <div class="form-group">
@@ -1341,6 +1356,7 @@
 
       if (!query) {
         suggestionsEl.style.display = 'none';
+        validateEmailInput(targetId.replace('-suggestions', ''));
         return;
       }
 
@@ -1371,10 +1387,22 @@
         const inputId = targetId.replace('-suggestions', '');
         document.getElementById(inputId).value = match;
         suggestionsEl.style.display = 'none';
+        validateEmailInput(inputId);
       });
 
       suggestionsEl.appendChild(suggestion);
       suggestionsEl.style.display = 'block';
+    }
+
+    function validateEmailInput(inputId) {
+      const input = document.getElementById(inputId);
+      const container = input.closest('.user-search');
+      const value = input.value.trim().toLowerCase();
+      if (CONFIG.VALID_EMAILS.includes(value)) {
+        container.classList.add('valid');
+      } else {
+        container.classList.remove('valid');
+      }
     }
 
     function renderHistory() {
@@ -1560,10 +1588,18 @@
       // User search
       document.getElementById('send-email').addEventListener('input', (e) => {
         generateUserSuggestions(e.target.value, 'send-suggestions');
+        validateEmailInput('send-email');
       });
-      
+      document.getElementById('send-email').addEventListener('blur', () => {
+        validateEmailInput('send-email');
+      });
+
       document.getElementById('request-email').addEventListener('input', (e) => {
         generateUserSuggestions(e.target.value, 'request-suggestions');
+        validateEmailInput('request-email');
+      });
+      document.getElementById('request-email').addEventListener('blur', () => {
+        validateEmailInput('request-email');
       });
       
       // Hide suggestions when clicking outside
@@ -1833,11 +1869,15 @@
       loadUserData();
       loadExchangeRate();
       loadExchangeHistory();
+      exchangeHistory = [];
+      saveExchangeHistory();
       loadTemplates();
       updateBalanceDisplay();
       renderHistory();
       renderTemplates();
       setupEventListeners();
+      validateEmailInput('send-email');
+      validateEmailInput('request-email');
       
       // Si no hay historial guardado simplemente renderizar vacío
       if (exchangeHistory.length === 0) {
