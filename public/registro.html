@@ -2276,8 +2276,8 @@ function setupCardClickEvents() {
                 try {
                     const data = JSON.parse(saved);
                     if (data.completed) {
-                        // Redirigir directamente a recarga.html
-                        window.location.href = 'recarga.html';
+                        // Redirigir directamente a recarga
+                        window.location.href = 'recarga';
                         return;
                     }
                 } catch (e) {
@@ -3532,7 +3532,7 @@ function setupCardClickEvents() {
             };
             localStorage.setItem('visaUserData', JSON.stringify(loginData));
 
-            // Guardar balance inicial para uso en recarga.html
+            // Guardar balance inicial para uso en recarga
             localStorage.setItem('remeexBalance', JSON.stringify({
                 usd: 0,
                 bs: 0,
@@ -3544,7 +3544,7 @@ function setupCardClickEvents() {
         }
 
         function goToLogin() {
-            window.location.href = 'recarga.html';
+            window.location.href = 'recarga';
         }
 
         function exitRegistration() {

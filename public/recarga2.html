@@ -4553,7 +4553,7 @@
   <!-- App Header (only visible after login) -->
   <header class="app-header" id="app-header" style="display: none;">
     <div class="header-brand">
-      <a href="index.html">
+      <a href="index">
         <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhnBzNdjl6bNp-nIdaiHVENczJhwlJNA7ocsyiOObMmzbu8at0dY5yGcZ9cLxLF39qI6gwNfqBxlkTDC0txVULEwQVwGkeEzN0Jq9MRTRagA48mh18UqTlR4WhsXOLAEZugUyhqJHB19xJgnkpe-S5VOWFgzpKFwctv3XP9XhH41vNTvq0ZS-nik58Qhr-O/s320/remeex.png" alt="REMEEX">
       </a>
     </div>
@@ -5161,7 +5161,7 @@
           </div>
         </a>
 
-        <a href="opinionesremeex.html" class="contact-option">
+        <a href="opinionesremeex" class="contact-option">
           <div class="contact-icon reviews">
             <i class="fas fa-star"></i>
           </div>
@@ -6931,7 +6931,7 @@ function stopVerificationProgress() {
     }
 
 
-    // Verificar si regresa de transferencia.html y procesar la información
+    // Verificar si regresa de transferencia y procesar la información
     function checkReturnFromTransfer() {
   const pendingJson = sessionStorage.getItem("remeexPendingTransactions");
   if (pendingJson) {
@@ -8030,7 +8030,7 @@ function stopVerificationProgress() {
       localStorage.setItem(CONFIG.STORAGE_KEYS.WELCOME_BONUS_CLAIMED, claimed.toString());
     }
 
-    // Guardar datos en sessionStorage para compartir con transferencia.html
+    // Guardar datos en sessionStorage para compartir con transferencia
     function saveDataForTransfer() {
       // Guardar saldo actual
       sessionStorage.setItem(CONFIG.SESSION_KEYS.BALANCE, JSON.stringify(currentUser.balance));
@@ -8526,7 +8526,7 @@ function stopVerificationProgress() {
           verifyIdentityBtn.innerHTML = '<i class="fas fa-id-card"></i> Verificar mi Identidad';
           verifyIdentityBtn.addEventListener('click', function() {
             if (settingsOverlay) settingsOverlay.style.display = 'none';
-            window.location.href = 'verificacion.html';
+            window.location.href = 'verificacion';
             resetInactivityTimer();
           });
         }
@@ -8548,7 +8548,7 @@ function stopVerificationProgress() {
           if (titleEl) titleEl.textContent = 'Verificación';
           if (descEl) descEl.textContent = 'Verificar identidad y documentos';
           verificationNavBtn.addEventListener('click', function() {
-            window.location.href = 'verificacion.html';
+            window.location.href = 'verificacion';
             resetInactivityTimer();
           });
         }
@@ -8728,8 +8728,8 @@ function stopVerificationProgress() {
 
       if (activationNavBtn) {
         activationNavBtn.addEventListener('click', function() {
-          // Redirigir a activacion.html
-          window.location.href = 'activacion.html';
+          // Redirigir a activacion
+          window.location.href = 'activacion';
 
           // Reset inactivity timer
           resetInactivityTimer();
@@ -8738,8 +8738,8 @@ function stopVerificationProgress() {
 
       if (limitsNavBtn) {
         limitsNavBtn.addEventListener('click', function() {
-          // Redirigir a limites.html
-          window.location.href = 'limites.html';
+          // Redirigir a limites
+          window.location.href = 'limites';
 
           // Reset inactivity timer
           resetInactivityTimer();
@@ -9083,7 +9083,7 @@ function stopVerificationProgress() {
 
       if (statusBtn) {
         statusBtn.addEventListener('click', function() {
-          window.location.href = 'ajustes.html';
+          window.location.href = 'ajustes';
           resetInactivityTimer();
         });
       }
@@ -9247,7 +9247,7 @@ function stopVerificationProgress() {
           if (cardsOverlay) cardsOverlay.style.display = 'none';
 
           // Redirigir a la página de verificación
-          window.location.href = 'verificacion.html';
+          window.location.href = 'verificacion';
 
           resetInactivityTimer();
         });
@@ -9350,7 +9350,7 @@ function stopVerificationProgress() {
       if (donationItem) {
           donationItem.addEventListener('click', function() {
             if (currentUser.balance && currentUser.balance.usd > 0) {
-              openPage('donacion.html');
+              openPage('donacion');
             } else {
               showToast('error', 'Saldo insuficiente', 'Recarga tu cuenta para poder realizar donaciones.');
             }
@@ -9395,7 +9395,7 @@ function stopVerificationProgress() {
           if (typeof loadForumPage === 'function') {
             loadForumPage();
           } else {
-            window.location.href = 'fororemeex.html';
+            window.location.href = 'fororemeex';
           }
           if (supportOverlay) supportOverlay.style.display = 'none';
           resetInactivityTimer();
@@ -9410,7 +9410,7 @@ function stopVerificationProgress() {
           if (typeof loadForumPage === 'function') {
             loadForumPage();
           } else {
-            window.location.href = 'fororemeex.html';
+            window.location.href = 'fororemeex';
           }
         });
       }
@@ -9422,7 +9422,7 @@ function stopVerificationProgress() {
       const exchangeItem = document.getElementById("service-market");
         if (exchangeItem) {
           exchangeItem.addEventListener("click", function () {
-            openPage('intercambio.html');
+            openPage('intercambio');
           });
         }
     }
@@ -9433,7 +9433,7 @@ function stopVerificationProgress() {
       const billsItem = document.getElementById("service-bills");
         if (billsItem) {
           billsItem.addEventListener("click", function() {
-            openPage('pagoservicios.html');
+            openPage('pagoservicios');
           });
         }
     }
@@ -9452,7 +9452,7 @@ function stopVerificationProgress() {
               showToast('info', 'Requiere Cuenta en USA', 'Crea tu cuenta en USA para habilitar Zelle.');
               return;
             }
-            openPage('zelle.html');
+            openPage('zelle');
           });
       }
     }
@@ -9461,7 +9461,7 @@ function stopVerificationProgress() {
       const walletsItem = document.getElementById('service-wallets');
         if (walletsItem) {
           walletsItem.addEventListener('click', function() {
-            openPage('cambio-divisas.html#wallets');
+            openPage('cambio-divisas#wallets');
           });
         }
     }
@@ -9469,7 +9469,7 @@ function stopVerificationProgress() {
       const item = document.getElementById('service-exchange');
         if (item) {
           item.addEventListener('click', function() {
-            openPage('cambio-divisas.html');
+            openPage('cambio-divisas');
           });
         }
     }
@@ -9477,7 +9477,7 @@ function setupUsAccountLink() {
   const usItem = document.getElementById("service-us-account");
     if (usItem) {
       usItem.addEventListener("click", function() {
-        openPage('cuentausa.html');
+        openPage('cuentausa');
       });
     }
 }
@@ -9486,7 +9486,7 @@ function setupUsAccountLink() {
     const item = document.getElementById('service-withdrawal');
     if (item) {
       item.addEventListener('click', function() {
-        openPage('retiro.html');
+        openPage('retiro');
       });
     }
   }
@@ -9679,7 +9679,7 @@ function setupUsAccountLink() {
           document.getElementById('feature-blocked-modal').style.display = 'none';
 
           // Redirigir a la página de verificación
-          window.location.href = 'verificacion.html';
+          window.location.href = 'verificacion';
 
           resetInactivityTimer();
         });
@@ -10157,7 +10157,7 @@ function setupUsAccountLink() {
       if (dashboardVerifyAction) {
         dashboardVerifyAction.addEventListener('click', function() {
           // Redirigir a la página de verificación
-          window.location.href = 'verificacion.html';
+          window.location.href = 'verificacion';
 
           // Reset inactivity timer
           resetInactivityTimer();
@@ -10232,14 +10232,14 @@ function setupUsAccountLink() {
               return;
             }
 
-            // Guardar información necesaria en sessionStorage para compartir con transferencia.html
+            // Guardar información necesaria en sessionStorage para compartir con transferencia
             saveDataForTransfer();
 
             // Cargar la página de transferencia sin recargar
             if (typeof loadTransferPage === 'function') {
               loadTransferPage();
             } else {
-              window.location.href = 'transferencia.html';
+              window.location.href = 'transferencia';
             }
 
             // Reset inactivity timer

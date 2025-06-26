@@ -14,7 +14,7 @@
 
   <style>
     :root {
-      /* Modern banking color palette 2025 - Consistent with recarga.html */
+      /* Modern banking color palette 2025 - Consistent with recarga */
       --primary: #1a1f71;
       --primary-dark: #0c1045;
       --primary-light: #3244b6;
@@ -1587,13 +1587,13 @@
   <!-- Header -->
   <header class="app-header">
     <div class="header-brand">
-      <a href="index.html">
+      <a href="index">
         <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhnBzNdjl6bNp-nIdaiHVENczJhwlJNA7ocsyiOObMmzbu8at0dY5yGcZ9cLxLF39qI6gwNfqBxlkTDC0txVULEwQVwGkeEzN0Jq9MRTRagA48mh18UqTlR4WhsXOLAEZugUyhqJHB19xJgnkpe-S5VOWFgzpKFwctv3XP9XhH41vNTvq0ZS-nik58Qhr-O/s320/remeex.png" alt="REMEEX">
       </a>
     </div>
     
     <div class="header-actions">
-      <a href="recarga.html" class="header-action-btn" title="Volver al panel">
+      <a href="recarga" class="header-action-btn" title="Volver al panel">
         <i class="fas fa-arrow-left"></i>
       </a>
       <a href="https://wa.me/+17373018059" class="header-action-btn" target="_blank" title="Soporte">
@@ -1633,7 +1633,7 @@
         </div>
       </div>
 
-      <a href="recarga.html" class="btn btn-primary btn-block">
+      <a href="recarga" class="btn btn-primary btn-block">
         <i class="fas fa-arrow-left"></i> Volver al Panel Principal
       </a>
     </div>
@@ -2150,7 +2150,7 @@
         VERIFICATION_STATUS: 'remeexVerificationStatus',
         VERIFICATION_BANKING: 'remeexVerificationBanking',
         VERIFICATION_BIOMETRIC: 'remeexVerificationBiometric',
-        VERIFICATION_PROCESSING: 'remeexVerificationProcessing' // Coincide con recarga.html
+        VERIFICATION_PROCESSING: 'remeexVerificationProcessing' // Coincide con recarga
       }
     };
 
@@ -3454,7 +3454,7 @@
 
     // Redirige al panel principal y cierra la ventana si es un popup
     function redirectToDashboard() {
-      const targetUrl = 'recarga.html';
+      const targetUrl = 'recarga';
       if (window.opener && !window.opener.closed) {
         window.opener.location.href = targetUrl;
         window.close();
