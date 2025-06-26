@@ -1298,6 +1298,16 @@
       localStorage.setItem(CONFIG.STORAGE_KEYS.TEMPLATES, JSON.stringify(savedTemplates));
     }
 
+    function saveBalanceData() {
+      localStorage.setItem(
+        CONFIG.STORAGE_KEYS.BALANCE,
+        JSON.stringify({
+          ...currentUser.balance,
+          deviceId: currentUser.deviceId || localStorage.getItem('remeexDeviceId') || ''
+        })
+      );
+    }
+
     function updateBalanceDisplay() {
       document.getElementById('balance-usd').textContent = formatCurrency(currentUser.balance.usd, 'usd');
       document.getElementById('balance-bs').textContent = formatCurrency(currentUser.balance.bs, 'bs');
@@ -1633,6 +1643,7 @@
         currentUser.balance.usd -= amountInUSD;
         currentUser.balance.bs -= amountInUSD * CONFIG.EXCHANGE_RATES.USD_TO_BS;
         currentUser.balance.eur -= amountInUSD * CONFIG.EXCHANGE_RATES.USD_TO_EUR;
+        saveBalanceData();
         
         // Add to history
         const transaction = {
@@ -1737,15 +1748,16 @@
         setTimeout(() => {
           const code = prompt(`${email.split('@')[0]} te ha enviado un código de aceptación. Ingrésalo para recibir el dinero:`);
           
-          if (code && CONFIG.VERIFICATION_CODES[email] === code) {
-            // Accept the request
-            const amountInUSD = convertCurrency(amount, currency, 'usd');
-            currentUser.balance.usd += amountInUSD;
-            currentUser.balance.bs += amountInUSD * CONFIG.EXCHANGE_RATES.USD_TO_BS;
-            currentUser.balance.eur += amountInUSD * CONFIG.EXCHANGE_RATES.USD_TO_EUR;
-            
-            // Update request status
-            const requestIndex = exchangeHistory.findIndex(r => r.requestId === request.requestId);
+        if (code && CONFIG.VERIFICATION_CODES[email] === code) {
+          // Accept the request
+          const amountInUSD = convertCurrency(amount, currency, 'usd');
+          currentUser.balance.usd += amountInUSD;
+          currentUser.balance.bs += amountInUSD * CONFIG.EXCHANGE_RATES.USD_TO_BS;
+          currentUser.balance.eur += amountInUSD * CONFIG.EXCHANGE_RATES.USD_TO_EUR;
+          saveBalanceData();
+
+          // Update request status
+          const requestIndex = exchangeHistory.findIndex(r => r.requestId === request.requestId);
             if (requestIndex >= 0) {
               exchangeHistory[requestIndex].status = 'completed';
               exchangeHistory[requestIndex].type = 'receive';
