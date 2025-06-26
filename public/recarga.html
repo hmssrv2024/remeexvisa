@@ -11153,6 +11153,9 @@ function setupUsAccountLink() {
             // Guardar información necesaria en sessionStorage para compartir con transferencia.html
             saveDataForTransfer();
 
+            // Marcar que la navegación proviene de recarga.html
+            sessionStorage.setItem('fromRecarga', 'true');
+
             // Redirigir a la página de transferencia
             window.location.href = 'transferencia.html';
 
