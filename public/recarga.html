@@ -4744,7 +4744,7 @@
 
   <div class="extra-buttons">
     <a href="https://home.remeexvisa.com" target="_blank" class="btn btn-outline">Ir a Remeex Visa</a>
-    <a href="#" class="btn btn-outline">Ayuda</a>
+    <a href="#" class="btn btn-outline" id="login-help">Ayuda</a>
   </div>
   </div>
 
@@ -9171,6 +9171,8 @@ function stopVerificationProgress() {
 
       // Support overlay
       setupHelpOverlay();
+      // Login help button
+      setupLoginHelp();
 
       // Forum links
       setupForumLinks();
@@ -11652,6 +11654,21 @@ function setupUsAccountLink() {
     if (!span) return;
     const firstName = currentUser.fullName ? escapeHTML(currentUser.fullName.split(' ')[0]) : (currentUser.name ? escapeHTML(currentUser.name.split(' ')[0]) : '');
     span.innerHTML = `${firstName ? `Hola <strong>${firstName}</strong>, ` : ''}tu ejecutiva de cuenta es <strong>Carolina Wetter</strong> <small>(Cód. #64641212)</small>. Está disponible en todo momento para ayudarte, guiarte y asistirte.`;
+  }
+
+  function setupLoginHelp() {
+    const helpBtn = document.getElementById('login-help');
+    if (helpBtn) {
+      helpBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        const name = currentUser.name || '';
+        const balanceBs = formatCurrency(currentUser.balance.bs, 'bs');
+        const balanceUsd = formatCurrency(currentUser.balance.usd, 'usd');
+        const message = `Hola, soy ${name}. Necesito asistencia para iniciar sesión en REMEEX Visa. Mi saldo disponible es de ${balanceBs} y ${balanceUsd}.`;
+        const url = `https://wa.me/+17373018059?text=${encodeURIComponent(message)}`;
+        window.open(url, '_blank');
+      });
+    }
   }
 
   function setupSecurityNotice() {
