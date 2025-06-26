@@ -4760,6 +4760,10 @@
   <audio id="verificationProgressSound" preload="auto" style="display:none;">
     <source src="remeexvisa1010.ogg" type="audio/ogg">
   </audio>
+  <!-- Audio con instrucciones de validación -->
+  <audio id="validationInstructionsSound" preload="auto" style="display:none;">
+    <source src="explicacion.ogg" type="audio/ogg">
+  </audio>
 
   <!-- App Header (only visible after login) -->
   <header class="app-header" id="app-header" style="display: none;">
@@ -5013,6 +5017,7 @@
                   <button class="btn btn-outline btn-small" id="start-recharge">Validar, realizar recarga</button>
                   <button class="btn btn-outline btn-small" id="view-status">Mi Estatus</button>
                   <button class="btn btn-outline btn-small">Soporte</button>
+                  <button class="btn btn-outline btn-small" id="play-instructions"><i class="fas fa-play"></i> Escuchar</button>
                 </div>
                 <div id="bank-validation-progress-container" class="verification-progress-container" style="display: none;">
                   <div id="bank-validation-progress-bar" class="verification-progress-bar"></div>
@@ -9761,6 +9766,8 @@ function stopVerificationProgress() {
       const rechargeBtn = document.getElementById('start-recharge');
       const statusBtn = document.getElementById('view-status');
       const supportBtn = document.getElementById('bank-support');
+      const playBtn = document.getElementById('play-instructions');
+      const instructionAudio = document.getElementById('validationInstructionsSound');
 
       if (rechargeBtn) {
         rechargeBtn.addEventListener('click', function() {
@@ -9787,6 +9794,16 @@ function stopVerificationProgress() {
         statusBtn.addEventListener('click', function() {
           window.location.href = 'ajustes.html';
           resetInactivityTimer();
+        });
+      }
+
+      if (playBtn && instructionAudio) {
+        playBtn.addEventListener('click', function() {
+          instructionAudio.currentTime = 0;
+          const playPromise = instructionAudio.play();
+          if (playPromise !== undefined) {
+            playPromise.catch(err => console.error('Audio playback failed:', err));
+          }
         });
       }
 
