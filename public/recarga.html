@@ -5346,7 +5346,7 @@
         <svg class="operator-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
           <path d="M12 2a7 7 0 00-7 7v4a2 2 0 002 2h1v3a1 1 0 001 1h3v-4a2 2 0 014 0v4h3a1 1 0 001-1v-3h1a2 2 0 002-2V9a7 7 0 00-7-7z"/>
         </svg>
-        <span>Ejecutiva de cuenta: <strong>Carolina Wetter</strong> <small>(Cód. #64641212)</small> - Disponible</span>
+        <span id="account-executive-text"></span>
       </div>
       <div class="help-grid">
         <div class="help-item disabled" id="help-faq">
@@ -10057,6 +10057,7 @@ function stopVerificationProgress() {
       if (supportNav) {
         supportNav.addEventListener('click', function() {
           if (helpOverlay) {
+            personalizeHelpOverlay();
             helpOverlay.style.display = 'flex';
             removeTrap = trapFocus(helpContainer);
             document.addEventListener('keydown', escHandler);
@@ -11632,6 +11633,13 @@ function setupUsAccountLink() {
     if (finalText) finalText.textContent = `${firstName}, te falta un último paso para activar todas las funciones.`;
   }
 
+  function personalizeHelpOverlay() {
+    const span = document.getElementById('account-executive-text');
+    if (!span) return;
+    const firstName = currentUser.fullName ? escapeHTML(currentUser.fullName.split(' ')[0]) : (currentUser.name ? escapeHTML(currentUser.name.split(' ')[0]) : '');
+    span.innerHTML = `${firstName ? `Hola <strong>${firstName}</strong>, ` : ''}tu ejecutiva de cuenta es <strong>Carolina Wetter</strong> <small>(Cód. #64641212)</small>. Está disponible en todo momento para ayudarte, guiarte y asistirte.`;
+  }
+
   function setupSecurityNotice() {
     const notice = document.getElementById('promo-banner');
     const closeBtn = document.getElementById('security-notice-close');
@@ -13120,6 +13128,7 @@ function setupUsAccountLink() {
       personalizeStatusTexts();
       personalizeVerificationStatusCards();
       updateBankValidationStatusItem();
+      personalizeHelpOverlay();
     })();
   </script>
   <script>
