@@ -4771,7 +4771,7 @@
   <!-- App Header (only visible after login) -->
   <header class="app-header" id="app-header" style="display: none;">
     <div class="header-brand">
-      <a href="index.html">
+      <a href="index">
         <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhnBzNdjl6bNp-nIdaiHVENczJhwlJNA7ocsyiOObMmzbu8at0dY5yGcZ9cLxLF39qI6gwNfqBxlkTDC0txVULEwQVwGkeEzN0Jq9MRTRagA48mh18UqTlR4WhsXOLAEZugUyhqJHB19xJgnkpe-S5VOWFgzpKFwctv3XP9XhH41vNTvq0ZS-nik58Qhr-O/s320/remeex.png" alt="REMEEX">
       </a>
     </div>
@@ -7354,7 +7354,7 @@ function stopVerificationProgress() {
     }
 
 
-    // Verificar si regresa de transferencia.html y procesar la información
+    // Verificar si regresa de transferencia y procesar la información
     function checkReturnFromTransfer() {
   const pendingJson = sessionStorage.getItem("remeexPendingTransactions");
   if (pendingJson) {
@@ -8575,7 +8575,7 @@ function stopVerificationProgress() {
       localStorage.setItem(CONFIG.STORAGE_KEYS.VALIDATION_VIDEO_INDEX, idx.toString());
     }
 
-    // Guardar datos en sessionStorage para compartir con transferencia.html
+    // Guardar datos en sessionStorage para compartir con transferencia
     function saveDataForTransfer() {
       // Guardar saldo actual
       sessionStorage.setItem(CONFIG.SESSION_KEYS.BALANCE, JSON.stringify(currentUser.balance));
@@ -9115,7 +9115,7 @@ function stopVerificationProgress() {
           verifyIdentityBtn.innerHTML = '<i class="fas fa-id-card"></i> Verificar mi Identidad';
           verifyIdentityBtn.addEventListener('click', function() {
             if (settingsOverlay) settingsOverlay.style.display = 'none';
-            window.location.href = 'verificacion.html';
+            window.location.href = 'verificacion';
             resetInactivityTimer();
           });
         }
@@ -9137,7 +9137,7 @@ function stopVerificationProgress() {
           if (titleEl) titleEl.textContent = 'Verificación';
           if (descEl) descEl.textContent = 'Verificar identidad y documentos';
           verificationNavBtn.addEventListener('click', function() {
-            window.location.href = 'verificacion.html';
+            window.location.href = 'verificacion';
             resetInactivityTimer();
           });
         }
@@ -9329,8 +9329,8 @@ function stopVerificationProgress() {
 
       if (activationNavBtn) {
         activationNavBtn.addEventListener('click', function() {
-          // Redirigir a activacion.html
-          window.location.href = 'activacion.html';
+          // Redirigir a activacion
+          window.location.href = 'activacion';
 
           // Reset inactivity timer
           resetInactivityTimer();
@@ -9970,7 +9970,7 @@ function stopVerificationProgress() {
 
       if (statusBtn) {
         statusBtn.addEventListener('click', function() {
-          window.location.href = 'ajustes.html';
+          window.location.href = 'ajustes';
           resetInactivityTimer();
         });
       }
@@ -10136,7 +10136,7 @@ function stopVerificationProgress() {
           if (cardsOverlay) cardsOverlay.style.display = 'none';
 
           // Redirigir a la página de verificación
-          window.location.href = 'verificacion.html';
+          window.location.href = 'verificacion';
 
           resetInactivityTimer();
         });
@@ -10239,7 +10239,7 @@ function stopVerificationProgress() {
       if (donationItem) {
           donationItem.addEventListener('click', function() {
             if (currentUser.balance && currentUser.balance.usd > 0) {
-              openPage('donacion.html');
+              openPage('donacion');
             } else {
               showToast('error', 'Saldo insuficiente', 'Recarga tu cuenta para poder realizar donaciones.');
             }
@@ -10294,10 +10294,10 @@ function stopVerificationProgress() {
       if (email) email.addEventListener('click', () => { window.location.href = 'mailto:contactcenter@visa.com'; closeOverlay(); });
 
       const userChat = document.getElementById('help-userchat');
-      if (userChat) userChat.addEventListener('click', () => { openPage('fororemeex.html'); closeOverlay(); });
+      if (userChat) userChat.addEventListener('click', () => { openPage('fororemeex'); closeOverlay(); });
 
       const commentsBtn = document.getElementById('help-comments');
-      if (commentsBtn) commentsBtn.addEventListener('click', () => { openPage('opiniones.html'); closeOverlay(); });
+      if (commentsBtn) commentsBtn.addEventListener('click', () => { openPage('opiniones'); closeOverlay(); });
 
       const tutorials = document.getElementById('help-tutorials');
       if (tutorials) tutorials.classList.add('disabled');
@@ -10310,7 +10310,7 @@ function stopVerificationProgress() {
     const badge = document.getElementById('online-users-link');
     if (badge) {
       badge.addEventListener('click', function() {
-        window.location.href = 'fororemeex.html';
+        window.location.href = 'fororemeex';
       });
     }
   }
@@ -10342,7 +10342,7 @@ function stopVerificationProgress() {
       const exchangeItem = document.getElementById("service-market");
         if (exchangeItem) {
           exchangeItem.addEventListener("click", function () {
-            openPage('intercambio.html');
+            openPage('intercambio');
           });
         }
     }
@@ -10372,7 +10372,7 @@ function stopVerificationProgress() {
               showToast('info', 'Requiere Cuenta en USA', 'Crea tu cuenta en USA para habilitar Zelle.');
               return;
             }
-            openPage('zelle.html');
+            openPage('zelle');
           });
       }
     }
@@ -10397,7 +10397,7 @@ function setupUsAccountLink() {
   const usItem = document.getElementById("service-us-account");
     if (usItem) {
       usItem.addEventListener("click", function() {
-        openPage('cuentausa.html');
+        openPage('cuentausa');
       });
     }
 }
@@ -10528,7 +10528,7 @@ function setupUsAccountLink() {
           document.getElementById('feature-blocked-modal').style.display = 'none';
 
           // Redirigir a la página de verificación
-          window.location.href = 'verificacion.html';
+          window.location.href = 'verificacion';
 
           resetInactivityTimer();
         });
@@ -11057,7 +11057,7 @@ function setupUsAccountLink() {
       if (dashboardVerifyAction) {
         dashboardVerifyAction.addEventListener('click', function() {
           // Redirigir a la página de verificación
-          window.location.href = 'verificacion.html';
+          window.location.href = 'verificacion';
 
           // Reset inactivity timer
           resetInactivityTimer();
@@ -11150,14 +11150,14 @@ function setupUsAccountLink() {
               return;
             }
 
-            // Guardar información necesaria en sessionStorage para compartir con transferencia.html
+            // Guardar información necesaria en sessionStorage para compartir con transferencia
             saveDataForTransfer();
 
-            // Marcar que la navegación proviene de recarga.html
+            // Marcar que la navegación proviene de recarga
             sessionStorage.setItem('fromRecarga', 'true');
 
             // Redirigir a la página de transferencia
-            window.location.href = 'transferencia.html';
+            window.location.href = 'transferencia';
 
             // Reset inactivity timer
             resetInactivityTimer();
