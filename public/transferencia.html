@@ -2,6 +2,17 @@
 <html lang="es">
 <head>
   <script src="repair.js"></script>
+  <script>
+    (function() {
+      const ref = document.referrer ? document.referrer.split('/').pop() : '';
+      const fromRecarga = sessionStorage.getItem('fromRecarga') === 'true';
+      if (ref !== 'recarga.html' && !fromRecarga) {
+        window.location.replace('recarga.html');
+      } else {
+        sessionStorage.removeItem('fromRecarga');
+      }
+    })();
+  </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>REMEEX - Retiro de Fondos</title>
