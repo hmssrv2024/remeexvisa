@@ -1747,31 +1747,8 @@
       renderTemplates();
       setupEventListeners();
       
-      // Add some sample history if empty
+      // Si no hay historial guardado simplemente renderizar vacío
       if (exchangeHistory.length === 0) {
-        exchangeHistory = [
-          {
-            type: 'send',
-            toEmail: 'patrickdlavangart@gmail.com',
-            amount: 50,
-            currency: 'usd',
-            note: 'Pago por servicio',
-            date: 'viernes, 17 de mayo de 2024 14:30',
-            status: 'completed',
-            code: 'ABC123'
-          },
-          {
-            type: 'receive',
-            fromEmail: 'patrickdlavangart@gmail.com',
-            amount: 25,
-            currency: 'usd',
-            note: 'Devolución',
-            date: 'jueves, 16 de mayo de 2024 09:15',
-            status: 'completed',
-            code: 'DEF456'
-          }
-        ];
-        saveExchangeHistory();
         renderHistory();
       }
     }
@@ -1779,7 +1756,5 @@
     // Start the application
     document.addEventListener('DOMContentLoaded', init);
   </script>
-<div id="bottom-nav-container"></div>
-<script src="bottom-nav.js"></script>
 </body>
 </html>
