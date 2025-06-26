@@ -9,7 +9,8 @@ body.dark-mode{
 body.dark-mode .card,
 body.dark-mode .settings-container,
 body.dark-mode .bottom-nav,
-body.dark-mode .app-header{
+body.dark-mode .app-header,
+body.dark-mode .modal{
   background:#1a1f37 !important;
   color:var(--neutral-900) !important;
 }
@@ -32,7 +33,30 @@ body.silver-mode{
 body.silver-mode .card,
 body.silver-mode .settings-container,
 body.silver-mode .bottom-nav,
-body.silver-mode .app-header{
+body.silver-mode .app-header,
+body.silver-mode .modal{
   background:rgba(255,255,255,0.5) !important;
   backdrop-filter:blur(10px);
+}
+
+body.dark-mode .btn-primary,
+body.dark-mode .btn-outline{
+  background:var(--primary-dark) !important;
+  color:#fff !important;
+  border-color:var(--primary-dark) !important;
+}
+
+body.dark-mode .btn-outline{
+  background:transparent !important;
+}
+
+body.silver-mode .btn-primary,
+body.silver-mode .btn-outline{
+  background:var(--primary) !important;
+  color:var(--neutral-900) !important;
+  border-color:var(--primary) !important;
+}
+
+body.silver-mode .btn-outline{
+  background:transparent !important;
 }
