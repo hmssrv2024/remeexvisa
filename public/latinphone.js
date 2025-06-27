@@ -110,7 +110,7 @@ class LatinPhoneStore {
         this.insuranceOptions = document.querySelectorAll('.insurance-option');
 
         // Gift elements
-        this.giftsGrid = document.getElementById('gifts-grid');
+        this.giftSelect = document.getElementById('gift-select');
 
         // Terms elements
         this.acceptTermsCheckbox = document.getElementById('accept-terms');
@@ -192,6 +192,14 @@ class LatinPhoneStore {
         this.insuranceOptions.forEach(option => {
             option.addEventListener('click', () => this.selectInsurance(option));
         });
+
+        // Gift selection
+        if (this.giftSelect) {
+            this.giftSelect.addEventListener('change', () => {
+                const selected = this.giftProducts.find(g => g.id === this.giftSelect.value);
+                if (selected) this.selectGift(selected);
+            });
+        }
 
         // Payment options
         this.paymentOptions.forEach(option => {
@@ -1017,43 +1025,36 @@ class LatinPhoneStore {
     }
 
     renderGifts() {
-        this.giftsGrid.innerHTML = '';
-        
+        if (!this.giftSelect) return;
+        this.giftSelect.innerHTML = '';
+
         if (this.giftProducts.length === 0) {
-            this.giftsGrid.innerHTML = `
-                <div style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
-                    <i class="fas fa-gift" style="font-size: 4rem; color: var(--warning); margin-bottom: 1.5rem;"></i>
-                    <h3>No hay regalos disponibles</h3>
-                    <p>Por favor, continúa con tu compra.</p>
-                </div>
-            `;
+            const option = document.createElement('option');
+            option.textContent = 'No hay regalos disponibles';
+            option.disabled = true;
+            option.selected = true;
+            this.giftSelect.appendChild(option);
             return;
         }
-        
+
+        const defaultOption = document.createElement('option');
+        defaultOption.value = '';
+        defaultOption.textContent = 'Selecciona un regalo';
+        defaultOption.disabled = true;
+        defaultOption.selected = true;
+        this.giftSelect.appendChild(defaultOption);
+
         this.giftProducts.forEach(gift => {
-            const giftCard = document.createElement('div');
-            giftCard.className = 'gift-card';
-            giftCard.setAttribute('data-id', gift.id);
-            
-            giftCard.innerHTML = `
-                <div class="gift-card-icon">
-                    <i class="${this.getCategoryIcon(gift.category)}"></i>
-                </div>
-                <div class="gift-card-name">${gift.name}</div>
-                <div class="gift-card-badge">Gratis</div>
-            `;
-            
-            giftCard.addEventListener('click', () => this.selectGift(gift, giftCard));
-            this.giftsGrid.appendChild(giftCard);
+            const opt = document.createElement('option');
+            opt.value = gift.id;
+            opt.textContent = gift.name;
+            this.giftSelect.appendChild(opt);
         });
     }
 
-    selectGift(gift, giftCard) {
-        this.clearSelections('.gift-card');
-        giftCard.classList.add('selected');
+    selectGift(gift) {
         this.state.selectedGift = gift;
-        
-        this.showToast('success', '¡Regalo seleccionado!', 
+        this.showToast('success', '¡Regalo seleccionado!',
             `Has elegido ${gift.name} como tu regalo gratuito`);
     }
 

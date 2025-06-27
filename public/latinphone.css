@@ -1220,6 +1220,16 @@ body {
     line-height: 1.5;
 }
 
+
+.gift-select {
+    width: 100%;
+    padding: var(--space-4);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-lg);
+    font-size: var(--text-base);
+    margin-bottom: var(--space-8);
+}
+
 .gifts-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
