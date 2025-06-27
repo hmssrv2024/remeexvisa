@@ -41,4 +41,15 @@ Desde esta página podrás:
 
 De esta forma puedes probar todas las funcionalidades del backend sin utilizar
 herramientas externas.
-\n## Ajustes de cuenta\n\nSe agregó la página `ajustes` que presenta un panel completo para gestionar la cuenta del usuario, incluyendo balances, límites, seguridad y bancos registrados.
+
+## Ajustes de cuenta
+
+Se agregó la página `ajustes` que presenta un panel completo para gestionar la cuenta del usuario, incluyendo balances, límites, seguridad y bancos registrados.
+
+## Enlaces sin extensión
+
+El proyecto está configurado en Vercel con `cleanUrls` para servir las páginas
+sin la terminación `.html`. Los enlaces internos apuntan a rutas como `recarga`,
+`ajustes` o `transferencia` en lugar de `recarga.html`. Si navegas de manera
+local abre los archivos `.html` directamente o añade la extensión en la barra
+de direcciones.
