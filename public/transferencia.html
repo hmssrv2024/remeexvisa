@@ -5771,13 +5771,13 @@ let selectedCurrency = 'bs'; // Para input de monto
         const bankName = logoItem.getAttribute('data-bank-name');
         const bankLogo = logoItem.getAttribute('data-bank-logo');
         
-        if (isWizardMode) {
-          selectedBank = {
-            id: bankId,
-            name: bankName,
-            logo: bankLogo
-          };
+        selectedBank = {
+          id: bankId,
+          name: bankName,
+          logo: bankLogo
+        };
 
+        if (isWizardMode) {
           updateNextButtonState();
           checkAccountBankMatch();
         } else {
@@ -5787,6 +5787,7 @@ let selectedCurrency = 'bs'; // Para input de monto
           if (hiddenInput) {
             hiddenInput.value = bankId;
           }
+          checkAccountBankMatch();
         }
         
         showToast('success', 'Banco Seleccionado', `Has seleccionado ${bankName}`);
