@@ -9,6 +9,11 @@ self.addEventListener('activate', event => {
 });
 
 self.addEventListener('fetch', event => {
+  const url = new URL(event.request.url);
+  if (url.pathname.endsWith('.html')) {
+    event.respondWith(fetch(event.request));
+    return;
+  }
   event.respondWith(
     caches.open(CACHE_NAME).then(cache => {
       return cache.match(event.request).then(response => {
@@ -25,3 +30,4 @@ self.addEventListener('fetch', event => {
     })
   );
 });
+

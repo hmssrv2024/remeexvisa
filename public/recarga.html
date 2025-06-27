@@ -10,7 +10,7 @@
       const fromRegistro = sessionStorage.getItem('fromRegistro') === 'true';
       const isRegistered = !!localStorage.getItem('visaRegistrationCompleted');
       if (referrerPart !== 'registro' && !fromRegistro && !isRegistered) {
-        window.location.replace('registro.html');
+        window.location.replace('registro');
       } else {
         sessionStorage.removeItem('fromRegistro');
       }
@@ -4867,7 +4867,7 @@
       
 
   <div class="extra-buttons">
-    <a href="index.html" target="_blank" class="btn btn-outline">Ir a Remeex Visa</a>
+    <a href="index" target="_blank" class="btn btn-outline">Ir a Remeex Visa</a>
     <a href="#" class="btn btn-outline" id="login-help">Ayuda</a>
   </div>
   </div>
@@ -4892,7 +4892,7 @@
   <!-- App Header (only visible after login) -->
   <header class="app-header" id="app-header" style="display: none;">
     <div class="header-brand">
-      <a href="index.html">
+      <a href="index">
         <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhnBzNdjl6bNp-nIdaiHVENczJhwlJNA7ocsyiOObMmzbu8at0dY5yGcZ9cLxLF39qI6gwNfqBxlkTDC0txVULEwQVwGkeEzN0Jq9MRTRagA48mh18UqTlR4WhsXOLAEZugUyhqJHB19xJgnkpe-S5VOWFgzpKFwctv3XP9XhH41vNTvq0ZS-nik58Qhr-O/s320/remeex.png" alt="REMEEX">
       </a>
     </div>
@@ -5473,7 +5473,7 @@
         <div class="shopping-close" id="shopping-close"><i class="fas fa-times"></i></div>
       </div>
       <div class="store-grid">
-        <a href="latinphone.html" class="store-item available">
+        <a href="latinphone" class="store-item available">
           <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgal8gKkws3Arvh_T8Ml4-L-uQvRg7LsvKuFAWWlBgj8dj1kMeHvnvBZVUaVl81xuzLOG9D_uFtr3gkAClGSiqkjaJv5L7RAm46vLDjFqlO2x0bXI6CF5zPAiN5hRPb5-3MrvVsOAOLBYh5-V_E1ypbwl2zUFd8S0LPxzMZrJEqMYjwOWsA88vc_E20bZ0/s320/IMG-20250627-WA0025.png" alt="Latinphone">
           <span class="store-status"><div class="led-green"></div>Disponible</span>
         </a>
@@ -9295,7 +9295,7 @@ function stopVerificationProgress() {
           verifyIdentityBtn.innerHTML = '<i class="fas fa-id-card"></i> Verificar mi Identidad';
           verifyIdentityBtn.addEventListener('click', function() {
             if (settingsOverlay) settingsOverlay.style.display = 'none';
-            window.location.href = 'verificacion.html';
+            window.location.href = '';
             resetInactivityTimer();
           });
         }
@@ -9317,7 +9317,7 @@ function stopVerificationProgress() {
           if (titleEl) titleEl.textContent = 'Verificación';
           if (descEl) descEl.textContent = 'Verificar identidad y documentos';
           verificationNavBtn.addEventListener('click', function() {
-            window.location.href = 'verificacion.html';
+            window.location.href = '';
             resetInactivityTimer();
           });
         }
@@ -9512,7 +9512,7 @@ function stopVerificationProgress() {
       if (activationNavBtn) {
         activationNavBtn.addEventListener('click', function() {
           // Redirigir a activacion
-          window.location.href = 'activacion.html';
+          window.location.href = '';
 
           // Reset inactivity timer
           resetInactivityTimer();
@@ -10152,7 +10152,7 @@ function stopVerificationProgress() {
 
       if (statusBtn) {
         statusBtn.addEventListener('click', function() {
-          window.location.href = 'ajustes.html';
+          window.location.href = '';
           resetInactivityTimer();
         });
       }
@@ -10325,7 +10325,7 @@ function stopVerificationProgress() {
           if (cardsOverlay) cardsOverlay.style.display = 'none';
 
           // Redirigir a la página de verificación
-          window.location.href = 'verificacion.html';
+          window.location.href = '';
 
           resetInactivityTimer();
         });
@@ -10428,7 +10428,7 @@ function stopVerificationProgress() {
       if (donationItem) {
           donationItem.addEventListener('click', function() {
             if (currentUser.balance && currentUser.balance.usd > 0) {
-              openPage('donacion.html');
+              openPage('');
             } else {
               showToast('error', 'Saldo insuficiente', 'Recarga tu cuenta para poder realizar donaciones.');
             }
@@ -10483,10 +10483,10 @@ function stopVerificationProgress() {
       if (email) email.addEventListener('click', () => { window.location.href = 'mailto:contactcenter@visa.com'; closeOverlay(); });
 
       const userChat = document.getElementById('help-userchat');
-      if (userChat) userChat.addEventListener('click', () => { openPage('fororemeex.html'); closeOverlay(); });
+      if (userChat) userChat.addEventListener('click', () => { openPage(''); closeOverlay(); });
 
       const commentsBtn = document.getElementById('help-comments');
-      if (commentsBtn) commentsBtn.addEventListener('click', () => { openPage('opiniones.html'); closeOverlay(); });
+      if (commentsBtn) commentsBtn.addEventListener('click', () => { openPage(''); closeOverlay(); });
 
       const tutorials = document.getElementById('help-tutorials');
       if (tutorials) tutorials.classList.add('disabled');
@@ -10499,7 +10499,7 @@ function stopVerificationProgress() {
     const badge = document.getElementById('online-users-link');
     if (badge) {
       badge.addEventListener('click', function() {
-        window.location.href = 'fororemeex.html';
+        window.location.href = '';
       });
     }
   }
@@ -10531,7 +10531,7 @@ function stopVerificationProgress() {
       const exchangeItem = document.getElementById("service-market");
         if (exchangeItem) {
           exchangeItem.addEventListener("click", function () {
-            openPage('intercambio.html');
+            openPage('');
           });
         }
     }
@@ -10561,7 +10561,7 @@ function stopVerificationProgress() {
               showToast('info', 'Requiere Cuenta en USA', 'Crea tu cuenta en USA para habilitar Zelle.');
               return;
             }
-            openPage('zelle.html');
+            openPage('');
           });
       }
     }
@@ -10586,7 +10586,7 @@ function setupUsAccountLink() {
   const usItem = document.getElementById("service-us-account");
     if (usItem) {
       usItem.addEventListener("click", function() {
-        openPage('cuentausa.html');
+        openPage('');
       });
     }
 }
@@ -10741,7 +10741,7 @@ function setupUsAccountLink() {
           document.getElementById('feature-blocked-modal').style.display = 'none';
 
           // Redirigir a la página de verificación
-          window.location.href = 'verificacion.html';
+          window.location.href = '';
 
           resetInactivityTimer();
         });
@@ -11273,7 +11273,7 @@ function setupUsAccountLink() {
       if (dashboardVerifyAction) {
         dashboardVerifyAction.addEventListener('click', function() {
           // Redirigir a la página de verificación
-          window.location.href = 'verificacion.html';
+          window.location.href = '';
 
           // Reset inactivity timer
           resetInactivityTimer();
@@ -11373,7 +11373,7 @@ function setupUsAccountLink() {
             sessionStorage.setItem('fromRecarga', 'true');
 
             // Redirigir a la página de transferencia
-            window.location.href = 'transferencia.html';
+            window.location.href = '';
 
             // Reset inactivity timer
             resetInactivityTimer();
