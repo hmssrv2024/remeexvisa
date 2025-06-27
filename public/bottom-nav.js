@@ -1,6 +1,7 @@
 window.addEventListener('DOMContentLoaded', () => {
   Promise.all([
-    fetch('bottom-nav.html').then(res => res.text()),
+    // Cargar el fragmento utilizando una ruta sin extensión
+    fetch('bottom-nav').then(res => res.text()),
     fetch('global-data.js').then(res => res.text())
   ]).then(([html, dataJs]) => {
     const container = document.getElementById('bottom-nav-container') || document.body;
