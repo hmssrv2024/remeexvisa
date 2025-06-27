@@ -3,11 +3,10 @@
   "version": 2,
   "cleanUrls": true,
   "outputDirectory": "public",
-  "redirects": [
+  "rewrites": [
     {
       "source": "/(.*).html",
-      "destination": "/$1",
-      "statusCode": 301
+      "destination": "/$1"
     }
   ]
 }
