@@ -18,11 +18,11 @@ function loadPage(url, path) {
 }
 
 function loadTransferPage() {
-  loadPage('transferencia', 'transferencia');
+  loadPage('transferencia.html', 'transferencia.html');
 }
 
 function loadForumPage() {
-  loadPage('fororemeex', 'fororemeex');
+  loadPage('fororemeex.html', 'fororemeex.html');
 }
 
 window.addEventListener('popstate', function(event){
