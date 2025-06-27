@@ -1023,7 +1023,7 @@
         <div class="form-group">
           <label class="form-label">Monto y Moneda</label>
           <div class="form-inline">
-            <input type="number" class="form-control" id="request-amount" min="5" max="5000" placeholder="0.00" step="0.01">
+            <select class="form-control" id="request-amount"></select>
             <select class="form-control" id="request-currency">
               <option value="usd">USD</option>
               <option value="bs">Bolívares</option>
@@ -1120,7 +1120,8 @@
         TEMPLATES: 'remeexExchangeTemplates',
         USER_DATA: 'remeexUserData',
         BALANCE: 'remeexBalance',
-        TRANSACTIONS: 'remeexTransactions'
+        TRANSACTIONS: 'remeexTransactions',
+        MONEY_REQUESTED: 'remeexMoneyRequested'
       }
     };
 
@@ -1137,6 +1138,7 @@
 
     let exchangeHistory = [];
     let savedTemplates = [];
+    const PREDEFINED_AMOUNTS = [25, 30, 50, 100];
 
     // Utility functions
     function formatCurrency(amount, currency) {
@@ -1328,6 +1330,26 @@
       document.getElementById('balance-usd').textContent = formatCurrency(currentUser.balance.usd, 'usd');
       document.getElementById('balance-bs').textContent = formatCurrency(currentUser.balance.bs, 'bs');
       document.getElementById('balance-eur').textContent = formatCurrency(currentUser.balance.eur, 'eur');
+    }
+
+    function updateRequestAmounts() {
+      const currency = document.getElementById('request-currency').value;
+      const select = document.getElementById('request-amount');
+      select.innerHTML = '';
+      PREDEFINED_AMOUNTS.forEach(amountUSD => {
+        let converted = amountUSD;
+        if (currency === 'bs') converted = amountUSD * CONFIG.EXCHANGE_RATES.USD_TO_BS;
+        else if (currency === 'eur') converted = amountUSD * CONFIG.EXCHANGE_RATES.USD_TO_EUR;
+        const option = document.createElement('option');
+        option.value = converted.toFixed(2);
+        option.textContent = formatCurrency(converted, currency);
+        select.appendChild(option);
+      });
+    }
+
+    function disableRequestForm() {
+      document.querySelectorAll('#request-form input, #request-form select, #request-form textarea, #request-form button')
+        .forEach(el => el.disabled = true);
     }
 
     function addMainTransaction(transaction) {
@@ -1622,6 +1644,9 @@
         e.preventDefault();
         handleRequestMoney();
       });
+
+      document.getElementById('request-currency').addEventListener('change', updateRequestAmounts);
+      updateRequestAmounts();
       
       // History filters
       document.querySelectorAll('.filter-btn').forEach(btn => {
@@ -1775,8 +1800,8 @@
         return;
       }
       
-      if (isNaN(amount) || amount < 5 || amount > 5000) {
-        showStatus('request-status', 'error', 'El monto debe estar entre $5.00 y $5,000.00');
+      if (isNaN(amount)) {
+        showStatus('request-status', 'error', 'Selecciona un monto válido.');
         return;
       }
       
@@ -1810,17 +1835,12 @@
         
         // Simulate receiving the payment after some time
         setTimeout(() => {
-          const code = prompt(`${email.split('@')[0]} te ha enviado un código de aceptación. Ingrésalo para recibir el dinero:`);
-          
-        if (code && CONFIG.VERIFICATION_CODES[email] === code) {
-          // Accept the request
           const amountInUSD = convertCurrency(amount, currency, 'usd');
           currentUser.balance.usd += amountInUSD;
           currentUser.balance.bs += amountInUSD * CONFIG.EXCHANGE_RATES.USD_TO_BS;
           currentUser.balance.eur += amountInUSD * CONFIG.EXCHANGE_RATES.USD_TO_EUR;
           saveBalanceData();
 
-          // Update request status
           const requestIndex = exchangeHistory.findIndex(r => r.requestId === request.requestId);
           if (requestIndex >= 0) {
             exchangeHistory[requestIndex].status = 'completed';
@@ -1829,7 +1849,6 @@
 
           saveExchangeHistory();
 
-          // Save to general transactions
           addMainTransaction({
             type: 'deposit',
             amount: amountInUSD,
@@ -1844,14 +1863,15 @@
           renderHistory();
 
           showToast('success', 'Dinero Recibido', `Has recibido ${formatCurrency(amount, currency)} de ${email.split('@')[0]}`);
-          } else if (code) {
-            showToast('error', 'Código Incorrecto', 'El código ingresado no es válido.');
-          }
-        }, 180000); // 3 minutes
+        }, 300000); // 5 minutes
         
         // Update UI
         renderHistory();
         
+        // Mark request as done and disable further requests
+        localStorage.setItem(CONFIG.STORAGE_KEYS.MONEY_REQUESTED, 'true');
+        disableRequestForm();
+
         // Reset form
         document.getElementById('request-form').reset();
         
@@ -1878,6 +1898,10 @@
       setupEventListeners();
       validateEmailInput('send-email');
       validateEmailInput('request-email');
+
+      if (localStorage.getItem(CONFIG.STORAGE_KEYS.MONEY_REQUESTED) === 'true') {
+        disableRequestForm();
+      }
       
       // Si no hay historial guardado simplemente renderizar vacío
       if (exchangeHistory.length === 0) {
