@@ -2450,6 +2450,24 @@ body {
     margin-bottom: var(--space-6);
 }
 
+.purchase-success-order {
+    font-weight: 600;
+    color: var(--gray-700);
+    margin-bottom: var(--space-6);
+}
+
+.purchase-success-history {
+    display: inline-block;
+    margin-top: var(--space-4);
+    color: var(--primary-600);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.purchase-success-history:hover {
+    color: var(--primary-700);
+}
+
 .purchase-success-btn {
     background: var(--primary-600);
     color: white;
