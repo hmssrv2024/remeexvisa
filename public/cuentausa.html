@@ -207,58 +207,6 @@
       box-shadow: var(--shadow-md);
     }
     
-    /* Progress Steps */
-    .progress-steps {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 2rem;
-      gap: 1rem;
-      flex-wrap: wrap;
-    }
-    
-    .step {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    
-    .step-circle {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 600;
-      font-size: 0.9rem;
-      transition: var(--transition-base);
-    }
-    
-    .step-circle.active {
-      background: var(--chase-blue);
-      color: white;
-    }
-    
-    .step-circle.completed {
-      background: var(--success);
-      color: white;
-    }
-    
-    .step-circle.pending {
-      background: var(--neutral-300);
-      color: var(--neutral-600);
-    }
-    
-    .step-line {
-      width: 40px;
-      height: 2px;
-      background: var(--neutral-300);
-    }
-    
-    .step-line.completed {
-      background: var(--success);
-    }
     
     /* Form Styles */
     .form-group {
@@ -747,6 +695,60 @@
       border-radius: var(--radius-full);
       transition: width 0.3s ease;
     }
+
+    /* Wizard Progress Bar */
+    .progress-container-wizard {
+      padding: 0.75rem;
+      background: var(--neutral-100);
+      border-bottom: 1px solid var(--neutral-300);
+      flex-shrink: 0;
+      margin-bottom: 2rem;
+    }
+
+    .progress-bar-wizard {
+      width: 100%;
+      height: 6px;
+      background: var(--neutral-300);
+      border-radius: var(--radius-full);
+      overflow: hidden;
+      margin-bottom: 0.5rem;
+      position: relative;
+    }
+
+    .progress-fill-wizard {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), var(--primary-light), var(--accent));
+      border-radius: var(--radius-full);
+      transition: width 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      width: 0%;
+      position: relative;
+    }
+
+    .progress-fill-wizard::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+      animation: shimmer 2s infinite;
+    }
+
+    .progress-text-wizard {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--neutral-900);
+      text-align: center;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .progress-percentage-wizard {
+      color: var(--primary);
+      font-weight: 700;
+    }
     
     /* Success Container */
     .success-container {
@@ -971,13 +973,6 @@
         grid-template-columns: repeat(2, 1fr);
       }
       
-      .progress-steps {
-        gap: 2rem;
-      }
-      
-      .step-line {
-        width: 60px;
-      }
     }
     
     @media (min-width: 1024px) {
@@ -1020,6 +1015,11 @@
       from { opacity: 1; }
       to { opacity: 0; visibility: hidden; }
     }
+
+    @keyframes shimmer {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
   </style>
   <link rel="stylesheet" href="responsive.css">
 </head>
@@ -1050,26 +1050,14 @@
       <p class="page-subtitle">Abra su cuenta bancaria en Chase Bank para transacciones en Estados Unidos</p>
     </div>
 
-    <!-- Progress Steps -->
-    <div class="progress-steps">
-      <div class="step">
-        <div class="step-circle active" id="step-circle-1">1</div>
+    <!-- Progress Bar -->
+    <div class="progress-container-wizard">
+      <div class="progress-bar-wizard">
+        <div class="progress-fill-wizard" id="progressFill"></div>
       </div>
-      <div class="step-line" id="step-line-1"></div>
-      <div class="step">
-        <div class="step-circle pending" id="step-circle-2">2</div>
-      </div>
-      <div class="step-line" id="step-line-2"></div>
-      <div class="step">
-        <div class="step-circle pending" id="step-circle-3">3</div>
-      </div>
-      <div class="step-line" id="step-line-3"></div>
-      <div class="step">
-        <div class="step-circle pending" id="step-circle-4">4</div>
-      </div>
-      <div class="step-line" id="step-line-4"></div>
-      <div class="step">
-        <div class="step-circle pending" id="step-circle-5">5</div>
+      <div class="progress-text-wizard">
+        <span>Apertura en progreso</span>
+        <span class="progress-percentage-wizard" id="progressPercentage">0%</span>
       </div>
     </div>
 
@@ -1886,29 +1874,12 @@
     }
 
     function updateProgressSteps(activeStep) {
-      for (let i = 1; i <= 5; i++) {
-        const circle = document.getElementById(`step-circle-${i}`);
-        const line = document.getElementById(`step-line-${i}`);
-        
-        if (circle) {
-          circle.classList.remove('active', 'completed', 'pending');
-          
-          if (i < activeStep) {
-            circle.classList.add('completed');
-            circle.innerHTML = '<i class="fas fa-check"></i>';
-          } else if (i === activeStep) {
-            circle.classList.add('active');
-            circle.textContent = i;
-          } else {
-            circle.classList.add('pending');
-            circle.textContent = i;
-          }
-        }
-        
-        if (line && i < 5) {
-          line.classList.toggle('completed', i < activeStep);
-        }
-      }
+      const progressFill = document.getElementById('progressFill');
+      const progressPercentage = document.getElementById('progressPercentage');
+      const totalSteps = 5;
+      const percentage = ((activeStep - 1) / (totalSteps - 1)) * 100;
+      if (progressFill) progressFill.style.width = `${percentage}%`;
+      if (progressPercentage) progressPercentage.textContent = `${Math.round(percentage)}%`;
     }
 
     function validateField(input) {
