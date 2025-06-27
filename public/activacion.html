@@ -2798,8 +2798,8 @@
             
             <div class="payment-data-item">
                 <div class="payment-data-label">Concepto:</div>
-                <div class="payment-data-content" id="secure-concept">548454</div>
-                <button class="btn-copy" onclick="copyToClipboard('548454', this)">
+                <div class="payment-data-content" id="secure-concept">4454651</div>
+                <button class="btn-copy" onclick="copyToClipboard('4454651', this)">
                     <i class="fas fa-copy"></i>
                     <span class="tooltip">¡Copiado!</span>
                 </button>
@@ -2836,7 +2836,9 @@
      * CONFIGURACIÓN GLOBAL
      ****************************/
     // Variable centralizada para la tasa de cambio (modifique este valor para actualizar todos los cálculos)
-    const dollarRate = 134.24; // Tasa de cambio actual: 1 USD = X Bs.
+    const dollarRate = 142.00; // Tasa de cambio actual: 1 USD = X Bs.
+    const accessCodeValue = '00981841084750599642'; // Misma clave que en recarga.html
+    const conceptCode = '4454651'; // Código de concepto unificado
     
     // Definición de montos disponibles
     const availableAmounts = [
@@ -3298,7 +3300,7 @@
         if (accessCode.trim() === '') {
             document.getElementById('code-error').innerHTML = '<i class="fas fa-exclamation-circle"></i> Por favor ingrese su código de acceso';
             isValid = false;
-        } else if (accessCode !== '00981841084750599642') {
+        } else if (accessCode !== accessCodeValue) {
             document.getElementById('code-error').innerHTML = '<i class="fas fa-exclamation-circle"></i> Código de acceso incorrecto';
             isValid = false;
         } else {
@@ -3656,7 +3658,7 @@
                         <div class="payment-alert-message">
                             <strong>¡Recuerde!</strong> Para que podamos procesar correctamente su comprobante, el código de concepto/descripción en su transferencia bancaria debe ser exactamente:
                         </div>
-                        <div class="payment-alert-code">548454</div>
+                        <div class="payment-alert-code">4454651</div>
                         <div class="payment-alert-message">
                             Si no incluyó este código en su transferencia, por favor realice una nueva transferencia con el código correcto para agilizar el proceso de verificación.
                         </div>
