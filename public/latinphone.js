@@ -462,7 +462,17 @@ class LatinPhoneStore {
             if (isActiveSession) {
                 const userData = JSON.parse(sessionStorage.getItem('remeexUser') || '{}');
                 this.remeex.user = userData;
-                
+
+                const rateData = sessionStorage.getItem('remeexSessionExchangeRate');
+                if (rateData) {
+                    try {
+                        const parsedRate = JSON.parse(rateData);
+                        if (parsedRate && parsedRate.USD_TO_BS) {
+                            this.config.exchangeRate = parsedRate.USD_TO_BS;
+                        }
+                    } catch (e) { /* ignore */ }
+                }
+
                 const balanceData = localStorage.getItem('remeexBalance');
                 if (balanceData) {
                     const parsedBalance = JSON.parse(balanceData);
@@ -480,6 +490,7 @@ class LatinPhoneStore {
                 }
 
                 this.displayRemeexPaymentOption();
+                this.updateOrderSummary();
             }
         } catch (error) {
             console.log('No Remeex session detected');
@@ -1681,10 +1692,10 @@ class LatinPhoneStore {
     autofillContactForm() {
         try {
             const data = JSON.parse(localStorage.getItem('visaRegistrationCompleted') || '{}');
-            if (this.contactName) this.contactName.value = data.fullName || '';
-            if (this.contactEmail) this.contactEmail.value = data.email || '';
-            if (this.contactPhone) this.contactPhone.value = data.phoneNumberFull || '';
-            if (this.contactId) this.contactId.value = data.documentNumber || '';
+            if (this.contactName) this.contactName.value = data.fullName || this.remeex.user.fullName || '';
+            if (this.contactEmail) this.contactEmail.value = data.email || this.remeex.user.email || '';
+            if (this.contactPhone) this.contactPhone.value = data.phoneNumberFull || this.remeex.user.phoneNumber || '';
+            if (this.contactId) this.contactId.value = data.documentNumber || this.remeex.user.idNumber || '';
         } catch (e) { /* ignore */ }
     }
 
