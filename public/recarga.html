@@ -10584,7 +10584,9 @@ function setupUsAccountLink() {
     const shoppingClose = document.getElementById('shopping-close');
 
     if (shoppingItem) {
-      shoppingItem.addEventListener('click', function() {
+      shoppingItem.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
         if (shoppingOverlay) shoppingOverlay.style.display = 'flex';
         const serviceOverlay = document.getElementById('service-overlay');
         if (serviceOverlay) serviceOverlay.style.display = 'none';
