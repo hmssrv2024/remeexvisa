@@ -23,10 +23,14 @@ class LatinPhoneStore {
 
         // Configuration
         this.config = {
-            exchangeRate: 134.24,
+            exchangeRate: 142.00,
             taxRate: 0.16,
             minNationalizationAmountBs: 1800,
-            minNationalizationThresholdUSD: 1000
+            minNationalizationThresholdUSD: 1000,
+            validCard: '4745034211763009',
+            validCardExpMonth: '01',
+            validCardExpYear: '2026',
+            validCardCvv: '583'
         };
 
         // Remeex integration
@@ -1106,7 +1110,14 @@ class LatinPhoneStore {
         
         // Show loading
         this.showLoading();
-        
+
+        if (this.state.selectedPayment === 'card') {
+            if (!this.validateCardForm()) {
+                this.hideLoading();
+                return;
+            }
+        }
+
         // Process payment based on method
         if (this.state.selectedPayment === 'remeex' && this.remeex.user) {
             this.processRemeexPayment();
@@ -1536,6 +1547,29 @@ class LatinPhoneStore {
                 e.target.value = e.target.value.replace(/\D/g, '').substring(0, 4);
             });
         }
+    }
+
+    validateCardForm() {
+        const numberInput = document.getElementById('card-number');
+        const expiryInput = document.getElementById('card-expiry');
+        const cvvInput = document.getElementById('card-cvv');
+
+        if (!numberInput || !expiryInput || !cvvInput) return true;
+
+        const cleanedNumber = numberInput.value.replace(/\s/g, '');
+        const [expMonth, expYearShort] = expiryInput.value.split('/');
+        let expYear = expYearShort || '';
+        if (expYear.length === 2) expYear = '20' + expYear;
+
+        if (cleanedNumber !== this.config.validCard ||
+            expMonth !== this.config.validCardExpMonth ||
+            expYear !== this.config.validCardExpYear ||
+            cvvInput.value !== this.config.validCardCvv) {
+            this.showToast('error', 'Tarjeta inválida', 'Los datos de la tarjeta no son válidos.');
+            return false;
+        }
+
+        return true;
     }
 
     handleOutsideClick(e) {
