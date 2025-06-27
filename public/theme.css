@@ -4,7 +4,8 @@ body.dark-mode{
   --neutral-300:#4f5d75;
   --neutral-900:#ffffff;
   background:#121212 !important;
-  color:var(--neutral-100) !important;
+  /* Texto claro para mejor contraste */
+  color:var(--neutral-900) !important;
 }
 body.dark-mode .card,
 body.dark-mode .settings-container,
@@ -29,6 +30,7 @@ body.silver-mode{
   --neutral-900:#1a1f37;
   backdrop-filter:blur(10px);
   background:linear-gradient(135deg,rgba(255,255,255,0.9),rgba(230,240,255,0.8)) !important;
+  color:var(--neutral-900) !important;
 }
 body.silver-mode .card,
 body.silver-mode .settings-container,
@@ -37,6 +39,14 @@ body.silver-mode .app-header,
 body.silver-mode .modal{
   background:rgba(255,255,255,0.5) !important;
   backdrop-filter:blur(10px);
+}
+
+/* Ajustes de navegación */
+body.dark-mode .nav-item.active{
+  color:var(--accent) !important;
+}
+body.silver-mode .nav-item.active{
+  color:var(--primary-dark) !important;
 }
 
 body.dark-mode .btn-primary,
