@@ -48,8 +48,10 @@ Se agregó la página `ajustes` que presenta un panel completo para gestionar la
 
 ## Enlaces sin extensión
 
-El proyecto está configurado en Vercel con `cleanUrls` para servir las páginas
-sin la terminación `.html`. Los enlaces internos apuntan a rutas como `recarga`,
-`ajustes` o `transferencia` en lugar de `recarga.html`. Si navegas de manera
-local abre los archivos `.html` directamente o añade la extensión en la barra
-de direcciones.
+El proyecto está configurado en Vercel con `cleanUrls` y una regla de
+`rewrites` para que cada página funcione tanto con la terminación `.html` como
+sin ella. Los enlaces internos apuntan a rutas como `recarga`, `ajustes` o
+`transferencia`, pero acceder a `recarga.html` o `recarga` mostrará el mismo
+contenido. Si navegas de manera local puedes abrir los archivos con su
+extensión `.html` o sin ella si cuentas con un servidor que maneje estas
+rewrites.
