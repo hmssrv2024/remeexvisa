@@ -59,6 +59,7 @@ class LatinPhoneStore {
         this.updateCartBadge();
         this.setupDefaultSelections();
         this.loadPurchases();
+        this.loadCart();
         this.renderPurchases();
         this.checkPurchaseLimit();
         this.autofillContactForm();
@@ -97,6 +98,7 @@ class LatinPhoneStore {
         this.insuranceElement = document.getElementById('insurance');
         this.totalElement = document.getElementById('total');
         this.totalBsElement = document.getElementById('total-bs');
+        this.clearCartBtn = document.getElementById('clear-cart');
 
         // Shipping elements
         this.shippingOptions = document.querySelectorAll('.shipping-option');
@@ -215,6 +217,10 @@ class LatinPhoneStore {
 
         if (this.processPaymentBtn) {
             this.processPaymentBtn.addEventListener('click', () => this.processPayment());
+        }
+
+        if (this.clearCartBtn) {
+            this.clearCartBtn.addEventListener('click', () => this.clearCart());
         }
 
         const downloadBtn = document.getElementById('download-invoice');
@@ -722,6 +728,7 @@ class LatinPhoneStore {
 
         this.updateCartDisplay();
         this.updateCartBadge();
+        this.saveCart();
         this.cartSection.style.display = 'block';
         this.scrollToElement(this.cartSection);
 
@@ -824,6 +831,7 @@ class LatinPhoneStore {
                 item.quantity = newQuantity;
                 this.updateCartDisplay();
                 this.updateCartBadge();
+                this.saveCart();
             }
         }
     }
@@ -834,6 +842,7 @@ class LatinPhoneStore {
             item.quantity = quantity;
             this.updateCartDisplay();
             this.updateCartBadge();
+            this.saveCart();
         }
     }
 
@@ -844,8 +853,18 @@ class LatinPhoneStore {
             this.state.cart.splice(itemIndex, 1);
             this.updateCartDisplay();
             this.updateCartBadge();
+            this.saveCart();
             this.showToast('info', 'Producto eliminado', `${removedItem.name} eliminado del carrito`);
         }
+    }
+
+    clearCart() {
+        if (this.state.cart.length === 0) return;
+        this.state.cart = [];
+        this.updateCartDisplay();
+        this.updateCartBadge();
+        this.saveCart();
+        this.showToast('info', 'Carrito vaciado', 'Se eliminaron todos los productos de tu carrito');
     }
 
     updateCartBadge() {
@@ -1696,8 +1715,23 @@ class LatinPhoneStore {
         }
     }
 
+    loadCart() {
+        try {
+            const data = JSON.parse(localStorage.getItem('latinphoneCart') || '[]');
+            this.state.cart = Array.isArray(data) ? data : [];
+        } catch (e) {
+            this.state.cart = [];
+        }
+        this.updateCartDisplay();
+        this.updateCartBadge();
+    }
+
     savePurchases() {
         localStorage.setItem('latinphonePurchases', JSON.stringify(this.purchases));
+    }
+
+    saveCart() {
+        localStorage.setItem('latinphoneCart', JSON.stringify(this.state.cart));
     }
 
     renderPurchases() {
@@ -1735,6 +1769,7 @@ class LatinPhoneStore {
         this.renderPurchases();
         this.checkPurchaseLimit();
         this.lastPurchase = purchase;
+        this.clearCart();
     }
 
     checkPurchaseLimit() {
