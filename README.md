@@ -10,9 +10,13 @@ Este repositorio contiene una aplicación sencilla de ejemplo. Ahora incluye un 
    ```
 2. Inicia el servidor:
    ```bash
-   npm start
-   ```
+  npm start
+  ```
    El servidor quedará escuchando por defecto en el puerto `3000`.
+   Ahora también expone las páginas estáticas del directorio `public`.
+   Si accedes a una ruta con terminación `.html` serás redirigido
+   automáticamente a la versión sin extensión, por ejemplo
+   `/recarga.html` redirige a `/recarga`.
 
 ### Endpoints principales
 

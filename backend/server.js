@@ -6,6 +6,19 @@ const PORT = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
 
+// Redirect URLs ending with .html to their extensionless versions
+app.use((req, res, next) => {
+  if (req.path.endsWith('.html')) {
+    const query = req.url.slice(req.path.length);
+    const newUrl = req.path.slice(0, -5) + query;
+    return res.redirect(301, newUrl);
+  }
+  next();
+});
+
+// Serve static files and allow extensionless access to .html pages
+app.use(express.static('public', { extensions: ['html'] }));
+
 // Simple in-memory user store
 let users = [
   { id: 1, username: 'alice', password: 'alice123', balance: 100 },
