@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <script src="./repair.js"></script>
+  <script src="./repair.js" defer></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LatinPhone - Tecnología Premium</title>
+    <meta name="description" content="Compra los últimos smartphones y gadgets con envío seguro a toda Latinoamérica en LatinPhone.">
     <link rel="icon" type="image/png" href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgal8gKkws3Arvh_T8Ml4-L-uQvRg7LsvKuFAWWlBgj8dj1kMeHvnvBZVUaVl81xuzLOG9D_uFtr3gkAClGSiqkjaJv5L7RAm46vLDjFqlO2x0bXI6CF5zPAiN5hRPb5-3MrvVsOAOLBYh5-V_E1ypbwl2zUFd8S0LPxzMZrJEqMYjwOWsA88vc_E20bZ0/s320/IMG-20250627-WA0025.png">
     <link rel="apple-touch-icon" href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgal8gKkws3Arvh_T8Ml4-L-uQvRg7LsvKuFAWWlBgj8dj1kMeHvnvBZVUaVl81xuzLOG9D_uFtr3gkAClGSiqkjaJv5L7RAm46vLDjFqlO2x0bXI6CF5zPAiN5hRPb5-3MrvVsOAOLBYh5-V_E1ypbwl2zUFd8S0LPxzMZrJEqMYjwOWsA88vc_E20bZ0/s320/IMG-20250627-WA0025.png">
     
@@ -24,6 +25,8 @@
     <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js" defer></script>
   <link rel="stylesheet" href="./responsive.css">
+  <link rel="stylesheet" href="./theme.css">
+  <script src="./theme.js" defer></script>
 </head>
 <body>
     <!-- Header Navegación Fijo -->
@@ -31,7 +34,7 @@
         <div class="header-content">
             <div class="logo-section">
                 <div class="logo-icon">
-                    <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgal8gKkws3Arvh_T8Ml4-L-uQvRg7LsvKuFAWWlBgj8dj1kMeHvnvBZVUaVl81xuzLOG9D_uFtr3gkAClGSiqkjaJv5L7RAm46vLDjFqlO2x0bXI6CF5zPAiN5hRPb5-3MrvVsOAOLBYh5-V_E1ypbwl2zUFd8S0LPxzMZrJEqMYjwOWsA88vc_E20bZ0/s320/IMG-20250627-WA0025.png" alt="LatinPhone logo">
+                    <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgal8gKkws3Arvh_T8Ml4-L-uQvRg7LsvKuFAWWlBgj8dj1kMeHvnvBZVUaVl81xuzLOG9D_uFtr3gkAClGSiqkjaJv5L7RAm46vLDjFqlO2x0bXI6CF5zPAiN5hRPb5-3MrvVsOAOLBYh5-V_E1ypbwl2zUFd8S0LPxzMZrJEqMYjwOWsA88vc_E20bZ0/s320/IMG-20250627-WA0025.png" alt="LatinPhone logo" loading="lazy">
                 </div>
                 <span class="logo-text">LatinPhone</span>
             </div>
@@ -45,6 +48,12 @@
                 <div class="cart-indicator">
                     <i class="fas fa-shopping-bag"></i>
                     <span class="cart-badge" id="cart-badge">0</span>
+                </div>
+                <div class="theme-toggle">
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="dark-mode-toggle">
+                        <span class="toggle-slider"></span>
+                    </label>
                 </div>
             </div>
         </div>
@@ -60,7 +69,7 @@
                 </h1>
                 <p class="hero-subtitle">Los últimos dispositivos Apple, Samsung y más marcas premium con envío seguro a toda Latinoamérica</p>
                 <div class="hero-video">
-                    <video class="hero-video-player" autoplay muted loop playsinline>
+                    <video class="hero-video-player" autoplay muted loop playsinline preload="metadata">
                         <source src="https://images.samsung.com/is/content/samsung/assets/es/14-03-2025/G90XF_KV_PC_Notext.mp4" type="video/mp4">
                     </video>
                     <div class="hero-video-overlay"></div>
@@ -936,7 +945,7 @@
             <button class="video-close" id="close-video">
                 <i class="fas fa-times"></i>
             </button>
-            <video class="video-player" id="product-video" controls>
+            <video class="video-player" id="product-video" controls preload="metadata">
                 <source src="" type="video/mp4">
             </video>
         </div>
@@ -964,7 +973,42 @@
         <!-- Toasts will be added dynamically -->
     </div>
 
+    <!-- Back to Top Button -->
+    <button class="floating-button back-to-top" id="backToTop" aria-label="Volver arriba">
+        <i class="fas fa-chevron-up"></i>
+    </button>
+
     <!-- JavaScript -->
     <script src="./latinphone.js" defer></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.applyTheme) applyTheme();
+            const toggle = document.getElementById('dark-mode-toggle');
+            if (toggle) {
+                toggle.checked = localStorage.getItem('remeexTheme') === 'dark';
+                toggle.addEventListener('change', () => {
+                    if (toggle.checked) {
+                        localStorage.setItem('remeexTheme', 'dark');
+                    } else {
+                        localStorage.removeItem('remeexTheme');
+                    }
+                    applyTheme();
+                });
+            }
+            const backToTop = document.getElementById('backToTop');
+            if (backToTop) {
+                window.addEventListener('scroll', () => {
+                    if (window.scrollY > 400) {
+                        backToTop.classList.add('active');
+                    } else {
+                        backToTop.classList.remove('active');
+                    }
+                });
+                backToTop.addEventListener('click', () => {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                });
+            }
+        });
+    </script>
 </body>
 </html>
