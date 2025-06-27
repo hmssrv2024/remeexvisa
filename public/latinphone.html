@@ -715,12 +715,24 @@
                                     <span class="detail-value" id="order-date">20 Marzo 2025</span>
                                 </div>
                                 <div class="detail-row">
+                                    <span class="detail-label">Subtotal</span>
+                                    <span class="detail-value" id="order-subtotal">$0.00</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">IVA (16%)</span>
+                                    <span class="detail-value" id="order-tax">$0.00</span>
+                                </div>
+                                <div class="detail-row">
                                     <span class="detail-label">Total pagado</span>
                                     <span class="detail-value" id="order-total">$0.00</span>
                                 </div>
                                 <div class="detail-row">
                                     <span class="detail-label">Envío</span>
                                     <span class="detail-value" id="shipping-method">Express (1-4 días)</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Seguro</span>
+                                    <span class="detail-value" id="insurance-fee">$0.00</span>
                                 </div>
                                 <div class="detail-row">
                                     <span class="detail-label">Transportista</span>
@@ -800,9 +812,9 @@
                                     <textarea class="form-input" id="contact-address" rows="3" placeholder="Dirección detallada para entrega"></textarea>
                                 </div>
                             </div>
-                            <button type="submit" class="submit-btn">
-                                <i class="fas fa-paper-plane"></i>
-                                <span>Enviar información</span>
+                            <button type="submit" id="finalize-whatsapp" class="submit-btn">
+                                <i class="fab fa-whatsapp"></i>
+                                <span>Procesar por WhatsApp</span>
                             </button>
                         </form>
                     </div>
@@ -909,6 +921,21 @@
             <video class="video-player" id="product-video" controls>
                 <source src="" type="video/mp4">
             </video>
+        </div>
+    </div>
+
+    <!-- Purchase Success Overlay -->
+    <div class="purchase-success-overlay" id="purchase-success-overlay">
+        <div class="purchase-success-card">
+            <div class="purchase-success-check">
+                <i class="fas fa-check"></i>
+            </div>
+            <div class="purchase-success-title">¡Compra exitosa!</div>
+            <div class="purchase-success-message">Tu pago fue procesado correctamente.</div>
+            <button class="purchase-success-btn" id="purchase-success-continue">
+                <i class="fas fa-receipt"></i>
+                <span>Ver detalle</span>
+            </button>
         </div>
     </div>
 
