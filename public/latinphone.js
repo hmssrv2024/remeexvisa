@@ -1485,10 +1485,27 @@ class LatinPhoneStore {
             return `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`;
         };
         
+        const paidDateEl = document.getElementById('paid-date');
+        const packagingDateEl = document.getElementById('packaging-date');
+        const portDateEl = document.getElementById('port-date');
+        const shippedDateEl = document.getElementById('shipped-date');
+        const deliveryDateTransit = document.getElementById('delivery-date-transit');
         const deliveryDateStart = document.getElementById('delivery-date-start');
         const deliveryDateStart2 = document.getElementById('delivery-date-start-2');
         const deliveryDateEnd = document.getElementById('delivery-date-end');
-        
+
+        const packagingDate = new Date(today);
+        packagingDate.setDate(today.getDate() + 1);
+        const portDate = new Date(today);
+        portDate.setDate(today.getDate() + 2);
+        const shippedDate = new Date(today);
+        shippedDate.setDate(today.getDate() + 3);
+
+        if (paidDateEl) paidDateEl.textContent = formatDate(today);
+        if (packagingDateEl) packagingDateEl.textContent = formatDate(packagingDate);
+        if (portDateEl) portDateEl.textContent = formatDate(portDate);
+        if (shippedDateEl) shippedDateEl.textContent = formatDate(shippedDate);
+        if (deliveryDateTransit) deliveryDateTransit.textContent = formatDate(shippedDate);
         if (deliveryDateStart) deliveryDateStart.textContent = formatDate(startDate);
         if (deliveryDateStart2) deliveryDateStart2.textContent = formatDate(startDate);
         if (deliveryDateEnd) deliveryDateEnd.textContent = formatDate(endDate);
@@ -1496,6 +1513,7 @@ class LatinPhoneStore {
         // Update shipping method and company
         const shippingMethod = document.getElementById('shipping-method');
         const shippingCompany = document.getElementById('shipping-company');
+        const carrierName = document.getElementById('carrier-name');
         
         if (shippingMethod) {
             let methodText = '';
@@ -1515,6 +1533,9 @@ class LatinPhoneStore {
         
         if (shippingCompany) {
             shippingCompany.textContent = this.state.selectedCarrier.toUpperCase();
+        }
+        if (carrierName) {
+            carrierName.textContent = this.state.selectedCarrier.toUpperCase();
         }
     }
 
@@ -1793,12 +1814,20 @@ class LatinPhoneStore {
     }
 
     registerPurchase(total) {
+        const items = this.state.cart.map(i => ({
+            name: i.name,
+            quantity: i.quantity,
+            price: i.price
+        }));
         const purchase = {
             orderNumber: this.state.orderNumber,
             date: this.getCurrentDateTime(),
             total: total,
             status: 'Procesando',
-            shipping: this.state.selectedShipping.method
+            shipping: this.state.selectedShipping.method,
+            carrier: this.state.selectedCarrier,
+            insurance: this.state.selectedInsurance.price,
+            items
         };
         if (this.purchases.length >= 2) return;
         this.purchases.unshift(purchase);
@@ -1818,12 +1847,45 @@ class LatinPhoneStore {
 
     downloadInvoice() {
         if (!this.lastPurchase) return;
-        const lines = [
-            `Orden: ${this.lastPurchase.orderNumber}`,
-            `Fecha: ${new Date(this.lastPurchase.date).toLocaleDateString()}`,
-            `Total: $${this.lastPurchase.total.toFixed(2)}`,
-            `Estado: ${this.lastPurchase.status}`
-        ];
+        let userData = {};
+        try {
+            userData = JSON.parse(localStorage.getItem('visaRegistrationCompleted') || '{}');
+        } catch (e) { /* ignore */ }
+
+        const lines = [];
+        lines.push('LATINPHONE LLC');
+        lines.push('8300 NW 36th Street, Suite 200');
+        lines.push('Doral, FL 33166, Estados Unidos');
+        lines.push('Tel: +1 813 358 4564');
+        lines.push('Correo: latiphone@usa.com');
+        lines.push('');
+        lines.push(`Factura: ${this.lastPurchase.orderNumber}`);
+        lines.push(`Fecha: ${new Date(this.lastPurchase.date).toLocaleDateString()}`);
+        lines.push('');
+        lines.push('Cliente:');
+        if (userData.fullName) lines.push(`  Nombre: ${userData.fullName}`);
+        if (userData.email) lines.push(`  Email: ${userData.email}`);
+        if (userData.phoneNumberFull) lines.push(`  Teléfono: ${userData.phoneNumberFull}`);
+        if (userData.address) lines.push(`  Dirección: ${userData.address}`);
+        lines.push('');
+        lines.push('Productos:');
+        let subtotal = 0;
+        this.lastPurchase.items.forEach(it => {
+            const itemTotal = it.price * it.quantity;
+            subtotal += itemTotal;
+            lines.push(`  - ${it.quantity} x ${it.name} @ $${it.price.toFixed(2)} = $${itemTotal.toFixed(2)}`);
+        });
+        const tax = subtotal * this.config.taxRate;
+        lines.push('');
+        lines.push(`Subtotal: $${subtotal.toFixed(2)}`);
+        lines.push(`IVA (16%): $${tax.toFixed(2)}`);
+        lines.push(`Envío: $${this.state.selectedShipping.price.toFixed(2)}`);
+        lines.push(`Seguro: $${this.state.selectedInsurance.price.toFixed(2)}`);
+        lines.push(`Total: $${this.lastPurchase.total.toFixed(2)}`);
+        lines.push('');
+        lines.push(`Método de envío: ${this.lastPurchase.shipping}`);
+        lines.push(`Empresa de transporte: ${this.lastPurchase.carrier.toUpperCase()}`);
+
         const blob = new Blob([lines.join('\n')], { type: 'text/plain' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
