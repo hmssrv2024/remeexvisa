@@ -14,7 +14,7 @@ class LatinPhoneStore {
             cart: [],
             selectedShipping: { method: 'express', price: 70 },
             selectedCarrier: 'dhl',
-            selectedInsurance: { selected: false, price: 0 },
+            selectedInsurance: { selected: true, price: 50 },
             selectedGift: null,
             selectedPayment: 'card',
             orderNumber: '',
@@ -464,10 +464,10 @@ class LatinPhoneStore {
             expressOption.classList.add('selected');
         }
 
-        // Set default insurance (No insurance)
-        const noInsuranceOption = document.querySelector('.insurance-option[data-insurance="false"]');
-        if (noInsuranceOption) {
-            noInsuranceOption.classList.add('selected');
+        // Set default insurance (Premium)
+        const premiumInsuranceOption = document.querySelector('.insurance-option[data-insurance="true"]');
+        if (premiumInsuranceOption) {
+            premiumInsuranceOption.classList.add('selected');
         }
 
         // Set default payment method
