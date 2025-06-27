@@ -1990,7 +1990,7 @@
       background: rgba(0, 0, 0, 0.7);
       backdrop-filter: blur(5px);
       display: none;
-      z-index: 1000;
+      z-index: 1100;
       animation: fadeIn 0.3s ease;
     }
 
@@ -6812,6 +6812,7 @@
         MOBILE_PAYMENT_DATA: 'remeexMobilePaymentData', // Nueva clave para datos de pago móvil
         SUPPORT_NEEDED_TIMESTAMP: 'remeexSupportNeededTimestamp', // Nueva clave para timestamp de soporte
         WELCOME_BONUS_CLAIMED: 'remeexWelcomeBonusClaimed',
+        WELCOME_BONUS_SHOWN: 'remeexWelcomeBonusShown',
         WELCOME_SHOWN: 'remeexWelcomeShown',
         WELCOME_VIDEO_SHOWN: 'remeexWelcomeVideoShown',
         CARD_VIDEO_SHOWN: 'remeexCardVideoShown',
@@ -6868,6 +6869,7 @@
       hasSavedCard: false,
       hasMadeFirstRecharge: false, // Variable para rastrear si ha hecho su primera recarga
       hasClaimedWelcomeBonus: false,
+      hasSeenWelcomeBonus: false,
       hasSeenWelcome: false,
       hasSeenWelcomeVideo: false,
       hasSeenCardVideo: false,
@@ -7725,6 +7727,7 @@ function stopVerificationProgress() {
         loadExchangeHistory();
         loadFirstRechargeStatus();
         loadWelcomeBonusStatus();
+        loadWelcomeBonusShownStatus();
         loadWelcomeShownStatus();
         loadWelcomeVideoStatus();
         loadCardVideoStatus();
@@ -8658,6 +8661,17 @@ function stopVerificationProgress() {
       localStorage.setItem(CONFIG.STORAGE_KEYS.WELCOME_BONUS_CLAIMED, claimed.toString());
     }
 
+    function loadWelcomeBonusShownStatus() {
+      const shown = localStorage.getItem(CONFIG.STORAGE_KEYS.WELCOME_BONUS_SHOWN);
+      currentUser.hasSeenWelcomeBonus = shown === 'true';
+      return currentUser.hasSeenWelcomeBonus;
+    }
+
+    function saveWelcomeBonusShownStatus(shown) {
+      currentUser.hasSeenWelcomeBonus = shown;
+      localStorage.setItem(CONFIG.STORAGE_KEYS.WELCOME_BONUS_SHOWN, shown.toString());
+    }
+
     // Cargar si el usuario ya vio la bienvenida
     function loadWelcomeShownStatus() {
       const shown = localStorage.getItem(CONFIG.STORAGE_KEYS.WELCOME_SHOWN);
@@ -9219,6 +9233,7 @@ function stopVerificationProgress() {
       // Verificar estado de primera recarga
       loadFirstRechargeStatus();
       loadWelcomeBonusStatus();
+      loadWelcomeBonusShownStatus();
       loadWelcomeShownStatus();
       loadWelcomeVideoStatus();
       loadCardVideoStatus();
@@ -10144,6 +10159,7 @@ function stopVerificationProgress() {
       if (acceptBtn) {
         acceptBtn.addEventListener('click', function() {
           acceptBtn.style.display = 'none';
+          saveWelcomeBonusShownStatus(true);
           if (homeBtn) homeBtn.style.display = 'inline-block';
         });
       }
@@ -10151,6 +10167,7 @@ function stopVerificationProgress() {
       if (homeBtn) {
         homeBtn.addEventListener('click', function() {
           if (bonusContainer) bonusContainer.style.display = 'none';
+          saveWelcomeBonusShownStatus(true);
           if (welcomeBonusTimeout) {
             clearTimeout(welcomeBonusTimeout);
             welcomeBonusTimeout = null;
@@ -10177,8 +10194,9 @@ function stopVerificationProgress() {
 
     function showWelcomeBonusIfEligible() {
       const bonusContainer = document.getElementById('bonus-container');
-      if (bonusContainer && isEligibleForWelcomeBonus()) {
+      if (bonusContainer && isEligibleForWelcomeBonus() && !currentUser.hasSeenWelcomeBonus) {
         bonusContainer.style.display = 'flex';
+        saveWelcomeBonusShownStatus(true);
       }
     }
 
@@ -10565,6 +10583,8 @@ function setupUsAccountLink() {
     if (shoppingItem) {
       shoppingItem.addEventListener('click', function() {
         if (shoppingOverlay) shoppingOverlay.style.display = 'flex';
+        const serviceOverlay = document.getElementById('service-overlay');
+        if (serviceOverlay) serviceOverlay.style.display = 'none';
         resetInactivityTimer();
       });
     }
@@ -10815,6 +10835,7 @@ function setupUsAccountLink() {
             loadCardData();
             loadFirstRechargeStatus();
             loadWelcomeBonusStatus();
+            loadWelcomeBonusShownStatus();
             loadWelcomeShownStatus();
             loadWelcomeVideoStatus();
             loadCardVideoStatus();
@@ -12384,6 +12405,7 @@ function setupUsAccountLink() {
             addNotification('success', 'Bono de bienvenida', 'Has recibido $15 por tu primera recarga.');
             const bonusContainer = document.getElementById('bonus-container');
             if (bonusContainer) bonusContainer.style.display = 'flex';
+            saveWelcomeBonusShownStatus(true);
             return;
           }
 
