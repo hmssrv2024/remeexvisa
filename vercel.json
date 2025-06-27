@@ -5,8 +5,8 @@
   "outputDirectory": "public",
   "redirects": [
     {
-      "source": "/:path+.html",
-      "destination": "/:path",
+      "source": "/(.*).html",
+      "destination": "/$1",
       "statusCode": 301
     }
   ]
