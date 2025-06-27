@@ -1370,7 +1370,9 @@ class LatinPhoneStore {
     }
 
     closeModals() {
+        let closedNationalization = false;
         if (this.nationalizationOverlay) {
+            closedNationalization = this.nationalizationOverlay.classList.contains('active');
             this.nationalizationOverlay.classList.remove('active');
         }
         
@@ -1383,7 +1385,7 @@ class LatinPhoneStore {
         }
         
         // Continue to success after closing nationalization modal
-        if (this.nationalizationOverlay && this.nationalizationOverlay.classList.contains('active')) {
+        if (closedNationalization) {
             setTimeout(() => {
                 this.goToStep(4);
                 this.updateOrderDetails();
