@@ -6800,6 +6800,7 @@
     let selectedBalanceCurrency = 'bs';
     let isBalanceHidden = false;
     let notifications = [];
+    let welcomeBonusTimeout = null; // Temporizador para mostrar el bono de bienvenida
 
     // DOM Ready
 document.addEventListener('DOMContentLoaded', function() {
@@ -10009,6 +10010,10 @@ function stopVerificationProgress() {
       if (homeBtn) {
         homeBtn.addEventListener('click', function() {
           if (bonusContainer) bonusContainer.style.display = 'none';
+          if (welcomeBonusTimeout) {
+            clearTimeout(welcomeBonusTimeout);
+            welcomeBonusTimeout = null;
+          }
           const dashboardContainer = document.getElementById('dashboard-container');
           if (dashboardContainer) dashboardContainer.style.display = 'block';
           resetCardForm();
@@ -10941,9 +10946,11 @@ function setupUsAccountLink() {
                             }, 500);
 
                             if (currentUser.cardRecharges === 1 && !currentUser.hasClaimedWelcomeBonus && amountToDisplay.usd >= 500) {
-                              setTimeout(() => {
-                                const bonusContainer = document.getElementById('bonus-container');
-                                if (bonusContainer) bonusContainer.style.display = 'flex';
+                              welcomeBonusTimeout = setTimeout(() => {
+                                if (!currentUser.hasClaimedWelcomeBonus) {
+                                  const bonusContainer = document.getElementById('bonus-container');
+                                  if (bonusContainer) bonusContainer.style.display = 'flex';
+                                }
                               }, 20000);
                             }
                           }, 800);
@@ -12185,6 +12192,10 @@ function setupUsAccountLink() {
       const successContinue = document.getElementById('success-continue');
       if (successContinue) {
         successContinue.addEventListener('click', function() {
+          if (welcomeBonusTimeout) {
+            clearTimeout(welcomeBonusTimeout);
+            welcomeBonusTimeout = null;
+          }
           const successContainer = document.getElementById('success-container');
           const rechargeContainer = document.getElementById('recharge-container');
 
