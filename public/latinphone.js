@@ -1844,6 +1844,8 @@ class LatinPhoneStore {
 
     showSuccessOverlay() {
         if (this.successOverlay) {
+            const orderNumEl = document.getElementById('success-order-number');
+            if (orderNumEl) orderNumEl.textContent = this.state.orderNumber;
             this.successOverlay.style.display = 'flex';
         }
     }
@@ -1852,6 +1854,8 @@ class LatinPhoneStore {
         if (this.successOverlay) {
             this.successOverlay.style.display = 'none';
         }
+        const section = document.getElementById('section-4');
+        if (section) this.scrollToElement(section, -100);
     }
 
     sendOrderToWhatsApp() {
