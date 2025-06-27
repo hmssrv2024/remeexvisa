@@ -4521,7 +4521,7 @@
       
 
       <div style="text-align:center; margin-top:1rem;">
-        <a href="index" target="_blank" class="btn btn-outline">Ir a Remeex Visa</a>
+        <a href="index.html" target="_blank" class="btn btn-outline">Ir a Remeex Visa</a>
       </div>
     </div>
 
@@ -4553,7 +4553,7 @@
   <!-- App Header (only visible after login) -->
   <header class="app-header" id="app-header" style="display: none;">
     <div class="header-brand">
-      <a href="index">
+      <a href="index.html">
         <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhnBzNdjl6bNp-nIdaiHVENczJhwlJNA7ocsyiOObMmzbu8at0dY5yGcZ9cLxLF39qI6gwNfqBxlkTDC0txVULEwQVwGkeEzN0Jq9MRTRagA48mh18UqTlR4WhsXOLAEZugUyhqJHB19xJgnkpe-S5VOWFgzpKFwctv3XP9XhH41vNTvq0ZS-nik58Qhr-O/s320/remeex.png" alt="REMEEX">
       </a>
     </div>
@@ -5161,7 +5161,7 @@
           </div>
         </a>
 
-        <a href="opinionesremeex" class="contact-option">
+        <a href="opinionesremeex.html" class="contact-option">
           <div class="contact-icon reviews">
             <i class="fas fa-star"></i>
           </div>
@@ -8526,7 +8526,7 @@ function stopVerificationProgress() {
           verifyIdentityBtn.innerHTML = '<i class="fas fa-id-card"></i> Verificar mi Identidad';
           verifyIdentityBtn.addEventListener('click', function() {
             if (settingsOverlay) settingsOverlay.style.display = 'none';
-            window.location.href = 'verificacion';
+            window.location.href = 'verificacion.html';
             resetInactivityTimer();
           });
         }
@@ -8548,7 +8548,7 @@ function stopVerificationProgress() {
           if (titleEl) titleEl.textContent = 'Verificación';
           if (descEl) descEl.textContent = 'Verificar identidad y documentos';
           verificationNavBtn.addEventListener('click', function() {
-            window.location.href = 'verificacion';
+            window.location.href = 'verificacion.html';
             resetInactivityTimer();
           });
         }
@@ -8729,7 +8729,7 @@ function stopVerificationProgress() {
       if (activationNavBtn) {
         activationNavBtn.addEventListener('click', function() {
           // Redirigir a activacion
-          window.location.href = 'activacion';
+          window.location.href = 'activacion.html';
 
           // Reset inactivity timer
           resetInactivityTimer();
@@ -8739,7 +8739,7 @@ function stopVerificationProgress() {
       if (limitsNavBtn) {
         limitsNavBtn.addEventListener('click', function() {
           // Redirigir a limites
-          window.location.href = 'limites';
+          window.location.href = 'limites.html';
 
           // Reset inactivity timer
           resetInactivityTimer();
@@ -9083,7 +9083,7 @@ function stopVerificationProgress() {
 
       if (statusBtn) {
         statusBtn.addEventListener('click', function() {
-          window.location.href = 'ajustes';
+          window.location.href = 'ajustes.html';
           resetInactivityTimer();
         });
       }
@@ -9247,7 +9247,7 @@ function stopVerificationProgress() {
           if (cardsOverlay) cardsOverlay.style.display = 'none';
 
           // Redirigir a la página de verificación
-          window.location.href = 'verificacion';
+          window.location.href = 'verificacion.html';
 
           resetInactivityTimer();
         });
@@ -9350,7 +9350,7 @@ function stopVerificationProgress() {
       if (donationItem) {
           donationItem.addEventListener('click', function() {
             if (currentUser.balance && currentUser.balance.usd > 0) {
-              openPage('donacion');
+              openPage('donacion.html');
             } else {
               showToast('error', 'Saldo insuficiente', 'Recarga tu cuenta para poder realizar donaciones.');
             }
@@ -9395,7 +9395,7 @@ function stopVerificationProgress() {
           if (typeof loadForumPage === 'function') {
             loadForumPage();
           } else {
-            window.location.href = 'fororemeex';
+            window.location.href = 'fororemeex.html';
           }
           if (supportOverlay) supportOverlay.style.display = 'none';
           resetInactivityTimer();
@@ -9410,7 +9410,7 @@ function stopVerificationProgress() {
           if (typeof loadForumPage === 'function') {
             loadForumPage();
           } else {
-            window.location.href = 'fororemeex';
+            window.location.href = 'fororemeex.html';
           }
         });
       }
@@ -9422,7 +9422,7 @@ function stopVerificationProgress() {
       const exchangeItem = document.getElementById("service-market");
         if (exchangeItem) {
           exchangeItem.addEventListener("click", function () {
-            openPage('intercambio');
+            openPage('intercambio.html');
           });
         }
     }
@@ -9433,7 +9433,7 @@ function stopVerificationProgress() {
       const billsItem = document.getElementById("service-bills");
         if (billsItem) {
           billsItem.addEventListener("click", function() {
-            openPage('pagoservicios');
+            openPage('pagoservicios.html');
           });
         }
     }
@@ -9452,7 +9452,7 @@ function stopVerificationProgress() {
               showToast('info', 'Requiere Cuenta en USA', 'Crea tu cuenta en USA para habilitar Zelle.');
               return;
             }
-            openPage('zelle');
+            openPage('zelle.html');
           });
       }
     }
@@ -9461,7 +9461,7 @@ function stopVerificationProgress() {
       const walletsItem = document.getElementById('service-wallets');
         if (walletsItem) {
           walletsItem.addEventListener('click', function() {
-            openPage('cambio-divisas#wallets');
+            openPage('cambio-divisas.html#wallets');
           });
         }
     }
@@ -9469,7 +9469,7 @@ function stopVerificationProgress() {
       const item = document.getElementById('service-exchange');
         if (item) {
           item.addEventListener('click', function() {
-            openPage('cambio-divisas');
+            openPage('cambio-divisas.html');
           });
         }
     }
@@ -9477,7 +9477,7 @@ function setupUsAccountLink() {
   const usItem = document.getElementById("service-us-account");
     if (usItem) {
       usItem.addEventListener("click", function() {
-        openPage('cuentausa');
+        openPage('cuentausa.html');
       });
     }
 }
@@ -9486,7 +9486,7 @@ function setupUsAccountLink() {
     const item = document.getElementById('service-withdrawal');
     if (item) {
       item.addEventListener('click', function() {
-        openPage('retiro');
+        openPage('retiro.html');
       });
     }
   }
@@ -9679,7 +9679,7 @@ function setupUsAccountLink() {
           document.getElementById('feature-blocked-modal').style.display = 'none';
 
           // Redirigir a la página de verificación
-          window.location.href = 'verificacion';
+          window.location.href = 'verificacion.html';
 
           resetInactivityTimer();
         });
@@ -10157,7 +10157,7 @@ function setupUsAccountLink() {
       if (dashboardVerifyAction) {
         dashboardVerifyAction.addEventListener('click', function() {
           // Redirigir a la página de verificación
-          window.location.href = 'verificacion';
+          window.location.href = 'verificacion.html';
 
           // Reset inactivity timer
           resetInactivityTimer();
@@ -10239,7 +10239,7 @@ function setupUsAccountLink() {
             if (typeof loadTransferPage === 'function') {
               loadTransferPage();
             } else {
-              window.location.href = 'transferencia';
+              window.location.href = 'transferencia.html';
             }
 
             // Reset inactivity timer
