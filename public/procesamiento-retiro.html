@@ -57,7 +57,7 @@
         .card-type{font-size:.9rem;font-weight:600;opacity:.8;}
         .card-body{z-index:2;position:relative;}
         .card-label{font-size:.85rem;opacity:.7;margin-bottom:.5rem;}
-        .card-amount{font-size:2rem;font-weight:700;margin-bottom:1rem;transition:all .3s ease;}
+        .card-amount{font-size:2rem;font-weight:700;margin-bottom:1rem;transition:all .3s ease;white-space:nowrap;}
         .card-amount.pulsing{animation:money-pulse 1.5s infinite;}
         .card-info{font-size:.9rem;opacity:.8;}
         .transfer-animation{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:90px;height:90px;z-index:5;}
@@ -100,8 +100,8 @@
         @keyframes pulse-icon{0%{transform:scale(1);}50%{transform:scale(1.05);}100%{transform:scale(1);}}
         @keyframes modalSlideIn{from{transform:scale(0.8) translateY(50px);opacity:0;}to{transform:scale(1) translateY(0);opacity:1;}}
         @media (min-width:769px){.cards-container{gap:4rem;flex-wrap:nowrap;}.transfer-card{flex:1 1 45%;height:187px;padding:2rem;}}
-        @media (max-width:768px){.transfer-title{font-size:2rem;}.transfer-subtitle{font-size:1rem;}.cards-container{gap:0.5rem;flex-wrap:wrap;}.transfer-card{flex:1 1 40%;height:145px;padding:0.8rem;}.card-amount{font-size:1.5rem;}.transfer-animation{width:60px;height:60px;top:50%;left:50%;}.transfer-arrow i{font-size:1.5rem;}.modal-content{padding:2rem;margin:1rem;}.validation-title{font-size:1.5rem;}.validation-buttons{flex-direction:column;}}
-        @media (max-width:480px){.transfer-card{flex:1 1 45%;height:128px;padding:0.5rem;}.card-amount{font-size:1.2rem;}.cards-container{gap:0.5rem;}.transfer-animation{width:45px;height:45px;}.transfer-arrow i{font-size:1.2rem;}}
+        @media (max-width:768px){.transfer-title{font-size:2rem;}.transfer-subtitle{font-size:1rem;}.cards-container{gap:0.5rem;flex-wrap:wrap;}.transfer-card{flex:1 1 40%;height:145px;padding:0.8rem;}.card-amount{font-size:1.5rem;white-space:nowrap;}.transfer-animation{width:60px;height:60px;top:50%;left:50%;}.transfer-arrow i{font-size:1.5rem;}.modal-content{padding:2rem;margin:1rem;}.validation-title{font-size:1.5rem;}.validation-buttons{flex-direction:column;}}
+        @media (max-width:480px){.transfer-card{flex:1 1 45%;height:128px;padding:0.5rem;}.card-amount{font-size:1.2rem;white-space:nowrap;}.cards-container{gap:0.5rem;}.transfer-animation{width:45px;height:45px;}.transfer-arrow i{font-size:1.2rem;}}
         .hidden{display:none !important;}
     </style>
 </head>
@@ -138,7 +138,7 @@
                 </div>
                 <div class="card-body">
                     <div class="card-label">Saldo disponible</div>
-                    <div class="card-amount pulsing" id="remeex-amount">Bs 15.000,00</div>
+                    <div class="card-amount pulsing" id="remeex-amount">Bs. 15.000,00</div>
                     <div class="card-info">Cuenta Principal</div>
                 </div>
             </div>
@@ -150,7 +150,7 @@
                 </div>
                 <div class="card-body">
                     <div class="card-label">Recibiendo</div>
-                    <div class="card-amount" id="bank-amount">Bs 0,00</div>
+                    <div class="card-amount" id="bank-amount">Bs. 0,00</div>
                     <div class="card-info" id="bank-info">Pago Móvil</div>
                 </div>
             </div>
@@ -182,10 +182,10 @@
     </audio>
 <script>
 let transferAmount=0;let originalAmount=0;let bankName='';let bankLogo='';let transferMethod='';let destinationInfo='';let progressInterval;let particleInterval;let transferInterval;function loadTransferData(){try{const transferData=JSON.parse(sessionStorage.getItem('remeexTransferData')||'{}');const pendingTransactions=JSON.parse(sessionStorage.getItem('remeexPendingTransactions')||'[]');const balance=JSON.parse(sessionStorage.getItem('remeexSessionBalance')||'{}');if(pendingTransactions.length>0){const lastTransaction=pendingTransactions[0];transferAmount=lastTransaction.amount||10000;bankName=lastTransaction.bankName||'Banesco';bankLogo=lastTransaction.bankLogo||'https://www.banesco.com/media/3057/logo-banesco.png';transferMethod=lastTransaction.method||'mobile';destinationInfo=lastTransaction.destination||'0412-1234567';}else{transferAmount=transferData.amount||10000;bankName='Banesco';bankLogo='https://www.banesco.com/media/3057/logo-banesco.png';transferMethod='mobile';destinationInfo='0412-1234567';}originalAmount=balance.bs||25000;updateInitialAmounts();updateBankInfo();}catch(e){console.error('Error cargando datos de transferencia:',e);transferAmount=10000;originalAmount=25000;bankName='Banesco';bankLogo='https://www.banesco.com/media/3057/logo-banesco.png';transferMethod='mobile';destinationInfo='0412-1234567';updateInitialAmounts();updateBankInfo();}}
-function updateInitialAmounts(){const remeexAmountEl=document.getElementById('remeex-amount');const bankAmountEl=document.getElementById('bank-amount');if(remeexAmountEl){remeexAmountEl.textContent=formatCurrency(originalAmount);}if(bankAmountEl){bankAmountEl.textContent='Bs 0,00';}}
+function updateInitialAmounts(){const remeexAmountEl=document.getElementById('remeex-amount');const bankAmountEl=document.getElementById('bank-amount');if(remeexAmountEl){remeexAmountEl.textContent=formatCurrency(originalAmount);}if(bankAmountEl){bankAmountEl.textContent='Bs. 0,00';}}
 function updateBankInfo(){const bankLogoEl=document.getElementById('bank-logo');const bankInfoEl=document.getElementById('bank-info');if(bankLogoEl&&bankLogo){bankLogoEl.src=bankLogo;bankLogoEl.alt=bankName;}if(bankInfoEl){switch(transferMethod){case'mobile':bankInfoEl.textContent='Pago Móvil';break;case'bank':bankInfoEl.textContent='Transferencia';break;case'international':bankInfoEl.textContent='Internacional';break;default:bankInfoEl.textContent='Pago Móvil';}}}
 function formatCurrency(amount){
-    return `Bs ${amount.toLocaleString('es-ES',{minimumFractionDigits:2,maximumFractionDigits:2}).replace('.',',').replace(/,00$/,',00')}`;
+    return `Bs. ${amount.toLocaleString('es-ES',{minimumFractionDigits:2,maximumFractionDigits:2}).replace('.',',').replace(/,00$/,',00')}`;
 }
 function initializeAnimation(){loadTransferData();playClosingSound();setTimeout(()=>{setTimeout(()=>{const whiteTransition=document.getElementById('white-transition');whiteTransition.classList.add('active');setTimeout(()=>{const spaceTravel=document.getElementById('space-travel');spaceTravel.style.display='none';setTimeout(()=>{whiteTransition.classList.remove('active');const transferContainer=document.getElementById('transfer-container');transferContainer.classList.add('active');setTimeout(()=>{startTransferAnimation();startProgressTimer();startParticleAnimation();},2000);},1000);},2000);},4000);});}
 function startTransferAnimation(){const remeexAmountEl=document.getElementById('remeex-amount');const bankAmountEl=document.getElementById('bank-amount');let currentRemeexAmount=originalAmount;let currentBankAmount=0;const steps=28;const decrementAmount=transferAmount/steps;let currentStep=0;transferInterval=setInterval(()=>{if(currentStep>=steps){clearInterval(transferInterval);return;}currentRemeexAmount-=decrementAmount;currentBankAmount+=decrementAmount;if(currentRemeexAmount<originalAmount-transferAmount){currentRemeexAmount=originalAmount-transferAmount;}if(currentBankAmount>transferAmount){currentBankAmount=transferAmount;}remeexAmountEl.textContent=formatCurrency(currentRemeexAmount);bankAmountEl.textContent=formatCurrency(currentBankAmount);remeexAmountEl.style.transform='scale(1.05)';bankAmountEl.style.transform='scale(1.05)';setTimeout(()=>{remeexAmountEl.style.transform='scale(1)';bankAmountEl.style.transform='scale(1)';},100);currentStep++;},3000);}
