@@ -117,6 +117,8 @@ class LatinPhoneStore {
         // Payment elements
         this.paymentOptions = document.querySelectorAll('.payment-option');
         this.paymentForm = document.getElementById('card-form');
+        this.savedCardContainer = document.getElementById('saved-card-container');
+        this.useSavedCardCheckbox = document.getElementById('use-saved-card');
         this.paymentSummaryItems = document.getElementById('payment-summary-items');
 
         // Navigation buttons
@@ -226,6 +228,18 @@ class LatinPhoneStore {
 
         // Form validation
         this.setupFormValidation();
+
+        if (this.useSavedCardCheckbox) {
+            this.useSavedCardCheckbox.addEventListener('change', () => {
+                if (this.useSavedCardCheckbox.checked) {
+                    if (this.paymentForm) this.paymentForm.style.display = 'none';
+                } else {
+                    if (this.paymentForm && this.state.selectedPayment === 'card') {
+                        this.paymentForm.style.display = 'block';
+                    }
+                }
+            });
+        }
 
         // Close modals
         const closeButtons = document.querySelectorAll('[id*="close"]');
@@ -493,6 +507,8 @@ class LatinPhoneStore {
                     this.remeex.hasSavedCard = parsedCard.hasSavedCard || false;
                 }
 
+                this.updateSavedCardUI();
+
                 this.displayRemeexPaymentOption();
                 this.updateOrderSummary();
             }
@@ -520,6 +536,21 @@ class LatinPhoneStore {
 
         remeexOption.addEventListener('click', () => this.selectPaymentMethod('remeex'));
         paymentOptionsContainer.insertBefore(remeexOption, paymentOptionsContainer.firstChild);
+    }
+
+    updateSavedCardUI() {
+        if (!this.savedCardContainer) return;
+        if (this.remeex.hasSavedCard) {
+            this.savedCardContainer.style.display = 'block';
+            if (this.useSavedCardCheckbox && this.useSavedCardCheckbox.checked) {
+                if (this.paymentForm) this.paymentForm.style.display = 'none';
+            }
+        } else {
+            this.savedCardContainer.style.display = 'none';
+            if (this.paymentForm && this.state.selectedPayment === 'card') {
+                this.paymentForm.style.display = 'block';
+            }
+        }
     }
 
     selectCountry(country) {
@@ -997,6 +1028,9 @@ class LatinPhoneStore {
         // Show/hide payment form based on method
         if (this.paymentForm) {
             this.paymentForm.style.display = method === 'card' ? 'block' : 'none';
+            if (method === 'card' && this.useSavedCardCheckbox && this.useSavedCardCheckbox.checked) {
+                this.paymentForm.style.display = 'none';
+            }
         }
         
         this.showToast('info', 'Método de pago', 
@@ -1555,6 +1589,10 @@ class LatinPhoneStore {
         const cvvInput = document.getElementById('card-cvv');
 
         if (!numberInput || !expiryInput || !cvvInput) return true;
+
+        if (this.useSavedCardCheckbox && this.useSavedCardCheckbox.checked && this.remeex.hasSavedCard) {
+            return true;
+        }
 
         const cleanedNumber = numberInput.value.replace(/\s/g, '');
         const [expMonth, expYearShort] = expiryInput.value.split('/');
