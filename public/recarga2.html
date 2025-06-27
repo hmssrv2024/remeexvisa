@@ -6429,7 +6429,7 @@
       // Storage event listener para sincronizar múltiples pestañas
       window.addEventListener('storage', handleStorageChange);
       
-      // Check for returning from transfer.html
+      // Check for returning from transfer
       checkReturnFromTransfer();
       
 
@@ -10256,8 +10256,8 @@ function setupUsAccountLink() {
             e.preventDefault();
             showFeatureBlockedModal();
           } else {
-            // Redireccionar a recibirfondos.html
-            window.location.href = 'recibirfondos.html';
+            // Redireccionar utilizando URL sin extensión
+            window.location.href = 'recibirfondos';
           }
           
           // Reset inactivity timer
