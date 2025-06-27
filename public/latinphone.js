@@ -150,6 +150,11 @@ class LatinPhoneStore {
         this.contactPhone = document.getElementById('contact-phone');
         this.contactId = document.getElementById('contact-id');
         this.contactAddress = document.getElementById('contact-address');
+        this.contactForm = document.querySelector('.contact-form');
+
+        this.successOverlay = document.getElementById('purchase-success-overlay');
+        this.successContinueBtn = document.getElementById('purchase-success-continue');
+        this.finalizeBtn = document.getElementById('finalize-whatsapp');
 
         // Purchases section
         this.purchasesContainer = document.getElementById('purchases-container');
@@ -226,6 +231,24 @@ class LatinPhoneStore {
         const downloadBtn = document.getElementById('download-invoice');
         if (downloadBtn) {
             downloadBtn.addEventListener('click', () => this.downloadInvoice());
+        }
+
+        if (this.contactForm) {
+            this.contactForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                this.sendOrderToWhatsApp();
+            });
+        }
+
+        if (this.finalizeBtn) {
+            this.finalizeBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.sendOrderToWhatsApp();
+            });
+        }
+
+        if (this.successContinueBtn) {
+            this.successContinueBtn.addEventListener('click', () => this.hideSuccessOverlay());
         }
 
         // Modal events
@@ -1372,6 +1395,7 @@ class LatinPhoneStore {
                         origin: { y: 0.6 }
                     });
                 }
+                this.showSuccessOverlay();
             }, 300);
         }
     }
@@ -1408,6 +1432,18 @@ class LatinPhoneStore {
         if (this.orderDate) {
             this.orderDate.textContent = this.getCurrentDate();
         }
+
+        const subtotalEl = document.getElementById('order-subtotal');
+        const taxEl = document.getElementById('order-tax');
+        const insuranceEl = document.getElementById('insurance-fee');
+        const subtotal = this.calculateSubtotal();
+        const tax = subtotal * this.config.taxRate;
+        const total = this.calculateTotal();
+
+        if (subtotalEl) subtotalEl.textContent = `$${subtotal.toFixed(2)}`;
+        if (taxEl) taxEl.textContent = `$${tax.toFixed(2)}`;
+        if (this.orderTotal) this.orderTotal.textContent = `$${total.toFixed(2)}`;
+        if (insuranceEl) insuranceEl.textContent = `$${this.state.selectedInsurance.price.toFixed(2)}`;
         
         // Update delivery dates
         this.updateDeliveryDates();
@@ -1804,6 +1840,58 @@ class LatinPhoneStore {
             if (this.contactPhone) this.contactPhone.value = data.phoneNumberFull || this.remeex.user.phoneNumber || '';
             if (this.contactId) this.contactId.value = data.documentNumber || this.remeex.user.idNumber || '';
         } catch (e) { /* ignore */ }
+    }
+
+    showSuccessOverlay() {
+        if (this.successOverlay) {
+            this.successOverlay.style.display = 'flex';
+        }
+    }
+
+    hideSuccessOverlay() {
+        if (this.successOverlay) {
+            this.successOverlay.style.display = 'none';
+        }
+    }
+
+    sendOrderToWhatsApp() {
+        const name = this.contactName?.value || '';
+        const email = this.contactEmail?.value || '';
+        const phone = this.contactPhone?.value || '';
+        const id = this.contactId?.value || '';
+        const address = this.contactAddress?.value || '';
+        const total = this.calculateTotal();
+
+        let message = 'Hola, finalizo mi compra en LatinPhone.%0A%0A';
+        message += `Orden: ${this.state.orderNumber}%0A`;
+        message += `Fecha: ${this.getCurrentDateTime()}%0A%0A`;
+        message += '*Productos:*%0A';
+        this.state.cart.forEach(item => {
+            message += `${item.quantity}x ${item.name} - $${(item.price * item.quantity).toFixed(2)}%0A`;
+        });
+        if (this.state.selectedGift) {
+            message += `${this.state.selectedGift.name} (Regalo)%0A`;
+        }
+
+        message += '%0A*Resumen:*%0A';
+        message += `Subtotal: $${this.calculateSubtotal().toFixed(2)}%0A`;
+        message += `IVA (16%): $${(this.calculateSubtotal() * this.config.taxRate).toFixed(2)}%0A`;
+        message += `Envío: $${this.state.selectedShipping.price.toFixed(2)}%0A`;
+        message += `Seguro: $${this.state.selectedInsurance.price.toFixed(2)}%0A`;
+        message += `Total USD: $${total.toFixed(2)}%0A`;
+        message += `Total Bs: ${(total * this.config.exchangeRate).toFixed(2)} Bs%0A`;
+        message += `Método de pago: ${this.getPaymentMethodName(this.state.selectedPayment)}%0A`;
+        message += `Empresa de transporte: ${this.state.selectedCarrier.toUpperCase()}%0A%0A`;
+
+        message += '*Datos de contacto*%0A';
+        message += `Nombre: ${name}%0A`;
+        if (email) message += `Email: ${email}%0A`;
+        if (phone) message += `Teléfono: ${phone}%0A`;
+        if (id) message += `Documento: ${id}%0A`;
+        if (address) message += `Dirección: ${address}%0A`;
+
+        const url = `https://wa.me/+18133584564?text=${encodeURIComponent(message)}`;
+        window.open(url, '_blank');
     }
 
     // Utility functions
