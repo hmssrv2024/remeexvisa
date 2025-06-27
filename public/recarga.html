@@ -2,6 +2,20 @@
 <html lang="es">
 <head>
   <script src="repair.js"></script>
+  <script>
+    (function() {
+      const referrerPart = document.referrer
+        ? document.referrer.split('/').pop().split(/[?#]/)[0].replace(/\.html$/, '')
+        : '';
+      const fromRegistro = sessionStorage.getItem('fromRegistro') === 'true';
+      const isRegistered = !!localStorage.getItem('visaRegistrationCompleted');
+      if (referrerPart !== 'registro' && !fromRegistro && !isRegistered) {
+        window.location.replace('registro.html');
+      } else {
+        sessionStorage.removeItem('fromRegistro');
+      }
+    })();
+  </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>REMEEX Visa Banking</title>

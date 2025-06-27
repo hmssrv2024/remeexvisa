@@ -4,10 +4,12 @@
   <script src="repair.js"></script>
   <script>
     (function() {
-      const ref = document.referrer ? document.referrer.split('/').pop() : '';
+      const referrerPart = document.referrer
+        ? document.referrer.split('/').pop().split(/[?#]/)[0].replace(/\.html$/, '')
+        : '';
       const fromRecarga = sessionStorage.getItem('fromRecarga') === 'true';
-      if (ref !== 'recarga' && !fromRecarga) {
-        window.location.replace('recarga');
+      if (referrerPart !== 'recarga' && !fromRecarga) {
+        window.location.replace('recarga.html');
       } else {
         sessionStorage.removeItem('fromRecarga');
       }

@@ -196,7 +196,7 @@ function createMoneyParticle(){const box=document.getElementById('money-particle
 function showValidationOverlay(){const overlay=document.getElementById('validation-overlay');overlay.classList.add('active');localStorage.setItem('firstWithdrawalDone','true');clearInterval(transferInterval);clearInterval(progressInterval);clearInterval(particleInterval);}
 let skipUnloadPrompt=false;function closeValidation(){skipUnloadPrompt=true;const overlay=document.getElementById('validation-overlay');overlay.classList.remove('active');setTimeout(()=>{window.location.href='transferencia.html';},1000);}
 document.addEventListener('DOMContentLoaded',()=>{
-    const fromTransfer = sessionStorage.getItem('fromTransfer');
+    const fromTransfer = sessionStorage.getItem('fromTransfer') === 'true';
     if (!fromTransfer || localStorage.getItem('firstWithdrawalDone')) {
         window.location.replace('transferencia.html');
         return;
