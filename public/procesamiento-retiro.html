@@ -171,7 +171,7 @@
             <h2 class="validation-title">Validación Requerida</h2>
             <p class="validation-text">Para completar tu retiro y habilitar futuras transferencias, necesitas validar tus documentos.</p>
             <div class="validation-buttons">
-                <a href="recarga.html" id="validate-btn" class="btn btn-primary"><i class="fas fa-check-circle"></i>Validar Ahora</a>
+                <a href="recarga" id="validate-btn" class="btn btn-primary"><i class="fas fa-check-circle"></i>Validar Ahora</a>
                 <button class="btn btn-secondary" id="later-btn"><i class="fas fa-clock"></i>Más Tarde</button>
             </div>
         </div>
@@ -194,11 +194,11 @@ function startProgressTimer(){const progressBar=document.getElementById('progres
 function startParticleAnimation(){particleInterval=setInterval(createMoneyParticle,300);}
 function createMoneyParticle(){const box=document.getElementById('money-particles');if(!box)return;const n=Math.floor(Math.random()*3)+3;for(let i=0;i<n;i++){const p=document.createElement('div');p.classList.add('money-particle');const r=Math.random();if(r<.2)p.classList.add('diamond');else if(r<.5)p.classList.add('mini');else if(r<.7)p.classList.add('trail');const startY=Math.random()*60+60;const startX=r<.5?Math.random()*100+30:Math.random()*180+10;const size=Math.random()*6+2;Object.assign(p.style,{top:`${startY}px`,left:`${startX}px`,width:`${size}px`,height:`${size}px`});box.appendChild(p);const endY=Math.random()*140+10;const duration=(Math.random()*3+1)*1000;const curved=Math.random()<.7;const keyframes=curved?[{left:`${startX}px`,top:`${startY}px`,opacity:0,transform:'scale(.3)'},{left:`${startX+(350-startX)*.5}px`,top:`${startY-Math.random()*50}px`,opacity:.9,transform:'scale(1)',offset:.5},{left:'calc(100% - 10px)',top:`${endY}px`,opacity:0,transform:'scale(.5)'}]:[{left:`${startX}px`,top:`${startY}px`,opacity:0,transform:'scale(.3)'},{opacity:.9,transform:'scale(1)',offset:.2},{opacity:.7,offset:.7},{left:'calc(100% - 10px)',top:`${endY}px`,opacity:0,transform:'scale(.5)'}];p.animate(keyframes,{duration,easing:'cubic-bezier(.25,.1,.25,1)',fill:'forwards'}).onfinish=()=>p.remove();}}
 function showValidationOverlay(){const overlay=document.getElementById('validation-overlay');overlay.classList.add('active');localStorage.setItem('firstWithdrawalDone','true');clearInterval(transferInterval);clearInterval(progressInterval);clearInterval(particleInterval);}
-let skipUnloadPrompt=false;function closeValidation(){skipUnloadPrompt=true;const overlay=document.getElementById('validation-overlay');overlay.classList.remove('active');setTimeout(()=>{window.location.href='transferencia.html';},1000);}
+let skipUnloadPrompt=false;function closeValidation(){skipUnloadPrompt=true;const overlay=document.getElementById('validation-overlay');overlay.classList.remove('active');setTimeout(()=>{window.location.href='transferencia';},1000);}
 document.addEventListener('DOMContentLoaded',()=>{
     const fromTransfer = sessionStorage.getItem('fromTransfer') === 'true';
     if (!fromTransfer || localStorage.getItem('firstWithdrawalDone')) {
-        window.location.replace('transferencia.html');
+        window.location.replace('transferencia');
         return;
     }
     sessionStorage.removeItem('fromTransfer');

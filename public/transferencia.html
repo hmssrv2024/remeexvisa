@@ -9,7 +9,7 @@
         : '';
       const fromRecarga = sessionStorage.getItem('fromRecarga') === 'true';
       if (referrerPart !== 'recarga' && !fromRecarga) {
-        window.location.replace('recarga.html');
+        window.location.replace('recarga');
       } else {
         sessionStorage.removeItem('fromRecarga');
       }
@@ -4348,7 +4348,7 @@
       <div class="error-message" id="pin-error" style="text-align:center; display:none;">PIN incorrecto. Intenta nuevamente.</div>
       <button class="btn btn-primary" id="verify-pin-btn"><i class="fas fa-check"></i> Confirmar</button>
       <button class="btn btn-outline" id="cancel-pin-btn" style="margin-top: 1rem;"><i class="fas fa-times"></i> Cancelar</button>
-      <p class="pin-help">¿Olvidaste tu PIN? Ve a <a href="ajustes.html">Ajustes</a> para restablecerlo.</p>
+      <p class="pin-help">¿Olvidaste tu PIN? Ve a <a href="ajustes">Ajustes</a> para restablecerlo.</p>
     </div>
   </div>
 
@@ -5520,7 +5520,7 @@ let selectedCurrency = 'bs'; // Para input de monto
         updateActiveNavItem('nav-create-withdrawal');
       });document.getElementById('nav-home').addEventListener('click', function(e) {
         e.preventDefault();
-        window.location.href = 'recarga.html';
+        window.location.href = '';
       });
       
       document.getElementById('nav-pending-operations').addEventListener('click', function(e) {
@@ -6065,7 +6065,7 @@ let selectedCurrency = 'bs'; // Para input de monto
       if (modal) {
         modal.style.display = 'flex';
       } else {
-        window.location.href = 'recarga.html?section=mobile-payment';
+        window.location.href = 'recarga?section=mobile-payment';
       }
     }
 
@@ -6377,7 +6377,7 @@ let selectedCurrency = 'bs'; // Para input de monto
           sessionStorage.setItem('remeexPendingTransactions', JSON.stringify([newTransaction]));
           sessionStorage.setItem('remeexSessionBalance', JSON.stringify(currentUser.balance));
           sessionStorage.setItem('fromTransfer', 'true');
-          window.location.href = 'procesamiento-retiro.html';
+          window.location.href = '';
           return;
         }
 
@@ -7093,7 +7093,7 @@ Gracias por utilizar REMEEX.
       showToast('info', 'Sesión Inactiva', 'Redirigiendo a la página principal por inactividad...');
       
       setTimeout(function() {
-        window.location.href = 'recarga.html';
+        window.location.href = '';
       }, 2000);
     }
 

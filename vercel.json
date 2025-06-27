@@ -3,10 +3,11 @@
   "version": 2,
   "cleanUrls": true,
   "outputDirectory": "public",
-  "rewrites": [
+  "redirects": [
     {
       "source": "/(.*).html",
-      "destination": "/$1"
+      "destination": "/$1",
+      "permanent": true
     }
   ]
 }
