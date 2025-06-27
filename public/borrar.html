@@ -15,7 +15,8 @@
     <script>
         document.getElementById('clearStorageBtn').addEventListener('click', () => {
             localStorage.clear();
-            alert('Datos de almacenamiento local borrados.');
+            sessionStorage.clear();
+            alert('Datos de almacenamiento local y de sesi\u00f3n borrados.');
         });
     </script>
 <div id="bottom-nav-container"></div>
