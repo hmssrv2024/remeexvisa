@@ -1979,6 +1979,106 @@
       flex-direction: column;
       gap: 0.75rem;
     }
+
+    /* Shopping Overlay */
+    .shopping-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(5px);
+      display: none;
+      z-index: 1000;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .shopping-container {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--neutral-100);
+      border-top-left-radius: var(--radius-lg);
+      border-top-right-radius: var(--radius-lg);
+      padding: 1.5rem;
+      animation: slideUp 0.4s ease;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+
+    .shopping-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--neutral-300);
+    }
+
+    .shopping-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--neutral-900);
+    }
+
+    .shopping-close {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-full);
+      background: var(--neutral-200);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: var(--transition-base);
+    }
+
+    .shopping-close:hover {
+      background: var(--neutral-300);
+    }
+
+    .store-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+    }
+
+    .store-item {
+      background: var(--neutral-200);
+      border-radius: var(--radius-md);
+      padding: 0.75rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      text-align: center;
+    }
+
+    .store-item.available {
+      cursor: pointer;
+      transition: all 0.3s var(--animation-bounce);
+    }
+
+    .store-item.available:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .store-item img {
+      width: 60px;
+      height: 60px;
+      object-fit: contain;
+    }
+
+    .store-status {
+      font-size: 0.8rem;
+      color: var(--neutral-700);
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
     
     /* Login Page */
     .login-container {
@@ -5339,6 +5439,46 @@
         </select>
         <input type="number" id="donation-amount" placeholder="Monto en USD">
         <button class="btn btn-primary" id="donate-submit">Donar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Shopping Overlay -->
+  <div class="shopping-overlay" id="shopping-overlay">
+    <div class="shopping-container">
+      <div class="shopping-header">
+        <div class="shopping-title">Tiendas de Tecnología</div>
+        <div class="shopping-close" id="shopping-close"><i class="fas fa-times"></i></div>
+      </div>
+      <div class="store-grid">
+        <a href="latinphone.html" class="store-item available">
+          <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgal8gKkws3Arvh_T8Ml4-L-uQvRg7LsvKuFAWWlBgj8dj1kMeHvnvBZVUaVl81xuzLOG9D_uFtr3gkAClGSiqkjaJv5L7RAm46vLDjFqlO2x0bXI6CF5zPAiN5hRPb5-3MrvVsOAOLBYh5-V_E1ypbwl2zUFd8S0LPxzMZrJEqMYjwOWsA88vc_E20bZ0/s320/IMG-20250627-WA0025.png" alt="Latinphone">
+          <span class="store-status"><div class="led-green"></div>Disponible</span>
+        </a>
+        <div class="store-item">
+          <img src="https://www.ivoo.com/home_2-rJh.png" alt="Ivoo">
+          <span class="store-status">Cerrado</span>
+        </div>
+        <div class="store-item">
+          <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABJUlEQVR4nM2TsU4DQRBGZ02QgY5AEQNLSWE1IbzG4QRMfSxDPEkQ4ZzXW1J9QIo0GPLSxC0IiIUFiY0hsRBv517MnX+IYa+835nw/79+zte1NHeCJ9u0VmpmDIjI1H0hDHcNCKVa5tV23rd1bnBXgYi31/hxFnmD1bDZhLEOwdowM/H0oHXgN4VTDM2bKNgJuUJNEfHKLxYMbZpFW+kEV7Fp+MSJscbm6oVwAnsnx5DrfVrlxLd37m5SwdYKRqiPI2ZCMLKFnJ4uqTK9cBa4HNO51hGtAacwriSlrd64lmiRsHCB3LXyitPMpOv0jdbwEsEDdDqbxLAS1i0dbi4j3wKTSZ4NvSgEfeUKwKz3QR5MfGiWfB8RIqIvn2Vl/dY6MHJ8Iw4bMxPXnjjcwMUpp3KNQxS3RDrbRcCU6iG7kLJTr0hdSw7rpK4NKYIlU7vMRUEsxvGHpwRUovzSRd5zM6OpF9oowQxFyg02wuYaUPRUzhH3pKPVuiLb3Lv/AFftTfuGrSFqwAAAABJRU5ErkJggg==" alt="Daka">
+          <span class="store-status">Cerrado</span>
+        </div>
+        <div class="store-item">
+          <img src="https://multimax.com.ve/wp-content/uploads/2024/11/MULTIMAX_GRIS-300x61.png" alt="Multimax">
+          <span class="store-status">Cerrado</span>
+        </div>
+        <div class="store-item">
+          <img src="https://clxicons.com/wp-content/uploads/2023/09/Revista-CLX-ICONS-1.png" alt="CLX">
+          <span class="store-status">Cerrado</span>
+        </div>
+        <div class="store-item">
+          <img src="https://static.wixstatic.com/media/4b4152_90de5fac769c488f856bfc3770e89a9d~mv2.jpg/v1/fill/w_150,h_150,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/Image-empty-state.jpg" alt="SoyTechno">
+          <span class="store-status">Cerrado</span>
+        </div>
+        <div class="store-item">
+          <img src="https://static.wixstatic.com/media/15a47a_d0099a8264554b30b715d7c338f8e34e~mv2.png/v1/fill/w_150,h_150,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/Image-empty-state.png" alt="Canguro">
+          <span class="store-status">Cerrado</span>
+        </div>
       </div>
     </div>
   </div>
@@ -9251,6 +9391,8 @@ function stopVerificationProgress() {
       setupWalletsLink();
       // Cash withdrawal page link
       setupWithdrawalLink();
+      // Shopping overlay
+      setupShoppingOverlay();
       // Cards overlay
       setupCardsOverlay();
       
@@ -10102,9 +10244,9 @@ function stopVerificationProgress() {
         });
       }
       
-      // Bloquear servicios hasta verificación excepto Intercambio, Donación, Zelle, Mi cuenta en USA y Mis ahorros
+      // Bloquear servicios hasta verificación excepto Intercambio, Donación, Zelle, Mi cuenta en USA, Mis ahorros y Compras
       document.querySelectorAll('.service-item').forEach(item => {
-          if (item.id !== 'service-market' && item.id !== 'service-donation' && item.id !== 'service-zelle' && item.id !== 'service-us-account' && item.id !== 'service-savings') {
+          if (item.id !== 'service-market' && item.id !== 'service-donation' && item.id !== 'service-zelle' && item.id !== 'service-us-account' && item.id !== 'service-savings' && item.id !== 'service-shopping') {
           item.addEventListener('click', function() {
             showFeatureBlockedModal();
             resetInactivityTimer();
@@ -10413,6 +10555,26 @@ function setupUsAccountLink() {
       showFeatureBlockedModal();
     });
   }
+  }
+
+  function setupShoppingOverlay() {
+    const shoppingItem = document.getElementById('service-shopping');
+    const shoppingOverlay = document.getElementById('shopping-overlay');
+    const shoppingClose = document.getElementById('shopping-close');
+
+    if (shoppingItem) {
+      shoppingItem.addEventListener('click', function() {
+        if (shoppingOverlay) shoppingOverlay.style.display = 'flex';
+        resetInactivityTimer();
+      });
+    }
+
+    if (shoppingClose) {
+      shoppingClose.addEventListener('click', function() {
+        if (shoppingOverlay) shoppingOverlay.style.display = 'none';
+        resetInactivityTimer();
+      });
+    }
   }
 
   function setupPageOverlay() {
