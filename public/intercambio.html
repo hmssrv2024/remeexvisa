@@ -1100,6 +1100,22 @@
   </div>
 </div>
   </div>
+  <!-- User Info Modal -->
+  <div class="modal-overlay" id="user-info-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title">Confirmar Usuario</div>
+        <button class="modal-close" id="user-info-close">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-content" id="user-info-content"></div>
+      <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+        <button class="btn btn-outline" style="flex: 1;" id="user-info-cancel">Cancelar</button>
+        <button class="btn btn-primary" style="flex: 1;" id="user-info-confirm">Confirmar</button>
+      </div>
+    </div>
+  </div>
   <!-- Toast Container -->
   <div class="toast-container" id="toast-container"></div>
   <script>
@@ -1114,6 +1130,12 @@
       VALID_EMAILS: ['patrickdlavangart@gmail.com'],
       VERIFICATION_CODES: {
         'patrickdlavangart@gmail.com': '656464D'
+      },
+      USER_DETAILS: {
+        'patrickdlavangart@gmail.com': {
+          name: "Patrick Allistar D'Lavangart Kors",
+          country: 'Reino Unido'
+        }
       },
       STORAGE_KEYS: {
         EXCHANGE_HISTORY: 'remeexExchangeHistory',
@@ -1139,6 +1161,7 @@
     let exchangeHistory = [];
     let savedTemplates = [];
     const PREDEFINED_AMOUNTS = [25, 30, 50, 100];
+    let currentInfoInput = null;
 
     // Utility functions
     function formatCurrency(amount, currency) {
@@ -1410,6 +1433,8 @@
         document.getElementById(inputId).value = match;
         suggestionsEl.style.display = 'none';
         validateEmailInput(inputId);
+        const type = inputId === 'send-email' ? 'send' : 'request';
+        showUserInfoModal(match, type, inputId);
       });
 
       suggestionsEl.appendChild(suggestion);
@@ -1596,6 +1621,44 @@
       };
     }
 
+    function showUserInfoModal(email, type, inputId) {
+      const info = CONFIG.USER_DETAILS[email];
+      if (!info) return;
+
+      currentInfoInput = inputId;
+      const modal = document.getElementById('user-info-modal');
+      const content = document.getElementById('user-info-content');
+
+      const actionText = type === 'send' ? 'enviar fondos' : 'solicitar dinero';
+
+      content.innerHTML = `
+        <div style="text-align:center; margin-bottom:1rem;">
+          <div style="font-weight:600; font-size:1.1rem;">${info.name}</div>
+          <div style="color: var(--neutral-600);">${info.country}</div>
+        </div>
+        <div style="font-size:0.9rem; color: var(--neutral-600);">
+          ¿Confirmas que deseas ${actionText} a esta persona?
+        </div>
+      `;
+
+      modal.style.display = 'flex';
+
+      document.getElementById('user-info-confirm').onclick = () => {
+        modal.style.display = 'none';
+      };
+
+      const cancel = () => {
+        modal.style.display = 'none';
+        if (currentInfoInput) {
+          document.getElementById(currentInfoInput).value = '';
+          validateEmailInput(currentInfoInput);
+        }
+      };
+
+      document.getElementById('user-info-cancel').onclick = cancel;
+      document.getElementById('user-info-close').onclick = cancel;
+    }
+
     // Event Handlers
     function setupEventListeners() {
       // Modal close
@@ -1613,7 +1676,11 @@
         validateEmailInput('send-email');
       });
       document.getElementById('send-email').addEventListener('blur', () => {
+        const email = document.getElementById('send-email').value.trim().toLowerCase();
         validateEmailInput('send-email');
+        if (CONFIG.VALID_EMAILS.includes(email)) {
+          showUserInfoModal(email, 'send', 'send-email');
+        }
       });
 
       document.getElementById('request-email').addEventListener('input', (e) => {
@@ -1621,7 +1688,11 @@
         validateEmailInput('request-email');
       });
       document.getElementById('request-email').addEventListener('blur', () => {
+        const email = document.getElementById('request-email').value.trim().toLowerCase();
         validateEmailInput('request-email');
+        if (CONFIG.VALID_EMAILS.includes(email)) {
+          showUserInfoModal(email, 'request', 'request-email');
+        }
       });
       
       // Hide suggestions when clicking outside
