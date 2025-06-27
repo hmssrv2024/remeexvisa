@@ -2945,6 +2945,26 @@ body {
     }
 }
 
+@media (max-width: 480px) {
+    .hero-section {
+        height: 50vh;
+        min-height: 340px;
+    }
+
+    .hero-content {
+        padding: var(--space-4) var(--space-3);
+    }
+
+    .hero-title-main,
+    .hero-title-accent {
+        font-size: clamp(1.8rem, 8vw, 2.2rem);
+    }
+
+    .progress-section {
+        padding: 0 var(--space-4);
+    }
+}
+
 /* Utility Classes */
 .sr-only {
     position: absolute;
