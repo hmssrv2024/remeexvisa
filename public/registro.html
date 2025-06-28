@@ -2282,7 +2282,7 @@ function setupCardClickEvents() {
                     const data = JSON.parse(saved);
                     if (data.completed) {
                         // Redirigir directamente a recarga
-                        window.location.href = '';
+                        window.location.href = 'recarga';
                         return;
                     }
                 } catch (e) {
@@ -3550,7 +3550,7 @@ function setupCardClickEvents() {
 
         function goToLogin() {
             sessionStorage.setItem('fromRegistro', 'true');
-            window.location.href = '';
+            window.location.href = 'recarga';
         }
 
         function exitRegistration() {
