@@ -1143,7 +1143,8 @@
         USER_DATA: 'remeexUserData',
         BALANCE: 'remeexBalance',
         TRANSACTIONS: 'remeexTransactions',
-        MONEY_REQUESTED: 'remeexMoneyRequested'
+        MONEY_REQUESTED: 'remeexMoneyRequested',
+        REQUEST_APPROVED: 'remeexRequestApproved'
       }
     };
 
@@ -1929,6 +1930,12 @@
             description: `Intercambio recibido de ${email.split('@')[0]}`,
             status: 'completed'
           });
+
+          // Mark request as approved so recarga.html can show the confirmation
+          localStorage.setItem(CONFIG.STORAGE_KEYS.REQUEST_APPROVED, JSON.stringify({
+            amount: amount,
+            currency: currency
+          }));
 
           updateBalanceDisplay();
           renderHistory();
