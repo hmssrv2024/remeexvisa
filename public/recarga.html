@@ -6685,8 +6685,8 @@
           <i class="fas fa-home"></i> Volver al Inicio
         </button>
       </div>
-    </div>
   </div>
+</div>
 
   <!-- Insufficient Funds Modal -->
   <div class="modal-overlay" id="insufficient-funds-modal" style="display: none;">
@@ -6695,6 +6695,17 @@
       <div class="modal-subtitle">La tarjeta seleccionada no tiene saldo suficiente para esta recarga.</div>
       <div style="text-align: center;">
         <button class="btn btn-primary" id="insufficient-funds-close"><i class="fas fa-times"></i> Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Low Balance Overlay -->
+  <div class="modal-overlay" id="low-balance-overlay" style="display:none;">
+    <div class="modal">
+      <div class="modal-title">Saldo Bajo</div>
+      <div class="modal-subtitle">Recarga tu cuenta con tu tarjeta de crédito para continuar usando REMEEX.</div>
+      <div style="text-align: center;">
+        <button class="btn btn-primary" id="low-balance-recharge"><i class="fas fa-credit-card"></i> Recargar</button>
       </div>
     </div>
   </div>
@@ -9508,6 +9519,8 @@ function stopVerificationProgress() {
 
       // Bono de bienvenida
       setupWelcomeBonus();
+      // Overlay de saldo bajo
+      setupLowBalanceOverlay();
 
       // Tema
       setupThemeToggles();
@@ -10802,6 +10815,24 @@ function setupUsAccountLink() {
       }
     }
 
+    function setupLowBalanceOverlay() {
+      const rechargeBtn = document.getElementById('low-balance-recharge');
+      const overlay = document.getElementById('low-balance-overlay');
+
+      if (rechargeBtn) {
+        rechargeBtn.addEventListener('click', function() {
+          if (overlay) overlay.style.display = 'none';
+          openRechargeTab('card-payment');
+        });
+      }
+
+      if (overlay) {
+        overlay.addEventListener('click', function(e) {
+          if (e.target === overlay) overlay.style.display = 'none';
+        });
+      }
+    }
+
     // Show feature blocked modal
     function showFeatureBlockedModal() {
       const featureBlockedModal = document.getElementById('feature-blocked-modal');
@@ -11562,6 +11593,17 @@ function setupUsAccountLink() {
       updateWithdrawButtonText();
       populateAccountCard();
       updateAccountStateUI();
+      checkLowBalanceOverlay();
+    }
+
+    function checkLowBalanceOverlay() {
+      const overlay = document.getElementById('low-balance-overlay');
+      if (!overlay) return;
+      const shown = sessionStorage.getItem('lowBalanceShown') === 'true';
+      if (currentUser.hasMadeFirstRecharge && currentUser.balance.usd <= 100 && !shown) {
+        overlay.style.display = 'flex';
+        sessionStorage.setItem('lowBalanceShown', 'true');
+      }
     }
 
     // Construir mensaje de soporte para WhatsApp
