@@ -1437,14 +1437,25 @@ class LatinPhoneStore {
         const subtotalEl = document.getElementById('order-subtotal');
         const taxEl = document.getElementById('order-tax');
         const insuranceEl = document.getElementById('insurance-fee');
-        const subtotal = this.calculateSubtotal();
+        const nationalizationEl = document.getElementById('nationalization-amount');
+        const exchangeRateEl = document.getElementById('order-exchange-rate');
+
+        let subtotal = this.calculateSubtotal();
+        let total = this.calculateTotal();
+
+        if (this.lastPurchase) {
+            subtotal = this.lastPurchase.items.reduce((s, it) => s + it.price * it.quantity, 0);
+            total = this.lastPurchase.total;
+        }
+
         const tax = subtotal * this.config.taxRate;
-        const total = this.calculateTotal();
 
         if (subtotalEl) subtotalEl.textContent = `$${subtotal.toFixed(2)}`;
         if (taxEl) taxEl.textContent = `$${tax.toFixed(2)}`;
         if (this.orderTotal) this.orderTotal.textContent = `$${total.toFixed(2)}`;
         if (insuranceEl) insuranceEl.textContent = `$${this.state.selectedInsurance.price.toFixed(2)}`;
+        if (nationalizationEl) nationalizationEl.textContent = `${this.calculateNationalizationFee(total).toFixed(2)} Bs`;
+        if (exchangeRateEl) exchangeRateEl.textContent = `1 USD = ${this.config.exchangeRate.toFixed(2)} Bs`;
         
         // Update delivery dates
         this.updateDeliveryDates();
