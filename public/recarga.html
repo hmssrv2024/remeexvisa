@@ -11994,6 +11994,17 @@ function setupUsAccountLink() {
           </div>
         `;
       }
+
+      if (transaction.cardAmount) {
+        const cardAmt = formatCurrency(transaction.cardAmount, 'usd');
+        const balAmt = formatCurrency(transaction.amount, 'usd');
+        transactionHTML += `
+          <div class="transaction-category">
+            <i class="fas fa-random"></i>
+            <span>Mixto: ${balAmt} Remeex y ${cardAmt} tarjeta</span>
+          </div>
+        `;
+      }
       
       if (transaction.reference) {
         const safeReference = escapeHTML(transaction.reference);
