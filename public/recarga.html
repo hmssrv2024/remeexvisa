@@ -8207,15 +8207,24 @@ function stopVerificationProgress() {
       if (savedBalance) {
         try {
           const balanceData = JSON.parse(savedBalance);
-          
+
           // Verificar si este es el dispositivo correcto
           if (balanceData.deviceId && balanceData.deviceId === currentUser.deviceId) {
+            const usd = balanceData.usd || 0;
+            const bs = balanceData.bs || 0;
+            let eur;
+            if (typeof balanceData.eur === 'number') {
+              eur = balanceData.eur;
+            } else if (usd) {
+              eur = usd * CONFIG.EXCHANGE_RATES.USD_TO_EUR;
+            } else if (bs) {
+              eur = (bs / CONFIG.EXCHANGE_RATES.USD_TO_BS) * CONFIG.EXCHANGE_RATES.USD_TO_EUR;
+            } else {
+              eur = 0;
+            }
+
             // Extraer solo el balance sin el deviceId
-            currentUser.balance = {
-              usd: balanceData.usd || 0,
-              bs: balanceData.bs || 0,
-              eur: balanceData.eur || 0
-            };
+            currentUser.balance = { usd, bs, eur };
             return true;
           } else {
             // Si es otro dispositivo, no cargar el balance
