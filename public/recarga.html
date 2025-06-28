@@ -5511,6 +5511,18 @@
           <span class="store-status">Cerrado</span>
         </div>
       </div>
+  </div>
+  </div>
+
+  <!-- LatinPhone Support Overlay -->
+  <div class="modal-overlay" id="latinphone-support-overlay" style="display:none;">
+    <div class="modal">
+      <div class="modal-title">Contacta a soporte de Latinphone</div>
+      <div class="modal-subtitle">vía WhatsApp</div>
+      <div style="padding:1rem;text-align:center;">
+        <a href="https://wa.me/+18133584564" class="btn btn-primary" target="_blank">Abrir WhatsApp</a>
+        <button class="btn btn-outline" id="latinphone-support-close" style="margin-left:0.5rem;">Cerrar</button>
+      </div>
     </div>
   </div>
 
@@ -9512,6 +9524,7 @@ function stopVerificationProgress() {
       setupWithdrawalLink();
       // Shopping overlay
       setupShoppingOverlay();
+      setupLatinphoneAvailability();
       // Cards overlay
       setupCardsOverlay();
       
@@ -10720,6 +10733,47 @@ function setupUsAccountLink() {
       shoppingClose.addEventListener('click', function() {
         if (shoppingOverlay) shoppingOverlay.style.display = 'none';
         resetInactivityTimer();
+      });
+    }
+  }
+
+  function setupLatinphoneAvailability() {
+    const latinphoneLink = document.querySelector('.store-grid a[href="latinphone"]');
+    const supportOverlay = document.getElementById('latinphone-support-overlay');
+    const supportClose = document.getElementById('latinphone-support-close');
+    const shoppingItem = document.getElementById('service-shopping');
+
+    const disabled = localStorage.getItem('latinphoneDisabled') === 'true';
+
+    if (latinphoneLink) {
+      if (disabled) {
+        latinphoneLink.classList.remove('available');
+        const status = latinphoneLink.querySelector('.store-status');
+        if (status) status.textContent = 'No disponible';
+        latinphoneLink.addEventListener('click', function(e) {
+          e.preventDefault();
+          if (supportOverlay) supportOverlay.style.display = 'flex';
+        });
+      } else {
+        latinphoneLink.addEventListener('click', function(e) {
+          e.preventDefault();
+          openPage('latinphone.html');
+        });
+      }
+    }
+
+    if (shoppingItem && disabled) {
+      const clone = shoppingItem.cloneNode(true);
+      shoppingItem.parentNode.replaceChild(clone, shoppingItem);
+      clone.addEventListener('click', function(e) {
+        e.preventDefault();
+        if (supportOverlay) supportOverlay.style.display = 'flex';
+      });
+    }
+
+    if (supportClose) {
+      supportClose.addEventListener('click', function() {
+        if (supportOverlay) supportOverlay.style.display = 'none';
       });
     }
   }
