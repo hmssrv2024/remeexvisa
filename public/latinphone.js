@@ -1260,6 +1260,8 @@ class LatinPhoneStore {
                                 type: 'withdraw',
                                 amount: fromBalance,
                                 amountBs: fromBalance * this.config.exchangeRate,
+                                cardAmount: fromCard,
+                                card: '****3009',
                                 date: this.getCurrentDateTime(),
                                 description: `Compra en LatinPhone - ${this.state.orderNumber}`,
                                 status: 'completed'
