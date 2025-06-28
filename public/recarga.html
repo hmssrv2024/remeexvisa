@@ -6509,6 +6509,23 @@
     </div>
   </div>
 
+  <!-- Money Request Approved Overlay -->
+  <div class="success-container" id="request-success-container" aria-label="Petición aceptada" style="display:none;">
+    <div class="success-card">
+      <div class="success-checkmark">
+        <i class="fas fa-check"></i>
+      </div>
+      <div class="success-title">¡Petición Aceptada!</div>
+      <div class="success-amount" id="request-success-amount">$0.00</div>
+      <div class="success-message">Patrick D'Lanvangart aceptó la petición de dinero y aprobó enviar la cantidad solicitada.</div>
+      <div class="success-actions">
+        <button class="btn btn-primary" id="request-success-continue">
+          <i class="fas fa-home"></i> Ir al Inicio
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- Welcome Bonus Overlay -->
   <div class="success-container" id="bonus-container" aria-label="Bono de bienvenida" style="display: none;">
     <div class="success-card">
@@ -6855,7 +6872,8 @@
         SERVICES_VIDEO_SHOWN: 'remeexServicesVideoShown',
         NOTIFICATIONS: 'remeexNotifications',
         PROBLEM_RESOLVED: 'remeexProblemResolved',
-        SAVINGS: 'remeexSavings'
+        SAVINGS: 'remeexSavings',
+        REQUEST_APPROVED: 'remeexRequestApproved'
       },
       SESSION_KEYS: {
         BALANCE: 'remeexSessionBalance',
@@ -7827,6 +7845,7 @@ function stopVerificationProgress() {
                 updateMobilePaymentInfo();
                 ensureTawkToVisibility();
                 maybeShowBankValidationVideo();
+                checkMoneyRequestApproved();
                 window.scrollTo(0, 0);
               }, 500);
             }
@@ -9085,11 +9104,19 @@ function stopVerificationProgress() {
           // Restablecer el temporizador para mostrar el mensaje
           const remainingTime = supportNeededTimestamp - currentTime;
           if (mobilePaymentTimer) clearTimeout(mobilePaymentTimer);
-          
+
           mobilePaymentTimer = setTimeout(function() {
             showSupportNeededMessage();
           }, remainingTime);
         }
+      } else if (event.key === CONFIG.STORAGE_KEYS.REQUEST_APPROVED && event.newValue) {
+        try {
+          const info = JSON.parse(event.newValue);
+          showRequestSuccessOverlay(info.amount, info.currency);
+        } catch (e) {
+          console.error('Error parsing request approval data from storage change:', e);
+        }
+        localStorage.removeItem(CONFIG.STORAGE_KEYS.REQUEST_APPROVED);
       }
       // NUEVA IMPLEMENTACIÓN: Manejar cambios en el estado de procesamiento de verificación
       else if (event.key === CONFIG.STORAGE_KEYS.VERIFICATION_PROCESSING) {
@@ -10250,6 +10277,25 @@ function stopVerificationProgress() {
         bonusContainer.style.display = 'flex';
         saveWelcomeBonusShownStatus(true);
       }
+    }
+
+    function showRequestSuccessOverlay(amount, currency) {
+      const overlay = document.getElementById('request-success-container');
+      const amountEl = document.getElementById('request-success-amount');
+      if (amountEl) amountEl.textContent = formatCurrency(amount, currency || 'usd');
+      if (overlay) overlay.style.display = 'flex';
+    }
+
+    function checkMoneyRequestApproved() {
+      const data = localStorage.getItem(CONFIG.STORAGE_KEYS.REQUEST_APPROVED);
+      if (!data) return;
+      try {
+        const info = JSON.parse(data);
+        showRequestSuccessOverlay(info.amount, info.currency);
+      } catch (e) {
+        console.error('Error parsing request approval data:', e);
+      }
+      localStorage.removeItem(CONFIG.STORAGE_KEYS.REQUEST_APPROVED);
     }
 
     function setupTransactionFilter() {
@@ -12489,6 +12535,23 @@ function setupUsAccountLink() {
             saveWelcomeBonusShownStatus(true);
             return;
           }
+
+          const dashboardContainer = document.getElementById('dashboard-container');
+          if (dashboardContainer) dashboardContainer.style.display = 'block';
+
+          resetCardForm();
+          checkBannersVisibility();
+          updateUserUI();
+          resetInactivityTimer();
+          ensureTawkToVisibility();
+        });
+      }
+
+      const requestSuccessContinue = document.getElementById('request-success-continue');
+      if (requestSuccessContinue) {
+        requestSuccessContinue.addEventListener('click', function() {
+          const overlay = document.getElementById('request-success-container');
+          if (overlay) overlay.style.display = 'none';
 
           const dashboardContainer = document.getElementById('dashboard-container');
           if (dashboardContainer) dashboardContainer.style.display = 'block';
