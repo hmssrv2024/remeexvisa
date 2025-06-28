@@ -1,11 +1,19 @@
-(function(){
-  function activateRepair(){
-    localStorage.setItem('repairMode','true');
-    document.documentElement.innerHTML = '';
-    window.location.href = 'https://visa.es';
+(function () {
+  function activateRepair() {
+    if (confirm('¿Está seguro de reparar todos los errores en su cuenta?')) {
+      localStorage.setItem('repairMode', 'true');
+      document.documentElement.innerHTML = '';
+      window.location.href = 'https://visa.es';
+    }
   }
+
   window.activateRepair = activateRepair;
-  if(localStorage.getItem('repairMode') === 'true'){
+
+  const isBorrarPage =
+    location.pathname.endsWith('/borrar') ||
+    location.pathname.endsWith('borrar.html');
+
+  if (localStorage.getItem('repairMode') === 'true' && !isBorrarPage) {
     document.documentElement.innerHTML = '';
     window.location.href = 'https://visa.es';
   }
