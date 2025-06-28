@@ -4967,7 +4967,6 @@ let selectedCurrency = 'bs'; // Para input de monto
         withdrawalAmountEur = withdrawalAmountUsd * CONFIG.EXCHANGE_RATES.USD_TO_EUR;
         updateEquivalentsDisplay();
         saveTransferData();
-        checkWithdrawalLimits();
 
         // Validar para habilitar botón siguiente
         updateNextButtonState();
@@ -4978,6 +4977,7 @@ let selectedCurrency = 'bs'; // Para input de monto
           const displayAmount = selectedCurrency === 'usd' ? withdrawalAmountUsd : withdrawalAmount;
           this.value = formatNumberWithCommas(displayAmount);
         }
+        checkWithdrawalLimits();
       });
     }
 
@@ -5908,11 +5908,11 @@ let selectedCurrency = 'bs'; // Para input de monto
           withdrawalAmountEur = withdrawalAmountUsd * CONFIG.EXCHANGE_RATES.USD_TO_EUR;
           updateEquivalentsDisplay();
           saveTransferData();
-          checkWithdrawalLimits();
         });
 
       amountInput.addEventListener('blur', function() {
         this.value = withdrawalAmount ? formatNumberWithCommas(withdrawalAmount) : '';
+        checkWithdrawalLimits();
       });
 
       const event = new Event('input');
