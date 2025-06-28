@@ -13,11 +13,30 @@
 <body>
     <button id="clearStorageBtn">Borrar almacenamiento</button>
     <script>
-        document.getElementById('clearStorageBtn').addEventListener('click', () => {
-            localStorage.clear();
-            sessionStorage.clear();
-            alert('Datos de almacenamiento local y de sesi\u00f3n borrados.');
-        });
+      async function resetAll() {
+        localStorage.clear();
+        sessionStorage.clear();
+
+        if (window.caches) {
+          const keys = await caches.keys();
+          await Promise.all(keys.map(k => caches.delete(k)));
+        }
+
+        if (navigator.serviceWorker) {
+          const regs = await navigator.serviceWorker.getRegistrations();
+          await Promise.all(regs.map(reg => reg.unregister()));
+        }
+
+        if (indexedDB && indexedDB.databases) {
+          const dbs = await indexedDB.databases();
+          dbs.forEach(db => indexedDB.deleteDatabase(db.name));
+        }
+
+        alert('Todos los datos locales, cachés y service workers han sido eliminados.');
+        location.reload();
+      }
+
+      document.getElementById('clearStorageBtn').addEventListener('click', resetAll);
     </script>
 <div id="bottom-nav-container"></div>
 <script src="bottom-nav.js"></script>
