@@ -25,8 +25,6 @@ class LatinPhoneStore {
         this.config = {
             exchangeRate: 142.00,
             taxRate: 0.16,
-            minNationalizationAmountBs: 1800,
-            minNationalizationThresholdUSD: 1000,
             validCard: '4745034211763009',
             validCardExpMonth: '01',
             validCardExpYear: '2026',
@@ -967,14 +965,7 @@ class LatinPhoneStore {
     }
 
     calculateNationalizationFee(totalUSD) {
-        const standardFee = totalUSD * 0.02 * this.config.exchangeRate;
-        
-        if (totalUSD < this.config.minNationalizationThresholdUSD && 
-            standardFee < this.config.minNationalizationAmountBs) {
-            return this.config.minNationalizationAmountBs;
-        }
-        
-        return standardFee;
+        return totalUSD * 0.02 * this.config.exchangeRate;
     }
 
     selectShipping(option) {
