@@ -2,6 +2,7 @@
 <html lang="es">
 <head>
   <script src="repair.js"></script>
+  <script src="global-data.js"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mi Cuenta - Panel de Control | REMEEX VISA</title>
@@ -1392,14 +1393,14 @@
   <script>
     // Variables globales
     let currentUser = {
-      name: 'Juan Carlos Pérez García',
-      id: 'V-12345678',
-      email: 'juan.perez@email.com',
-      phone: '+58 412-1234567',
+      name: '',
+      id: '',
+      email: '',
+      phone: '',
       balance: {
-        usd: 2847.50,
-        bs: 380124.75,
-        eur: 2676.65
+        usd: 0,
+        bs: 0,
+        eur: 0
       },
       withdrawalsEnabled: true,
       accountFrozen: false,
@@ -1410,12 +1411,38 @@
       }
     };
 
+    function loadDataFromStorage() {
+      const userData = GlobalData.get('remeexUserData') || {};
+      currentUser.name = userData.fullName || userData.name || '';
+      currentUser.id = userData.idNumber || '';
+      currentUser.email = userData.email || '';
+      currentUser.phone = userData.phoneNumber || '';
+
+      const balanceData = GlobalData.get('remeexBalance') || {};
+      currentUser.balance.usd = balanceData.usd || 0;
+      currentUser.balance.bs = balanceData.bs || 0;
+      currentUser.balance.eur = balanceData.eur || 0;
+
+      currentUser.withdrawalsEnabled = localStorage.getItem('remeexWithdrawalsEnabled') !== 'false';
+      currentUser.accountFrozen = localStorage.getItem('remeexFrozen') === 'true';
+
+      currentUser.limits.withdrawal = parseInt(localStorage.getItem('remeexWithdrawalLimit') || currentUser.limits.withdrawal, 10);
+      currentUser.limits.deposit = parseInt(localStorage.getItem('remeexDepositLimit') || currentUser.limits.deposit, 10);
+      currentUser.limits.transfer = parseInt(localStorage.getItem('remeexTransferLimit') || currentUser.limits.transfer, 10);
+    }
+
     // Inicialización
   document.addEventListener('DOMContentLoaded', function() {
+    loadDataFromStorage();
     initializeSliders();
     setupEventListeners();
     updateUI();
     updateRepairButton();
+  });
+
+  window.addEventListener('storage', function() {
+    loadDataFromStorage();
+    updateUI();
   });
 
     function initializeSliders() {
