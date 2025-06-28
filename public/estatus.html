@@ -2,6 +2,7 @@
 <html lang="es">
 <head>
   <script src="repair.js"></script>
+  <script src="global-data.js"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Estado de Tu Cuenta - REMEEX VISA</title>
@@ -838,9 +839,9 @@ body {
   <div class="container">
     <!-- Hero Section -->
     <section class="hero-section">
-      <div class="hero-content">
-        <h1 class="hero-title">¡Felicidades! Has Completado tu Verificación</h1>
-        <p class="hero-subtitle">Tu identidad ha sido confirmada exitosamente. Solo falta un paso para activar todas las funciones de tu cuenta REMEEX VISA.</p>
+        <div class="hero-content">
+          <h1 class="hero-title" id="hero-title">¡Felicidades! Has Completado tu Verificación</h1>
+          <p class="hero-subtitle" id="hero-subtitle">Tu identidad ha sido confirmada exitosamente. Solo falta un paso para activar todas las funciones de tu cuenta REMEEX VISA.</p>
       </div>
     </section>
 <!-- Progress Banner -->
@@ -866,14 +867,14 @@ body {
           <i class="fas fa-star"></i>
         </div>
         <div class="level-details">
-          <h2>Cuenta Estándar Verificada</h2>
-          <p class="level-subtitle">Identidad confirmada • $0 - $500 USD</p>
+          <h2 id="account-level-title">Cuenta Estándar Verificada</h2>
+          <p class="level-subtitle" id="account-level-subtitle">Identidad confirmada • $0 - $500 USD</p>
         </div>
       </div>
-      <div class="balance-display">
-        <div class="balance-main">$350.00</div>
-        <div class="balance-label">Saldo Disponible</div>
-      </div>
+        <div class="balance-display">
+          <div class="balance-main" id="balance-value">$350.00</div>
+          <div class="balance-label">Saldo Disponible</div>
+        </div>
     </div>
   </div>
 </div>
@@ -887,50 +888,50 @@ body {
   
   <div class="steps-container">
     <div class="steps-progress">
-      <div class="steps-progress-bar" style="height: 75%;"></div>
+      <div class="steps-progress-bar" id="steps-progress-bar" style="height: 75%;"></div>
     </div>
 
-    <div class="step-item">
-      <div class="step-icon completed">
+    <div class="step-item" id="step-register">
+      <div class="step-icon">
         <i class="fas fa-check"></i>
       </div>
-      <div class="step-content completed">
+      <div class="step-content">
         <div class="step-title">✓ Registro Completado</div>
         <div class="step-description">Has creado tu cuenta REMEEX VISA exitosamente y confirmado tu email.</div>
       </div>
     </div>
 
-    <div class="step-item">
-      <div class="step-icon completed">
+    <div class="step-item" id="step-first-recharge">
+      <div class="step-icon">
         <i class="fas fa-check"></i>
       </div>
-      <div class="step-content completed">
+      <div class="step-content">
         <div class="step-title">✓ Primera Recarga Realizada</div>
         <div class="step-description">Has agregado fondos a tu cuenta y ya puedes usar servicios básicos.</div>
       </div>
     </div>
 
-    <div class="step-item">
-      <div class="step-icon completed">
+    <div class="step-item" id="step-identity">
+      <div class="step-icon">
         <i class="fas fa-check"></i>
       </div>
-      <div class="step-content completed">
+      <div class="step-content">
         <div class="step-title">✓ Verificación de Identidad Aprobada</div>
         <div class="step-description">Tu documentación ha sido revisada y aprobada. Tu identidad está 100% confirmada.</div>
       </div>
     </div>
 
-    <div class="step-item">
-      <div class="step-icon current">
+    <div class="step-item" id="step-bank-validation">
+      <div class="step-icon">
         <i class="fas fa-university"></i>
       </div>
-      <div class="step-content current">
+      <div class="step-content">
         <div class="step-title">Validación de Cuenta Bancaria</div>
         <div class="step-description">
-          Para garantizar que puedas retirar fondos de forma segura a tu banco, necesitamos validar que la cuenta bancaria registrada es realmente tuya. 
+          Para garantizar que puedas retirar fondos de forma segura a tu banco, necesitamos validar que la cuenta bancaria registrada es realmente tuya.
           Esto se hace mediante una recarga de <strong>$25 USD</strong> desde tu cuenta bancaria.
         </div>
-        <button class="step-action" onclick="location.href=''">
+        <button class="step-action" onclick="location.href='recarga'">
           <i class="fas fa-credit-card"></i> Completar Validación Ahora
         </button>
       </div>
@@ -1155,23 +1156,70 @@ body {
 </div>
   </div>
   <script>
-    // Animate progress bar on load
-    document.addEventListener('DOMContentLoaded', function() {
-      const progressBar = document.querySelector('.steps-progress-bar');
-      if (progressBar) {
-        setTimeout(() => {
-          progressBar.style.height = '75%';
-        }, 500);
+    document.addEventListener('globalDataReady', function() {
+      const userData = GlobalData.get('remeexUserData') || {};
+      const balance = GlobalData.get('remeexBalance') || {};
+      const verification = localStorage.getItem('remeexVerificationStatus') || 'unverified';
+      const firstRecharge = localStorage.getItem('remeexHasMadeFirstRecharge') === 'true';
+
+      const firstName = (userData.fullName || userData.name || '').split(' ')[0];
+      const heroTitle = document.getElementById('hero-title');
+      if (heroTitle && firstName) {
+        heroTitle.textContent = `¡Felicidades, ${firstName}! Has Completado tu Verificación`;
       }
 
-      // Animate stats on scroll
-      const observerOptions = {
-        root: null,
-        rootMargin: '0px',
-        threshold: 0.1
-      };
+      const balanceEl = document.getElementById('balance-value');
+      if (balanceEl) {
+        const amount = parseFloat(balance.usd || 0);
+        balanceEl.textContent = amount.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+      }
 
-      const observer = new IntersectionObserver((entries) => {
+      const stepRegister = document.getElementById('step-register');
+      const stepRecharge = document.getElementById('step-first-recharge');
+      const stepIdentity = document.getElementById('step-identity');
+      const stepBank = document.getElementById('step-bank-validation');
+
+      function markCompleted(step) {
+        if (!step) return;
+        step.querySelector('.step-icon').classList.add('completed');
+        step.querySelector('.step-content').classList.add('completed');
+      }
+
+      function markCurrent(step) {
+        if (!step) return;
+        step.querySelector('.step-icon').classList.add('current');
+        step.querySelector('.step-content').classList.add('current');
+      }
+
+      if (userData.email) markCompleted(stepRegister);
+      if (firstRecharge) markCompleted(stepRecharge);
+      if (verification === 'verified' || verification === 'bank_validation' || verification === 'payment_validation') {
+        markCompleted(stepIdentity);
+      }
+
+      let completed = 1; // registro
+      if (firstRecharge) completed++;
+      if (verification === 'verified' || verification === 'bank_validation' || verification === 'payment_validation') completed++;
+
+      if (verification === 'verified') {
+        markCompleted(stepBank);
+        completed++;
+        const btn = stepBank.querySelector('.step-action');
+        if (btn) btn.style.display = 'none';
+      } else if (verification === 'bank_validation' || verification === 'payment_validation') {
+        markCurrent(stepBank);
+      } else {
+        markCurrent(stepBank);
+      }
+
+      const progressBar = document.getElementById('steps-progress-bar');
+      if (progressBar) {
+        progressBar.style.height = `${(completed / 4) * 100}%`;
+      }
+
+      // stats animation
+      const observerOptions = { root: null, rootMargin: '0px', threshold: 0.1 };
+      const observer = new IntersectionObserver(entries => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
             animateStats();
@@ -1181,9 +1229,7 @@ body {
       }, observerOptions);
 
       const statsContainer = document.querySelector('.stats-container');
-      if (statsContainer) {
-        observer.observe(statsContainer);
-      }
+      if (statsContainer) observer.observe(statsContainer);
     });
 
     function animateStats() {
