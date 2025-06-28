@@ -642,8 +642,11 @@ class LatinPhoneStore {
             brandCard.className = 'brand-card';
             brandCard.setAttribute('data-brand', brand);
 
+            const logo = this.getBrandLogo(brand);
+            const logoContent = logo ? `<img src="${logo}" alt="${brand} logo">` : brand.toUpperCase();
+
             brandCard.innerHTML = `
-                <div class="brand-logo">${brand.toUpperCase()}</div>
+                <div class="brand-logo">${logoContent}</div>
                 <div class="brand-name">${this.capitalize(brand)}</div>
             `;
 
@@ -673,13 +676,18 @@ class LatinPhoneStore {
                 <i class="fas fa-play"></i>
              </button>` : '';
 
-        const specs = product.specs.map(spec => 
+        const specs = product.specs.map(spec =>
             `<span class="product-spec">${spec}</span>`
         ).join('');
 
+        const imageUrl = product.image || this.getDefaultProductImage(brand, category);
+        const imageContent = imageUrl
+            ? `<img src="${imageUrl}" alt="${product.name}" class="product-photo">`
+            : `<i class="product-icon ${this.getCategoryIcon(category)}"></i>`;
+
         productCard.innerHTML = `
             <div class="product-image">
-                <i class="product-icon ${this.getCategoryIcon(category)}"></i>
+                ${imageContent}
                 ${videoButton}
             </div>
             <div class="product-content">
@@ -2003,6 +2011,33 @@ class LatinPhoneStore {
             videojuegos: 'fas fa-gamepad'
         };
         return icons[category] || 'fas fa-box';
+    }
+
+    getBrandLogo(brand) {
+        const logos = {
+            apple: 'https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg',
+            samsung: 'https://upload.wikimedia.org/wikipedia/commons/2/24/Samsung_Logo.svg',
+            xiaomi: 'https://upload.wikimedia.org/wikipedia/commons/2/29/Xiaomi_logo.svg',
+            google: 'https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg',
+            motorola: 'https://upload.wikimedia.org/wikipedia/commons/d/d1/Motorola_logo.svg',
+            oneplus: 'https://upload.wikimedia.org/wikipedia/commons/6/63/OnePlus_logo.svg',
+            microsoft: 'https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg',
+            garmin: 'https://upload.wikimedia.org/wikipedia/commons/7/71/Garmin_logo.svg',
+            anker: 'https://upload.wikimedia.org/wikipedia/commons/3/3b/Anker_Logo.png',
+            belkin: 'https://upload.wikimedia.org/wikipedia/commons/3/3a/Belkin_logo.png'
+        };
+        return logos[brand] || '';
+    }
+
+    getDefaultProductImage(brand, category) {
+        if (category === 'smartphones') {
+            const images = {
+                apple: 'https://cdsassets.apple.com/live/7WUAS350/images/tech-specs/121032-iphone-16-pro-max.png',
+                samsung: 'https://assets.mmsrg.com/isr/166325/c1/-/ASSET_MMS_149355058?x=536&y=402&format=jpg&quality=80&sp=yes&strip=yes&trim&ex=536&ey=402&align=center&resizesource&unsharp=1.5x1+0.7+0.02&cox=0&coy=0&cdx=536&cdy=402'
+            };
+            return images[brand] || '';
+        }
+        return '';
     }
 
     getCountryName(countryCode) {
