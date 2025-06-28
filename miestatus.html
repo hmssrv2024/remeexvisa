@@ -6,6 +6,7 @@
     <title>Estado de tu Cuenta - REMEEX Visa</title>
     <link rel="icon" href="https://w7.pngwing.com/pngs/400/28/png-transparent-credit-card-computer-icons-visa-electron-bank-curio-blue-text-rectangle-thumbnail.png" type="image/png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         :root {
@@ -36,6 +37,8 @@
             --border-radius: 12px;
             --border-radius-lg: 16px;
             --border-radius-xl: 20px;
+            --radius-md: 12px;
+            --transition-base: all 0.3s ease;
         }
 
         * {
@@ -535,6 +538,50 @@
             transform: scale(1.1);
         }
 
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--visa-white);
+            display: flex;
+            justify-content: space-around;
+            padding: 0.5rem 0;
+            box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.05);
+            z-index: 900;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.25rem;
+            padding: 0.4rem;
+            border-radius: var(--radius-md);
+            transition: var(--transition-base);
+            cursor: pointer;
+            flex: 1;
+        }
+
+        .nav-item.active {
+            color: var(--visa-blue);
+        }
+
+        .nav-icon {
+            font-size: 1.1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-item:hover .nav-icon {
+            transform: translateY(-3px);
+        }
+
+        .nav-label {
+            font-size: 0.6rem;
+            font-weight: 600;
+        }
+
         .final-message {
             background: linear-gradient(135deg, rgba(52, 152, 219, 0.1) 0%, rgba(26, 31, 113, 0.1) 100%);
             border: 2px solid var(--visa-info);
@@ -556,6 +603,12 @@
             margin-bottom: 1rem;
             font-size: 1rem;
             line-height: 1.6;
+        }
+
+        .balance-info {
+            font-weight: 700;
+            color: var(--visa-blue);
+            margin-top: 1rem;
         }
 
         /* SVG Icons */
@@ -878,10 +931,12 @@
         <section class="final-message">
             <h3>Ya casi terminas</h3>
             <p>
-                Una vez que valides tu cuenta bancaria, tendrás acceso completo a todas las funciones de REMEEX, 
+                Una vez que valides tu cuenta bancaria, tendrás acceso completo a todas las funciones de REMEEX,
                 incluyendo retiros ilimitados a tu cuenta registrada.
             </p>
             <p><strong>Este es el último paso para completar tu activación al 100%</strong></p>
+            <p id="current-balance" class="balance-info"></p>
+            <a href="recarga.html" class="btn btn-primary">Volver a Recarga</a>
         </section>
     </div>
 
@@ -961,6 +1016,7 @@
                 const regData = JSON.parse(localStorage.getItem('visaRegistrationCompleted') || '{}');
                 const userDataStored = JSON.parse(localStorage.getItem('visaUserData') || '{}');
                 const bankingData = JSON.parse(localStorage.getItem('remeexVerificationBanking') || '{}');
+                const balanceData = JSON.parse(localStorage.getItem('remeexBalance') || '{}');
                 
                 userData = {
                     name: regData.preferredName || userDataStored.fullName || `${regData.firstName || ''} ${regData.lastName || ''}`.trim() || 'Usuario',
@@ -968,7 +1024,9 @@
                     primaryBank: regData.primaryBank || 'banesco',
                     bankName: BANK_NAME_MAP[regData.primaryBank] || BANK_NAME_MAP[bankingData.bankId] || 'Tu Banco',
                     accountNumber: bankingData.accountNumber || regData.accountNumber || '••••••••',
-                    bankLogo: bankingData.bankLogo || regData.primaryBankLogo || getBankLogo(regData.primaryBank)
+                    bankLogo: bankingData.bankLogo || regData.primaryBankLogo || getBankLogo(regData.primaryBank),
+                    balanceUsd: balanceData.usd || 0,
+                    balanceBs: balanceData.bs || 0
                 };
 
                 console.log('Datos cargados:', userData);
@@ -1008,11 +1066,17 @@
             const bankName = document.getElementById('bank-name');
             const accountNumber = document.getElementById('account-number');
             const validationBankName = document.getElementById('validation-bank-name');
+            const currentBalance = document.getElementById('current-balance');
 
             if (bankLogo) bankLogo.src = userData.bankLogo;
             if (bankName) bankName.textContent = userData.bankName;
             if (accountNumber) accountNumber.textContent = `••••${userData.accountNumber.slice(-4)}`;
             if (validationBankName) validationBankName.textContent = userData.bankName;
+            if (currentBalance) {
+                const usd = userData.balanceUsd.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                const bs = userData.balanceBs.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                currentBalance.textContent = `Saldo actual: $${usd} | Bs. ${bs}`;
+            }
         }
 
         // Función para volver atrás
@@ -1047,5 +1111,28 @@
         // Actualizar tasa de cambio cada 5 minutos
         setInterval(getExchangeRate, 300000);
     </script>
+
+    <nav class="bottom-nav">
+        <a class="nav-item" href="recarga#servicios">
+            <div class="nav-icon"><i class="fas fa-list-alt"></i></div>
+            <div class="nav-label">Servicios</div>
+        </a>
+        <a class="nav-item" href="recarga#tarjetas">
+            <div class="nav-icon"><i class="fas fa-credit-card"></i></div>
+            <div class="nav-label">Tarjetas</div>
+        </a>
+        <a class="nav-item active" href="recarga">
+            <div class="nav-icon"><i class="fas fa-home"></i></div>
+            <div class="nav-label">Inicio</div>
+        </a>
+        <a class="nav-item" href="dudas">
+            <div class="nav-icon"><i class="fas fa-headset"></i></div>
+            <div class="nav-label">Ayuda</div>
+        </a>
+        <a class="nav-item" href="ajustes">
+            <div class="nav-icon"><i class="fas fa-cog"></i></div>
+            <div class="nav-label">Ajustes</div>
+        </a>
+    </nav>
 </body>
 </html>
