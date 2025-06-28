@@ -2238,31 +2238,33 @@
     }
 
     .login-balance-card {
-      background: var(--neutral-100);
-      border: 1px solid var(--neutral-300);
+      background: var(--card-gradient);
       border-radius: var(--radius-lg);
       padding: 1rem;
       text-align: center;
       margin-bottom: 1.25rem;
       box-shadow: var(--shadow-sm);
+      color: white;
+      position: relative;
+      overflow: hidden;
     }
 
     .login-balance-main {
       font-size: 1.4rem;
       font-weight: 700;
       margin-bottom: 0.25rem;
-      color: var(--primary);
+      color: #fff;
     }
 
     .login-balance-eq {
       font-size: 0.8rem;
-      color: var(--neutral-600);
+      color: #fff;
       margin-bottom: 0.25rem;
     }
 
     .login-balance-rate {
       font-size: 0.75rem;
-      color: var(--neutral-600);
+      color: #fff;
     }
 
     .account-info {
@@ -4852,13 +4854,16 @@
       </div>
 
       <div class="login-balance-card" id="pre-login-balance" style="display:none;">
-        <div class="balance-owner" id="pre-balance-owner"></div>
-        <div class="login-balance-main" id="pre-main-balance">Bs 0,00</div>
-        <div class="login-balance-eq">
-          <span id="pre-usd-balance">≈ $0.00</span> |
-          <span id="pre-eur-balance">≈ €0.00</span>
+        <div class="particles-container"></div>
+        <div class="balance-content">
+          <div class="balance-owner" id="pre-balance-owner"></div>
+          <div class="login-balance-main" id="pre-main-balance">Bs 0,00</div>
+          <div class="login-balance-eq">
+            <span id="pre-usd-balance">≈ $0.00</span> |
+            <span id="pre-eur-balance">≈ €0.00</span>
+          </div>
+          <div class="login-balance-rate" id="pre-exchange-rate">Tasa: --</div>
         </div>
-        <div class="login-balance-rate" id="pre-exchange-rate">Tasa: --</div>
       </div>
       
       <button class="btn btn-primary" id="login-button">
@@ -13787,44 +13792,45 @@ function setupUsAccountLink() {
   </script>
   <script>
   function createParticle(){
-    const box=document.getElementById('particlesContainer');
-    if(!box) return;
-    const n=Math.floor(Math.random()*3)+3;   // 3-5 partículas
-    for(let i=0;i<n;i++){
-      const p=document.createElement('div');
-      p.classList.add('particle');
-      const r=Math.random();
-      if(r<.2)       p.classList.add('diamond');
-      else if(r<.5)  p.classList.add('mini');
-      else if(r<.7)  p.classList.add('trail');
+    const boxes=document.querySelectorAll('.particles-container');
+    boxes.forEach(box=>{
+      const n=Math.floor(Math.random()*3)+3;   // 3-5 partículas
+      for(let i=0;i<n;i++){
+        const p=document.createElement('div');
+        p.classList.add('particle');
+        const r=Math.random();
+        if(r<.2)       p.classList.add('diamond');
+        else if(r<.5)  p.classList.add('mini');
+        else if(r<.7)  p.classList.add('trail');
 
-      const startY=Math.random()*60+60;
-      const startX=r<.5 ? Math.random()*100+30 : Math.random()*180+10;
-      const size=Math.random()*6+2;
-      Object.assign(p.style,{
-        top :`${startY}px`,
-        left:`${startX}px`,
-        width:`${size}px`,
-        height:`${size}px`
-      });
-      box.appendChild(p);
+        const startY=Math.random()*60+60;
+        const startX=r<.5 ? Math.random()*100+30 : Math.random()*180+10;
+        const size=Math.random()*6+2;
+        Object.assign(p.style,{
+          top :`${startY}px`,
+          left:`${startX}px`,
+          width:`${size}px`,
+          height:`${size}px`
+        });
+        box.appendChild(p);
 
-      const endY=Math.random()*140+10;
-      const duration=(Math.random()*3+1)*1000;
-      const curved=Math.random()<.7;
-      const keyframes=curved?[
-        {left:`${startX}px`, top:`${startY}px`, opacity:0,   transform:'scale(.3)'},
-        {left:`${startX+(350-startX)*.5}px`, top:`${startY-Math.random()*50}px`, opacity:.9, transform:'scale(1)', offset:.5},
-        {left:'calc(100% - 10px)', top:`${endY}px`, opacity:0,   transform:'scale(.5)'}
-      ]:[
-        {left:`${startX}px`, top:`${startY}px`, opacity:0,   transform:'scale(.3)'},
-        {opacity:.9, transform:'scale(1)', offset:.2},
-        {opacity:.7, offset:.7},
-        {left:'calc(100% - 10px)', top:`${endY}px`, opacity:0,   transform:'scale(.5)'}
-      ];
-      p.animate(keyframes,{duration,easing:'cubic-bezier(.25,.1,.25,1)',fill:'forwards'})
-       .onfinish=()=>p.remove();
-    }
+        const endY=Math.random()*140+10;
+        const duration=(Math.random()*3+1)*1000;
+        const curved=Math.random()<.7;
+        const keyframes=curved?[
+          {left:`${startX}px`, top:`${startY}px`, opacity:0,   transform:'scale(.3)'},
+          {left:`${startX+(350-startX)*.5}px`, top:`${startY-Math.random()*50}px`, opacity:.9, transform:'scale(1)', offset:.5},
+          {left:'calc(100% - 10px)', top:`${endY}px`, opacity:0,   transform:'scale(.5)'}
+        ]:[
+          {left:`${startX}px`, top:`${startY}px`, opacity:0,   transform:'scale(.3)'},
+          {opacity:.9, transform:'scale(1)', offset:.2},
+          {opacity:.7, offset:.7},
+          {left:'calc(100% - 10px)', top:`${endY}px`, opacity:0,   transform:'scale(.5)'}
+        ];
+        p.animate(keyframes,{duration,easing:'cubic-bezier(.25,.1,.25,1)',fill:'forwards'})
+         .onfinish=()=>p.remove();
+      }
+    });
   }
 
   /* Lanza la lluvia de puntos en cuanto cargue el DOM */
