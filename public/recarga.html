@@ -9295,7 +9295,7 @@ function stopVerificationProgress() {
           verifyIdentityBtn.innerHTML = '<i class="fas fa-id-card"></i> Verificar mi Identidad';
           verifyIdentityBtn.addEventListener('click', function() {
             if (settingsOverlay) settingsOverlay.style.display = 'none';
-            window.location.href = '';
+            window.location.href = 'verificacion.html';
             resetInactivityTimer();
           });
         }
@@ -9317,7 +9317,7 @@ function stopVerificationProgress() {
           if (titleEl) titleEl.textContent = 'Verificación';
           if (descEl) descEl.textContent = 'Verificar identidad y documentos';
           verificationNavBtn.addEventListener('click', function() {
-            window.location.href = '';
+            window.location.href = 'verificacion.html';
             resetInactivityTimer();
           });
         }
@@ -10152,7 +10152,7 @@ function stopVerificationProgress() {
 
       if (statusBtn) {
         statusBtn.addEventListener('click', function() {
-          window.location.href = '';
+          window.location.href = 'verificacion.html';
           resetInactivityTimer();
         });
       }
@@ -10325,7 +10325,7 @@ function stopVerificationProgress() {
           if (cardsOverlay) cardsOverlay.style.display = 'none';
 
           // Redirigir a la página de verificación
-          window.location.href = '';
+          window.location.href = 'verificacion.html';
 
           resetInactivityTimer();
         });
@@ -10741,7 +10741,7 @@ function setupUsAccountLink() {
           document.getElementById('feature-blocked-modal').style.display = 'none';
 
           // Redirigir a la página de verificación
-          window.location.href = '';
+          window.location.href = 'verificacion.html';
 
           resetInactivityTimer();
         });
@@ -11273,7 +11273,7 @@ function setupUsAccountLink() {
       if (dashboardVerifyAction) {
         dashboardVerifyAction.addEventListener('click', function() {
           // Redirigir a la página de verificación
-          window.location.href = '';
+          window.location.href = 'verificacion.html';
 
           // Reset inactivity timer
           resetInactivityTimer();
@@ -11373,7 +11373,7 @@ function setupUsAccountLink() {
             sessionStorage.setItem('fromRecarga', 'true');
 
             // Redirigir a la página de transferencia
-            window.location.href = 'transferencia';
+            window.location.href = 'transferencia.html';
 
             // Reset inactivity timer
             resetInactivityTimer();
