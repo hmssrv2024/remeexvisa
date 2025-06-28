@@ -4,7 +4,7 @@
   <script src="repair.js"></script>
   <script src="global-data.js"></script>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>Estado de Tu Cuenta - REMEEX VISA</title>
   <link rel="icon" href="https://w7.pngegg.com/pngs/400/28/png-transparent-credit-card-computer-icons-visa-electron-bank-curio-blue-text-rectangle-thumbnail.png" type="image/png">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -70,6 +70,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
+  zoom: 0.8;
 }
 
 /* Header */
@@ -104,6 +105,11 @@ body {
   display: flex;
   align-items: center;
   gap: 1rem;
+}
+
+.header-user {
+  font-weight: 600;
+  margin-left: 1rem;
 }
 
 .header-action-btn {
@@ -144,7 +150,7 @@ body {
   max-width: 1200px;
   margin: 0 auto;
   padding: 1.5rem;
-  padding-top: 80px;
+  padding-top: 100px;
 }
 
 /* Hero Section */
@@ -805,6 +811,10 @@ body {
     padding: 1rem;
   }
 
+  body {
+    zoom: 1;
+  }
+
   .steps-progress {
     left: 1.5rem;
   }
@@ -826,6 +836,7 @@ body {
   <div class="header">
     <div class="header-brand">
       <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhnBzNdjl6bNp-nIdaiHVENczJhwlJNA7ocsyiOObMmzbu8at0dY5yGcZ9cLxLF39qI6gwNfqBxlkTDC0txVULEwQVwGkeEzN0Jq9MRTRagA48mh18UqTlR4WhsXOLAEZugUyhqJHB19xJgnkpe-S5VOWFgzpKFwctv3XP9XhH41vNTvq0ZS-nik58Qhr-O/s320/remeex.png" alt="REMEEX">
+      <span class="header-user" id="header-user-name"></span>
     </div>
 <div class="header-actions">
   <a href="dudas" class="header-action-btn btn-outline">
@@ -1198,6 +1209,10 @@ body {
       if (heroTitle && firstName) {
         heroTitle.textContent = `¡Felicidades, ${firstName}! Has Completado tu Verificación`;
       }
+      const headerUser = document.getElementById('header-user-name');
+      if (headerUser && firstName) {
+        headerUser.textContent = firstName;
+      }
 
       let rateBs = 0;
       const rateData = sessionStorage.getItem('remeexSessionExchangeRate');
@@ -1311,8 +1326,6 @@ body {
       card.style.animation = 'fadeIn 0.6s ease forwards';
     });
   </script>
-<div id="bottom-nav-container"></div>
-<script src="bottom-nav.js"></script>
 </body>
 </html>
   <script src="preload.js"></script>
