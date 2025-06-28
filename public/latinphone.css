@@ -2012,6 +2012,28 @@ body {
     border-top: 1px solid var(--gray-200);
 }
 
+.payment-provider {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    background: var(--gray-100);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-lg);
+    padding: var(--space-4);
+    margin-top: var(--space-4);
+}
+
+.payment-provider img {
+    height: 24px;
+    width: auto;
+    border-radius: var(--radius-sm);
+}
+
+.payment-provider .visa-logo {
+    font-size: var(--text-xl);
+    color: #1a1f71;
+}
+
 /* Success Section */
 .success-container {
     text-align: center;
