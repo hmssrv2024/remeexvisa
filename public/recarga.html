@@ -10428,7 +10428,7 @@ function stopVerificationProgress() {
       if (donationItem) {
           donationItem.addEventListener('click', function() {
             if (currentUser.balance && currentUser.balance.usd > 0) {
-              openPage('');
+              openPage('donacion.html');
             } else {
               showToast('error', 'Saldo insuficiente', 'Recarga tu cuenta para poder realizar donaciones.');
             }
@@ -10531,7 +10531,7 @@ function stopVerificationProgress() {
       const exchangeItem = document.getElementById("service-market");
         if (exchangeItem) {
           exchangeItem.addEventListener("click", function () {
-            openPage('');
+            openPage('intercambio.html');
           });
         }
     }
@@ -10586,7 +10586,7 @@ function setupUsAccountLink() {
   const usItem = document.getElementById("service-us-account");
     if (usItem) {
       usItem.addEventListener("click", function() {
-        openPage('');
+        openPage('cuentausa.html');
       });
     }
 }
