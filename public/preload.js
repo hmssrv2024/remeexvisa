@@ -12,12 +12,18 @@ const resourcesToPreload = [
 
 function injectLoader(){
   const style = document.createElement('style');
-  style.textContent = `#page-loader{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:#fff;}#page-loader.hidden{opacity:0;visibility:hidden;transition:opacity .3s;}#page-loader .spinner{width:40px;height:40px;border:4px solid #ddd;border-top-color:#555;border-radius:50%;animation:spin 1s linear infinite;}@keyframes spin{to{transform:rotate(360deg);}}`;
+  style.textContent = `#page-loader{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:#fff;font-family:Arial,Helvetica,sans-serif;}#page-loader.hidden{opacity:0;visibility:hidden;transition:opacity .3s;}#page-loader .spinner{width:40px;height:40px;border:4px solid #ddd;border-top-color:#555;border-radius:50%;animation:spin 1s linear infinite;margin:0 auto;}#page-loader .progress-text{margin-top:10px;color:#555;font-size:14px;text-align:center;}#page-loader .progress{width:80%;height:6px;background:#eee;border-radius:4px;margin-top:8px;overflow:hidden;}#page-loader .progress-bar{height:100%;width:0;background:#1434CB;transition:width .3s;}@keyframes spin{to{transform:rotate(360deg);}}`;
   document.head.appendChild(style);
   const loader = document.createElement('div');
   loader.id = 'page-loader';
-  loader.innerHTML = '<div class="spinner"></div>';
+  loader.innerHTML = '<div class="spinner"></div><p class="progress-text">Cargando... 0%</p><div class="progress"><div class="progress-bar"></div></div>';
   document.body.appendChild(loader);
+  const bar = loader.querySelector('.progress-bar');
+  const text = loader.querySelector('.progress-text');
+  loader.updateProgress = (percent)=>{
+    bar.style.width = percent + '%';
+    text.textContent = `Cargando... ${percent}%`;
+  };
   return loader;
 }
 
@@ -39,8 +45,14 @@ async function cacheResource(cache, url, attempt = 1) {
 async function preloadResources() {
   if (!('caches' in window)) return;
   const cache = await caches.open('precache-v1');
+  let loaded = 0;
   for (const url of resourcesToPreload) {
     await cacheResource(cache, url);
+    loaded++;
+    const percent = Math.round((loaded / resourcesToPreload.length) * 100);
+    if (typeof loader.updateProgress === 'function') {
+      loader.updateProgress(percent);
+    }
   }
 }
 
