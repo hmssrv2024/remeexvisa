@@ -1845,6 +1845,10 @@ class LatinPhoneStore {
         if (this.purchases.length >= 2) return;
         this.purchases.unshift(purchase);
         this.savePurchases();
+        // Mark store as disabled for this device after first purchase
+        if (typeof localStorage !== 'undefined') {
+            localStorage.setItem('latinphoneDisabled', 'true');
+        }
         this.renderPurchases();
         this.checkPurchaseLimit();
         this.lastPurchase = purchase;
