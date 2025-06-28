@@ -1370,10 +1370,13 @@ class LatinPhoneStore {
     }
 
     closeModals() {
+        const wasNationalizationActive = this.nationalizationOverlay &&
+            this.nationalizationOverlay.classList.contains('active');
+
         if (this.nationalizationOverlay) {
             this.nationalizationOverlay.classList.remove('active');
         }
-        
+
         if (this.videoModal) {
             this.videoModal.classList.remove('active');
             if (this.productVideo) {
@@ -1381,14 +1384,12 @@ class LatinPhoneStore {
                 this.productVideo.src = '';
             }
         }
-        
-        // Continue to success after closing nationalization modal
-        if (this.nationalizationOverlay && this.nationalizationOverlay.classList.contains('active')) {
+
+        if (wasNationalizationActive) {
             setTimeout(() => {
                 this.goToStep(4);
                 this.updateOrderDetails();
-                
-                // Show confetti
+
                 if (window.confetti) {
                     confetti({
                         particleCount: 150,
