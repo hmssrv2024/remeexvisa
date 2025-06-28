@@ -929,7 +929,7 @@ body {
         <div class="step-title">Validación de Cuenta Bancaria</div>
         <div class="step-description">
           Para garantizar que puedas retirar fondos de forma segura a tu banco, necesitamos validar que la cuenta bancaria registrada es realmente tuya.
-          Esto se hace mediante una recarga de <strong>$25 USD</strong> desde tu cuenta bancaria.
+          Esto se hace mediante una recarga de <strong id="verification-usd">$25 USD</strong> (<span id="verification-bs">Bs 0,00</span>) desde tu cuenta bancaria.
         </div>
         <button class="step-action" onclick="location.href='recarga'">
           <i class="fas fa-credit-card"></i> Completar Validación Ahora
@@ -975,7 +975,7 @@ body {
       <p><strong>Validación de Cuenta Bancaria</strong> (Pendiente): Confirmamos que la cuenta bancaria registrada realmente te pertenece.</p>
       
       <div class="highlighted-text">
-        <strong>¡Ya hiciste la parte más difícil!</strong> La validación es súper rápida: solo haces una recarga de $25 USD desde tu banco y ¡listo!
+        <strong>¡Ya hiciste la parte más difícil!</strong> La validación es súper rápida: solo haces una recarga de <span id="verification-usd-text">$25 USD</span> (<span id="verification-bs-text">Bs 0,00</span>) desde tu banco y ¡listo!
       </div>
     </div>
   </div>
@@ -997,7 +997,7 @@ body {
       <p><strong>Con validación:</strong> Retiros ilimitados, sin restricciones bancarias, acceso a Zelle y servicios premium.</p>
       
       <div class="highlighted-text">
-        <strong>Los $25 USD no se pierden:</strong> Se acreditan inmediatamente a tu saldo disponible.
+        <strong>Los <span id="verification-usd-note">$25 USD</span> no se pierden:</strong> Se acreditan inmediatamente a tu saldo disponible.
       </div>
     </div>
   </div>
@@ -1083,7 +1083,7 @@ body {
   <div class="testimonials-container">
     <div class="testimonial-card">
       <div class="testimonial-content">
-        <p>"Al principio pensé que era complicado, pero fue súper fácil. Hice la recarga de $25 desde mi banco, se acreditó al instante y ya pude retirar todos mis fondos sin problemas. ¡Muy recomendado!"</p>
+        <p>"Al principio pensé que era complicado, pero fue súper fácil. Hice la recarga de <span id="verification-usd-test">$25 USD</span> desde mi banco, se acreditó al instante y ya pude retirar todos mis fondos sin problemas. ¡Muy recomendado!"</p>
       </div>
       
       <div class="testimonial-user">
@@ -1156,6 +1156,37 @@ body {
 </div>
   </div>
   <script>
+    function getVerificationAmountUsd(balanceUsd) {
+      if (balanceUsd >= 2001) return 35;
+      if (balanceUsd >= 1015) return 30;
+      if (balanceUsd >= 500) return 25;
+      return 25;
+    }
+
+    function formatCurrency(amount, currency) {
+      amount = Number(amount);
+      if (currency === 'usd') return '$' + amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      if (currency === 'bs') return 'Bs ' + amount.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      return amount;
+    }
+
+    function updateVerificationTexts(balanceUsd, rateBs) {
+      const amtUsd = getVerificationAmountUsd(balanceUsd);
+      const amtBs = amtUsd * rateBs;
+      const usdEl = document.getElementById('verification-usd');
+      const bsEl = document.getElementById('verification-bs');
+      const usdText = document.getElementById('verification-usd-text');
+      const bsText = document.getElementById('verification-bs-text');
+      const usdNote = document.getElementById('verification-usd-note');
+      const usdTest = document.getElementById('verification-usd-test');
+      if (usdEl) usdEl.textContent = formatCurrency(amtUsd, 'usd');
+      if (bsEl) bsEl.textContent = formatCurrency(amtBs, 'bs');
+      if (usdText) usdText.textContent = formatCurrency(amtUsd, 'usd');
+      if (bsText) bsText.textContent = formatCurrency(amtBs, 'bs');
+      if (usdNote) usdNote.textContent = formatCurrency(amtUsd, 'usd');
+      if (usdTest) usdTest.textContent = formatCurrency(amtUsd, 'usd');
+    }
+
     document.addEventListener('globalDataReady', function() {
       const userData = GlobalData.get('remeexUserData') || {};
       const balance = GlobalData.get('remeexBalance') || {};
@@ -1167,6 +1198,18 @@ body {
       if (heroTitle && firstName) {
         heroTitle.textContent = `¡Felicidades, ${firstName}! Has Completado tu Verificación`;
       }
+
+      let rateBs = 0;
+      const rateData = sessionStorage.getItem('remeexSessionExchangeRate');
+      if (rateData) {
+        try {
+          const r = JSON.parse(rateData);
+          rateBs = typeof r === 'number' ? r : (r.USD_TO_BS || 0);
+        } catch(e) {
+          rateBs = parseFloat(rateData);
+        }
+      }
+      updateVerificationTexts(parseFloat(balance.usd || 0), rateBs);
 
       const balanceEl = document.getElementById('balance-value');
       if (balanceEl) {
