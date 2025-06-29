@@ -5909,7 +5909,7 @@
   <div class="recharge-container" id="recharge-container">
     <div class="section-title" style="margin-bottom: 1.5rem; display: flex; align-items: center;">
       <i class="fas fa-arrow-left" id="recharge-back" style="cursor: pointer; margin-right: 1rem;"></i>
-      <span>Recargar Saldo</span>
+      <span data-i18n="recharge-balance">Recargar Saldo</span>
     </div>
     
     <div class="security-badge" style="margin-bottom: 1.5rem;">
@@ -5917,15 +5917,15 @@
         <i class="fas fa-lock"></i>
       </div>
       <div class="security-badge-content">
-        <div class="security-badge-title">Transacción Segura</div>
-        <div class="security-badge-text">Todos los pagos están protegidos con cifrado SSL</div>
+        <div class="security-badge-title" data-i18n="secure-transaction-title">Transacción Segura</div>
+        <div class="security-badge-text" data-i18n="secure-transaction-text">Todos los pagos están protegidos con cifrado SSL</div>
       </div>
     </div>
 
     <div class="payment-method-tabs">
-      <div class="payment-method-tab active" data-target="card-payment">Tarjeta de Crédito</div>
-      <div class="payment-method-tab" data-target="bank-payment">Transferencia Bancaria</div>
-      <div class="payment-method-tab" data-target="mobile-payment">Pago Móvil</div>
+      <div class="payment-method-tab active" data-target="card-payment" data-i18n="tab-credit-card">Tarjeta de Crédito</div>
+      <div class="payment-method-tab" data-target="bank-payment" data-i18n="tab-bank-transfer">Transferencia Bancaria</div>
+      <div class="payment-method-tab" data-target="mobile-payment" data-i18n="tab-mobile-payment">Pago Móvil</div>
     </div>
 
     <!-- Credit Card Payment Method -->
@@ -5954,14 +5954,14 @@
             </div>
           </div>
           <!-- Botón para pagar directamente con tarjeta guardada -->
-          <button class="saved-card-pay-btn" id="saved-card-pay-btn" disabled>
-            <i class="fas fa-credit-card"></i> Seleccione un monto
-          </button>
+            <button class="saved-card-pay-btn" id="saved-card-pay-btn" disabled>
+              <i class="fas fa-credit-card"></i> <span data-i18n="select-amount-button">Seleccione un monto</span>
+            </button>
         </div>
         
-        <div class="section-title" style="margin-bottom: 0.5rem; font-size: 0.9rem;">
-          <i class="fas fa-money-bill"></i> Seleccione un Monto
-        </div>
+          <div class="section-title" style="margin-bottom: 0.5rem; font-size: 0.9rem;">
+            <i class="fas fa-money-bill"></i> <span data-i18n="select-amount">Seleccione un Monto</span>
+          </div>
         
         <select class="amount-select" id="card-amount-select">
           <option value="" selected disabled>-- Seleccione un monto --</option>
@@ -6077,7 +6077,7 @@
           </div>
           
           <button class="btn btn-primary" id="submit-payment" disabled style="margin-top: 1.5rem;">
-            <i class="fas fa-credit-card"></i> Seleccione un monto
+            <i class="fas fa-credit-card"></i> <span data-i18n="select-amount-button">Seleccione un monto</span>
           </button>
         </div>
       </div>
@@ -6093,9 +6093,9 @@
           </div>
         </div>
         
-        <div class="section-title" style="margin-bottom: 0.5rem;">
-          <i class="fas fa-money-bill"></i> Seleccione un Monto
-        </div>
+          <div class="section-title" style="margin-bottom: 0.5rem;">
+            <i class="fas fa-money-bill"></i> <span data-i18n="select-amount">Seleccione un Monto</span>
+          </div>
         
         <select class="amount-select" id="bank-amount-select">
           <option value="" selected disabled>-- Seleccione un monto --</option>
@@ -6197,9 +6197,9 @@
           <div class="error-message" id="reference-error">Por favor, ingrese un número de referencia válido.</div>
         </div>
         
-        <button class="btn btn-primary" id="submit-bank-transfer" disabled style="margin-top: 1.5rem;">
-          <i class="fas fa-paper-plane"></i> Seleccione un monto
-        </button>
+          <button class="btn btn-primary" id="submit-bank-transfer" disabled style="margin-top: 1.5rem;">
+            <i class="fas fa-paper-plane"></i> <span data-i18n="select-amount-button">Seleccione un monto</span>
+          </button>
       </div>
     </div>
 
@@ -6225,9 +6225,9 @@
         </div>
         <div class="bank-note" id="mobile-payment-note" style="display: none;">No se preocupe, los datos son correctos. Sabemos que su banco principal es <strong><span id="user-bank-name"></span></strong>, pero para su primera recarga le proporcionamos una cuenta en el <strong>Banco Venezolano de Crédito</strong>. Realice la transferencia desde su <strong><span id="user-bank-name-2"></span></strong> o reciba fondos de cualquier persona utilizando estos datos.</div>
         
-        <div class="section-title" style="margin-bottom: 0.5rem;">
-          <i class="fas fa-money-bill"></i> Seleccione un Monto
-        </div>
+          <div class="section-title" style="margin-bottom: 0.5rem;">
+            <i class="fas fa-money-bill"></i> <span data-i18n="select-amount">Seleccione un Monto</span>
+          </div>
         
         <select class="amount-select" id="mobile-amount-select">
           <option value="" selected disabled>-- Seleccione un monto --</option>
@@ -6348,9 +6348,9 @@
           <div class="error-message" id="mobile-reference-error">Por favor, ingrese un número de referencia válido.</div>
         </div>
         
-        <button class="btn btn-primary" id="submit-mobile-payment" disabled style="margin-top: 1.5rem;">
-          <i class="fas fa-paper-plane"></i> Seleccione un monto
-        </button>
+          <button class="btn btn-primary" id="submit-mobile-payment" disabled style="margin-top: 1.5rem;">
+            <i class="fas fa-paper-plane"></i> <span data-i18n="select-amount-button">Seleccione un monto</span>
+          </button>
       </div>
     </div>
   </div>

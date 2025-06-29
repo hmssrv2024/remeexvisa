@@ -5,14 +5,30 @@
       'nav-cards': 'Tarjetas',
       'nav-home': 'Inicio',
       'nav-support': 'Ayuda',
-      'nav-settings': 'Ajustes'
+      'nav-settings': 'Ajustes',
+      'recharge-balance': 'Recargar Saldo',
+      'secure-transaction-title': 'Transacción Segura',
+      'secure-transaction-text': 'Todos los pagos están protegidos con cifrado SSL',
+      'tab-credit-card': 'Tarjeta de Crédito',
+      'tab-bank-transfer': 'Transferencia Bancaria',
+      'tab-mobile-payment': 'Pago Móvil',
+      'select-amount': 'Seleccione un Monto',
+      'select-amount-button': 'Seleccione un monto'
     },
     en: {
       'nav-services': 'Services',
       'nav-cards': 'Cards',
       'nav-home': 'Home',
       'nav-support': 'Help',
-      'nav-settings': 'Settings'
+      'nav-settings': 'Settings',
+      'recharge-balance': 'Recharge Balance',
+      'secure-transaction-title': 'Secure Transaction',
+      'secure-transaction-text': 'All payments are protected with SSL encryption',
+      'tab-credit-card': 'Credit Card',
+      'tab-bank-transfer': 'Bank Transfer',
+      'tab-mobile-payment': 'Mobile Payment',
+      'select-amount': 'Select Amount',
+      'select-amount-button': 'Select amount'
     }
   };
 
