@@ -3655,6 +3655,15 @@ const bankList = [...(BANK_DATA.NACIONAL || []), ...(BANK_DATA.INTERNACIONAL || 
     function completeProcess() {
         // Ocultar spinner container
         document.getElementById('spinner-container').classList.remove('active');
+
+        // Guardar en localStorage que se completó una recarga por activación
+        try {
+            localStorage.setItem('remeexPendingActivationPayment', JSON.stringify({
+                amount: selectedAmount
+            }));
+        } catch (e) {
+            console.error('Error storing activation payment data', e);
+        }
         
         // Mostrar sección de verificación final
         const container = document.querySelector('.container');
