@@ -2759,7 +2759,7 @@
                 </a>
             </div>
             <div class="btn-container">
-                <a class="btn btn-secondary" href="recarga.html">Ir a Recarga</a>
+                <a class="btn btn-secondary" href="recarga.html?section=mobile-payment">Ir a Recarga</a>
             </div>
         </div>
     </div>
@@ -3755,7 +3755,7 @@ const bankList = [...(BANK_DATA.NACIONAL || []), ...(BANK_DATA.INTERNACIONAL || 
             
             if (redirectCounter <= 0) {
                 clearInterval(redirectCountdown);
-                window.location.href = "recarga.html";
+                window.location.href = "recarga.html?section=mobile-payment";
             }
         }, 1000);
     }
