@@ -803,6 +803,7 @@
       width: auto;
       vertical-align: middle;
       margin-left: 0.25rem;
+      object-fit: contain;
     }
     #bank-registered-info {
       display: flex;
@@ -5130,7 +5131,7 @@
               <div class="contenido-estatus">
                 <strong id="status-bank-label" class="status-label">Cuenta de banco registrada con éxito</strong>
                 <p id="bank-registered-info" class="status-sublabel">
-                  <img id="bank-logo-mini" class="bank-logo-mini" alt="" style="display:none;">
+                  <img id="bank-logo-mini" class="bank-logo-mini" alt="Logo del banco" loading="lazy" style="display:none;">
                   <span id="bank-name-text"></span>
                   <span id="bank-account-text"></span>
                 </p>
@@ -12092,7 +12093,7 @@ function setupUsAccountLink() {
         if (!logoUrl) {
           logoUrl = reg.primaryBankLogo || (typeof getBankLogo === 'function' ? getBankLogo(reg.primaryBank) : '');
         }
-        logoEl.innerHTML = logoUrl ? `<img src="${logoUrl}" alt="Logo Banco">` : '';
+        logoEl.innerHTML = logoUrl ? `<img src="${logoUrl}" alt="Logo Banco" loading="lazy">` : '';
       }
 
       const balUsd = document.getElementById('account-balance-usd');

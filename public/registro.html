@@ -1757,7 +1757,7 @@
                     <select class="form-input" id="primaryBank">
                         <option value="">Selecciona tu banco</option>
                     </select>
-                    <img id="bankLogoPreview" style="display:none;margin-top:10px;height:40px;" alt="Logo banco">
+                    <img id="bankLogoPreview" style="display:none;margin-top:10px;height:40px;" alt="Logo del banco" loading="lazy">
                 </div>
                 
                 <div class="button-group">
@@ -3396,13 +3396,22 @@ function setupCardClickEvents() {
                 opt.value = bank.id;
                 opt.textContent = bank.name;
                 opt.setAttribute('data-logo', bank.logo);
-                opt.style.backgroundImage = `url(${bank.logo})`;
-                opt.style.backgroundRepeat = 'no-repeat';
-                opt.style.backgroundPosition = '8px center';
-                opt.style.paddingLeft = '36px';
-                opt.style.backgroundSize = '24px 24px';
                 select.appendChild(opt);
             });
+            initializeBankLogoPreview();
+        }
+
+        function initializeBankLogoPreview() {
+            const select = document.getElementById('primaryBank');
+            const preview = document.getElementById('bankLogoPreview');
+            if (!select || !preview) return;
+            const logo = getBankLogo(select.value);
+            if (logo) {
+                preview.src = logo;
+                preview.style.display = 'block';
+            } else {
+                preview.style.display = 'none';
+            }
         }
 
         function toggleAccountUse(use) {
@@ -3663,6 +3672,7 @@ function setupCardClickEvents() {
                                 element.value = data[key];
                             }
                         });
+                        initializeBankLogoPreview();
                         
                         const step0 = document.getElementById('step0');
                         if (step0) step0.classList.remove('active');
