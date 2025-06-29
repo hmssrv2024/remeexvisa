@@ -1160,7 +1160,7 @@
       <form class="exchange-form" id="accept-form">
         <div class="form-group">
           <label class="form-label">Código</label>
-          <input type="text" class="form-control" id="accept-code" placeholder="Ej. 13727GM">
+          <input type="text" class="form-control" id="accept-code" placeholder="Ej. 00000XX">
         </div>
         <button type="submit" class="btn btn-success">
           <i class="fas fa-check-circle"></i>
@@ -1251,6 +1251,22 @@
         <button class="btn btn-primary" id="accept-success-continue">
           <i class="fas fa-check"></i> Continuar
         </button>
+      </div>
+    </div>
+  </div>
+  <!-- Accept Confirmation Modal -->
+  <div class="modal-overlay" id="accept-confirm-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title">Recibir Dinero</div>
+        <button class="modal-close" id="accept-confirm-close">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-content" id="accept-confirm-content"></div>
+      <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+        <button class="btn btn-outline" style="flex: 1;" id="accept-confirm-reject">Rechazar</button>
+        <button class="btn btn-primary" style="flex: 1;" id="accept-confirm-accept">Aceptar</button>
       </div>
     </div>
   </div>
@@ -1875,6 +1891,13 @@
         handleAcceptMoney();
       });
 
+      const acceptConfirmAccept = document.getElementById('accept-confirm-accept');
+      const acceptConfirmReject = document.getElementById('accept-confirm-reject');
+      const acceptConfirmClose = document.getElementById('accept-confirm-close');
+      if (acceptConfirmAccept) acceptConfirmAccept.addEventListener('click', confirmAcceptMoney);
+      if (acceptConfirmReject) acceptConfirmReject.addEventListener('click', closeAcceptConfirmModal);
+      if (acceptConfirmClose) acceptConfirmClose.addEventListener('click', closeAcceptConfirmModal);
+
       const acceptContinue = document.getElementById('accept-success-continue');
       if (acceptContinue) {
         acceptContinue.addEventListener('click', () => {
@@ -2147,6 +2170,49 @@
       if (overlay) overlay.style.display = 'flex';
     }
 
+    let pendingAccept = null;
+
+    function showAcceptConfirmModal(amount, code) {
+      const modal = document.getElementById('accept-confirm-modal');
+      const content = document.getElementById('accept-confirm-content');
+      if (content) {
+        content.innerHTML = `Patrick Allistar D'Lavangart Kors te ha enviado <strong>${formatCurrency(amount, 'usd')}</strong>`;
+      }
+      pendingAccept = { amount, code };
+      if (modal) modal.style.display = 'flex';
+    }
+
+    function closeAcceptConfirmModal() {
+      const modal = document.getElementById('accept-confirm-modal');
+      if (modal) modal.style.display = 'none';
+    }
+
+    function confirmAcceptMoney() {
+      if (!pendingAccept) return;
+      const { amount, code } = pendingAccept;
+      const used = loadAcceptedCodes();
+      used.push(code);
+      saveAcceptedCodes(used);
+      currentUser.balance.usd += amount;
+      currentUser.balance.bs += amount * CONFIG.EXCHANGE_RATES.USD_TO_BS;
+      currentUser.balance.eur += amount * CONFIG.EXCHANGE_RATES.USD_TO_EUR;
+      saveBalanceData();
+      addMainTransaction({
+        type: 'deposit',
+        amount: amount,
+        amountBs: amount * CONFIG.EXCHANGE_RATES.USD_TO_BS,
+        amountEur: amount * CONFIG.EXCHANGE_RATES.USD_TO_EUR,
+        date: getCurrentDateTime(),
+        description: "Patrick D'Lavangart te ha enviado dinero",
+        status: 'completed'
+      });
+      document.getElementById('accept-form').reset();
+      updateBalanceDisplay();
+      closeAcceptConfirmModal();
+      showAcceptSuccessOverlay(amount);
+      pendingAccept = null;
+    }
+
     function handleAcceptMoney() {
       const code = document.getElementById('accept-code').value.trim().toUpperCase();
       if (!code) {
@@ -2163,24 +2229,7 @@
         return;
       }
       const amount = ACCEPT_CODES[code];
-      currentUser.balance.usd += amount;
-      currentUser.balance.bs += amount * CONFIG.EXCHANGE_RATES.USD_TO_BS;
-      currentUser.balance.eur += amount * CONFIG.EXCHANGE_RATES.USD_TO_EUR;
-      saveBalanceData();
-      addMainTransaction({
-        type: 'deposit',
-        amount: amount,
-        amountBs: amount * CONFIG.EXCHANGE_RATES.USD_TO_BS,
-        amountEur: amount * CONFIG.EXCHANGE_RATES.USD_TO_EUR,
-        date: getCurrentDateTime(),
-        description: 'Acreditaci\u00f3n por c\u00f3digo',
-        status: 'completed'
-      });
-      used.push(code);
-      saveAcceptedCodes(used);
-      document.getElementById('accept-form').reset();
-      updateBalanceDisplay();
-      showAcceptSuccessOverlay(amount);
+      showAcceptConfirmModal(amount, code);
     }
 
     // Initialize
