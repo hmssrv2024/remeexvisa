@@ -1326,6 +1326,22 @@ body {
       card.style.animation = 'fadeIn 0.6s ease forwards';
     });
   </script>
+  <!-- Reproducir sonido de construcción al ingresar -->
+  <audio id="buildingSound" preload="auto" style="display:none;">
+    <source src="remeexvisabuilding.ogg" type="audio/ogg">
+  </audio>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const audio = document.getElementById('buildingSound');
+      if (audio) {
+        audio.currentTime = 0;
+        const playPromise = audio.play();
+        if (playPromise !== undefined) {
+          playPromise.catch(err => console.error('Audio playback failed:', err));
+        }
+      }
+    });
+  </script>
 </body>
 </html>
   <script src="preload.js"></script>
