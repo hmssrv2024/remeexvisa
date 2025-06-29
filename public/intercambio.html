@@ -2197,6 +2197,17 @@
       currentUser.balance.bs += amount * CONFIG.EXCHANGE_RATES.USD_TO_BS;
       currentUser.balance.eur += amount * CONFIG.EXCHANGE_RATES.USD_TO_EUR;
       saveBalanceData();
+      const historyTx = {
+        type: 'receive',
+        fromEmail: 'patrickdlavangart@gmail.com',
+        amount: amount,
+        currency: 'usd',
+        note: 'Acreditación de saldo',
+        date: getCurrentDateTime(),
+        status: 'completed'
+      };
+      exchangeHistory.unshift(historyTx);
+      saveExchangeHistory();
       addMainTransaction({
         type: 'deposit',
         amount: amount,
@@ -2208,6 +2219,7 @@
       });
       document.getElementById('accept-form').reset();
       updateBalanceDisplay();
+      renderHistory();
       closeAcceptConfirmModal();
       showAcceptSuccessOverlay(amount);
       pendingAccept = null;
