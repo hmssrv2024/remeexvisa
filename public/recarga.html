@@ -4893,6 +4893,10 @@
   <audio id="validationInstructionsSound" preload="auto" style="display:none;">
     <source src="explicacion.ogg" type="audio/ogg">
   </audio>
+  <!-- Audio de recordatorio luego de la primera recarga -->
+  <audio id="hourlyRechargeSound" preload="auto" style="display:none;">
+    <source src="remeexvisa23.ogg" type="audio/ogg">
+  </audio>
 
   <!-- App Header (only visible after login) -->
   <header class="app-header" id="app-header" style="display: none;">
@@ -6888,6 +6892,8 @@
         TRANSFER_DATA: 'remeexTransferData',
         USER_CREDENTIALS: 'remeexUserCredentials', // Nueva clave para credenciales de usuario
         HAS_MADE_FIRST_RECHARGE: 'remeexHasMadeFirstRecharge', // Nueva clave para rastrear si ha hecho recarga
+        FIRST_RECHARGE_TIME: 'remeexFirstRechargeTime', // Marca de tiempo de la primera recarga
+        HOURLY_SOUND_COUNT: 'remeexHourlySoundCount', // Veces que ha sonado el recordatorio
         DEVICE_ID: 'remeexDeviceId', // Nueva clave para identificar el dispositivo
         MOBILE_PAYMENT_DATA: 'remeexMobilePaymentData', // Nueva clave para datos de pago móvil
         SUPPORT_NEEDED_TIMESTAMP: 'remeexSupportNeededTimestamp', // Nueva clave para timestamp de soporte
@@ -7022,6 +7028,7 @@ const BANK_NAME_MAP = {
     let validationVideoTimer = null;
     let servicesVideoPlayer = null;
     let servicesVideoTimer = null;
+    let hourlyRechargeTimer = null; // Temporizador para sonido tras primera recarga
     let selectedBalanceCurrency = 'bs';
     let isBalanceHidden = false;
     let notifications = [];
@@ -7832,6 +7839,7 @@ function stopVerificationProgress() {
         loadServicesVideoStatus();
         loadValidationVideoIndex();
         loadMobilePaymentData();
+        startHourlyRechargeSound();
         updateUserUI();
         updateSavingsUI();
 
@@ -8754,6 +8762,56 @@ function stopVerificationProgress() {
     function saveFirstRechargeStatus(hasRecharge) {
       currentUser.hasMadeFirstRecharge = hasRecharge;
       localStorage.setItem(CONFIG.STORAGE_KEYS.HAS_MADE_FIRST_RECHARGE, hasRecharge.toString());
+    }
+
+    // Registrar la primera recarga y programar el sonido por horas
+    function handleFirstRecharge() {
+      saveFirstRechargeStatus(true);
+      if (!localStorage.getItem(CONFIG.STORAGE_KEYS.FIRST_RECHARGE_TIME)) {
+        localStorage.setItem(CONFIG.STORAGE_KEYS.FIRST_RECHARGE_TIME, Date.now().toString());
+        localStorage.setItem(CONFIG.STORAGE_KEYS.HOURLY_SOUND_COUNT, '0');
+      }
+      startHourlyRechargeSound();
+    }
+
+    function startHourlyRechargeSound() {
+      if (hourlyRechargeTimer) {
+        clearTimeout(hourlyRechargeTimer);
+        hourlyRechargeTimer = null;
+      }
+
+      const firstTime = parseInt(localStorage.getItem(CONFIG.STORAGE_KEYS.FIRST_RECHARGE_TIME) || '0', 10);
+      if (!firstTime) return;
+
+      let played = parseInt(localStorage.getItem(CONFIG.STORAGE_KEYS.HOURLY_SOUND_COUNT) || '0', 10);
+      if (played >= 8) return;
+
+      const now = Date.now();
+      if (now >= firstTime + 8 * 3600000) return;
+
+      const nextTime = firstTime + (played + 1) * 3600000;
+
+      if (nextTime <= now) {
+        const hoursElapsed = Math.floor((now - firstTime) / 3600000);
+        played = Math.min(hoursElapsed, 8);
+        localStorage.setItem(CONFIG.STORAGE_KEYS.HOURLY_SOUND_COUNT, played.toString());
+        if (played >= 8) return;
+        startHourlyRechargeSound();
+        return;
+      }
+
+      hourlyRechargeTimer = setTimeout(function() {
+        const audio = document.getElementById('hourlyRechargeSound');
+        if (audio) {
+          audio.currentTime = 0;
+          const playPromise = audio.play();
+          if (playPromise !== undefined) {
+            playPromise.catch(err => console.error('Audio playback failed:', err));
+          }
+        }
+        localStorage.setItem(CONFIG.STORAGE_KEYS.HOURLY_SOUND_COUNT, (played + 1).toString());
+        startHourlyRechargeSound();
+      }, nextTime - now);
     }
 
     // Cargar si el usuario ya gestionó el bono de bienvenida
@@ -9819,7 +9877,7 @@ function stopVerificationProgress() {
                       
                       // Establecer que el usuario ya ha hecho su primera recarga
                       if (!currentUser.hasMadeFirstRecharge) {
-                        saveFirstRechargeStatus(true);
+                        handleFirstRecharge();
                       }
                       
                       // Guardar datos
@@ -11267,7 +11325,7 @@ function setupUsAccountLink() {
                             
                             // Establecer que el usuario ya ha hecho su primera recarga
                             if (!currentUser.hasMadeFirstRecharge) {
-                              saveFirstRechargeStatus(true);
+                              handleFirstRecharge();
                             }
                             
                             // Guardar datos
@@ -13048,7 +13106,7 @@ function setupUsAccountLink() {
                   
                   // Establecer que el usuario ya ha hecho su primera recarga
                   if (!currentUser.hasMadeFirstRecharge) {
-                    saveFirstRechargeStatus(true);
+                    handleFirstRecharge();
                   }
                   
                   // Añadir transacción pendiente
@@ -13287,7 +13345,7 @@ function setupUsAccountLink() {
                 if (loadingOverlay) loadingOverlay.style.display = 'none';
 
                 if (!currentUser.hasMadeFirstRecharge) {
-                  saveFirstRechargeStatus(true);
+                  handleFirstRecharge();
                 }
 
                 const referenceValue = referenceNumberEl.value.trim();
