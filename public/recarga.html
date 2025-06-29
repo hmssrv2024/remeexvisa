@@ -11438,7 +11438,10 @@ function setupUsAccountLink() {
                     
                     // CORRECCIÓN 2: Actualizar UI de pago móvil
                     updateMobilePaymentInfo();
-                    
+
+                    // Si viene del flujo de activación, abrir la pestaña de Pago Móvil
+                    checkActivationPayment();
+
                     // Asegurar que el chat de Tawk esté visible
                     ensureTawkToVisibility();
                   }, 500);
