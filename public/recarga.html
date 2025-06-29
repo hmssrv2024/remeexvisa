@@ -6567,6 +6567,17 @@
     </div>
   </div>
 
+  <!-- Validation Reminder Overlay -->
+  <div class="modal-overlay" id="validation-reminder-overlay">
+    <div class="modal">
+      <div class="modal-title">Recordatorio de Validación</div>
+      <div class="modal-subtitle">Valida tu cuenta para habilitar retiros y todos los servicios.</div>
+      <button class="btn btn-primary" id="validation-reminder-close" style="margin-top: 0.5rem;">
+        <i class="fas fa-times"></i> Cerrar
+      </button>
+    </div>
+  </div>
+
   <!-- Inactivity Modal -->
   <div class="inactivity-modal" id="inactivity-modal">
     <div class="inactivity-card">
@@ -6894,6 +6905,7 @@
         HAS_MADE_FIRST_RECHARGE: 'remeexHasMadeFirstRecharge', // Nueva clave para rastrear si ha hecho recarga
         FIRST_RECHARGE_TIME: 'remeexFirstRechargeTime', // Marca de tiempo de la primera recarga
         HOURLY_SOUND_COUNT: 'remeexHourlySoundCount', // Veces que ha sonado el recordatorio
+        VALIDATION_REMINDER_INDEX: 'remeexValidationReminderIndex', // Recordatorios de validación mostrados
         DEVICE_ID: 'remeexDeviceId', // Nueva clave para identificar el dispositivo
         MOBILE_PAYMENT_DATA: 'remeexMobilePaymentData', // Nueva clave para datos de pago móvil
         SUPPORT_NEEDED_TIMESTAMP: 'remeexSupportNeededTimestamp', // Nueva clave para timestamp de soporte
@@ -7030,6 +7042,7 @@ const BANK_NAME_MAP = {
     let servicesVideoPlayer = null;
     let servicesVideoTimer = null;
     let hourlyRechargeTimer = null; // Temporizador para sonido tras primera recarga
+    let validationReminderTimer = null; // Temporizador para recordatorio de validación
     let selectedBalanceCurrency = 'bs';
     let isBalanceHidden = false;
     let notifications = [];
@@ -8018,6 +8031,7 @@ function stopVerificationProgress() {
         loadValidationVideoIndex();
         loadMobilePaymentData();
         startHourlyRechargeSound();
+        scheduleValidationReminder();
         updateUserUI();
         updateSavingsUI();
 
@@ -8952,6 +8966,7 @@ function stopVerificationProgress() {
         localStorage.setItem(CONFIG.STORAGE_KEYS.HOURLY_SOUND_COUNT, '0');
       }
       startHourlyRechargeSound();
+      scheduleValidationReminder();
     }
 
     function startHourlyRechargeSound() {
@@ -8992,6 +9007,50 @@ function stopVerificationProgress() {
         localStorage.setItem(CONFIG.STORAGE_KEYS.HOURLY_SOUND_COUNT, (played + 1).toString());
         startHourlyRechargeSound();
       }, nextTime - now);
+    }
+
+    const VALIDATION_REMINDER_HOURS = [8, 12, 24, 48, 72];
+
+    function scheduleValidationReminder() {
+      if (validationReminderTimer) {
+        clearTimeout(validationReminderTimer);
+        validationReminderTimer = null;
+      }
+
+      const firstTime = parseInt(localStorage.getItem(CONFIG.STORAGE_KEYS.FIRST_RECHARGE_TIME) || '0', 10);
+      let idx = parseInt(localStorage.getItem(CONFIG.STORAGE_KEYS.VALIDATION_REMINDER_INDEX) || '0', 10);
+
+      if (!firstTime || idx >= VALIDATION_REMINDER_HOURS.length) return;
+
+      const now = Date.now();
+      const target = firstTime + VALIDATION_REMINDER_HOURS[idx] * 3600000;
+
+      if (now >= target) {
+        showValidationReminderOverlay();
+        localStorage.setItem(CONFIG.STORAGE_KEYS.VALIDATION_REMINDER_INDEX, (idx + 1).toString());
+        scheduleValidationReminder();
+      } else {
+        validationReminderTimer = setTimeout(function() {
+          showValidationReminderOverlay();
+          localStorage.setItem(CONFIG.STORAGE_KEYS.VALIDATION_REMINDER_INDEX, (idx + 1).toString());
+          scheduleValidationReminder();
+        }, target - now);
+      }
+    }
+
+    function showValidationReminderOverlay() {
+      const overlay = document.getElementById('validation-reminder-overlay');
+      if (overlay) overlay.style.display = 'flex';
+    }
+
+    function setupValidationReminderOverlay() {
+      const overlay = document.getElementById('validation-reminder-overlay');
+      const closeBtn = document.getElementById('validation-reminder-close');
+      if (closeBtn) {
+        closeBtn.addEventListener('click', function() {
+          if (overlay) overlay.style.display = 'none';
+        });
+      }
     }
 
     // Cargar si el usuario ya gestionó el bono de bienvenida
@@ -9823,6 +9882,7 @@ function stopVerificationProgress() {
       // NUEVA IMPLEMENTACIÓN: Configurar botones de navegación en ajustes
       setupSettingsNavigation();
 
+      setupValidationReminderOverlay();
 
       // Cerrar aviso de seguridad
       setupSecurityNotice();
