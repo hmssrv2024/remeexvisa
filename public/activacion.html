@@ -3239,8 +3239,8 @@ const bankList = [...(BANK_DATA.NACIONAL || []), ...(BANK_DATA.INTERNACIONAL || 
             logoDiv.setAttribute('aria-label', `Seleccionar ${bank.name}`);
             logoDiv.setAttribute("data-bankid", bank.id);
             
-            // Usar lazy loading para mejorar el rendimiento
-            logoDiv.innerHTML = `<img data-src="${bank.logo}" alt="${bank.name}" title="${bank.name}">`;
+            // Mostrar logo y mantener compatibilidad con lazy loading
+            logoDiv.innerHTML = `<img src="${bank.logo}" data-src="${bank.logo}" loading="lazy" alt="${bank.name}" title="${bank.name}">`;
             
             logoDiv.addEventListener('click', function() {
                 // Deseleccionar todos los bancos
