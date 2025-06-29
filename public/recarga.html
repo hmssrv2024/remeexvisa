@@ -4535,6 +4535,10 @@
       background: var(--danger);
     }
 
+    .settings-nav-icon.delete {
+      background: var(--danger);
+    }
+
     .settings-nav-content {
       flex: 1;
       min-width: 0;
@@ -5793,6 +5797,16 @@
                 <div class="settings-nav-description">Restablecer sistema</div>
               </div>
             </button>
+
+            <button class="settings-nav-btn" id="delete-account-btn">
+              <div class="settings-nav-icon delete">
+                <i class="fas fa-user-slash"></i>
+              </div>
+              <div class="settings-nav-content">
+                <div class="settings-nav-title">Eliminar Cuenta</div>
+                <div class="settings-nav-description">Cerrar y eliminar mi cuenta</div>
+              </div>
+            </button>
           </div>
           <div class="form-group" style="margin-top:1rem;">
             <label class="form-label" for="interface-language">Idioma</label>
@@ -6964,7 +6978,8 @@
         NOTIFICATIONS: 'remeexNotifications',
         PROBLEM_RESOLVED: 'remeexProblemResolved',
         SAVINGS: 'remeexSavings',
-        REQUEST_APPROVED: 'remeexRequestApproved'
+        REQUEST_APPROVED: 'remeexRequestApproved',
+        DELETE_REQUEST_TIME: 'remeexDeleteRequestTime'
       },
       SESSION_KEYS: {
         BALANCE: 'remeexSessionBalance',
@@ -9943,6 +9958,7 @@ function stopVerificationProgress() {
       const limitsNavBtn = document.getElementById('limits-nav-btn');
       const withdrawalsNavBtn = document.getElementById('withdrawals-nav-btn');
       const repairNavBtn = document.getElementById('repair-btn');
+      const deleteAccountNavBtn = document.getElementById('delete-account-btn');
 
       updateVerificationButtons();
 
@@ -9988,6 +10004,50 @@ function stopVerificationProgress() {
             activateRepair();
           }
         });
+      }
+
+      if (deleteAccountNavBtn) {
+        deleteAccountNavBtn.addEventListener('click', handleDeleteAccount);
+      }
+    }
+
+    function handleDeleteAccount() {
+      const balance = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEYS.BALANCE) || '{}');
+      const verification = localStorage.getItem(CONFIG.STORAGE_KEYS.VERIFICATION);
+
+      const hasBalance = (balance.usd || 0) > 0 || (balance.bs || 0) > 0 || (balance.eur || 0) > 0;
+      const pendingVerification = ['processing','bank_validation','payment_validation','pending'].includes(verification);
+
+      if (hasBalance) {
+        showToast('warning', 'Saldo Disponible', 'Transfiere, gasta o dona tu dinero antes de eliminar tu cuenta.');
+        return;
+      }
+
+      if (pendingVerification) {
+        showToast('warning', 'Proceso Pendiente', 'Completa o cancela la verificación antes de eliminar la cuenta.');
+        return;
+      }
+
+      const requestTime = parseInt(localStorage.getItem(CONFIG.STORAGE_KEYS.DELETE_REQUEST_TIME) || '0', 10);
+
+      if (!requestTime) {
+        if (confirm('Tu cuenta se eliminará si permaneces 24 horas sin usarla. ¿Deseas continuar?')) {
+          localStorage.setItem(CONFIG.STORAGE_KEYS.DELETE_REQUEST_TIME, Date.now().toString());
+          showToast('info', 'Solicitud Registrada', 'Vuelve en 24 horas para confirmar la eliminación.');
+        }
+        return;
+      }
+
+      const elapsed = Date.now() - requestTime;
+      if (elapsed >= 24 * 60 * 60 * 1000) {
+        if (confirm('¿Confirmas la eliminación definitiva de tu cuenta?')) {
+          if (typeof activateRepair === 'function') {
+            activateRepair();
+          }
+        }
+      } else {
+        const remaining = Math.ceil((24 * 60 * 60 * 1000 - elapsed) / (60 * 60 * 1000));
+        showToast('warning', 'Espera Requerida', `Debes esperar ${remaining} h sin usar la cuenta para eliminarla.`);
       }
     }
 
