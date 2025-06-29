@@ -86,6 +86,9 @@
       --success-green: var(--success);
       --danger-red: var(--danger);
       --warning-orange: var(--warning);
+      --visa-gold: #F7B600;
+      --visa-gold-light: #FFD233;
+      --visa-gold-dark: #E5A800;
     }
     
     * {
@@ -5883,6 +5886,13 @@
               <span>Modo Silver</span>
               <label class="switch">
                 <input type="checkbox" id="silver-mode-toggle">
+                <span class="slider round"></span>
+              </label>
+            </div>
+            <div class="toggle-row">
+              <span>Modo Gold</span>
+              <label class="switch">
+                <input type="checkbox" id="gold-mode-toggle">
                 <span class="slider round"></span>
               </label>
             </div>
@@ -12319,6 +12329,7 @@ function setupUsAccountLink() {
     function setupThemeToggles() {
       const darkToggle = document.getElementById('dark-mode-toggle');
       const silverToggle = document.getElementById('silver-mode-toggle');
+      const goldToggle = document.getElementById('gold-mode-toggle');
       const theme = localStorage.getItem('remeexTheme');
       if (darkToggle) {
         darkToggle.checked = theme === 'dark';
@@ -12326,6 +12337,7 @@ function setupUsAccountLink() {
           if (darkToggle.checked) {
             localStorage.setItem('remeexTheme', 'dark');
             if (silverToggle) silverToggle.checked = false;
+            if (goldToggle) goldToggle.checked = false;
           } else {
             localStorage.setItem('remeexTheme', 'default');
           }
@@ -12338,6 +12350,20 @@ function setupUsAccountLink() {
           if (silverToggle.checked) {
             localStorage.setItem('remeexTheme', 'silver');
             if (darkToggle) darkToggle.checked = false;
+            if (goldToggle) goldToggle.checked = false;
+          } else {
+            localStorage.setItem('remeexTheme', 'default');
+          }
+          applySavedTheme();
+        });
+      }
+      if (goldToggle) {
+        goldToggle.checked = theme === 'gold';
+        goldToggle.addEventListener('change', () => {
+          if (goldToggle.checked) {
+            localStorage.setItem('remeexTheme', 'gold');
+            if (darkToggle) darkToggle.checked = false;
+            if (silverToggle) silverToggle.checked = false;
           } else {
             localStorage.setItem('remeexTheme', 'default');
           }

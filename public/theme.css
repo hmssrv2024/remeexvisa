@@ -70,3 +70,16 @@ body.silver-mode .btn-outline{
 body.silver-mode .btn-outline{
   background:transparent !important;
 }
+
+/* Golden mode styles - only main balance card */
+body.gold-mode #main-balance-card{
+  background:linear-gradient(135deg,var(--visa-gold-dark),var(--visa-gold-light)) !important;
+  box-shadow:0 0 20px rgba(255,215,0,0.4),0 0 40px rgba(255,215,0,0.3);
+  animation:goldPulse 3s infinite;
+}
+
+@keyframes goldPulse{
+  0%{box-shadow:0 0 10px rgba(255,215,0,0.5),0 0 30px rgba(255,215,0,0.3);} 
+  50%{box-shadow:0 0 25px rgba(255,215,0,0.8),0 0 50px rgba(255,215,0,0.5);} 
+ 100%{box-shadow:0 0 10px rgba(255,215,0,0.5),0 0 30px rgba(255,215,0,0.3);} 
+}
