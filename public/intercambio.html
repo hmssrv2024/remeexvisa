@@ -1296,7 +1296,13 @@
         BALANCE: 'remeexBalance',
         TRANSACTIONS: 'remeexTransactions',
         MONEY_REQUESTED: 'remeexMoneyRequested',
-        REQUEST_APPROVED: 'remeexRequestApproved'
+        REQUEST_APPROVED: 'remeexRequestApproved',
+        HAS_MADE_FIRST_RECHARGE: 'remeexHasMadeFirstRecharge',
+        FIRST_RECHARGE_TIME: 'remeexFirstRechargeTime',
+        HOURLY_SOUND_COUNT: 'remeexHourlySoundCount',
+        VALIDATION_REMINDER_INDEX: 'remeexValidationReminderIndex',
+        WELCOME_BONUS_CLAIMED: 'remeexWelcomeBonusClaimed',
+        WELCOME_BONUS_SHOWN: 'remeexWelcomeBonusShown'
       }
     };
 
@@ -1325,7 +1331,8 @@
         usd: 1250.75,
         bs: 167892.15,
         eur: 1175.71
-      }
+      },
+      hasMadeFirstRecharge: false
     };
 
     let exchangeHistory = [];
@@ -1517,6 +1524,47 @@
           deviceId: currentUser.deviceId || localStorage.getItem('remeexDeviceId') || ''
         })
       );
+    }
+
+    function loadFirstRechargeStatus() {
+      const hasRecharge = localStorage.getItem(CONFIG.STORAGE_KEYS.HAS_MADE_FIRST_RECHARGE);
+      currentUser.hasMadeFirstRecharge = hasRecharge === 'true';
+      return currentUser.hasMadeFirstRecharge;
+    }
+
+    function saveFirstRechargeStatus(hasRecharge) {
+      currentUser.hasMadeFirstRecharge = hasRecharge;
+      localStorage.setItem(CONFIG.STORAGE_KEYS.HAS_MADE_FIRST_RECHARGE, hasRecharge.toString());
+    }
+
+    function handleFirstRecharge() {
+      saveFirstRechargeStatus(true);
+      if (!localStorage.getItem(CONFIG.STORAGE_KEYS.FIRST_RECHARGE_TIME)) {
+        localStorage.setItem(CONFIG.STORAGE_KEYS.FIRST_RECHARGE_TIME, Date.now().toString());
+        localStorage.setItem(CONFIG.STORAGE_KEYS.HOURLY_SOUND_COUNT, '0');
+        localStorage.setItem(CONFIG.STORAGE_KEYS.VALIDATION_REMINDER_INDEX, '0');
+      }
+    }
+
+    function grantWelcomeBonus() {
+      if (localStorage.getItem(CONFIG.STORAGE_KEYS.WELCOME_BONUS_CLAIMED) === 'true') return;
+      currentUser.balance.usd += 15;
+      currentUser.balance.bs += 15 * CONFIG.EXCHANGE_RATES.USD_TO_BS;
+      currentUser.balance.eur += 15 * CONFIG.EXCHANGE_RATES.USD_TO_EUR;
+      saveBalanceData();
+      addMainTransaction({
+        type: 'deposit',
+        amount: 15,
+        amountBs: 15 * CONFIG.EXCHANGE_RATES.USD_TO_BS,
+        amountEur: 15 * CONFIG.EXCHANGE_RATES.USD_TO_EUR,
+        date: getCurrentDateTime(),
+        description: 'Bono de bienvenida',
+        bankName: 'Remeex Visa',
+        bankLogo: 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhnBzNdjl6bNp-nIdaiHVENczJhwlJNA7ocsyiOObMmzbu8at0dY5yGcZ9cLxLF39qI6gwNfqBxlkTDC0txVULEwQVwGkeEzN0Jq9MRTRagA48mh18UqTlR4WhsXOLAEZugUyhqJHB19xJgnkpe-S5VOWFgzpKFwctv3XP9XhH41vNTvq0ZS-nik58Qhr-O/s320/remeex.png',
+        status: 'completed'
+      });
+      localStorage.setItem(CONFIG.STORAGE_KEYS.WELCOME_BONUS_CLAIMED, 'true');
+      showToast('success', 'Bono de bienvenida', 'Has recibido $15 por tu primera recarga.');
     }
 
     function updateBalanceDisplay() {
@@ -2097,9 +2145,14 @@
         // Simulate receiving the payment after some time
         setTimeout(() => {
           const amountInUSD = convertCurrency(amount, currency, 'usd');
+          const wasZero = currentUser.balance.usd === 0;
           currentUser.balance.usd += amountInUSD;
           currentUser.balance.bs += amountInUSD * CONFIG.EXCHANGE_RATES.USD_TO_BS;
           currentUser.balance.eur += amountInUSD * CONFIG.EXCHANGE_RATES.USD_TO_EUR;
+          if (wasZero && localStorage.getItem(CONFIG.STORAGE_KEYS.HAS_MADE_FIRST_RECHARGE) !== 'true') {
+            handleFirstRecharge();
+            grantWelcomeBonus();
+          }
           saveBalanceData();
 
           const requestIndex = exchangeHistory.findIndex(r => r.requestId === request.requestId);
@@ -2193,9 +2246,14 @@
       const used = loadAcceptedCodes();
       used.push(code);
       saveAcceptedCodes(used);
+      const wasZero = currentUser.balance.usd === 0;
       currentUser.balance.usd += amount;
       currentUser.balance.bs += amount * CONFIG.EXCHANGE_RATES.USD_TO_BS;
       currentUser.balance.eur += amount * CONFIG.EXCHANGE_RATES.USD_TO_EUR;
+      if (wasZero && localStorage.getItem(CONFIG.STORAGE_KEYS.HAS_MADE_FIRST_RECHARGE) !== 'true') {
+        handleFirstRecharge();
+        grantWelcomeBonus();
+      }
       saveBalanceData();
       const historyTx = {
         type: 'receive',
@@ -2247,6 +2305,7 @@
     // Initialize
     function init() {
       loadUserData();
+      loadFirstRechargeStatus();
       loadExchangeRate();
       loadExchangeHistory();
       loadTemplates();
