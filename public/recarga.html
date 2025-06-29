@@ -5197,27 +5197,27 @@
   <nav class="bottom-nav" id="bottom-nav" style="display: none;">
     <div class="nav-item" data-section="services">
       <div class="nav-icon"><i class="fas fa-list-alt"></i></div>
-      <div class="nav-label">Servicios</div>
+      <div class="nav-label" data-i18n="nav-services">Servicios</div>
     </div>
     
     <div class="nav-item" data-section="cards">
       <div class="nav-icon"><i class="fas fa-credit-card"></i></div>
-      <div class="nav-label">Tarjetas</div>
+      <div class="nav-label" data-i18n="nav-cards">Tarjetas</div>
     </div>
     
     <div class="nav-item active" data-section="home">
       <div class="nav-icon"><i class="fas fa-home"></i></div>
-      <div class="nav-label">Inicio</div>
+      <div class="nav-label" data-i18n="nav-home">Inicio</div>
     </div>
     
     <div class="nav-item" data-section="support">
       <div class="nav-icon"><i class="fas fa-headset"></i></div>
-      <div class="nav-label">Ayuda</div>
+      <div class="nav-label" data-i18n="nav-support">Ayuda</div>
     </div>
 
     <div class="nav-item" data-section="settings">
       <div class="nav-icon"><i class="fas fa-cog"></i></div>
-      <div class="nav-label">Ajustes</div>
+      <div class="nav-label" data-i18n="nav-settings">Ajustes</div>
     </div>
   </nav>
 
@@ -5783,6 +5783,13 @@
                 <div class="settings-nav-description">Restablecer sistema</div>
               </div>
             </button>
+          </div>
+          <div class="form-group" style="margin-top:1rem;">
+            <label class="form-label" for="interface-language">Idioma</label>
+            <select id="interface-language" class="form-control">
+              <option value="es">Español</option>
+              <option value="en">English</option>
+            </select>
           </div>
           <div class="bank-note" style="margin-top: 1rem;">
             Remeex Visa una marca de Visa International Service Association opera en Venezuela
@@ -14218,4 +14225,5 @@ function setupUsAccountLink() {
   </script>
 </body>
 </html>
+  <script src="language.js"></script>
   <script src="preload.js"></script>
