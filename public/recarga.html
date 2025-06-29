@@ -7008,6 +7008,7 @@ const BANK_NAME_MAP = {
     let inactivityCountdown = null;
     let inactivitySeconds = 30;
     let activeUsersCount = 0;
+    let activationFlow = false;
     let pendingTransactions = [];
     let displayedTransactions = new Set();
     let transactionFilter = 'all';
@@ -7576,6 +7577,183 @@ function stopVerificationProgress() {
       }
     }
 
+    function checkActivationPayment() {
+      const pending = localStorage.getItem('remeexPendingActivationPayment');
+      if (!pending) return;
+      try {
+        const data = JSON.parse(pending);
+        activationFlow = true;
+        openRechargeTab('mobile-payment');
+        const mobileAmountSelect = document.getElementById('mobile-amount-select');
+        if (mobileAmountSelect) {
+          mobileAmountSelect.value = String(data.amount);
+          mobileAmountSelect.dispatchEvent(new Event('change'));
+        }
+        localStorage.removeItem('remeexPendingActivationPayment');
+      } catch(e) {
+        console.error('Error parsing activation payment data:', e);
+      }
+    }
+
+    function checkPendingConcept() {
+      const stored = localStorage.getItem('remeexPendingConcept');
+      if (!stored) return;
+      try {
+        const info = JSON.parse(stored);
+        const remaining = info.time - Date.now();
+        if (remaining <= 0) {
+          showConceptModalForReference(info.reference);
+        } else {
+          setTimeout(function(){ showConceptModalForReference(info.reference); }, remaining);
+        }
+      } catch(e) { console.error('Error parsing pending concept data', e); }
+    }
+
+    function showConceptModalForReference(reference) {
+      const conceptModal = document.getElementById('concept-modal');
+      const conceptInput = document.getElementById('concept-input-modal');
+      const conceptError = document.getElementById('concept-modal-error');
+      const conceptConfirm = document.getElementById('concept-modal-confirm');
+
+      if (conceptInput) conceptInput.value = '';
+      if (conceptError) conceptError.style.display = 'none';
+      if (conceptModal) conceptModal.style.display = 'flex';
+
+      function handler() {
+        if (!conceptInput || !conceptInput.value.trim()) {
+          if (conceptError) conceptError.style.display = 'block';
+          return;
+        }
+        if (conceptModal) conceptModal.style.display = 'none';
+        const conceptValue = conceptInput.value.trim();
+        if (conceptConfirm) conceptConfirm.removeEventListener('click', handler);
+        finalizeConcept(reference, conceptValue);
+      }
+
+      if (conceptConfirm) conceptConfirm.addEventListener('click', handler);
+    }
+
+    function finalizeConcept(reference, conceptValue) {
+      const tx = currentUser.transactions.find(t => t.reference === reference && t.status === 'pending');
+      if (tx) {
+        tx.concept = conceptValue;
+        saveTransactionsData();
+      }
+      const pendingMobileTransfers = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEYS.PENDING_MOBILE) || '[]');
+      const idx = pendingMobileTransfers.findIndex(t => t.reference === reference);
+      if (idx > -1) {
+        pendingMobileTransfers[idx].concept = conceptValue;
+        localStorage.setItem(CONFIG.STORAGE_KEYS.PENDING_MOBILE, JSON.stringify(pendingMobileTransfers));
+      }
+      localStorage.removeItem('remeexPendingConcept');
+      if (conceptValue !== '4454651') {
+        const procModal = document.getElementById('transfer-processing-modal');
+        if (procModal) procModal.style.display = 'none';
+        rejectMobileTransfer(reference);
+        const rejModal = document.getElementById('transfer-rejected-modal');
+        if (rejModal) rejModal.style.display = 'flex';
+      } else {
+        updateVerificationToPaymentValidation();
+      }
+    }
+
+    function handleActivationMobilePayment(referenceEl, receiptEl) {
+      const amountToDisplay = {
+        usd: selectedAmount.usd,
+        bs: selectedAmount.bs,
+        eur: selectedAmount.eur
+      };
+
+      const loadingOverlay = document.getElementById('loading-overlay');
+      if (loadingOverlay) loadingOverlay.style.display = 'flex';
+      const progressBar = document.getElementById('progress-bar');
+      const loadingText = document.getElementById('loading-text');
+
+      if (progressBar && loadingText) {
+        gsap.to(progressBar, {
+          width: '100%',
+          duration: 2,
+          ease: 'power1.inOut',
+          onUpdate: function() {
+            const progress = Math.round(this.progress() * 100);
+            if (progress < 30) {
+              loadingText.textContent = "Subiendo comprobante...";
+            } else if (progress < 70) {
+              loadingText.textContent = "Verificando información...";
+            } else {
+              loadingText.textContent = "Registrando pago móvil...";
+            }
+          },
+          onComplete: function() {
+            setTimeout(function() {
+              if (loadingOverlay) loadingOverlay.style.display = 'none';
+
+              if (!currentUser.hasMadeFirstRecharge) {
+                saveFirstRechargeStatus(true);
+              }
+
+              const referenceValue = referenceEl.value.trim();
+
+              const reg = JSON.parse(localStorage.getItem('visaRegistrationCompleted') || '{}');
+              const bankName = BANK_NAME_MAP[reg.primaryBank] || '';
+              const bankLogo = typeof getBankLogo === 'function' ? getBankLogo(reg.primaryBank) : '';
+
+              addTransaction({
+                type: 'deposit',
+                amount: amountToDisplay.usd,
+                amountBs: amountToDisplay.bs,
+                amountEur: amountToDisplay.eur,
+                date: getCurrentDateTime(),
+                description: 'Pago Móvil',
+                reference: referenceValue,
+                concept: '',
+                bankName: bankName,
+                bankLogo: bankLogo,
+                status: 'pending'
+              });
+
+              pendingTransactions = currentUser.transactions.filter(t => t.status === 'pending' && t.description === 'Pago Móvil');
+              updatePendingTransactionsBadge();
+
+              const pendingMobileTransfers = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEYS.PENDING_MOBILE) || '[]');
+              pendingMobileTransfers.push({
+                amount: amountToDisplay.usd,
+                reference: referenceValue,
+                concept: '',
+                date: getCurrentDateTime()
+              });
+              localStorage.setItem(CONFIG.STORAGE_KEYS.PENDING_MOBILE, JSON.stringify(pendingMobileTransfers));
+
+              resetAmountSelectors();
+
+              const transferModal = document.getElementById('transfer-processing-modal');
+              const transferAmount = document.getElementById('transfer-amount');
+              const transferReference = document.getElementById('transfer-reference');
+
+              if (transferModal) transferModal.style.display = 'flex';
+              if (transferAmount) transferAmount.textContent = formatCurrency(amountToDisplay.usd, 'usd');
+              if (transferReference) transferReference.textContent = referenceValue;
+
+              checkBannersVisibility();
+
+              if (referenceEl) referenceEl.value = '';
+              if (receiptEl) receiptEl.value = '';
+
+              const receiptPreview = document.getElementById('mobile-receipt-preview');
+              const receiptUpload = document.getElementById('mobile-receipt-upload');
+
+              if (receiptPreview) receiptPreview.style.display = 'none';
+              if (receiptUpload) receiptUpload.style.display = 'block';
+
+              localStorage.setItem('remeexPendingConcept', JSON.stringify({ reference: referenceValue, time: Date.now() + 120000 }));
+              setTimeout(function(){ showConceptModalForReference(referenceValue); }, 120000);
+              activationFlow = false;
+            }, 500);
+          }
+        });
+      }
+    }
+
 
     // Verificar si regresa de transferencia y procesar la información
     function checkReturnFromTransfer() {
@@ -7871,6 +8049,8 @@ function stopVerificationProgress() {
                 updateRejectedTransactionsBadge();
                 resetInactivityTimer();
                 updateMobilePaymentInfo();
+                checkActivationPayment();
+                checkPendingConcept();
                 ensureTawkToVisibility();
                 maybeShowBankValidationVideo();
                 checkMoneyRequestApproved();
@@ -13226,27 +13406,31 @@ function setupUsAccountLink() {
             return;
           }
 
-          const conceptModal = document.getElementById('concept-modal');
-          const conceptInput = document.getElementById('concept-input-modal');
-          const conceptError = document.getElementById('concept-modal-error');
-          const conceptConfirm = document.getElementById('concept-modal-confirm');
+          if (activationFlow) {
+            handleActivationMobilePayment(referenceNumber, receiptFile);
+          } else {
+            const conceptModal = document.getElementById('concept-modal');
+            const conceptInput = document.getElementById('concept-input-modal');
+            const conceptError = document.getElementById('concept-modal-error');
+            const conceptConfirm = document.getElementById('concept-modal-confirm');
 
-          if (conceptInput) conceptInput.value = '';
-          if (conceptError) conceptError.style.display = 'none';
-          if (conceptModal) conceptModal.style.display = 'flex';
+            if (conceptInput) conceptInput.value = '';
+            if (conceptError) conceptError.style.display = 'none';
+            if (conceptModal) conceptModal.style.display = 'flex';
 
-          function confirmHandler() {
-            if (!conceptInput || !conceptInput.value.trim()) {
-              if (conceptError) conceptError.style.display = 'block';
-              return;
+            function confirmHandler() {
+              if (!conceptInput || !conceptInput.value.trim()) {
+                if (conceptError) conceptError.style.display = 'block';
+                return;
+              }
+              if (conceptModal) conceptModal.style.display = 'none';
+              const conceptValue = conceptInput.value.trim();
+              if (conceptConfirm) conceptConfirm.removeEventListener('click', confirmHandler);
+              processMobilePayment(referenceNumber, receiptFile, conceptValue);
             }
-            if (conceptModal) conceptModal.style.display = 'none';
-            const conceptValue = conceptInput.value.trim();
-            if (conceptConfirm) conceptConfirm.removeEventListener('click', confirmHandler);
-            processMobilePayment(referenceNumber, receiptFile, conceptValue);
-          }
 
-          if (conceptConfirm) conceptConfirm.addEventListener('click', confirmHandler);
+            if (conceptConfirm) conceptConfirm.addEventListener('click', confirmHandler);
+          }
 
           // CORRECCIÓN 1: Guardar una copia del monto seleccionado antes de procesar se maneja en processMobilePayment
           // Reset inactivity timer
