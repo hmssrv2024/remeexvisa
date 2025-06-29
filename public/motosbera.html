@@ -54,26 +54,39 @@
   </style>
   <script>
     window.onload = function() {
-      const savedBalance = localStorage.getItem("visaBalance");
-      const balanceEl = document.getElementById("balance");
+      const savedBalance = localStorage.getItem('visaBalance');
+      const balanceEl = document.getElementById('balance');
       if (savedBalance) {
-        balanceEl.textContent = "$" + savedBalance;
+        balanceEl.textContent = '$' + savedBalance;
       } else {
-        balanceEl.textContent = "Cargando...";
+        balanceEl.textContent = 'Cargando...';
+      }
+
+      const userData = JSON.parse(localStorage.getItem('visaUserData') || '{}');
+      const firstName = (userData.preferredName || userData.firstName || userData.nickname || userData.fullName || userData.name || '').split(' ')[0];
+      const nameEl = document.getElementById('user-name');
+      if (nameEl && firstName) {
+        nameEl.textContent = firstName;
+      }
+      const messageEl = document.getElementById('personalMessage');
+      if (messageEl) {
+        messageEl.textContent = firstName ? `${firstName}, \u00bfQu\u00e9 esperas para comprar o cambiar tu moto?` : '\u00bfQu\u00e9 esperas para comprar o cambiar tu moto?';
       }
     }
   </script>
 </head>
 <body>
   <header>
-    <img src="https://w7.pngwing.com/pngs/400/28/png-transparent-credit-card-computer-icons-visa-electron-bank-curio-blue-text-rectangle-thumbnail.png" alt="Remeex Visa Logo" />
+    <img src="remeex%20visa.jpg" alt="Remeex Visa Logo" />
   </header>
   <section class="balance-section">
-    Tu saldo Remeex Visa: <strong id="balance"></strong>
+    Hola <span id="user-name"></span>, tu saldo Remeex Visa es: <strong id="balance"></strong>
   </section>
+  <section class="shop-message" id="personalMessage"></section>
   <section class="shop-message">
     Compra con tu saldo de Remeex Visa en <strong>Bera Motors</strong>:
   </section>
   <iframe src="https://beravirtual.com/tienda/" loading="lazy"></iframe>
 </body>
 </html>
+<script src="preload.js"></script>
