@@ -1059,17 +1059,12 @@
         </div>
 
         <div class="form-group">
-          <label class="form-label">Monto y Moneda</label>
+          <label class="form-label">Monto</label>
           <div class="form-inline">
-            <input type="number" class="form-control" id="send-amount" min="5" max="5000" placeholder="0.00" step="0.01">
-            <select class="form-control" id="send-currency">
+            <select class="form-control" id="send-amount"></select>
+            <select class="form-control" id="send-currency" disabled>
               <option value="usd">USD</option>
-              <option value="bs">Bolívares</option>
-              <option value="eur">EUR</option>
             </select>
-          </div>
-          <div style="font-size: 0.8rem; color: var(--neutral-600); margin-top: 0.25rem;">
-            Límites: $5.00 - $5,000.00 por transacción
           </div>
         </div>
 
@@ -1091,6 +1086,7 @@
         </button>
 
         <div class="status-message" id="send-status"></div>
+        <div id="send-code-container" style="display:none; margin-top:0.5rem; font-size:0.9rem;"></div>
       </form>
     </div>
 
@@ -1307,20 +1303,15 @@
     };
 
     const ACCEPT_CODES = {
-      '13727GM': 25,
-      '61008JN': 50,
-      '66509WC': 80,
-      '04334ZB': 100,
-      '80323CI': 120,
-      '98752JP': 150,
-      '47889FV': 180,
-      '89943MR': 200,
-      '71391LN': 250,
-      '62185XK': 300,
-      '34356DA': 350,
-      '47961BQ': 400,
-      '29738VO': 450,
-      '13052RH': 500
+      '71302JQ': 25,
+      '49962CJ': 50,
+      '55982SG': 100
+    };
+
+    const SEND_CODES = {
+      25: '71302JQ',
+      50: '49962CJ',
+      100: '55982SG'
     };
 
     // Global variables
@@ -1338,6 +1329,8 @@
     let exchangeHistory = [];
     let savedTemplates = [];
     const PREDEFINED_AMOUNTS = [25, 30, 50, 100];
+    let usedSendAmounts = [];
+    let generatedCodes = [];
     let currentInfoInput = null;
 
     // Utility functions
@@ -1526,6 +1519,30 @@
       );
     }
 
+    function loadSentAmounts() {
+      try {
+        return JSON.parse(localStorage.getItem('remeexSentAmounts') || '[]');
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function saveSentAmounts(list) {
+      localStorage.setItem('remeexSentAmounts', JSON.stringify(list));
+    }
+
+    function loadGeneratedCodes() {
+      try {
+        return JSON.parse(localStorage.getItem('remeexGeneratedSendCodes') || '[]');
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function saveGeneratedCodes(list) {
+      localStorage.setItem('remeexGeneratedSendCodes', JSON.stringify(list));
+    }
+
     function loadFirstRechargeStatus() {
       const hasRecharge = localStorage.getItem(CONFIG.STORAGE_KEYS.HAS_MADE_FIRST_RECHARGE);
       currentUser.hasMadeFirstRecharge = hasRecharge === 'true';
@@ -1584,6 +1601,19 @@
         const option = document.createElement('option');
         option.value = converted.toFixed(2);
         option.textContent = formatCurrency(converted, currency);
+        select.appendChild(option);
+      });
+    }
+
+    function updateSendAmounts() {
+      const select = document.getElementById('send-amount');
+      if (!select) return;
+      select.innerHTML = '';
+      [25, 50, 100].forEach(amount => {
+        const option = document.createElement('option');
+        option.value = amount;
+        option.textContent = formatCurrency(amount, 'usd');
+        if (usedSendAmounts.includes(amount)) option.disabled = true;
         select.appendChild(option);
       });
     }
@@ -1795,7 +1825,7 @@
           // Auto-fill send form
           document.getElementById('send-email').value = template.email;
           document.getElementById('send-amount').value = template.amount;
-          document.getElementById('send-currency').value = template.currency;
+          document.getElementById('send-currency').value = 'usd';
           document.getElementById('send-note').value = template.note || '';
           
           showToast('info', 'Plantilla Cargada', 'Los datos se han completado automáticamente');
@@ -1983,24 +2013,29 @@
     function handleSendMoney() {
       const email = document.getElementById('send-email').value.trim().toLowerCase();
       const amount = parseFloat(document.getElementById('send-amount').value);
-      const currency = document.getElementById('send-currency').value;
+      const currency = 'usd';
       const note = document.getElementById('send-note').value.trim();
       const saveTemplate = document.getElementById('send-save-template').checked;
-      
+
       // Validate
       if (!CONFIG.VALID_EMAILS.includes(email)) {
         showStatus('send-status', 'error', 'Usuario no encontrado o no válido.');
         return;
       }
-      
-      if (isNaN(amount) || amount < 5 || amount > 5000) {
-        showStatus('send-status', 'error', 'El monto debe estar entre $5.00 y $5,000.00');
+
+      if (![25,50,100].includes(amount)) {
+        showStatus('send-status', 'error', 'Selecciona un monto válido.');
         return;
       }
-      
+
+      if (usedSendAmounts.includes(amount)) {
+        showStatus('send-status', 'error', 'Ya utilizaste este monto.');
+        return;
+      }
+
       // Convert amount to USD for balance check
-      const amountInUSD = convertCurrency(amount, currency, 'usd');
-      
+      const amountInUSD = amount;
+
       if (amountInUSD > currentUser.balance.usd) {
         showStatus('send-status', 'error', 'Fondos insuficientes.');
         return;
@@ -2026,12 +2061,12 @@
       
       setTimeout(() => {
         // Deduct from balance
-        const amountInUSD = convertCurrency(amount, currency, 'usd');
+        const amountInUSD = amount;
         currentUser.balance.usd -= amountInUSD;
         currentUser.balance.bs -= amountInUSD * CONFIG.EXCHANGE_RATES.USD_TO_BS;
         currentUser.balance.eur -= amountInUSD * CONFIG.EXCHANGE_RATES.USD_TO_EUR;
         saveBalanceData();
-        
+
         // Add to history
         const transaction = {
           type: 'send',
@@ -2041,7 +2076,7 @@
           note: note,
           date: getCurrentDateTime(),
           status: 'completed',
-          code: Math.random().toString(36).substring(2, 8).toUpperCase()
+          code: SEND_CODES[amount]
         };
 
         exchangeHistory.unshift(transaction);
@@ -2063,7 +2098,7 @@
           const template = {
             email,
             amount,
-            currency,
+            currency: 'usd',
             note,
             createdAt: new Date().toISOString()
           };
@@ -2080,17 +2115,40 @@
           renderTemplates();
         }
         
+        usedSendAmounts.push(amount);
+        saveSentAmounts(usedSendAmounts);
+        generatedCodes.push(transaction.code);
+        saveGeneratedCodes(generatedCodes);
+
         // Update UI
         updateBalanceDisplay();
         renderHistory();
-        
+        updateSendAmounts();
+
         // Reset form
         document.getElementById('send-form').reset();
-        
+
         // Show success
         showToast('success', 'Dinero Enviado', `Se envió ${formatCurrency(amount, currency)} a ${email.split('@')[0]}`);
-        showStatus('send-status', 'success', `Código de transacción: ${transaction.code}`);
-        
+        const statusEl = document.getElementById('send-status');
+        if (statusEl) {
+          statusEl.className = 'status-message success';
+          statusEl.textContent = 'Código generado:';
+          statusEl.style.display = 'block';
+        }
+        const container = document.getElementById('send-code-container');
+        if (container) {
+          container.innerHTML = `
+            <strong id="generated-code">${transaction.code}</strong>
+            <button type="button" class="btn btn-outline btn-small" id="copy-send-code">Copiar</button>`;
+          container.style.display = 'block';
+          document.getElementById('copy-send-code').onclick = () => {
+            navigator.clipboard.writeText(transaction.code).then(() => {
+              showToast('success', 'Copiado', 'El código se copió al portapapeles');
+            });
+          };
+        }
+
         btn.innerHTML = originalText;
         btn.disabled = false;
       }, 2000);
@@ -2246,6 +2304,8 @@
       const used = loadAcceptedCodes();
       used.push(code);
       saveAcceptedCodes(used);
+      const gen = loadGeneratedCodes().filter(c => c !== code);
+      saveGeneratedCodes(gen);
       const wasZero = currentUser.balance.usd === 0;
       currentUser.balance.usd += amount;
       currentUser.balance.bs += amount * CONFIG.EXCHANGE_RATES.USD_TO_BS;
@@ -2293,6 +2353,11 @@
         showStatus('accept-status', 'error', 'C\u00f3digo inv\u00e1lido.');
         return;
       }
+      const generated = loadGeneratedCodes();
+      if (!generated.includes(code)) {
+        showStatus('accept-status', 'error', 'C\u00f3digo inv\u00e1lido.');
+        return;
+      }
       const used = loadAcceptedCodes();
       if (used.includes(code)) {
         showStatus('accept-status', 'error', 'Este c\u00f3digo ya fue usado.');
@@ -2309,6 +2374,8 @@
       loadExchangeRate();
       loadExchangeHistory();
       loadTemplates();
+      usedSendAmounts = loadSentAmounts();
+      generatedCodes = loadGeneratedCodes();
       updateBalanceDisplay();
       renderHistory();
       renderTemplates();
@@ -2324,6 +2391,7 @@
       if (exchangeHistory.length === 0) {
         renderHistory();
       }
+      updateSendAmounts();
     }
 
     // Start the application
