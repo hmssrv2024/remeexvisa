@@ -2447,39 +2447,6 @@
             from { opacity: 0; }
             to { opacity: 1; }
         }
-        /* Botón de ayuda */
-        #help-button {
-            position: fixed;
-            bottom: 80px;
-            right: 20px;
-            z-index: 950;
-            border: none;
-            border-radius: 28px;
-            padding: 12px 20px;
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-color-light) 100%);
-            color: white;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            box-shadow: 0 8px 24px rgba(26, 31, 113, 0.25), 0 4px 12px rgba(26, 31, 113, 0.15);
-            transition: var(--transition-medium);
-        }
-
-        #help-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 32px rgba(26, 31, 113, 0.3), 0 6px 16px rgba(26, 31, 113, 0.2);
-        }
-
-        /* Contenedor para el chat */
-        .tawkto-container {
-            position: fixed;
-            z-index: 1200;
-            bottom: 20px;
-            right: 20px;
-            visibility: hidden;
-            display: none;
-        }
     </style>
   <link rel="stylesheet" href="responsive.css">
 </head>
@@ -3790,30 +3757,6 @@ const bankList = [...(BANK_DATA.NACIONAL || []), ...(BANK_DATA.INTERNACIONAL || 
         }
     });
 </script>
-    <div id="tawkto-container" class="tawkto-container"></div>
-    <button id="help-button" aria-label="Ayuda"><i class="fas fa-headset"></i> Ayuda</button>
-    <script>
-    let tawkLoaded = false;
-    function loadTawkChat(){
-        if (tawkLoaded){ if (window.Tawk_API) Tawk_API.maximize(); return; }
-        var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-        Tawk_API.onLoad = function(){
-            const container = document.getElementById("tawkto-container");
-            if (container){ container.style.display = "block"; container.style.visibility = "visible"; }
-            if (window.Tawk_API) Tawk_API.maximize();
-        };
-        try{
-            var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-            s1.async=true;
-            s1.src="https://embed.tawk.to/67cca8c614b1ee191063c36a/default";
-            s1.charset="UTF-8";
-            s1.setAttribute("crossorigin","*");
-            s0.parentNode.insertBefore(s1,s0);
-            tawkLoaded = true;
-        }catch(e){ console.error("Error al cargar Tawk.to:", e); }
-    }
-    document.getElementById("help-button").addEventListener("click", loadTawkChat);
-    </script>
 
     <!-- Reproducir sonido de construcción al iniciar sesión -->
     <audio id="buildingSound" preload="auto" style="display:none;">
