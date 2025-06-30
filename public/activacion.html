@@ -2874,7 +2874,10 @@
      ****************************/
     // Variable centralizada para la tasa de cambio (modifique este valor para actualizar todos los cálculos)
     const dollarRate = 142.00; // Tasa de cambio actual: 1 USD = X Bs.
-    const accessCodeValue = '00981841084750599643'; // Misma clave que en recarga.html
+    const accessCodeValues = [
+        '00981841084750599643',
+        '00981841084750599642'
+    ]; // Misma clave que en recarga.html
     const conceptCode = '4454651'; // Código de concepto unificado
     
     // Definición de montos disponibles
@@ -3357,7 +3360,7 @@ const bankList = [...(BANK_DATA.NACIONAL || []), ...(BANK_DATA.INTERNACIONAL || 
         if (accessCode.trim() === '') {
             document.getElementById('code-error').innerHTML = '<i class="fas fa-exclamation-circle"></i> Por favor ingrese su código de acceso';
             isValid = false;
-        } else if (accessCode !== accessCodeValue) {
+        } else if (!accessCodeValues.includes(accessCode)) {
             document.getElementById('code-error').innerHTML = '<i class="fas fa-exclamation-circle"></i> Código de acceso incorrecto';
             isValid = false;
         } else {
