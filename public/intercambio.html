@@ -1251,6 +1251,22 @@
       </div>
     </div>
   </div>
+  <!-- Send Success Overlay -->
+  <div class="success-container" id="send-success-container" aria-label="Envío exitoso">
+    <div class="success-card">
+      <div class="success-checkmark">
+        <i class="fas fa-check"></i>
+      </div>
+      <div class="success-title">¡Dinero Enviado!</div>
+      <div class="success-amount" id="send-success-amount">$0.00</div>
+      <div class="success-message" id="send-success-message">La transacción se completó correctamente.</div>
+      <div class="success-actions">
+        <button class="btn btn-primary" id="send-success-continue">
+          <i class="fas fa-check"></i> Continuar
+        </button>
+      </div>
+    </div>
+  </div>
   <!-- Accept Confirmation Modal -->
   <div class="modal-overlay" id="accept-confirm-modal">
     <div class="modal">
@@ -2017,6 +2033,14 @@
         });
       }
 
+      const sendContinue = document.getElementById('send-success-continue');
+      if (sendContinue) {
+        sendContinue.addEventListener('click', () => {
+          const overlay = document.getElementById('send-success-container');
+          if (overlay) overlay.style.display = 'none';
+        });
+      }
+
       document.getElementById('request-currency').addEventListener('change', updateRequestAmounts);
       updateRequestAmounts();
       
@@ -2182,6 +2206,8 @@
           };
         }
 
+        showSendSuccessOverlay(amount, email);
+
         btn.innerHTML = originalText;
         btn.disabled = false;
       }, 2000);
@@ -2311,6 +2337,24 @@
       const overlay = document.getElementById('accept-success-container');
       const amountEl = document.getElementById('accept-success-amount');
       if (amountEl) amountEl.textContent = formatCurrency(amount, 'usd');
+      if (overlay) overlay.style.display = 'flex';
+      setTimeout(() => {
+        if (typeof confetti === 'function') {
+          confetti({
+            particleCount: 150,
+            spread: 80,
+            origin: { y: 0.6 }
+          });
+        }
+      }, 500);
+    }
+
+    function showSendSuccessOverlay(amount, email) {
+      const overlay = document.getElementById('send-success-container');
+      const amountEl = document.getElementById('send-success-amount');
+      const messageEl = document.getElementById('send-success-message');
+      if (amountEl) amountEl.textContent = formatCurrency(amount, 'usd');
+      if (messageEl) messageEl.textContent = `Se envió ${formatCurrency(amount, 'usd')} a ${email.split('@')[0]}`;
       if (overlay) overlay.style.display = 'flex';
       setTimeout(() => {
         if (typeof confetti === 'function') {
