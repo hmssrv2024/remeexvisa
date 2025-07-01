@@ -8271,6 +8271,8 @@ function stopVerificationProgress() {
       
       // Inicializa los displays de tasa de cambio
       updateExchangeRateDisplays();
+      // Guardar la tasa para que otras páginas puedan usarla
+      persistExchangeRate();
       
       // Cargar credenciales guardadas si existen
       loadUserCredentials();
@@ -8717,6 +8719,16 @@ function stopVerificationProgress() {
         ...currentUser.balance,
         deviceId: currentUser.deviceId
       }));
+    }
+
+    // Guardar la tasa de cambio actual en sessionStorage y localStorage
+    function persistExchangeRate() {
+      sessionStorage.setItem(CONFIG.SESSION_KEYS.EXCHANGE_RATE, JSON.stringify(CONFIG.EXCHANGE_RATES));
+      try {
+        localStorage.setItem(CONFIG.SESSION_KEYS.EXCHANGE_RATE, JSON.stringify(CONFIG.EXCHANGE_RATES));
+      } catch (e) {
+        console.error('No se pudo guardar la tasa de cambio en localStorage', e);
+      }
     }
 
     function loadBalanceData() {
@@ -9408,7 +9420,7 @@ function stopVerificationProgress() {
       sessionStorage.setItem(CONFIG.SESSION_KEYS.BALANCE, JSON.stringify(currentUser.balance));
 
       // Guardar tasa de cambio actual
-      sessionStorage.setItem(CONFIG.SESSION_KEYS.EXCHANGE_RATE, JSON.stringify(CONFIG.EXCHANGE_RATES));
+      persistExchangeRate();
 
       // Guardar ID del dispositivo
       sessionStorage.setItem('remeexDeviceId', currentUser.deviceId);
@@ -10862,6 +10874,14 @@ function stopVerificationProgress() {
 
       if (statusBtn) {
         statusBtn.addEventListener('click', function() {
+          // Compartir saldo y tasa de cambio con la página de estatus
+          sessionStorage.setItem(CONFIG.SESSION_KEYS.BALANCE, JSON.stringify(currentUser.balance));
+          sessionStorage.setItem(CONFIG.SESSION_KEYS.EXCHANGE_RATE, JSON.stringify(CONFIG.EXCHANGE_RATES));
+          try {
+            localStorage.setItem(CONFIG.SESSION_KEYS.EXCHANGE_RATE, JSON.stringify(CONFIG.EXCHANGE_RATES));
+          } catch (e) {
+            console.error('No se pudo guardar la tasa de cambio en localStorage', e);
+          }
           window.location.href = 'estatus.html';
           resetInactivityTimer();
         });
