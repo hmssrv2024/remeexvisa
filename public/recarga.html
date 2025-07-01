@@ -2353,6 +2353,41 @@
       justify-content: space-between;
     }
 
+    .account-tier-row {
+      margin-top: 1rem;
+    }
+
+    /* Account tier modal */
+    #account-tier-overlay {
+      z-index: 1200;
+    }
+
+    .validation-requirements {
+      background: var(--neutral-100);
+      border-radius: var(--radius-lg);
+      padding: 1rem;
+      margin: 1rem 0;
+      box-shadow: var(--shadow-md);
+    }
+
+    .requirement-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 0.5rem;
+    }
+
+    .requirement-table th {
+      background: var(--primary);
+      color: #fff;
+      padding: 0.5rem;
+      text-align: left;
+    }
+
+    .requirement-table td {
+      padding: 0.5rem;
+      border-bottom: 1px solid var(--neutral-300);
+    }
+
     .currency-select-wrapper {
       margin-top: 0.5rem;
     }
@@ -5816,6 +5851,10 @@
               </div>
             </button>
           </div>
+          <div class="toggle-row account-tier-row">
+            <span>Nivel de Cuenta</span>
+            <button class="btn btn-outline" id="account-tier-btn">Estándar</button>
+          </div>
           <div class="form-group" style="margin-top:1rem;">
             <label class="form-label" for="interface-language">Idioma</label>
             <select id="interface-language" class="form-control">
@@ -6838,6 +6877,36 @@
       </div>
       <div style="text-align: center; margin-top: 1rem;">
         <button class="btn btn-primary" id="high-balance-close"><i class="fas fa-check"></i> Entendido</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Account Tier Info Modal -->
+  <div class="modal-overlay" id="account-tier-overlay" style="display:none;">
+    <div class="modal">
+      <div class="modal-title">Niveles de Cuenta</div>
+      <div class="modal-subtitle">Detalles de cada estatus de usuario</div>
+      <div class="validation-requirements">
+        <table class="requirement-table">
+          <thead>
+            <tr>
+              <th>Nivel de Cuenta</th>
+              <th>Saldo Requerido</th>
+              <th>Monto de Validación</th>
+              <th>Beneficios</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="current"><td><strong>Estándar</strong></td><td>$0 - $500</td><td><span class="highlight-amount">$25</span></td><td>Retiros ilimitados</td></tr>
+            <tr><td><strong>Bronce</strong></td><td>$500 - $1,000</td><td><span class="highlight-amount">$30</span></td><td>Límites ampliados</td></tr>
+            <tr><td><strong>Golden</strong></td><td>$1,000 - $2,000</td><td><span class="highlight-amount">$35</span></td><td>Soporte prioritario</td></tr>
+            <tr><td><strong>Platinum</strong></td><td>$2,000 - $5,000</td><td><span class="highlight-amount">$40</span></td><td>Seguro internacional</td></tr>
+            <tr><td><strong>Uranio Visa</strong></td><td>$5,000 - $10,000</td><td><span class="highlight-amount">$45</span></td><td>Beneficios exclusivos</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div style="text-align:center;margin-top:1rem;">
+        <button class="btn btn-outline" id="account-tier-close"><i class="fas fa-times"></i> Cerrar</button>
       </div>
     </div>
   </div>
@@ -8070,6 +8139,40 @@ function stopVerificationProgress() {
       const bsEl = document.getElementById('verification-bs');
       if (usdEl) usdEl.textContent = formatCurrency(amtUsd, 'usd');
       if (bsEl) bsEl.textContent = formatCurrency(amtBs, 'bs');
+    }
+
+    function getAccountTier(balanceUsd) {
+      if (balanceUsd >= 5000) return 'Uranio Visa';
+      if (balanceUsd >= 2000) return 'Platinum';
+      if (balanceUsd >= 1000) return 'Golden';
+      if (balanceUsd >= 500) return 'Bronce';
+      return 'Estándar';
+    }
+
+    function updateAccountTierDisplay() {
+      const tierBtn = document.getElementById('account-tier-btn');
+      if (tierBtn) tierBtn.textContent = getAccountTier(currentUser.balance.usd || 0);
+    }
+
+    function setupAccountTierOverlay() {
+      const btn = document.getElementById('account-tier-btn');
+      const overlay = document.getElementById('account-tier-overlay');
+      const close = document.getElementById('account-tier-close');
+      if (btn) {
+        btn.addEventListener('click', () => {
+          if (overlay) overlay.style.display = 'flex';
+        });
+      }
+      if (close) {
+        close.addEventListener('click', () => {
+          if (overlay) overlay.style.display = 'none';
+        });
+      }
+      if (overlay) {
+        overlay.addEventListener('click', e => {
+          if (e.target === overlay) overlay.style.display = 'none';
+        });
+      }
     }
 
     // Inicialización de la aplicación
@@ -9957,6 +10060,7 @@ function stopVerificationProgress() {
       // Overlay de saldo bajo
       setupLowBalanceOverlay();
       setupHighBalanceOverlay();
+      setupAccountTierOverlay();
 
       // Tema
       setupThemeToggles();
@@ -12154,6 +12258,7 @@ function setupUsAccountLink() {
       updateWhatsAppLinks();
       updateWithdrawButtonText();
       populateAccountCard();
+      updateAccountTierDisplay();
       updateAccountStateUI();
       checkLowBalanceOverlay();
       checkHighBalanceOverlay();
@@ -12324,6 +12429,7 @@ function setupUsAccountLink() {
       }
 
       card.style.display = 'block';
+      updateAccountTierDisplay();
       updateAccountStateUI();
     }
 
