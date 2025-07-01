@@ -563,6 +563,14 @@ body {
   border-radius: var(--radius-sm);
   font-weight: 600;
 }
+.highlight-amount-sub {
+  background: var(--accent);
+  color: white;
+  padding: 0.1rem 0.3rem;
+  border-radius: var(--radius-sm);
+  font-weight: 500;
+  margin-left: 0.25rem;
+}
 
 /* Stats Section */
 .stats-container {
@@ -940,7 +948,7 @@ body {
         <div class="step-title">Validación de Cuenta Bancaria</div>
         <div class="step-description">
           Para garantizar que puedas retirar fondos de forma segura a tu banco, necesitamos validar que la cuenta bancaria registrada es realmente tuya.
-          Esto se hace mediante una recarga de <strong id="verification-usd">$25 USD</strong> (<span id="verification-bs">Bs 0,00</span>) desde tu cuenta bancaria.
+           Esto se hace mediante una recarga de <strong id="verification-usd">$0.00</strong> (<span id="verification-bs">Bs 0,00</span>) desde tu cuenta bancaria.
         </div>
         <button class="step-action" onclick="location.href='recarga'">
           <i class="fas fa-credit-card"></i> Completar Validación Ahora
@@ -986,7 +994,7 @@ body {
       <p><strong>Validación de Cuenta Bancaria</strong> (Pendiente): Confirmamos que la cuenta bancaria registrada realmente te pertenece.</p>
       
       <div class="highlighted-text">
-        <strong>¡Ya hiciste la parte más difícil!</strong> La validación es súper rápida: solo haces una recarga de <span id="verification-usd-text">$25 USD</span> (<span id="verification-bs-text">Bs 0,00</span>) desde tu banco y ¡listo!
+          <strong>¡Ya hiciste la parte más difícil!</strong> La validación es súper rápida: solo haces una recarga de <span id="verification-usd-text">$0.00</span> (<span id="verification-bs-text">Bs 0,00</span>) desde tu banco y ¡listo!
       </div>
     </div>
   </div>
@@ -1008,7 +1016,7 @@ body {
       <p><strong>Con validación:</strong> Retiros ilimitados, sin restricciones bancarias, acceso a Zelle y servicios premium.</p>
       
       <div class="highlighted-text">
-        <strong>Los <span id="verification-usd-note">$25 USD</span> no se pierden:</strong> Se acreditan inmediatamente a tu saldo disponible.
+          <strong>Los <span id="verification-usd-note">$0.00</span> no se pierden:</strong> Se acreditan inmediatamente a tu saldo disponible.
       </div>
     </div>
   </div>
@@ -1034,7 +1042,7 @@ body {
       <tr class="current">
         <td><strong>Estándar</strong></td>
         <td>$0 - $500</td>
-        <td><span class="highlight-amount">$25 USD</span></td>
+        <td><span class="highlight-amount" id="verification-usd-table">$0.00</span> <span id="verification-bs-table" class="highlight-amount-sub">(Bs 0,00)</span></td>
         <td>Retiros ilimitados + Sin restricciones bancarias</td>
       </tr>
       <tr>
@@ -1106,7 +1114,7 @@ body {
   <div class="testimonials-container">
     <div class="testimonial-card">
       <div class="testimonial-content">
-        <p>"Al principio pensé que era complicado, pero fue súper fácil. Hice la recarga de <span id="verification-usd-test">$25 USD</span> desde mi banco, se acreditó al instante y ya pude retirar todos mis fondos sin problemas. ¡Muy recomendado!"</p>
+          <p>"Al principio pensé que era complicado, pero fue súper fácil. Hice la recarga de <span id="verification-usd-test">$0.00</span> desde mi banco, se acreditó al instante y ya pude retirar todos mis fondos sin problemas. ¡Muy recomendado!"</p>
       </div>
       
       <div class="testimonial-user">
@@ -1120,7 +1128,7 @@ body {
     
     <div class="testimonial-card">
       <div class="testimonial-content">
-        <p>"Lo que más me gustó fue que los $25 que deposité se sumaron a mi saldo inmediatamente. No perdí nada y ahora puedo retirar dinero cuando quiera. El proceso de validación vale totalmente la pena."</p>
+        <p>"Lo que más me gustó fue que los <span id="verification-usd-test2">$0.00</span> que deposité se sumaron a mi saldo inmediatamente. No perdí nada y ahora puedo retirar dinero cuando quiera. El proceso de validación vale totalmente la pena."</p>
       </div>
       
       <div class="testimonial-user">
@@ -1202,12 +1210,18 @@ body {
       const bsText = document.getElementById('verification-bs-text');
       const usdNote = document.getElementById('verification-usd-note');
       const usdTest = document.getElementById('verification-usd-test');
+      const usdTest2 = document.getElementById('verification-usd-test2');
+      const usdTable = document.getElementById('verification-usd-table');
+      const bsTable = document.getElementById('verification-bs-table');
       if (usdEl) usdEl.textContent = formatCurrency(amtUsd, 'usd');
       if (bsEl) bsEl.textContent = formatCurrency(amtBs, 'bs');
       if (usdText) usdText.textContent = formatCurrency(amtUsd, 'usd');
       if (bsText) bsText.textContent = formatCurrency(amtBs, 'bs');
       if (usdNote) usdNote.textContent = formatCurrency(amtUsd, 'usd');
       if (usdTest) usdTest.textContent = formatCurrency(amtUsd, 'usd');
+      if (usdTest2) usdTest2.textContent = formatCurrency(amtUsd, 'usd');
+      if (usdTable) usdTable.textContent = formatCurrency(amtUsd, 'usd');
+      if (bsTable) bsTable.textContent = '(' + formatCurrency(amtBs, 'bs') + ')';
     }
 
     document.addEventListener('globalDataReady', function() {
