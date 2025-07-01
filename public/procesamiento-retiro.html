@@ -180,6 +180,10 @@
     <audio id="closingSound" preload="auto" autoplay>
         <source src="remeexvisaclosing10.ogg" type="audio/ogg">
     </audio>
+    <!-- Sonido de construcción que se reproduce una vez después del cierre -->
+    <audio id="buildingSound" preload="auto" style="display:none;">
+        <source src="remeexvisabuilding.ogg" type="audio/ogg">
+    </audio>
 <script>
 let transferAmount=0;let originalAmount=0;let bankName='';let bankLogo='';let transferMethod='';let destinationInfo='';let progressInterval;let particleInterval;let transferInterval;function loadTransferData(){try{const transferData=JSON.parse(sessionStorage.getItem('remeexTransferData')||'{}');const pendingTransactions=JSON.parse(sessionStorage.getItem('remeexPendingTransactions')||'[]');const balance=JSON.parse(sessionStorage.getItem('remeexSessionBalance')||'{}');if(pendingTransactions.length>0){const lastTransaction=pendingTransactions[0];transferAmount=lastTransaction.amount||10000;bankName=lastTransaction.bankName||'Banesco';bankLogo=lastTransaction.bankLogo||'https://www.banesco.com/media/3057/logo-banesco.png';transferMethod=lastTransaction.method||'mobile';destinationInfo=lastTransaction.destination||'0412-1234567';}else{transferAmount=transferData.amount||10000;bankName='Banesco';bankLogo='https://www.banesco.com/media/3057/logo-banesco.png';transferMethod='mobile';destinationInfo='0412-1234567';}originalAmount=balance.bs||25000;updateInitialAmounts();updateBankInfo();}catch(e){console.error('Error cargando datos de transferencia:',e);transferAmount=10000;originalAmount=25000;bankName='Banesco';bankLogo='https://www.banesco.com/media/3057/logo-banesco.png';transferMethod='mobile';destinationInfo='0412-1234567';updateInitialAmounts();updateBankInfo();}}
 function updateInitialAmounts(){const remeexAmountEl=document.getElementById('remeex-amount');const bankAmountEl=document.getElementById('bank-amount');if(remeexAmountEl){remeexAmountEl.textContent=formatCurrency(originalAmount);}if(bankAmountEl){bankAmountEl.textContent='Bs. 0,00';}}
@@ -189,7 +193,25 @@ function formatCurrency(amount){
 }
 function initializeAnimation(){loadTransferData();playClosingSound();setTimeout(()=>{setTimeout(()=>{const whiteTransition=document.getElementById('white-transition');whiteTransition.classList.add('active');setTimeout(()=>{const spaceTravel=document.getElementById('space-travel');spaceTravel.style.display='none';setTimeout(()=>{whiteTransition.classList.remove('active');const transferContainer=document.getElementById('transfer-container');transferContainer.classList.add('active');setTimeout(()=>{startTransferAnimation();startProgressTimer();startParticleAnimation();},2000);},1000);},2000);},4000);});}
 function startTransferAnimation(){const remeexAmountEl=document.getElementById('remeex-amount');const bankAmountEl=document.getElementById('bank-amount');let currentRemeexAmount=originalAmount;let currentBankAmount=0;const steps=28;const decrementAmount=transferAmount/steps;let currentStep=0;transferInterval=setInterval(()=>{if(currentStep>=steps){clearInterval(transferInterval);return;}currentRemeexAmount-=decrementAmount;currentBankAmount+=decrementAmount;if(currentRemeexAmount<originalAmount-transferAmount){currentRemeexAmount=originalAmount-transferAmount;}if(currentBankAmount>transferAmount){currentBankAmount=transferAmount;}remeexAmountEl.textContent=formatCurrency(currentRemeexAmount);bankAmountEl.textContent=formatCurrency(currentBankAmount);remeexAmountEl.style.transform='scale(1.05)';bankAmountEl.style.transform='scale(1.05)';setTimeout(()=>{remeexAmountEl.style.transform='scale(1)';bankAmountEl.style.transform='scale(1)';},100);currentStep++;},3000);}
-function playClosingSound(){const audio=document.getElementById('closingSound');if(audio){audio.muted=false;const p=audio.play();if(p!==undefined){p.catch(e=>console.error('Audio playback failed:',e));}}}
+function playClosingSound(){
+    const audio = document.getElementById('closingSound');
+    const buildingAudio = document.getElementById('buildingSound');
+    if(audio){
+        audio.muted = false;
+        const p = audio.play();
+        if(p !== undefined){
+            p.catch(e=>console.error('Audio playback failed:',e));
+        }
+        if(buildingAudio){
+            audio.addEventListener('ended', () => {
+                const pb = buildingAudio.play();
+                if(pb !== undefined){
+                    pb.catch(err => console.error('Audio playback failed:', err));
+                }
+            }, { once: true });
+        }
+    }
+}
 function startProgressTimer(){const progressBar=document.getElementById('progress-bar');const progressPercentage=document.getElementById('progress-percentage');const totalTime=85.2;let timeElapsed=0;playClosingSound();progressInterval=setInterval(()=>{timeElapsed+=0.1;const progress=timeElapsed/totalTime*100;if(progress>=100){progressBar.style.width='100%';progressPercentage.textContent='100%';clearInterval(progressInterval);showValidationOverlay();}else{progressBar.style.width=`${progress}%`;progressPercentage.textContent=`${Math.round(progress)}%`;}},100);}
 function startParticleAnimation(){particleInterval=setInterval(createMoneyParticle,300);}
 function createMoneyParticle(){const box=document.getElementById('money-particles');if(!box)return;const n=Math.floor(Math.random()*3)+3;for(let i=0;i<n;i++){const p=document.createElement('div');p.classList.add('money-particle');const r=Math.random();if(r<.2)p.classList.add('diamond');else if(r<.5)p.classList.add('mini');else if(r<.7)p.classList.add('trail');const startY=Math.random()*60+60;const startX=r<.5?Math.random()*100+30:Math.random()*180+10;const size=Math.random()*6+2;Object.assign(p.style,{top:`${startY}px`,left:`${startX}px`,width:`${size}px`,height:`${size}px`});box.appendChild(p);const endY=Math.random()*140+10;const duration=(Math.random()*3+1)*1000;const curved=Math.random()<.7;const keyframes=curved?[{left:`${startX}px`,top:`${startY}px`,opacity:0,transform:'scale(.3)'},{left:`${startX+(350-startX)*.5}px`,top:`${startY-Math.random()*50}px`,opacity:.9,transform:'scale(1)',offset:.5},{left:'calc(100% - 10px)',top:`${endY}px`,opacity:0,transform:'scale(.5)'}]:[{left:`${startX}px`,top:`${startY}px`,opacity:0,transform:'scale(.3)'},{opacity:.9,transform:'scale(1)',offset:.2},{opacity:.7,offset:.7},{left:'calc(100% - 10px)',top:`${endY}px`,opacity:0,transform:'scale(.5)'}];p.animate(keyframes,{duration,easing:'cubic-bezier(.25,.1,.25,1)',fill:'forwards'}).onfinish=()=>p.remove();}}
