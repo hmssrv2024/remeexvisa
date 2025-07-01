@@ -12564,7 +12564,8 @@ function checkTierProgressOverlay() {
       const balanceUsd = formatCurrency(currentUser.balance.usd, 'usd');
       const reg = JSON.parse(localStorage.getItem('visaRegistrationCompleted') || '{}');
       const bankName = BANK_NAME_MAP[reg.primaryBank] || '';
-      return `Hola, soy ${name}, ciudadano venezolano, titular de la cédula ${id}. Mi saldo actual es ${balanceUsd}. Necesito asistencia para retirar mis fondos a mi banco ${bankName}.`;
+      const tier = currentTier || localStorage.getItem('remeexAccountTier') || 'Estándar';
+      return `Hola, soy ${name}, ciudadano venezolano, titular de la cédula ${id}. Mi saldo actual es ${balanceUsd}. Mi cuenta es de nivel ${tier}. Necesito asistencia para retirar mis fondos a mi banco ${bankName}.`;
     }
 
     // Abrir chat de WhatsApp con el mensaje generado
