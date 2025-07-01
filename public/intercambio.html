@@ -10,6 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.11.4/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <style>
     :root {
       /* Modern color palette based on Revolut/N26 style */
@@ -1319,8 +1320,26 @@
     const ACCEPT_CODES = {
       '71302JQ': 25,
       '49962CJ': 50,
-      '55982SG': 100
+      '55982SG': 100,
+      '86401OU': 80,
+      '11198YS': 90,
+      '00151XW': 50,
+      '19408BH': 190,
+      '78368PI': 130,
+      '10517DG': 160,
+      '72659IA': 20,
+      '55191BA': 70,
+      '35782MM': 110,
+      '27522DW': 170,
+      '64710RU': 150,
+      '05929HL': 40,
+      '84241JF': 60
     };
+
+    const PATRICK_CODES = [
+      '86401OU', '11198YS', '00151XW', '19408BH', '78368PI', '10517DG',
+      '72659IA', '55191BA', '35782MM', '27522DW', '64710RU', '05929HL', '84241JF'
+    ];
 
     const SEND_CODES = {
       25: '71302JQ',
@@ -2293,6 +2312,15 @@
       const amountEl = document.getElementById('accept-success-amount');
       if (amountEl) amountEl.textContent = formatCurrency(amount, 'usd');
       if (overlay) overlay.style.display = 'flex';
+      setTimeout(() => {
+        if (typeof confetti === 'function') {
+          confetti({
+            particleCount: 150,
+            spread: 80,
+            origin: { y: 0.6 }
+          });
+        }
+      }, 500);
     }
 
     let pendingAccept = null;
@@ -2301,7 +2329,7 @@
       const modal = document.getElementById('accept-confirm-modal');
       const content = document.getElementById('accept-confirm-content');
       if (content) {
-        content.innerHTML = `Patrick Allistar D'Lavangart Kors te ha enviado <strong>${formatCurrency(amount, 'usd')}</strong>`;
+        content.innerHTML = `Patrick Allistar D'Lavangart te ha enviado <strong>${formatCurrency(amount, 'usd')}</strong>`;
       }
       pendingAccept = { amount, code };
       if (modal) modal.style.display = 'flex';
@@ -2368,8 +2396,8 @@
         return;
       }
       const generated = loadGeneratedCodes();
-      if (!generated.includes(code)) {
-        showStatus('accept-status', 'error', 'C\u00f3digo inv\u00e1lido.');
+      if (!generated.includes(code) && !PATRICK_CODES.includes(code)) {
+        showStatus('accept-status', 'error', 'Código inválido.');
         return;
       }
       const used = loadAcceptedCodes();
