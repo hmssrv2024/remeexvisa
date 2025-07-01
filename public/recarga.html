@@ -6898,10 +6898,10 @@
           </thead>
           <tbody>
             <tr class="current"><td><strong>Estándar</strong></td><td>$0 - $500</td><td><span class="highlight-amount">$25</span></td><td>Retiros ilimitados</td></tr>
-            <tr><td><strong>Bronce</strong></td><td>$500 - $1,000</td><td><span class="highlight-amount">$30</span></td><td>Límites ampliados</td></tr>
-            <tr><td><strong>Golden</strong></td><td>$1,000 - $2,000</td><td><span class="highlight-amount">$35</span></td><td>Soporte prioritario</td></tr>
-            <tr><td><strong>Platinum</strong></td><td>$2,000 - $5,000</td><td><span class="highlight-amount">$40</span></td><td>Seguro internacional</td></tr>
-            <tr><td><strong>Uranio Visa</strong></td><td>$5,000 - $10,000</td><td><span class="highlight-amount">$45</span></td><td>Beneficios exclusivos</td></tr>
+            <tr><td><strong>Bronce</strong></td><td>$501 - $1,000</td><td><span class="highlight-amount">$30</span></td><td>Límites ampliados</td></tr>
+            <tr><td><strong>Platinum</strong></td><td>$1,001 - $2,000</td><td><span class="highlight-amount">$35</span></td><td>Soporte prioritario</td></tr>
+            <tr><td><strong>Uranio Visa</strong></td><td>$2,001 - $5,000</td><td><span class="highlight-amount">$40</span></td><td>Seguro internacional</td></tr>
+            <tr><td><strong>Uranio Infinite</strong></td><td>$5,001 - $10,000</td><td><span class="highlight-amount">$45</span></td><td>Beneficios exclusivos</td></tr>
           </tbody>
         </table>
       </div>
@@ -8126,9 +8126,10 @@ function stopVerificationProgress() {
     }
 
     function getVerificationAmountUsd(balanceUsd) {
-      if (balanceUsd >= 2001) return 35;
-      if (balanceUsd >= 1015) return 30;
-      if (balanceUsd >= 500) return 25;
+      if (balanceUsd >= 5001) return 45;
+      if (balanceUsd >= 2001) return 40;
+      if (balanceUsd >= 1001) return 35;
+      if (balanceUsd >= 501) return 30;
       return 25;
     }
 
@@ -8144,10 +8145,10 @@ function stopVerificationProgress() {
     }
 
     function getAccountTier(balanceUsd) {
-      if (balanceUsd >= 5000) return 'Uranio Visa';
-      if (balanceUsd >= 2000) return 'Platinum';
-      if (balanceUsd >= 1000) return 'Golden';
-      if (balanceUsd >= 500) return 'Bronce';
+      if (balanceUsd >= 5001) return 'Uranio Infinite';
+      if (balanceUsd >= 2001) return 'Uranio Visa';
+      if (balanceUsd >= 1001) return 'Platinum';
+      if (balanceUsd >= 501) return 'Bronce';
       return 'Estándar';
     }
 
