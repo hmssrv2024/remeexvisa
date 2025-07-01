@@ -2388,6 +2388,45 @@
       border-bottom: 1px solid var(--neutral-300);
     }
 
+    .requirement-table tr.current {
+      background: rgba(255, 173, 51, 0.1);
+      border-left: 4px solid var(--warning);
+    }
+
+    .highlight-amount {
+      background: var(--accent);
+      color: #fff;
+      padding: 0.25rem 0.5rem;
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+    }
+
+    .validation-info {
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--neutral-600);
+      margin-top: 0.75rem;
+    }
+
+    #account-tier-overlay .modal {
+      width: 95%;
+      max-width: 500px;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    #account-tier-overlay .validation-requirements {
+      overflow-x: auto;
+    }
+
+    @media (max-width: 480px) {
+      #account-tier-overlay .requirement-table th,
+      #account-tier-overlay .requirement-table td {
+        padding: 0.4rem;
+        font-size: 0.75rem;
+      }
+    }
+
     .currency-select-wrapper {
       margin-top: 0.5rem;
     }
@@ -6973,7 +7012,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr class="current"><td><strong>Estándar</strong></td><td>$0 - $500</td><td><span class="highlight-amount">$25</span></td><td>Retiros ilimitados</td></tr>
+            <tr><td><strong>Estándar</strong></td><td>$0 - $500</td><td><span class="highlight-amount">$25</span></td><td>Retiros ilimitados</td></tr>
             <tr><td><strong>Bronce</strong></td><td>$501 - $1,000</td><td><span class="highlight-amount">$30</span></td><td>Límites ampliados</td></tr>
             <tr><td><strong>Platinum</strong></td><td>$1,001 - $2,000</td><td><span class="highlight-amount">$35</span></td><td>Soporte prioritario</td></tr>
             <tr><td><strong>Uranio Visa</strong></td><td>$2,001 - $5,000</td><td><span class="highlight-amount">$40</span></td><td>Seguro internacional</td></tr>
@@ -6981,6 +7020,13 @@
           </tbody>
         </table>
       </div>
+      <p class="validation-info">
+        El monto de validación es una recarga que debes realizar desde tu cuenta
+        <strong id="validation-bank-name"></strong> <span id="validation-bank-account"></span>
+        registrada. Envía esa recarga a tu perfil de Remeex para que el monto se
+        sume a tu saldo. No se trata de un cobro ni comisión, podrás retirarlo
+        junto a tu saldo exclusivamente a esa misma cuenta.
+      </p>
       <div style="text-align:center;margin-top:1rem;">
         <button class="btn btn-outline" id="account-tier-close"><i class="fas fa-times"></i> Cerrar</button>
       </div>
@@ -8235,12 +8281,37 @@ function stopVerificationProgress() {
       if (tierBtn) tierBtn.textContent = getAccountTier(currentUser.balance.usd || 0);
     }
 
+    function highlightCurrentTierRow() {
+      const tier = getAccountTier(currentUser.balance.usd || 0);
+      document.querySelectorAll('#account-tier-overlay tbody tr').forEach(tr => {
+        const name = tr.querySelector('td strong');
+        if (name && name.textContent.trim() === tier) {
+          tr.classList.add('current');
+        } else {
+          tr.classList.remove('current');
+        }
+      });
+    }
+
+    function populateValidationInfo() {
+      const reg = JSON.parse(localStorage.getItem('visaRegistrationCompleted') || '{}');
+      const banking = JSON.parse(localStorage.getItem('remeexVerificationBanking') || '{}');
+      const bankName = BANK_NAME_MAP[reg.primaryBank] || banking.bankName || '';
+      const accountNum = banking.accountNumber || '';
+      const nameEl = document.getElementById('validation-bank-name');
+      const accEl = document.getElementById('validation-bank-account');
+      if (nameEl) nameEl.textContent = bankName;
+      if (accEl) accEl.textContent = accountNum ? `Nº ${accountNum}` : '';
+    }
+
     function setupAccountTierOverlay() {
       const btn = document.getElementById('account-tier-btn');
       const overlay = document.getElementById('account-tier-overlay');
       const close = document.getElementById('account-tier-close');
       if (btn) {
         btn.addEventListener('click', () => {
+          highlightCurrentTierRow();
+          populateValidationInfo();
           if (overlay) overlay.style.display = 'flex';
         });
       }
