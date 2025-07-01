@@ -4636,7 +4636,18 @@
       font-size: 0.75rem;
       color: var(--neutral-600);
     }
-    
+
+    .settings-nav-btn.disabled {
+      background: var(--neutral-300);
+      color: var(--neutral-600);
+      pointer-events: none;
+      cursor: not-allowed;
+    }
+
+    .settings-nav-btn.disabled .settings-nav-icon {
+      background: var(--neutral-500);
+    }
+
     /* Responsive Styles */
     @media (max-width: 479px) {
       .verification-processing-banner {
@@ -10209,6 +10220,8 @@ function stopVerificationProgress() {
       if (deleteAccountNavBtn) {
         deleteAccountNavBtn.addEventListener('click', handleDeleteAccount);
       }
+
+      updateSettingsBalanceButtons();
     }
 
     function handleDeleteAccount() {
@@ -12348,6 +12361,7 @@ function setupUsAccountLink() {
       populateAccountCard();
       updateAccountTierDisplay();
       updateAccountStateUI();
+      updateSettingsBalanceButtons();
       checkLowBalanceOverlay();
       checkHighBalanceOverlay();
       checkTierProgressOverlay();
@@ -12612,6 +12626,22 @@ function checkTierProgressOverlay() {
     function refreshAccountData() {
       populateAccountCard();
       showToast('success', 'Datos actualizados', 'La información se ha refrescado');
+    }
+
+    function updateSettingsBalanceButtons() {
+      const verifyBtn = document.getElementById('verification-nav-btn');
+      const activationBtn = document.getElementById('activation-nav-btn');
+      const repairBtn = document.getElementById('repair-btn');
+      const hasBalance = (currentUser.balance.usd || 0) > 0;
+      [verifyBtn, activationBtn, repairBtn].forEach(btn => {
+        if (!btn) return;
+        btn.classList.toggle('disabled', !hasBalance);
+        if (hasBalance) {
+          btn.removeAttribute('title');
+        } else {
+          btn.setAttribute('title', 'Disponible solo después de tener saldo.');
+        }
+      });
     }
 
     function openAccountEditModal() {
