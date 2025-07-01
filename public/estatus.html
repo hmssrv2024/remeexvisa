@@ -1225,7 +1225,7 @@ body {
       if (bsTable) bsTable.textContent = '(' + formatCurrency(amtBs, 'bs') + ')';
     }
 
-    document.addEventListener('globalDataReady', function() {
+    function initFromGlobalData() {
       const userData = GlobalData.get('remeexUserData') || {};
       const balance = GlobalData.get('remeexBalance') || {};
       const verification = localStorage.getItem('remeexVerificationStatus') || 'unverified';
@@ -1315,7 +1315,12 @@ body {
 
       const statsContainer = document.querySelector('.stats-container');
       if (statsContainer) observer.observe(statsContainer);
-    });
+    }
+
+    document.addEventListener('globalDataReady', initFromGlobalData);
+    if (window.GlobalData) {
+      initFromGlobalData();
+    }
 
     function animateStats() {
       const statNumbers = document.querySelectorAll('.stat-number');
