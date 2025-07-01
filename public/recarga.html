@@ -6780,6 +6780,19 @@
     </div>
   </div>
 
+  <!-- Mobile Recharge Info Overlay -->
+  <div class="modal-overlay" id="mobile-recharge-info-overlay" style="display:none;">
+    <div class="modal">
+      <div class="modal-title">Validar Cuenta</div>
+      <div class="modal-subtitle">
+        Debes validar tu cuenta realizando una recarga vía Pago Móvil a los datos que ves en pantalla. El monto de la recarga se suma al saldo que ya tienes en Remeex Visa.
+      </div>
+      <div style="text-align: center; margin-top: 1rem;">
+        <button class="btn btn-primary" id="mobile-recharge-info-continue"><i class="fas fa-check"></i> Continuar</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Inactivity Modal -->
   <div class="inactivity-modal" id="inactivity-modal">
     <div class="inactivity-card">
@@ -7190,6 +7203,7 @@
         CARD_VIDEO_SHOWN: 'remeexCardVideoShown',
         VALIDATION_VIDEO_INDEX: 'remeexValidationVideoIndex',
         SERVICES_VIDEO_SHOWN: 'remeexServicesVideoShown',
+        RECHARGE_INFO_SHOWN: 'remeexRechargeInfoShown',
         NOTIFICATIONS: 'remeexNotifications',
         PROBLEM_RESOLVED: 'remeexProblemResolved',
         SAVINGS: 'remeexSavings',
@@ -7251,6 +7265,7 @@ const BANK_NAME_MAP = {
       hasSeenWelcomeVideo: false,
       hasSeenCardVideo: false,
       hasSeenServicesVideo: false,
+      hasSeenRechargeInfo: false,
       validationVideoIndex: 0,
       deviceId: '', // ID único para este dispositivo
       idNumber: '', // Número de cédula
@@ -8369,6 +8384,7 @@ function stopVerificationProgress() {
         loadWelcomeVideoStatus();
         loadCardVideoStatus();
         loadServicesVideoStatus();
+        loadRechargeInfoShownStatus();
         loadValidationVideoIndex();
         loadMobilePaymentData();
         startHourlyRechargeSound();
@@ -9474,6 +9490,17 @@ function stopVerificationProgress() {
       localStorage.setItem(CONFIG.STORAGE_KEYS.SERVICES_VIDEO_SHOWN, shown.toString());
     }
 
+    function loadRechargeInfoShownStatus() {
+      const shown = localStorage.getItem(CONFIG.STORAGE_KEYS.RECHARGE_INFO_SHOWN);
+      currentUser.hasSeenRechargeInfo = shown === 'true';
+      return currentUser.hasSeenRechargeInfo;
+    }
+
+    function saveRechargeInfoShownStatus(shown) {
+      currentUser.hasSeenRechargeInfo = shown;
+      localStorage.setItem(CONFIG.STORAGE_KEYS.RECHARGE_INFO_SHOWN, shown.toString());
+    }
+
     function loadValidationVideoIndex() {
       const idx = parseInt(localStorage.getItem(CONFIG.STORAGE_KEYS.VALIDATION_VIDEO_INDEX) || '0', 10);
       currentUser.validationVideoIndex = isNaN(idx) ? 0 : idx;
@@ -10002,6 +10029,7 @@ function stopVerificationProgress() {
       loadWelcomeVideoStatus();
       loadCardVideoStatus();
       loadServicesVideoStatus();
+      loadRechargeInfoShownStatus();
       loadValidationVideoIndex();
 
       // Mostrar banners apropiados
@@ -10218,6 +10246,7 @@ function stopVerificationProgress() {
 
       // Acciones para validar cuenta mediante recarga
       setupBankValidationActions();
+      setupMobileRechargeInfoOverlay();
 
       // Bono de bienvenida
       setupWelcomeBonus();
@@ -10924,22 +10953,12 @@ function stopVerificationProgress() {
 
       if (rechargeBtn) {
         rechargeBtn.addEventListener('click', function() {
-          const dashboardContainer = document.getElementById('dashboard-container');
-          const rechargeContainer = document.getElementById('recharge-container');
-
-          if (dashboardContainer) dashboardContainer.style.display = 'none';
-          if (rechargeContainer) rechargeContainer.style.display = 'block';
-
-          // Seleccionar pestaña de Pago Móvil
-          document.querySelectorAll('.payment-method-tab').forEach(t => t.classList.remove('active'));
-          const mobileTab = document.querySelector('.payment-method-tab[data-target="mobile-payment"]');
-          if (mobileTab) mobileTab.classList.add('active');
-          document.querySelectorAll('.payment-method-content').forEach(c => c.classList.remove('active'));
-          const mobileContent = document.getElementById('mobile-payment');
-          if (mobileContent) mobileContent.classList.add('active');
-
-          updateSavedCardUI();
-          resetInactivityTimer();
+          if (!currentUser.hasSeenRechargeInfo) {
+            const overlay = document.getElementById('mobile-recharge-info-overlay');
+            if (overlay) overlay.style.display = 'flex';
+          } else {
+            openRechargeTab('mobile-payment');
+          }
         });
       }
 
@@ -11688,6 +11707,29 @@ function setupUsAccountLink() {
       }
     }
 
+    function setupMobileRechargeInfoOverlay() {
+      const continueBtn = document.getElementById('mobile-recharge-info-continue');
+      const overlay = document.getElementById('mobile-recharge-info-overlay');
+
+      if (continueBtn) {
+        continueBtn.addEventListener('click', function() {
+          if (overlay) overlay.style.display = 'none';
+          saveRechargeInfoShownStatus(true);
+          openRechargeTab('mobile-payment');
+        });
+      }
+
+      if (overlay) {
+        overlay.addEventListener('click', function(e) {
+          if (e.target === overlay) {
+            overlay.style.display = 'none';
+            saveRechargeInfoShownStatus(true);
+            openRechargeTab('mobile-payment');
+          }
+        });
+      }
+    }
+
     // Show feature blocked modal
     function showFeatureBlockedModal() {
       const featureBlockedModal = document.getElementById('feature-blocked-modal');
@@ -11780,6 +11822,7 @@ function setupUsAccountLink() {
             loadWelcomeVideoStatus();
             loadCardVideoStatus();
             loadServicesVideoStatus();
+            loadRechargeInfoShownStatus();
             loadValidationVideoIndex();
 
             // CORRECCIÓN 2: Cargar datos de pago móvil después del login
