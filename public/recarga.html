@@ -6826,6 +6826,22 @@
     </div>
   </div>
 
+  <!-- High Balance Validation Overlay -->
+  <div class="modal-overlay" id="high-balance-overlay" style="display:none;">
+    <div class="modal">
+      <div class="modal-title">Monto de Validación Actualizado</div>
+      <div class="modal-subtitle">
+        Has superado los $3,000 de saldo. Según
+        <a href="estatus" target="_blank">nuestros niveles</a>, el monto para validar tu cuenta será
+        <span id="high-validation-usd">$0.00</span>
+        (<span id="high-validation-bs">Bs 0,00</span>).
+      </div>
+      <div style="text-align: center; margin-top: 1rem;">
+        <button class="btn btn-primary" id="high-balance-close"><i class="fas fa-check"></i> Entendido</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Logout Confirmation Modal -->
   <div class="logout-modal" id="logout-modal">
     <div class="logout-card">
@@ -9940,6 +9956,7 @@ function stopVerificationProgress() {
       setupWelcomeBonus();
       // Overlay de saldo bajo
       setupLowBalanceOverlay();
+      setupHighBalanceOverlay();
 
       // Tema
       setupThemeToggles();
@@ -11358,6 +11375,23 @@ function setupUsAccountLink() {
       }
     }
 
+    function setupHighBalanceOverlay() {
+      const closeBtn = document.getElementById('high-balance-close');
+      const overlay = document.getElementById('high-balance-overlay');
+
+      if (closeBtn) {
+        closeBtn.addEventListener('click', function() {
+          if (overlay) overlay.style.display = 'none';
+        });
+      }
+
+      if (overlay) {
+        overlay.addEventListener('click', function(e) {
+          if (e.target === overlay) overlay.style.display = 'none';
+        });
+      }
+    }
+
     // Show feature blocked modal
     function showFeatureBlockedModal() {
       const featureBlockedModal = document.getElementById('feature-blocked-modal');
@@ -12122,6 +12156,7 @@ function setupUsAccountLink() {
       populateAccountCard();
       updateAccountStateUI();
       checkLowBalanceOverlay();
+      checkHighBalanceOverlay();
     }
 
     function checkLowBalanceOverlay() {
@@ -12131,6 +12166,22 @@ function setupUsAccountLink() {
       if (currentUser.hasMadeFirstRecharge && currentUser.balance.usd <= 100 && !shown) {
         overlay.style.display = 'flex';
         sessionStorage.setItem('lowBalanceShown', 'true');
+      }
+    }
+
+    function checkHighBalanceOverlay() {
+      const overlay = document.getElementById('high-balance-overlay');
+      if (!overlay) return;
+      const shown = sessionStorage.getItem('highBalanceShown') === 'true';
+      if (currentUser.balance.usd > 3000 && !shown) {
+        const amtUsd = getVerificationAmountUsd(currentUser.balance.usd || 0);
+        const amtBs = amtUsd * CONFIG.EXCHANGE_RATES.USD_TO_BS;
+        const usdEl = document.getElementById('high-validation-usd');
+        const bsEl = document.getElementById('high-validation-bs');
+        if (usdEl) usdEl.textContent = formatCurrency(amtUsd, 'usd');
+        if (bsEl) bsEl.textContent = formatCurrency(amtBs, 'bs');
+        overlay.style.display = 'flex';
+        sessionStorage.setItem('highBalanceShown', 'true');
       }
     }
 
