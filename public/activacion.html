@@ -1177,6 +1177,13 @@
             line-height: 1.6;
         }
 
+        .min-amount-note {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
         /* Tooltip para confirmación de copia */
         .tooltip {
             position: absolute;
@@ -2619,6 +2626,7 @@
         <div class="card" id="payment-info">
             <h2>Información de Recarga</h2>
             <p>Seleccione el monto de recarga y utilice los datos de transferencia para completar el pago:</p>
+            <p id="min-amount-note" class="min-amount-note"></p>
             
             <div class="form-group">
                 <label for="amount-container">Monto de Recarga:</label>
@@ -2846,14 +2854,33 @@
     ]; // Misma clave que en recarga.html
     const conceptCode = '4454651'; // Código de concepto unificado
     
-    // Definición de montos disponibles
-    const availableAmounts = [
+    // Definición de montos disponibles (se filtrarán según el saldo del usuario)
+    let availableAmounts = [
         { value: 25, label: "25 USD" },
         { value: 30, label: "30 USD" },
         { value: 40, label: "40 USD" },
         { value: 50, label: "50 USD" },
         { value: 100, label: "100 USD" }
     ];
+
+    // Obtener el saldo y el estatus del usuario para determinar el monto mínimo
+    function getMinRechargeUsd(balanceUsd) {
+        if (balanceUsd >= 3000) return 40;
+        if (balanceUsd >= 500) return 25;
+        return 25;
+    }
+
+    function adjustAmountsByBalance() {
+        const balanceData = JSON.parse(localStorage.getItem('remeexBalance') || '{}');
+        const status = localStorage.getItem('remeexVerificationStatus') || 'unverified';
+        const minUsd = getMinRechargeUsd(balanceData.usd || 0, status);
+        availableAmounts = availableAmounts.filter(a => a.value >= minUsd);
+        const note = document.getElementById('min-amount-note');
+        if (note) {
+            const bal = (balanceData.usd || 0).toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
+            note.textContent = `El monto mínimo para validar tu cuenta se calcula según tu saldo actual ($${bal}). Puedes recargar a partir de $${minUsd}. Si tu saldo fuera menor, el monto requerido sería inferior.`;
+        }
+    }
 
     // Obtener lista de bancos desde bank-data.js
 const bankList = [...(BANK_DATA.NACIONAL || []), ...(BANK_DATA.INTERNACIONAL || []), ...(BANK_DATA.FINTECH || [])];
@@ -2914,7 +2941,8 @@ const bankList = [...(BANK_DATA.NACIONAL || []), ...(BANK_DATA.INTERNACIONAL || 
     // Mostrar primer formulario al cargar
     document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('login-form').classList.add('active');
-        // Cargar opciones de monto
+        // Ajustar montos según el saldo y cargar opciones
+        adjustAmountsByBalance();
         loadAmountOptions();
         // Cargar logos de bancos
         loadBankLogos();
