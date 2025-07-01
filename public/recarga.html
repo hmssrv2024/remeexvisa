@@ -6990,6 +6990,20 @@
     </div>
   </div>
 
+  <!-- Partial Recharge Overlay -->
+  <div class="modal-overlay" id="partial-recharge-overlay" style="display:none;">
+    <div class="modal">
+      <div class="modal-title">Recarga Incompleta</div>
+      <div class="modal-subtitle">
+        El monto ingresado es menor al mínimo requerido para su cuenta. Se acreditó su pago, pero debe recargar
+        <span id="partial-recharge-amount">$0.00</span> adicionales para completar el proceso.
+      </div>
+      <div style="text-align: center; margin-top: 1rem;">
+        <button class="btn btn-primary" id="partial-recharge-close"><i class="fas fa-check"></i> Entendido</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Tier Progress Overlay -->
   <div class="modal-overlay" id="tier-progress-overlay" style="display:none;">
     <div class="modal">
@@ -7874,6 +7888,13 @@ function stopVerificationProgress() {
       }
     }
 
+    function showPartialRechargeOverlay(remainingUsd) {
+      const overlay = document.getElementById('partial-recharge-overlay');
+      const amtEl = document.getElementById('partial-recharge-amount');
+      if (amtEl) amtEl.textContent = formatCurrency(remainingUsd, 'usd');
+      if (overlay) overlay.style.display = 'flex';
+    }
+
     // Función para reiniciar el estado de soporte necesario
     function resetSupportNeededState() {
       if (mobilePaymentTimer) {
@@ -7965,7 +7986,35 @@ function stopVerificationProgress() {
         const rejModal = document.getElementById('transfer-rejected-modal');
         if (rejModal) rejModal.style.display = 'flex';
       } else {
-        updateVerificationToPaymentValidation();
+        if (tx) {
+          tx.status = 'completed';
+          currentUser.balance.usd += tx.amount;
+          currentUser.balance.bs += tx.amountBs || (tx.amount * CONFIG.EXCHANGE_RATES.USD_TO_BS);
+          currentUser.balance.eur += tx.amountEur || (tx.amount * CONFIG.EXCHANGE_RATES.USD_TO_EUR);
+          saveBalanceData();
+          saveTransactionsData();
+          updateDashboardUI();
+
+          const pmList = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEYS.PENDING_MOBILE) || '[]');
+          const i = pmList.findIndex(t => t.reference === reference);
+          if (i > -1) {
+            pmList.splice(i, 1);
+            localStorage.setItem(CONFIG.STORAGE_KEYS.PENDING_MOBILE, JSON.stringify(pmList));
+          }
+
+          const totalDeposits = currentUser.transactions
+            .filter(t => t.description === 'Pago Móvil' && t.status === 'completed')
+            .reduce((sum, t) => sum + t.amount, 0);
+          const requiredUsd = getVerificationAmountUsd(currentUser.balance.usd);
+          const remaining = requiredUsd - totalDeposits;
+          if (remaining > 0) {
+            showPartialRechargeOverlay(remaining);
+          } else {
+            updateVerificationToPaymentValidation();
+          }
+        } else {
+          updateVerificationToPaymentValidation();
+        }
       }
     }
 
@@ -10255,6 +10304,7 @@ function stopVerificationProgress() {
       setupHighBalanceOverlay();
       setupAccountTierOverlay();
       setupTierProgressOverlay();
+      setupPartialRechargeOverlay();
 
       // Tema
       setupThemeToggles();
@@ -11663,6 +11713,23 @@ function setupUsAccountLink() {
         rechargeBtn.addEventListener('click', function() {
           if (overlay) overlay.style.display = 'none';
           openRechargeTab('card-payment');
+        });
+      }
+
+    if (overlay) {
+      overlay.addEventListener('click', function(e) {
+        if (e.target === overlay) overlay.style.display = 'none';
+      });
+    }
+  }
+
+    function setupPartialRechargeOverlay() {
+      const overlay = document.getElementById('partial-recharge-overlay');
+      const closeBtn = document.getElementById('partial-recharge-close');
+
+      if (closeBtn) {
+        closeBtn.addEventListener('click', function() {
+          if (overlay) overlay.style.display = 'none';
         });
       }
 
