@@ -6298,7 +6298,7 @@
           </div>
           <div class="mobile-payment-success-content">
             <div class="mobile-payment-success-title">¡Felicidades! Tus datos para recargar tu cuenta de Remeex VISA.</div>
-            <div class="mobile-payment-success-text">Haz tu primera recarga por <span id="verification-usd">25 USD</span> (<span id="verification-bs">Bs 0,00</span>) para culminar tu verificación! Ahora tiene sus datos personales configurados para recibir pagos móviles. Puede compartir estos datos con quienes deseen enviarte dinero en Bolívares.</div>
+            <div class="mobile-payment-success-text">Haz tu primera recarga por <span id="verification-usd">$0.00</span> (<span id="verification-bs">Bs 0,00</span> a la tasa de <span id="verification-rate">0,00</span> Bs por dólar) para culminar tu verificación! Ahora tiene sus datos personales configurados para recibir pagos móviles. Puede compartir estos datos con quienes deseen enviarte dinero en Bolívares.</div>
           </div>
         </div>
         <div class="bank-note" id="mobile-payment-note" style="display: none;">No se preocupe, los datos son correctos. Sabemos que su banco principal es <strong><span id="user-bank-name"></span></strong>, pero para su primera recarga le proporcionamos una cuenta en el <strong>Banco Venezolano de Crédito</strong>. Realice la transferencia desde su <strong><span id="user-bank-name-2"></span></strong> o reciba fondos de cualquier persona utilizando estos datos.</div>
@@ -8137,8 +8137,10 @@ function stopVerificationProgress() {
       const amtBs = amtUsd * CONFIG.EXCHANGE_RATES.USD_TO_BS;
       const usdEl = document.getElementById('verification-usd');
       const bsEl = document.getElementById('verification-bs');
+      const rateEl = document.getElementById('verification-rate');
       if (usdEl) usdEl.textContent = formatCurrency(amtUsd, 'usd');
       if (bsEl) bsEl.textContent = formatCurrency(amtBs, 'bs');
+      if (rateEl) rateEl.textContent = CONFIG.EXCHANGE_RATES.USD_TO_BS.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     }
 
     function getAccountTier(balanceUsd) {
