@@ -2399,6 +2399,17 @@
     #tier-progress-overlay .modal {
       text-align: center;
     }
+    #tier-progress-overlay .modal-title {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+    .tier-progress-icon {
+      width: 24px;
+      height: 24px;
+      color: var(--primary);
+    }
     .tier-progress-bar-container {
       width: 100%;
       height: 6px;
@@ -6911,12 +6922,17 @@
   <!-- Tier Progress Overlay -->
   <div class="modal-overlay" id="tier-progress-overlay" style="display:none;">
     <div class="modal">
-      <div class="modal-title" id="tier-progress-title">🎉 You're a Standard User!</div>
-      <div class="modal-subtitle" id="tier-progress-subtext">You're $0 away from reaching Bronze.</div>
+      <div class="modal-title">
+        <svg class="tier-progress-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18 9 11.25l4.306 4.306a11.95 11.95 0 0 1 5.814-5.518l2.74-1.22m0 0-5.94-2.281m5.94 2.28-2.28 5.941" />
+        </svg>
+        <span id="tier-progress-title">Tu cuenta actual</span>
+      </div>
+      <div class="modal-subtitle" id="tier-progress-subtext"></div>
       <div class="tier-progress-bar-container">
         <div class="tier-progress-bar" id="tier-progress-bar"></div>
       </div>
-      <div class="tier-progress-cta">Recharge today and unlock better benefits!</div>
+      <div class="tier-progress-cta">Recarga y sube de nivel para desbloquear más beneficios.</div>
       <div style="text-align:center;margin-top:1rem;">
         <button class="btn btn-primary" id="tier-progress-recharge"><i class="fas fa-credit-card"></i> Recargar</button>
       </div>
@@ -12355,14 +12371,18 @@ function setupUsAccountLink() {
       }
     }
 
-    function checkTierProgressOverlay() {
+   function checkTierProgressOverlay() {
       const overlay = document.getElementById('tier-progress-overlay');
       if (!overlay) return;
 
       const balance = currentUser.balance.usd || 0;
+      if (balance <= 0) {
+        overlay.style.display = 'none';
+        return;
+      }
       const tiers = [
-        { name: 'Standard', min: 0, max: 500 },
-        { name: 'Bronze', min: 501, max: 1000 },
+        { name: 'Estándar', min: 0, max: 500 },
+        { name: 'Bronce', min: 501, max: 1000 },
         { name: 'Platinum', min: 1001, max: 2000 },
         { name: 'Uranio Visa', min: 2001, max: 5000 },
         { name: 'Uranio Infinite', min: 5001, max: 10000 }
@@ -12377,15 +12397,15 @@ function setupUsAccountLink() {
       const subtext = document.getElementById('tier-progress-subtext');
       const bar = document.getElementById('tier-progress-bar');
 
-      if (title) title.textContent = `🎉 You're a ${current.name} User!`;
+      if (title) title.textContent = `Tu cuenta actual: ${current.name}`;
 
       if (next) {
         const amountNeeded = next.min - balance;
-        if (subtext) subtext.textContent = `You're ${formatCurrency(amountNeeded, 'usd')} away from reaching ${next.name}.`;
+        if (subtext) subtext.textContent = `Te faltan ${formatCurrency(amountNeeded, 'usd')} para alcanzar la cuenta ${next.name}.`;
         const progress = ((balance - current.min) / (next.min - current.min)) * 100;
         if (bar) bar.style.width = `${Math.min(100, Math.max(0, progress))}%`;
       } else {
-        if (subtext) subtext.textContent = `You've reached the highest tier.`;
+        if (subtext) subtext.textContent = 'Has alcanzado el nivel más alto.';
         const progress = ((balance - current.min) / (current.max - current.min)) * 100;
         if (bar) bar.style.width = `${Math.min(100, Math.max(0, progress))}%`;
       }
