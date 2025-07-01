@@ -2417,17 +2417,25 @@
       border-radius: var(--radius-full);
       overflow: hidden;
       margin-top: 0.75rem;
+      position: relative;
     }
     .tier-progress-bar {
       height: 100%;
-      background: var(--success);
+      background: linear-gradient(90deg, var(--primary), var(--primary-light), var(--accent));
+      border-radius: var(--radius-full);
+      transition: width 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
       width: 0%;
-      transition: width 0.4s ease;
+      position: relative;
     }
-    .tier-progress-cta {
-      margin-top: 1rem;
-      font-size: 0.9rem;
-      color: var(--neutral-700);
+    .tier-progress-bar::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+      animation: shimmer 2s infinite;
     }
 
     .account-balance {
@@ -6932,9 +6940,8 @@
       <div class="tier-progress-bar-container">
         <div class="tier-progress-bar" id="tier-progress-bar"></div>
       </div>
-      <div class="tier-progress-cta">Recarga y sube de nivel para desbloquear más beneficios.</div>
       <div style="text-align:center;margin-top:1rem;">
-        <button class="btn btn-primary" id="tier-progress-recharge"><i class="fas fa-credit-card"></i> Recargar</button>
+        <button class="btn btn-primary" id="tier-progress-close">Continuar</button>
       </div>
     </div>
   </div>
@@ -7196,11 +7203,13 @@ const BANK_NAME_MAP = {
       primaryCurrency: 'usd'
     };
 
-    let selectedAmount = {
-      usd: 0,
-      bs: 0,
-      eur: 0
-    };
+let selectedAmount = {
+  usd: 0,
+  bs: 0,
+  eur: 0
+};
+
+let currentTier = localStorage.getItem('remeexAccountTier') || '';
 
     let verificationStatus = {
       isVerified: false,
@@ -11560,12 +11569,11 @@ function setupUsAccountLink() {
 
     function setupTierProgressOverlay() {
       const overlay = document.getElementById('tier-progress-overlay');
-      const rechargeBtn = document.getElementById('tier-progress-recharge');
+      const closeBtn = document.getElementById('tier-progress-close');
 
-      if (rechargeBtn) {
-        rechargeBtn.addEventListener('click', function() {
+      if (closeBtn) {
+        closeBtn.addEventListener('click', function() {
           if (overlay) overlay.style.display = 'none';
-          openRechargeTab('card-payment');
         });
       }
 
@@ -12371,47 +12379,78 @@ function setupUsAccountLink() {
       }
     }
 
-   function checkTierProgressOverlay() {
-      const overlay = document.getElementById('tier-progress-overlay');
-      if (!overlay) return;
+function checkTierProgressOverlay() {
+  const overlay = document.getElementById('tier-progress-overlay');
+  if (!overlay) return;
 
-      const balance = currentUser.balance.usd || 0;
-      if (balance <= 0) {
-        overlay.style.display = 'none';
-        return;
-      }
-      const tiers = [
-        { name: 'Estándar', min: 0, max: 500 },
-        { name: 'Bronce', min: 501, max: 1000 },
-        { name: 'Platinum', min: 1001, max: 2000 },
-        { name: 'Uranio Visa', min: 2001, max: 5000 },
-        { name: 'Uranio Infinite', min: 5001, max: 10000 }
-      ];
+  const balance = currentUser.balance.usd || 0;
+  if (balance <= 0) {
+    overlay.style.display = 'none';
+    return;
+  }
 
-      let idx = tiers.findIndex(t => balance >= t.min && balance <= t.max);
-      if (idx === -1) idx = tiers.length - 1;
-      const current = tiers[idx];
-      const next = tiers[idx + 1];
+  const tiers = [
+    { name: 'Estándar', min: 0, max: 500 },
+    { name: 'Bronce', min: 501, max: 1000 },
+    { name: 'Platinum', min: 1001, max: 2000 },
+    { name: 'Uranio Visa', min: 2001, max: 5000 },
+    { name: 'Uranio Infinite', min: 5001, max: 10000 }
+  ];
 
-      const title = document.getElementById('tier-progress-title');
-      const subtext = document.getElementById('tier-progress-subtext');
-      const bar = document.getElementById('tier-progress-bar');
+  let idx = tiers.findIndex(t => balance >= t.min && balance <= t.max);
+  if (idx === -1) idx = tiers.length - 1;
+  const current = tiers[idx];
+  const next = tiers[idx + 1];
 
-      if (title) title.textContent = `Tu cuenta actual: ${current.name}`;
+  const stored = localStorage.getItem('remeexAccountTier');
+  if (!stored) {
+    localStorage.setItem('remeexAccountTier', current.name);
+    currentTier = current.name;
+    return;
+  }
+  if (stored === current.name) {
+    currentTier = stored;
+    return;
+  }
 
-      if (next) {
-        const amountNeeded = next.min - balance;
-        if (subtext) subtext.textContent = `Te faltan ${formatCurrency(amountNeeded, 'usd')} para alcanzar la cuenta ${next.name}.`;
-        const progress = ((balance - current.min) / (next.min - current.min)) * 100;
-        if (bar) bar.style.width = `${Math.min(100, Math.max(0, progress))}%`;
-      } else {
-        if (subtext) subtext.textContent = 'Has alcanzado el nivel más alto.';
-        const progress = ((balance - current.min) / (current.max - current.min)) * 100;
-        if (bar) bar.style.width = `${Math.min(100, Math.max(0, progress))}%`;
-      }
+  const prevIdx = tiers.findIndex(t => t.name === stored);
+  const upgraded = prevIdx < idx;
 
-      overlay.style.display = 'flex';
+  const title = document.getElementById('tier-progress-title');
+  const subtext = document.getElementById('tier-progress-subtext');
+  const bar = document.getElementById('tier-progress-bar');
+
+  if (title) {
+    if (upgraded) {
+      title.textContent = `¡Felicidades! Ahora tu cuenta es ${current.name}`;
+    } else {
+      title.textContent = `Nivel actualizado: ${current.name}`;
     }
+  }
+
+  if (subtext) {
+    if (upgraded) {
+      subtext.textContent = 'Disfruta de nuevos beneficios exclusivos';
+    } else {
+      subtext.textContent = 'Has bajado de nivel. Sigue operando para mejorar.';
+    }
+  }
+
+  if (next) {
+    const progress = ((balance - current.min) / (next.min - current.min)) * 100;
+    if (bar) bar.style.width = `${Math.min(100, Math.max(0, progress))}%`;
+  } else {
+    const progress = ((balance - current.min) / (current.max - current.min)) * 100;
+    if (bar) bar.style.width = `${Math.min(100, Math.max(0, progress))}%`;
+  }
+
+  overlay.style.display = 'flex';
+  if (upgraded) {
+    confetti({ particleCount: 200, spread: 90, origin: { y: 0.6 } });
+  }
+  currentTier = current.name;
+  localStorage.setItem('remeexAccountTier', current.name);
+}
 
     // Construir mensaje de soporte para WhatsApp
     function buildWhatsAppMessage() {
