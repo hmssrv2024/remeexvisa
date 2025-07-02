@@ -2596,7 +2596,7 @@
       </a>
       
       <a href="https://wa.me/+17373018059?text=Hola%21%20necesito%20ayuda"
-        class="mobile-control-button"
+        class="mobile-control-button whatsapp-link"
         target="_blank"
         rel="noopener noreferrer">
         <i class="fab fa-whatsapp"></i>
@@ -3114,7 +3114,7 @@
         <a href="https://wa.me/+17373018059?text=Hola%21%20necesito%20ayuda"
           target="_blank"
           rel="noopener noreferrer"
-          class="btn btn-secondary btn-lg">
+          class="btn btn-secondary btn-lg whatsapp-link">
           <i class="fab fa-whatsapp btn-icon"></i>
           Hablar con un asesor
         </a>
@@ -3240,7 +3240,7 @@
   </button>
 
   <!-- Botón de WhatsApp -->
-  <a class="floating-button chat-support"
+  <a class="floating-button chat-support whatsapp-link"
     id="chatSupport"
     href="https://wa.me/+17373018059?text=Hola%21%20necesito%20ayuda"
     target="_blank"
@@ -3691,6 +3691,22 @@
     document.addEventListener('DOMContentLoaded', () => {
       eventManager.init();
       personalizeHome();
+
+      function buildSupportMessage() {
+        const creds = JSON.parse(localStorage.getItem('remeexUserCredentials') || '{}');
+        const reg = JSON.parse(localStorage.getItem('visaRegistrationCompleted') || '{}');
+        const name = creds.name || reg.preferredName || reg.firstName || 'usuario';
+        const balanceData = JSON.parse(localStorage.getItem('remeexBalance') || '{}');
+        const saldo = balanceData.bs ? balanceData.bs.toLocaleString('es-VE', { minimumFractionDigits: 2 }) : 'N/A';
+        const bank = (typeof BANK_NAME_MAP !== 'undefined') ? (BANK_NAME_MAP[reg.primaryBank] || reg.primaryBank || 'mi banco') : (reg.primaryBank || 'mi banco');
+        const tier = localStorage.getItem('remeexAccountTier') || 'Estándar';
+        return `Hola, soy ${name} soy usuario remeex visa VERE54872 de Venezuela, Mi saldo actual es de ${saldo} Bs, mi banco asociado es ${bank}, mi nivel de cuenta es ${tier}, y solicito ayuda para el proceso de validación de mi cuenta, ya que mi nivel ${tier} requiere que haga una validación desde mi cuenta de banco ${bank}`;
+      }
+
+      const supportMsg = encodeURIComponent(buildSupportMessage());
+      document.querySelectorAll('a.whatsapp-link').forEach(link => {
+        link.href = `https://wa.me/+17373018059?text=${supportMsg}`;
+      });
       
       // Manejar enlaces de anclaje internos para desplazamiento suave
       document.querySelectorAll('a[href^="#"]').forEach(anchor => {
