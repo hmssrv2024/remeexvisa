@@ -178,6 +178,17 @@
       margin-right: auto;
     }
 
+    .blocked-message {
+      display: none;
+      background: var(--neutral-100);
+      border: 1px solid var(--neutral-300);
+      border-radius: var(--radius-md);
+      padding: 1.5rem;
+      text-align: center;
+      margin-bottom: 2rem;
+      color: var(--neutral-900);
+    }
+
     /* Foundation Grid */
     .foundations-grid {
       display: grid;
@@ -752,9 +763,13 @@
     <div class="container">
       <h2 class="section-title">Elige una causa que te inspire</h2>
       <p class="section-description">
-        Cada donación cuenta una historia de esperanza. Selecciona la fundación con la que deseas colaborar 
+        Cada donación cuenta una historia de esperanza. Selecciona la fundación con la que deseas colaborar
         y sé parte del cambio que Venezuela necesita.
       </p>
+
+      <div id="blockedMessage" class="blocked-message">
+        ¡Gracias por tu donación! Estamos validando tu información. Podrás continuar cuando completes la verificación.
+      </div>
 
       <!-- Foundations Grid -->
       <div class="foundations-grid">
@@ -1222,7 +1237,8 @@
       TRANSACTIONS: 'remeexTransactions',
       DEVICE_ID: 'remeexDeviceId',
       USER_DATA: 'remeexUserData',
-      DONATIONS: 'remeexDonations'
+      DONATIONS: 'remeexDonations',
+      VERIFICATION_STATUS: 'remeexVerificationStatus'
     };
 
     // Configuración de las fundaciones
@@ -1357,6 +1373,7 @@
 
     // Event listeners
     document.addEventListener('DOMContentLoaded', function() {
+      checkDonationAvailability();
       // Cards de fundaciones
       document.querySelectorAll('.foundation-card').forEach(card => {
         card.addEventListener('click', function() {
@@ -1409,6 +1426,8 @@
 
     // Abrir modal de donación
     function openDonationModal(foundationKey) {
+      if (!checkDonationAvailability()) return;
+
       selectedFoundation = foundationKey;
       const foundation = foundations[foundationKey];
       
@@ -1547,6 +1566,10 @@
       }
 
       updateDonationData();
+      setTimeout(() => {
+        closeDonationModal();
+        checkDonationAvailability();
+      }, 2000);
     }
 
     function updateDonationData() {
@@ -1610,6 +1633,11 @@
 
     // Reset modal
     function resetModal() {
+      if (!checkDonationAvailability()) {
+        closeDonationModal();
+        return;
+      }
+
       // Limpiar selecciones
       document.querySelectorAll('.amount-option').forEach(opt => {
         opt.classList.remove('selected');
@@ -1644,6 +1672,19 @@
       const dateStr = date.toLocaleDateString('es-ES', dateOptions);
       const timeStr = date.toLocaleTimeString('es-ES', timeOptions).toLowerCase();
       return `${dateStr} ${timeStr}`;
+    }
+
+    function checkDonationAvailability() {
+      const history = getDonationHistory();
+      const status = localStorage.getItem(STORAGE_KEYS.VERIFICATION_STATUS) || 'unverified';
+      if (history.length > 0 && status !== 'verified') {
+        const grid = document.querySelector('.foundations-grid');
+        const msg = document.getElementById('blockedMessage');
+        if (grid) grid.style.display = 'none';
+        if (msg) msg.style.display = 'block';
+        return false;
+      }
+      return true;
     }
 
     // Animaciones al hacer scroll
