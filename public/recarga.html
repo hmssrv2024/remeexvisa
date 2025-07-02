@@ -9260,24 +9260,39 @@ function stopVerificationProgress() {
       });
     }
 
-    function updateExchangeBalances() {
-      const usdEl = document.getElementById('bal-usd');
-      const bsEl = document.getElementById('bal-bs');
-      const eurEl = document.getElementById('bal-eur');
-      if (usdEl) usdEl.textContent = formatCurrency(currentUser.balance.usd, 'usd');
-      if (bsEl) bsEl.textContent = formatCurrency(currentUser.balance.bs, 'bs');
-      if (eurEl) eurEl.textContent = formatCurrency(currentUser.balance.eur, 'eur');
+  function updateExchangeBalances() {
+    const usdEl = document.getElementById('bal-usd');
+    const bsEl = document.getElementById('bal-bs');
+    const eurEl = document.getElementById('bal-eur');
+    if (usdEl) usdEl.textContent = formatCurrency(currentUser.balance.usd, 'usd');
+    if (bsEl) bsEl.textContent = formatCurrency(currentUser.balance.bs, 'bs');
+    if (eurEl) eurEl.textContent = formatCurrency(currentUser.balance.eur, 'eur');
+  }
+
+  function adjustTierAfterBalanceChange(prevUsd, newUsd) {
+    const previous = getAccountTier(prevUsd);
+    const current = getAccountTier(newUsd);
+    if (previous !== current) {
+      currentTier = current;
+      localStorage.setItem('remeexAccountTier', current);
+      updateVerificationAmountDisplays();
+      updateAccountTierDisplay();
+      updateBankValidationStatusItem();
+      adjustAmountOptions();
     }
+  }
 
    function depositToPot(id, amount) {
      const pot = savings.pots.find(p => p.id === id);
      if (!pot || amount > currentUser.balance.usd) return false;
+     const prevBalance = currentUser.balance.usd;
      pot.balance += amount;
      currentUser.balance.usd -= amount;
       currentUser.balance.bs -= amount * CONFIG.EXCHANGE_RATES.USD_TO_BS;
       currentUser.balance.eur -= amount * CONFIG.EXCHANGE_RATES.USD_TO_EUR;
       saveBalanceData();
       saveSavingsData();
+      adjustTierAfterBalanceChange(prevBalance, currentUser.balance.usd);
       updateDashboardUI();
       updateSavingsUI();
       addTransaction({
