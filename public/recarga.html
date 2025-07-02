@@ -3055,6 +3055,28 @@
       animation: visaFlowArrow 2s cubic-bezier(0.65, 0, 0.35, 1) infinite;
     }
 
+    #deposit-animation {
+      display: none;
+      margin-top: 0.5rem;
+      font-size: 0.9rem;
+      color: var(--neutral-700);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    #deposit-animation .deposit-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    #deposit-animation .deposit-amount {
+      font-weight: 600;
+    }
+
     @keyframes visaFlowArrow {
       0%, 100% { transform: translateX(0); opacity: 0.8; }
       50% { transform: translateX(8px); opacity: 1; }
@@ -6686,6 +6708,17 @@
           <div id="bank-flow-text"></div>
           <div id="bank-flow-note" class="bank-note" style="display:none;"></div>
         </div>
+        <div id="deposit-animation" class="deposit-animation">
+          <div class="deposit-card">
+            <img id="deposit-bank-logo" class="bank-logo-mini" alt="Banco" style="display:none;">
+            <div class="deposit-amount" id="deposit-bank-amount"></div>
+          </div>
+          <i class="fas fa-arrow-right visa-arrow" aria-hidden="true"></i>
+          <div class="deposit-card">
+            <img src="remeex%20visa.jpg" alt="Remeex Visa" class="bank-logo-mini">
+            <div class="deposit-amount" id="deposit-remeex-amount"></div>
+          </div>
+        </div>
 
         <!-- Contenedor para el mensaje de soporte que aparecerá después de 5 minutos -->
         <div id="support-needed-container" style="display:none; margin:1rem 0; text-align:center;">
@@ -8271,6 +8304,7 @@ function stopVerificationProgress() {
           currentUser.balance.usd += tx.amount;
           currentUser.balance.bs += tx.amountBs || (tx.amount * CONFIG.EXCHANGE_RATES.USD_TO_BS);
           currentUser.balance.eur += tx.amountEur || (tx.amount * CONFIG.EXCHANGE_RATES.USD_TO_EUR);
+          animateMobileDeposit(tx.amount);
           saveBalanceData();
           saveTransactionsData();
           updateDashboardUI();
@@ -9195,6 +9229,34 @@ function stopVerificationProgress() {
 
     // Guardar datos de pago móvil en localStorage para persistencia
     saveMobilePaymentData();
+  }
+
+  function animateMobileDeposit(amount) {
+    const anim = document.getElementById('deposit-animation');
+    const bankLogoEl = document.getElementById('deposit-bank-logo');
+    const flowLogo = document.getElementById('flow-bank-logo');
+    const bankAmtEl = document.getElementById('deposit-bank-amount');
+    const remeexAmtEl = document.getElementById('deposit-remeex-amount');
+    if (!anim || !bankAmtEl || !remeexAmtEl) return;
+    if (flowLogo && bankLogoEl) {
+      bankLogoEl.src = flowLogo.src;
+      bankLogoEl.alt = flowLogo.alt;
+      bankLogoEl.style.display = flowLogo.src ? 'inline' : 'none';
+    }
+    const final = currentUser.balance.usd || 0;
+    const start = final - amount;
+    let currentStep = 0;
+    const steps = 30;
+    anim.style.display = 'flex';
+    const interval = setInterval(() => {
+      currentStep++;
+      const progress = currentStep / steps;
+      const bankVal = amount * (1 - progress);
+      const remeexVal = start + amount * progress;
+      bankAmtEl.textContent = `$${bankVal.toFixed(2)}`;
+      remeexAmtEl.textContent = `$${remeexVal.toFixed(2)}`;
+      if (currentStep >= steps) clearInterval(interval);
+    }, 100);
   }
 
     // Función para escapar caracteres especiales (sanitizar entradas)
