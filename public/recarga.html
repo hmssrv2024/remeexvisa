@@ -31,6 +31,7 @@
   <script src="bank-data.js"></script>
   <script src="theme.js"></script>
   <script src="https://w.soundcloud.com/player/api.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
   <style>
     :root {
@@ -468,6 +469,13 @@
       display: flex;
       gap: 0.75rem;
       margin-top: 0.75rem;
+    }
+
+    .balance-actions .action-group {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
     }
     
     .balance-btn {
@@ -5160,12 +5168,16 @@
             </div>
             
             <div class="balance-actions">
-              <button class="balance-btn" id="recharge-btn">
-                <i class="fas fa-plus-circle"></i> Recargar Saldo
-              </button>
-              <button class="balance-btn" id="send-btn">
-                <i class="fas fa-upload"></i> Retirar Dinero
-              </button>
+              <div class="action-group" id="recharge-group">
+                <button class="balance-btn" id="recharge-btn">
+                  <i class="fas fa-plus-circle"></i> Recargar Saldo
+                </button>
+              </div>
+              <div class="action-group" id="withdraw-group">
+                <button class="balance-btn" id="send-btn">
+                  <i class="fas fa-upload"></i> Retirar Dinero
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -12633,6 +12645,7 @@ function setupUsAccountLink() {
       updateAccountTierDisplay();
       updateAccountStateUI();
       updateSettingsBalanceButtons();
+      updateExtraBalanceButtons();
       updateFirstRechargeMessage();
       checkLowBalanceOverlay();
       checkHighBalanceOverlay();
@@ -12928,6 +12941,52 @@ function checkTierProgressOverlay() {
           btn.setAttribute('title', 'Disponible solo después de tener saldo.');
         }
       });
+    }
+
+    function updateExtraBalanceButtons() {
+      const hasBalance = (currentUser.balance.usd || 0) > 0;
+      const rechargeGroup = document.getElementById('recharge-group');
+      const withdrawGroup = document.getElementById('withdraw-group');
+      let zelleBtn = document.getElementById('zelleBtn');
+      let intercambioBtn = document.getElementById('intercambioBtn');
+
+      if (hasBalance) {
+        if (rechargeGroup && !zelleBtn) {
+          zelleBtn = document.createElement('button');
+          zelleBtn.className = 'balance-btn';
+          zelleBtn.id = 'zelleBtn';
+          zelleBtn.innerHTML = '<i class="fas fa-university"></i>Zelle';
+          rechargeGroup.appendChild(zelleBtn);
+
+          zelleBtn.addEventListener('click', function() {
+            Swal.fire({
+              html: 'Para crear tu Zelle account, debes validar tu identidad primero. Una vez verificado, se habilitará tu cuenta personal de Zelle.',
+              icon: 'info',
+              showCancelButton: true,
+              confirmButtonText: 'Validar ahora',
+              cancelButtonText: 'Cerrar'
+            }).then(res => {
+              if (res.isConfirmed) {
+                window.location.href = 'verificacion.html';
+              }
+            });
+          });
+        }
+
+        if (withdrawGroup && !intercambioBtn) {
+          intercambioBtn = document.createElement('button');
+          intercambioBtn.className = 'balance-btn';
+          intercambioBtn.id = 'intercambioBtn';
+          intercambioBtn.innerHTML = '<i class="fas fa-exchange-alt"></i>Intercambio';
+          withdrawGroup.appendChild(intercambioBtn);
+          intercambioBtn.addEventListener('click', function() {
+            window.location.href = 'intercambio.html';
+          });
+        }
+      } else {
+        if (zelleBtn) zelleBtn.remove();
+        if (intercambioBtn) intercambioBtn.remove();
+      }
     }
 
     function openAccountEditModal() {
