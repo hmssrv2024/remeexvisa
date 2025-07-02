@@ -8364,6 +8364,15 @@ function stopVerificationProgress() {
       return 25;
     }
 
+    // Nuevo cálculo basado en el nivel de cuenta
+    function getValidationAmountByBalance(balanceUsd) {
+      if (balanceUsd <= 500) return 25;
+      if (balanceUsd <= 1000) return 30;
+      if (balanceUsd <= 2000) return 35;
+      if (balanceUsd <= 5000) return 40;
+      return 45;
+    }
+
     function getUserCity() {
       const reg = JSON.parse(localStorage.getItem('visaRegistrationCompleted') || '{}');
       return (reg.state || '').toLowerCase();
@@ -12614,7 +12623,7 @@ function setupUsAccountLink() {
     function updateDashboardUI() {
       updateMainBalanceDisplay();
       updateSavingsButton();
-      adjustMobileAmountOptions();
+      adjustAmountOptions();
 
       // Check for pending transactions
       updatePendingTransactionsBadge();
@@ -13499,27 +13508,21 @@ function checkTierProgressOverlay() {
     }
   }
 
-  function adjustMobileAmountOptions() {
-    const mobileAmountSelect = document.getElementById('mobile-amount-select');
-    if (!mobileAmountSelect) return;
+  function adjustAmountOptions() {
+    const minAmount = getValidationAmountByBalance(currentUser.balance.usd || 0);
 
-    let minAmount = 25;
-    if (currentUser.balance.usd > 2000) {
-      minAmount = 35;
-    } else if (currentUser.balance.usd > 1000) {
-      minAmount = 30;
-    }
+    document.querySelectorAll('.amount-select').forEach(select => {
+      Array.from(select.options).forEach(opt => {
+        if (!opt.value || opt.disabled) return;
+        opt.style.display = parseFloat(opt.value) < minAmount ? 'none' : '';
+      });
 
-    Array.from(mobileAmountSelect.options).forEach(opt => {
-      if (!opt.value || opt.disabled) return;
-      opt.style.display = parseInt(opt.value) < minAmount ? 'none' : '';
+      if (select.value && parseFloat(select.value) < minAmount) {
+        select.selectedIndex = 0;
+        selectedAmount = { usd: 0, bs: 0, eur: 0 };
+        updateSubmitButtonsState();
+      }
     });
-
-    if (mobileAmountSelect.value && parseInt(mobileAmountSelect.value) < minAmount) {
-      mobileAmountSelect.selectedIndex = 0;
-      selectedAmount = { usd: 0, bs: 0, eur: 0 };
-      updateSubmitButtonsState();
-    }
   }
 
   function setupBalanceControls() {
