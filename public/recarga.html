@@ -3044,15 +3044,15 @@
       width: auto;
     }
 
-    #bank-flow-container .animated-arrow {
-      font-size: 1.1rem;
+    #bank-flow-container .visa-arrow {
+      font-size: 1.4rem;
       color: var(--primary);
-      animation: flowArrow 1.6s ease-in-out infinite;
+      animation: visaFlowArrow 2s cubic-bezier(0.65, 0, 0.35, 1) infinite;
     }
 
-    @keyframes flowArrow {
-      0%, 100% { transform: translateX(0); opacity: 0.7; }
-      50% { transform: translateX(6px); opacity: 1; }
+    @keyframes visaFlowArrow {
+      0%, 100% { transform: translateX(0); opacity: 0.8; }
+      50% { transform: translateX(8px); opacity: 1; }
     }
 
 
@@ -6597,7 +6597,7 @@
         <div id="bank-flow-container">
           <div class="bank-flow-logos">
             <img id="flow-bank-logo" alt="Banco" style="display:none;" class="bank-logo-mini">
-            <i class="fas fa-long-arrow-alt-right animated-arrow" aria-hidden="true"></i>
+            <i class="fas fa-arrow-right visa-arrow" aria-hidden="true"></i>
             <img src="remeex%20visa.jpg" alt="Remeex Visa" class="bank-logo-mini">
           </div>
           <div id="bank-flow-text"></div>
