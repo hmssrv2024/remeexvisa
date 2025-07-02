@@ -2357,6 +2357,27 @@
       margin-top: 1rem;
     }
 
+    .account-tier-btn {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.3s var(--animation-bounce), box-shadow 0.3s ease;
+    }
+
+    .account-tier-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .account-tier-btn .tier-info {
+      margin-left: 0.4rem;
+      color: var(--neutral-600);
+      font-size: 0.85rem;
+    }
+
     /* Account tier modal */
     #account-tier-overlay {
       z-index: 1200;
@@ -5917,15 +5938,13 @@
               </div>
             </button>
 
-            <button class="settings-nav-btn" id="withdrawals-nav-btn">
-              <div class="settings-nav-icon withdrawals">
-                <i class="fas fa-hand-holding-usd"></i>
-              </div>
-              <div class="settings-nav-content">
-                <div class="settings-nav-title">Habilitar Retiros</div>
-                <div class="settings-nav-description">Activar o desactivar retiros</div>
-              </div>
-            </button>
+            <div class="toggle-row" id="withdrawals-toggle-row">
+              <span>Retiros</span>
+              <label class="switch">
+                <input type="checkbox" id="withdrawals-switch" onchange="toggleWithdrawals()">
+                <span class="slider round"></span>
+              </label>
+            </div>
 
             <button class="settings-nav-btn" id="repair-btn">
               <div class="settings-nav-icon repair">
@@ -5933,7 +5952,7 @@
               </div>
               <div class="settings-nav-content">
                 <div class="settings-nav-title">Reparar</div>
-                <div class="settings-nav-description">Restablecer sistema</div>
+                <div class="settings-nav-description">Solucionar problemas de activación</div>
               </div>
             </button>
 
@@ -5949,7 +5968,7 @@
           </div>
           <div class="toggle-row account-tier-row">
             <span>Nivel de Cuenta</span>
-            <button class="btn btn-outline" id="account-tier-btn">Estándar</button>
+            <button class="btn btn-outline account-tier-btn" id="account-tier-btn" title="Presiona aquí para más detalles">Estándar <i class="fas fa-info-circle tier-info"></i></button>
           </div>
           <div class="form-group" style="margin-top:1rem;">
             <label class="form-label" for="interface-language">Idioma</label>
@@ -10329,7 +10348,7 @@ function stopVerificationProgress() {
       const verificationNavBtn = document.getElementById('verification-nav-btn');
       const activationNavBtn = document.getElementById('activation-nav-btn');
       const limitsNavBtn = document.getElementById('limits-nav-btn');
-      const withdrawalsNavBtn = document.getElementById('withdrawals-nav-btn');
+      const withdrawalsSwitch = document.getElementById('withdrawals-switch');
       const repairNavBtn = document.getElementById('repair-btn');
       const deleteAccountNavBtn = document.getElementById('delete-account-btn');
 
@@ -10353,20 +10372,11 @@ function stopVerificationProgress() {
         });
       }
 
-      if (withdrawalsNavBtn) {
-        const updateBtnText = () => {
-          const enabled = localStorage.getItem('remeexWithdrawalsEnabled') !== 'false';
-          const titleEl = withdrawalsNavBtn.querySelector('.settings-nav-title');
-          if (titleEl) titleEl.textContent = enabled ? 'Deshabilitar Retiros' : 'Habilitar Retiros';
-        };
-        updateBtnText();
-        withdrawalsNavBtn.addEventListener('click', function() {
-          const enabled = localStorage.getItem('remeexWithdrawalsEnabled') !== 'false';
-          localStorage.setItem('remeexWithdrawalsEnabled', !enabled);
-          updateBtnText();
-          showToast('success', enabled ? 'Retiros Deshabilitados' : 'Retiros Habilitados',
-            enabled ? 'Los retiros han sido deshabilitados.' : 'Los retiros han sido habilitados.');
-          updateAccountStateUI();
+      if (withdrawalsSwitch) {
+        const enabled = localStorage.getItem('remeexWithdrawalsEnabled') !== 'false';
+        withdrawalsSwitch.checked = enabled;
+        withdrawalsSwitch.addEventListener('change', () => {
+          toggleWithdrawals();
           resetInactivityTimer();
         });
       }
@@ -12777,10 +12787,7 @@ function checkTierProgressOverlay() {
       if (withdrawalToggle) {
         const enabled = localStorage.getItem('remeexWithdrawalsEnabled') !== 'false';
         withdrawalToggle.checked = enabled;
-        withdrawalToggle.onchange = () => {
-          localStorage.setItem('remeexWithdrawalsEnabled', withdrawalToggle.checked);
-          updateAccountStateUI();
-        };
+        withdrawalToggle.onchange = toggleWithdrawals;
       }
       const freezeToggle = document.getElementById('freeze-toggle');
       if (freezeToggle) {
@@ -12823,6 +12830,19 @@ function checkTierProgressOverlay() {
       }
       if (rechargeBtn) rechargeBtn.disabled = disabled;
       if (sendBtn) sendBtn.disabled = disabled;
+    }
+
+    function toggleWithdrawals() {
+      const enabled = localStorage.getItem('remeexWithdrawalsEnabled') !== 'false';
+      const newState = !enabled;
+      localStorage.setItem('remeexWithdrawalsEnabled', newState);
+      const secondary = document.getElementById('withdrawal-toggle');
+      if (secondary) secondary.checked = newState;
+      const mainToggle = document.getElementById('withdrawals-switch');
+      if (mainToggle) mainToggle.checked = newState;
+      showToast('success', newState ? 'Retiros Habilitados' : 'Retiros Deshabilitados',
+        newState ? 'Los retiros han sido habilitados.' : 'Los retiros han sido deshabilitados.');
+      updateAccountStateUI();
     }
 
     function refreshAccountData() {
