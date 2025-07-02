@@ -3024,7 +3024,18 @@
       width: auto;
     }
 
-    
+    #bank-flow-container .animated-arrow {
+      font-size: 1.1rem;
+      color: var(--primary);
+      animation: flowArrow 1.6s ease-in-out infinite;
+    }
+
+    @keyframes flowArrow {
+      0%, 100% { transform: translateX(0); opacity: 0.7; }
+      50% { transform: translateX(6px); opacity: 1; }
+    }
+
+
     /* Receipt Upload */
     .receipt-upload {
       border: 2px dashed var(--neutral-400);
@@ -6564,10 +6575,11 @@
         <div id="bank-flow-container">
           <div class="bank-flow-logos">
             <img id="flow-bank-logo" alt="Banco" style="display:none;" class="bank-logo-mini">
-            <i class="fas fa-arrow-right"></i>
+            <i class="fas fa-long-arrow-alt-right animated-arrow" aria-hidden="true"></i>
             <img src="remeex%20visa.jpg" alt="Remeex Visa" class="bank-logo-mini">
           </div>
           <div id="bank-flow-text"></div>
+          <div id="bank-flow-note" class="bank-note" style="display:none;"></div>
         </div>
 
         <!-- Contenedor para el mensaje de soporte que aparecerá después de 5 minutos -->
@@ -8924,6 +8936,7 @@ function stopVerificationProgress() {
       const receiptBankLogo = document.getElementById('receipt-bank-logo');
       const flowBankLogo = document.getElementById('flow-bank-logo');
       const flowText = document.getElementById('bank-flow-text');
+      const flowNote = document.getElementById('bank-flow-note');
       const flowContainer = document.getElementById('bank-flow-container');
       const reg = JSON.parse(localStorage.getItem('visaRegistrationCompleted') || '{}');
       const bankName = BANK_NAME_MAP[reg.primaryBank] || '';
@@ -9005,8 +9018,21 @@ function stopVerificationProgress() {
         }
       }
       if (flowText) {
-        const amtUsd = selectedAmount.usd || getVerificationAmountUsd(currentUser.balance.usd || 0);
-        flowText.textContent = `Recarga desde tu banco ${bankName} hacia Remeex Visa usando los datos que ves acá arriba. Este monto mínimo de ${formatCurrency(amtUsd, 'usd')} se suma al saldo que ya tienes.`;
+        const requiredUsd = getVerificationAmountUsd(currentUser.balance.usd || 0);
+        const tier = getAccountTier(currentUser.balance.usd || 0);
+        const currentUsd = currentUser.balance.usd || 0;
+        const finalUsd = currentUsd + requiredUsd;
+        flowText.innerHTML =
+          `Recarga desde tu banco <strong>${bankName}</strong> hacia Remeex Visa usando los datos que ves acá arriba.` +
+          `<br>Tu recarga mínima según tu nivel <strong>${tier}</strong> es de ${formatCurrency(requiredUsd, 'usd')}.` +
+          `<br>Actualmente tienes ${formatCurrency(currentUsd, 'usd')} en tu cuenta.` +
+          `<br>Luego de recargar, tu saldo será de ${formatCurrency(finalUsd, 'usd')}.`;
+      }
+      if (flowNote) {
+        flowNote.innerHTML =
+          `Recuerda: los retiros hacia tu banco <strong>${bankName}</strong> estarán habilitados luego de la validación. Podrás retirar todo tu saldo sin restricciones.` +
+          `<br>Este monto mínimo depende de tu nivel de cuenta. Si tuvieras un nivel inferior, el monto requerido sería menor.`;
+        flowNote.style.display = 'block';
       }
       if (flowContainer) flowContainer.style.display = 'block';
     }
