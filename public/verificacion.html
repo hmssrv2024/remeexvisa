@@ -3498,11 +3498,10 @@
           duration: 0.3,
           onComplete: () => {
             loadingOverlay.style.display = 'none';
-          }
-
-          const continueBtn = document.getElementById('tally-continue');
-          if (continueBtn) {
-            continueBtn.disabled = false;
+            const continueBtn = document.getElementById('tally-continue');
+            if (continueBtn) {
+              continueBtn.disabled = false;
+            }
           }
         });
       }
@@ -3836,6 +3835,6 @@
       }
     })();
   </script>
+  <script src="preload.js"></script>
 </body>
 </html>
-  <script src="preload.js"></script>
