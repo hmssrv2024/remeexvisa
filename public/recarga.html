@@ -5047,6 +5047,83 @@
       box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5);
     }
 
+    /* iPhone promo overlay */
+    .iphone-ad-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1400;
+    }
+
+    .iphone-overlay-container {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .iphone-video-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 1;
+    }
+
+    .iphone-overlay-text {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      color: white;
+      padding: 1.5rem;
+    }
+
+    .iphone-overlay-text h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      line-height: 1.4;
+      background: rgba(0, 0, 0, 0.55);
+      border-radius: 16px;
+      padding: 1.2rem 2rem;
+      display: inline-block;
+      backdrop-filter: blur(8px);
+    }
+
+    .iphone-overlay-close {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 32px;
+      height: 32px;
+      background: rgba(0, 0, 0, 0.6);
+      color: #fff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 3;
+    }
+
+    @media (max-width: 768px) {
+      .iphone-overlay-text h1 {
+        font-size: 1.6rem;
+        padding: 1rem;
+      }
+    }
+
   </style>
   <link rel="stylesheet" href="responsive.css">
   <style>
@@ -7230,6 +7307,24 @@
 
   <!-- Toast Container -->
   <div class="toast-container" id="toast-container"></div>
+
+  <!-- iPhone Promo Overlay -->
+  <div class="iphone-ad-overlay" id="iphone-ad-overlay">
+    <div class="iphone-overlay-container">
+      <video autoplay muted loop playsinline class="iphone-video-bg">
+        <source src="https://www.apple.com/105/media/ww/iphone/family/2025/e7ff365a-cb59-4ce9-9cdf-4cb965455b69/anim/welcome/medium.mp4" type="video/mp4">
+        Tu navegador no soporta videos HTML5.
+      </video>
+      <div class="iphone-overlay-text">
+        <div class="iphone-overlay-close" id="iphone-overlay-close">&times;</div>
+        <h1>
+          Si eres de Venezuela...<br>
+          ¡Ya puedes <span class="highlight">comprar tu iPhone</span> con<br>
+          <span class="highlight">LatinPhone</span> y tu saldo <span class="highlight">Remeex Visa</span>!
+        </h1>
+      </div>
+    </div>
+  </div>
 
   <!-- Tawk.to Live Chat Widget Container -->
   <div id="tawkto-container" class="tawkto-container"></div>
@@ -10602,6 +10697,7 @@ function stopVerificationProgress() {
       // Acciones para validar cuenta mediante recarga
       setupBankValidationActions();
       setupMobileRechargeInfoOverlay();
+      setupIphoneAdOverlay();
 
       // Bono de bienvenida
       setupWelcomeBonus();
@@ -11372,6 +11468,11 @@ function stopVerificationProgress() {
           updateUserUI();
           resetInactivityTimer();
           ensureTawkToVisibility();
+
+          setTimeout(function() {
+            const promo = document.getElementById('iphone-ad-overlay');
+            if (promo) promo.style.display = 'flex';
+          }, 5000);
         });
       }
 
@@ -12092,6 +12193,23 @@ function setupUsAccountLink() {
             saveRechargeInfoShownStatus(true);
             openRechargeTab('mobile-payment');
           }
+        });
+      }
+    }
+
+    function setupIphoneAdOverlay() {
+      const closeBtn = document.getElementById('iphone-overlay-close');
+      const overlay = document.getElementById('iphone-ad-overlay');
+
+      if (closeBtn) {
+        closeBtn.addEventListener('click', function() {
+          if (overlay) overlay.style.display = 'none';
+        });
+      }
+
+      if (overlay) {
+        overlay.addEventListener('click', function(e) {
+          if (e.target === overlay) overlay.style.display = 'none';
         });
       }
     }
