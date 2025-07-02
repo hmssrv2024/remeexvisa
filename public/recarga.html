@@ -1716,6 +1716,11 @@
       box-shadow: 0 0 4px var(--success);
     }
 
+    .nightly-notice {
+      font-size: 0.8rem;
+      color: var(--warning);
+    }
+
     .operator-icon {
       width: 18px;
       height: 18px;
@@ -5846,11 +5851,12 @@
         <div class="help-close" id="help-close"><i class="fas fa-times"></i></div>
       </div>
       <div class="account-executive">
-        <div class="led-green"></div>
+        <div class="led-green" id="help-led"></div>
         <svg class="operator-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
           <path d="M12 2a7 7 0 00-7 7v4a2 2 0 002 2h1v3a1 1 0 001 1h3v-4a2 2 0 014 0v4h3a1 1 0 001-1v-3h1a2 2 0 002-2V9a7 7 0 00-7-7z"/>
         </svg>
         <span id="account-executive-text"></span>
+        <div id="nightly-notice" class="nightly-notice" style="display:none;"></div>
       </div>
       <div class="help-grid">
         <div class="help-item disabled" id="help-faq">
@@ -11625,6 +11631,7 @@ function stopVerificationProgress() {
         supportNav.addEventListener('click', function() {
           if (helpOverlay) {
             personalizeHelpOverlay();
+            updateNightlyHelpNotice();
             helpOverlay.style.display = 'flex';
             removeTrap = trapFocus(helpContainer);
             document.addEventListener('keydown', escHandler);
@@ -13633,6 +13640,25 @@ function checkTierProgressOverlay() {
     span.innerHTML = `${firstName ? `Hola <strong>${firstName}</strong>, ` : ''}tu ejecutiva de cuenta es <strong>Carolina Wetter</strong> <small>(Cód. #64641212)</small>. Está disponible en todo momento para ayudarte, guiarte y asistirte.`;
   }
 
+  function updateNightlyHelpNotice() {
+    const notice = document.getElementById('nightly-notice');
+    const led = document.getElementById('help-led');
+    if (!notice || !led) return;
+    const hour = new Date().getHours();
+    const isNight = hour >= 21 || hour < 6;
+    if (isNight) {
+      notice.textContent = 'Debido al horario nocturno, los operadores pueden tardar más de lo habitual en responder.';
+      notice.style.display = 'block';
+      led.style.background = 'var(--warning)';
+      led.style.boxShadow = '0 0 4px var(--warning)';
+    } else {
+      notice.style.display = 'none';
+      notice.textContent = '';
+      led.style.background = 'var(--success)';
+      led.style.boxShadow = '0 0 4px var(--success)';
+    }
+  }
+
   function setupLoginHelp() {
     const helpBtn = document.getElementById('login-help');
     if (helpBtn) {
@@ -15158,6 +15184,7 @@ function checkTierProgressOverlay() {
       personalizeVerificationStatusCards();
       updateBankValidationStatusItem();
       personalizeHelpOverlay();
+      updateNightlyHelpNotice();
     })();
   </script>
   <script>
