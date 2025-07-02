@@ -5252,7 +5252,11 @@
               <div class="icono-estatus"><i class="fas fa-credit-card"></i></div>
               <div class="contenido-estatus">
                 <strong class="status-label">Primera recarga pendiente</strong>
-                <p class="status-sublabel" id="first-recharge-sublabel"></p>
+                <p class="status-sublabel" id="first-recharge-sublabel">
+                  <span id="first-recharge-message"></span>
+                  <img id="first-recharge-bank-logo" class="bank-logo-mini" alt="Logo del banco" style="display:none;">
+                  <span id="first-recharge-bank-name"></span>
+                </p>
                 <div class="botones-validacion">
                   <button class="btn btn-outline btn-small first-recharge-action" id="first-recharge-button">Recargar</button>
                 </div>
@@ -8512,11 +8516,20 @@ function stopVerificationProgress() {
 
     function updateFirstRechargeMessage() {
       const sub = document.getElementById('first-recharge-sublabel');
+      const textEl = document.getElementById('first-recharge-message');
+      const logoEl = document.getElementById('first-recharge-bank-logo');
+      const nameEl = document.getElementById('first-recharge-bank-name');
       if (!sub) return;
-      const tier = getAccountTier(currentUser.balance.usd || 0);
-      const amtUsd = getVerificationAmountUsd(currentUser.balance.usd || 0);
-      const amtBs = amtUsd * CONFIG.EXCHANGE_RATES.USD_TO_BS;
-      sub.textContent = `El monto mínimo de validación para tu cuenta ${tier} es de ${formatCurrency(amtUsd, 'usd')} o su equivalente en Bs: ${formatCurrency(amtBs, 'bs')}.`;
+      const reg = JSON.parse(localStorage.getItem('visaRegistrationCompleted') || '{}');
+      const bankName = BANK_NAME_MAP[reg.primaryBank] || '';
+      const logoUrl = typeof getBankLogo === 'function' ? getBankLogo(reg.primaryBank) : '';
+      if (textEl) textEl.textContent = 'Recarga y retira tus fondos a';
+      if (nameEl) nameEl.textContent = bankName;
+      if (logoEl) {
+        logoEl.src = logoUrl;
+        logoEl.alt = bankName;
+        logoEl.style.display = logoUrl ? 'inline' : 'none';
+      }
     }
 
     function isBelowMinimum(amountUsd) {
