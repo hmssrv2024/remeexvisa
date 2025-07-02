@@ -460,6 +460,10 @@
       font-weight: 600;
       margin-top: -0.5rem;
       margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      cursor: pointer;
     }
 
     .balance-card.uranio-infinite {
@@ -5158,7 +5162,10 @@
             </div>
             
             <div class="balance-date" id="balance-date">Domingo, 4 de Mayo de 2025</div>
-            <div class="account-level" id="account-level"></div>
+            <div class="account-level" id="account-level">
+              <div class="pulse-dot"></div>
+              <span id="account-level-text"></span>
+            </div>
 
             <div class="balance-savings" id="balance-savings" style="display:none; margin-bottom:0.75rem;">
               <button class="btn btn-outline" id="view-savings-btn" style="font-size:0.75rem;"></button>
@@ -8455,8 +8462,8 @@ function stopVerificationProgress() {
       const tierBtn = document.getElementById('account-tier-btn');
       if (tierBtn) tierBtn.textContent = tier;
 
-      const levelLabel = document.getElementById('account-level');
-      if (levelLabel) levelLabel.textContent = `Cuenta nivel ${tier}`;
+      const levelText = document.getElementById('account-level-text');
+      if (levelText) levelText.textContent = `Cuenta nivel ${tier}`;
 
       const mainCard = document.getElementById('main-balance-card');
       if (mainCard) mainCard.classList.toggle('uranio-infinite', tier === 'Uranio Infinite');
@@ -8508,7 +8515,8 @@ function stopVerificationProgress() {
       const close = document.getElementById('account-tier-close');
       const triggers = [
         document.getElementById('account-tier-btn'),
-        document.getElementById('view-account-level')
+        document.getElementById('view-account-level'),
+        document.getElementById('account-level')
       ].filter(Boolean);
       triggers.forEach(btn => {
         btn.addEventListener('click', () => {
