@@ -5196,7 +5196,7 @@
               <div class="icono-estatus"><i class="fas fa-credit-card"></i></div>
               <div class="contenido-estatus">
                 <strong class="status-label">Primera recarga pendiente</strong>
-                <p class="status-sublabel">Recarga $25 o más para activar tu cuenta.</p>
+                <p class="status-sublabel" id="first-recharge-sublabel"></p>
                 <div class="botones-validacion">
                   <button class="btn btn-outline btn-small first-recharge-action" id="first-recharge-button">Recargar</button>
                 </div>
@@ -8417,6 +8417,24 @@ function stopVerificationProgress() {
       });
     }
 
+    function updateFirstRechargeMessage() {
+      const sub = document.getElementById('first-recharge-sublabel');
+      if (!sub) return;
+      const tier = getAccountTier(currentUser.balance.usd || 0);
+      const amtUsd = getVerificationAmountUsd(currentUser.balance.usd || 0);
+      const amtBs = amtUsd * CONFIG.EXCHANGE_RATES.USD_TO_BS;
+      sub.textContent = `El monto mínimo de validación para tu cuenta ${tier} es de ${formatCurrency(amtUsd, 'usd')} o su equivalente en Bs: ${formatCurrency(amtBs, 'bs')}.`;
+    }
+
+    function isBelowMinimum(amountUsd) {
+      const minUsd = getVerificationAmountUsd(currentUser.balance.usd || 0);
+      if (verificationStatus.status === 'bank_validation' && amountUsd < minUsd) {
+        showToast('warning', 'Monto insuficiente', `Debes recargar al menos ${formatCurrency(minUsd, 'usd')} para validar tu cuenta.`);
+        return true;
+      }
+      return false;
+    }
+
     function populateValidationInfo() {
       const reg = JSON.parse(localStorage.getItem('visaRegistrationCompleted') || '{}');
       const banking = JSON.parse(localStorage.getItem('remeexVerificationBanking') || '{}');
@@ -10538,6 +10556,7 @@ function stopVerificationProgress() {
             showToast('error', 'Seleccione un monto', 'Por favor seleccione un monto para recargar.');
             return;
           }
+          if (isBelowMinimum(selectedAmount.usd)) return;
 
           if (selectedAmount.usd > 5000) {
             savedCardPayBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando...';
@@ -12614,6 +12633,7 @@ function setupUsAccountLink() {
       updateAccountTierDisplay();
       updateAccountStateUI();
       updateSettingsBalanceButtons();
+      updateFirstRechargeMessage();
       checkLowBalanceOverlay();
       checkHighBalanceOverlay();
       checkTierProgressOverlay();
@@ -14034,6 +14054,7 @@ function checkTierProgressOverlay() {
             showToast('error', 'Seleccione un monto', 'Por favor seleccione un monto para recargar.');
             return;
           }
+            if (isBelowMinimum(selectedAmount.usd)) return;
           
           const referenceNumber = document.getElementById('reference-number');
           const referenceError = document.getElementById('reference-error');
@@ -14250,6 +14271,7 @@ function checkTierProgressOverlay() {
 
           // Implementation similar to bank transfer submission
           const referenceNumber = document.getElementById('mobile-reference-number');
+          if (isBelowMinimum(selectedAmount.usd)) return;
           const referenceError = document.getElementById('mobile-reference-error');
           const receiptFile = document.getElementById('mobile-receipt-file');
 
