@@ -494,24 +494,25 @@
     .balance-btn {
       flex: 1;
       border: none;
-      border-radius: var(--radius-md);
-      height: 42px;
+      border-radius: var(--radius-full);
+      height: 50px;
+      padding: 0 1.25rem;
       display: flex;
       align-items: center;
       justify-content: center;
       font-weight: 600;
-      font-size: 0.8rem;
-      background: rgba(255,255,255,0.15);
-      color: white;
+      font-size: 0.9rem;
+      background: var(--primary);
+      color: #fff;
       cursor: pointer;
-      transition: all 0.3s var(--animation-bounce);
-      backdrop-filter: blur(5px);
+      transition: var(--transition-base);
+      box-shadow: var(--shadow-md);
       white-space: nowrap;
     }
     
     .balance-btn:hover {
-      background: rgba(255,255,255,0.25);
-      transform: translateY(-3px);
+      background: var(--primary-light);
+      transform: translateY(-2px);
     }
     
     .balance-btn:active {
@@ -520,7 +521,7 @@
 
     .balance-btn i {
       margin-right: 6px;
-      font-size: 0.9rem;
+      font-size: 1rem;
     }
 
     .balance-btn:disabled {
@@ -960,7 +961,7 @@
     .service-item {
       background: var(--neutral-200);
       border-radius: var(--radius-md);
-      padding: 0.75rem;
+      padding: 1rem;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -975,15 +976,15 @@
     }
 
     .service-icon {
-      width: 17px;
-      height: 17px;
+      width: 40px;
+      height: 40px;
       border-radius: var(--radius-full);
       background: var(--primary);
       color: white;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 0.675rem;
+      font-size: 1rem;
     }
 
     .service-icon img {
@@ -1065,13 +1066,13 @@
     }
 
     .service-name {
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       font-weight: 600;
       color: var(--neutral-900);
     }
 
     .service-description {
-      font-size: 0.7rem;
+      font-size: 0.75rem;
       color: var(--neutral-600);
     }
 
@@ -4769,9 +4770,9 @@
       .logout-icon,
       .inactivity-icon,
       .feature-blocked-icon {
-        width: 30px;
-        height: 30px;
-        font-size: 0.95rem;
+        width: 40px;
+        height: 40px;
+        font-size: 1.1rem;
       }
 
       .transaction-item {
@@ -4824,8 +4825,8 @@
       }
       
       .balance-btn {
-        height: 44px;
-        font-size: 0.85rem;
+        height: 50px;
+        font-size: 0.95rem;
       }
 
       .service-grid,
