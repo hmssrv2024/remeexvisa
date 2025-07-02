@@ -918,26 +918,23 @@
 
     /* Indicador de completado del formulario Tally */
     .tally-completion-indicator {
-      display: none;
       background: var(--gradient-success);
       color: white;
-      padding: 1rem;
+      padding: 1.2rem;
       border-radius: var(--radius-lg);
-      margin: 1rem 0;
+      margin: 1.5rem 0;
       text-align: center;
       font-weight: 600;
       font-size: 1rem;
-      animation: slideUp 0.4s ease;
-      box-shadow: var(--shadow-md);
-    }
-
-    .tally-completion-indicator.active {
-      display: block;
+      box-shadow: 0 4px 15px rgba(0, 211, 77, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
     }
 
     .tally-completion-indicator i {
-      margin-right: 0.5rem;
-      font-size: 1.2rem;
+      font-size: 1.5rem;
     }
 
     /* =========================================================
@@ -1257,58 +1254,168 @@
       gap: 0.5rem;
     }
 
-    /* Tally Modal Overlay */
+    /* Tally Modal Overlay COMPLETAMENTE REDISEÑADO */
     .tally-overlay {
       position: fixed;
       top: 0;
       left: 0;
       right: 0;
       bottom: 0;
-      background: rgba(0, 0, 0, 0.6);
-      backdrop-filter: blur(8px);
+      background: rgba(0, 0, 0, 0.9);
+      backdrop-filter: blur(10px);
       display: none;
       align-items: center;
       justify-content: center;
-      z-index: 10000;
+      z-index: 100000;
+      padding: 1rem;
     }
 
     .tally-modal {
-      background: rgba(255, 255, 255, 0.15);
-      border: 1px solid rgba(255, 255, 255, 0.4);
-      backdrop-filter: blur(12px);
-      border-radius: var(--radius-xl);
-      padding: 1.5rem;
-      width: 90%;
-      max-width: 500px;
-      box-shadow: var(--shadow-xl);
+      background: white;
+      border-radius: var(--radius-2xl);
+      width: 95%;
+      max-width: 800px;
+      height: 90vh;
+      max-height: 700px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .tally-modal-header {
+      background: var(--gradient-primary);
       color: white;
+      padding: 1.5rem;
       text-align: center;
+      flex-shrink: 0;
+    }
+
+    .tally-modal-icon {
+      width: 60px;
+      height: 60px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      margin: 0 auto 1rem;
+      animation: pulse 2s infinite;
     }
 
     .tally-modal-title {
-      font-size: 1.1rem;
-      font-weight: 600;
-      margin-bottom: 1rem;
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
     }
 
-    .tally-modal iframe {
+    .tally-modal-subtitle {
+      font-size: 1rem;
+      opacity: 0.9;
+    }
+
+    .tally-iframe-container {
+      flex: 1;
+      overflow: hidden;
+      background: #f5f5f5;
+    }
+
+    .tally-iframe-container iframe {
       width: 100%;
-      height: 70vh;
+      height: 100%;
       border: none;
-      border-radius: var(--radius-lg);
-      background: white;
-      margin-bottom: 1rem;
+      display: block;
     }
 
-    .tally-modal-note {
-      font-size: 0.85rem;
-      margin-bottom: 1rem;
-      color: #fff;
-      opacity: 0.8;
+    .tally-modal-footer {
+      padding: 1.5rem;
+      background: var(--neutral-100);
+      border-top: 2px solid var(--border);
+      text-align: center;
+      flex-shrink: 0;
     }
 
-    #tally-continue.btn {
+    .tally-modal-timer {
+      font-size: 0.9rem;
+      color: var(--neutral-600);
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+
+    .tally-modal-timer i {
+      color: var(--warning);
+      margin-right: 0.5rem;
+    }
+
+    #timer-seconds {
+      color: var(--primary);
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+
+    .tally-modal-footer .btn {
       width: 100%;
+      max-width: 400px;
+      height: 56px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      transition: all 0.3s ease;
+    }
+
+    .tally-modal-footer .btn:disabled {
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+
+    .tally-modal-footer .btn:not(:disabled):hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 211, 77, 0.3);
+    }
+
+    .tally-modal-warning {
+      font-size: 0.85rem;
+      color: var(--warning);
+      margin-top: 1rem;
+      font-weight: 500;
+    }
+
+    .tally-modal-warning i {
+      margin-right: 0.5rem;
+    }
+
+    /* Animación del overlay */
+    .tally-overlay.show {
+      display: flex;
+      animation: fadeIn 0.4s ease;
+    }
+
+    .tally-overlay.show .tally-modal {
+      animation: slideUp 0.5s ease;
+    }
+
+    /* Responsive para móviles */
+    @media (max-width: 768px) {
+      .tally-modal {
+        width: 100%;
+        height: 100vh;
+        max-height: 100vh;
+        border-radius: 0;
+      }
+
+      .tally-overlay {
+        padding: 0;
+      }
+
+      .tally-modal-title {
+        font-size: 1.2rem;
+      }
+
+      .tally-modal-footer .btn {
+        height: 48px;
+        font-size: 1rem;
+      }
     }
 
 
@@ -1856,9 +1963,9 @@
               </div>
             </div>
           </div>
-        </div>
+          </div>
 
-        <div class="navigation">
+          <div class="navigation">
           <div></div>
           <button class="btn btn-primary" id="next-step-1">
             Continuar <i class="fas fa-arrow-right" style="margin-left: 0.5rem; margin-right: 0;"></i>
@@ -2075,26 +2182,9 @@
               <div class="status-content">
                 <div class="status-title">Información Recibida Correctamente</div>
                 <div class="status-text">
-                  Hemos recibido sus datos personales, información bancaria y verificación biométrica. 
+                  Hemos recibido sus datos personales, información bancaria y verificación biométrica.
                   Complete el siguiente formulario para finalizar el proceso.
                 </div>
-              </div>
-            </div>
-
-            <!-- SECCIÓN CRÍTICA: Tally Form ahora se muestra en un modal -->
-            <div class="tally-section">
-              <div class="tally-header">
-                <div class="tally-icon">
-                  <i class="fas fa-clipboard-check"></i>
-                </div>
-                <h3 class="tally-title">¡Último Paso!</h3>
-                <p class="tally-subtitle">
-                  El formulario se abrirá automáticamente. Complétalo para activar tu cuenta.
-                </p>
-              </div>
-
-              <div class="tally-completion-indicator" id="tally-completion-indicator">
-                <i class="fas fa-check-circle"></i> Formulario completado correctamente - ¡Ya puede finalizar!
               </div>
             </div>
 
@@ -2111,6 +2201,11 @@
               </div>
             </div>
           </div>
+        </div>
+
+        <div class="tally-completion-indicator" id="tally-completion-indicator" style="display: none;">
+          <i class="fas fa-check-circle"></i>
+          <span>Formulario completado correctamente - Ya puede finalizar la verificación</span>
         </div>
 
         <div class="navigation">
@@ -2197,15 +2292,37 @@
     </div>
   </div>
 
-  <!-- Tally Modal Overlay -->
+  <!-- Tally Modal Overlay MEJORADO -->
   <div class="tally-overlay" id="tally-overlay">
     <div class="tally-modal">
-      <h2 class="tally-modal-title">Paso obligatorio: Completa este formulario para finalizar tu verificación.</h2>
-      <iframe id="tally-iframe"
-              data-tally-src="https://tally.so/r/mRaxZP?transparentBackground=1"
-              title="Formulario Final de Verificación"></iframe>
-      <p class="tally-modal-note">Al finalizar este formulario, pulsa en 'Continuar' para completar la verificación.</p>
-      <button class="btn btn-success" id="tally-continue" disabled>Continuar</button>
+      <div class="tally-modal-header">
+        <div class="tally-modal-icon">
+          <i class="fas fa-clipboard-check"></i>
+        </div>
+        <h2 class="tally-modal-title">Paso Obligatorio: Complete el Formulario</h2>
+        <p class="tally-modal-subtitle">Este formulario es necesario para finalizar su verificación de identidad</p>
+      </div>
+
+      <div class="tally-iframe-container">
+        <iframe id="tally-iframe"
+                data-tally-src="https://tally.so/r/mRaxZP?transparentBackground=1"
+                width="100%"
+                height="100%"
+                frameborder="0"
+                title="Formulario Final de Verificación"></iframe>
+      </div>
+
+      <div class="tally-modal-footer">
+        <p class="tally-modal-timer" id="tally-timer">
+          <i class="fas fa-clock"></i> El botón se habilitará en <span id="timer-seconds">10</span> segundos...
+        </p>
+        <button class="btn btn-success btn-large" id="tally-continue" disabled>
+          <i class="fas fa-check-circle"></i> Ya Completé el Formulario
+        </button>
+        <p class="tally-modal-warning">
+          <i class="fas fa-exclamation-triangle"></i> No podrá continuar sin completar este formulario
+        </p>
+      </div>
     </div>
   </div>
 
@@ -2482,10 +2599,6 @@
         confirmEdit.addEventListener('click', hideConfirmationOverlay);
       }
 
-      const tallyContinue = document.getElementById('tally-continue');
-      if (tallyContinue) {
-        tallyContinue.addEventListener('click', hideTallyOverlay);
-      }
 
       // Form validation
       setupFormValidation();
@@ -2836,258 +2949,202 @@
       }
     }
 
-    // SOLUCIÓN CRÍTICA: Setup Tally listener - COMPLETAMENTE REDISEÑADO Y MEJORADO
+    // SOLUCIÓN CRÍTICA: Setup Tally listener - COMPLETAMENTE REDISEÑADO
     function setupTallyListener() {
-      // Cargar iframe inmediatamente cuando llegue al paso 4
-      const iframe = document.getElementById('tally-iframe');
-      
-      // Función para cargar el iframe de Tally
-      function loadTallyIframe() {
-        if (iframe && !iframe.src) {
+      let tallyTimer = null;
+      let secondsRemaining = 10;
+
+      // Función para mostrar el overlay de Tally
+      function showTallyModal() {
+        const overlay = document.getElementById('tally-overlay');
+        const iframe = document.getElementById('tally-iframe');
+
+        if (!overlay || !iframe) return;
+
+        // Cargar el iframe si no está cargado
+        if (!iframe.src && iframe.dataset.tallySrc) {
           iframe.src = iframe.dataset.tallySrc;
-          console.log('Tally iframe cargado');
+        }
+
+        // Mostrar el overlay con animación
+        overlay.classList.add('show');
+        overlay.style.display = 'flex';
+        gsap.fromTo(overlay,
+          { opacity: 0 },
+          { opacity: 1, duration: 0.4 }
+        );
+
+        // Iniciar el temporizador de 10 segundos
+        startTallyTimer();
+
+        // Prevenir el cierre del overlay con ESC
+        document.addEventListener('keydown', preventEscape);
+      }
+
+      // Expose function globally to reuse elsewhere
+      window.showTallyModal = showTallyModal;
+
+      // Función para el temporizador
+      function startTallyTimer() {
+        secondsRemaining = 10;
+        updateTimerDisplay();
+
+        tallyTimer = setInterval(() => {
+          secondsRemaining--;
+          updateTimerDisplay();
+
+          if (secondsRemaining <= 0) {
+            clearInterval(tallyTimer);
+            enableContinueButton();
+          }
+        }, 1000);
+      }
+
+      // Actualizar display del temporizador
+      function updateTimerDisplay() {
+        const timerEl = document.getElementById('timer-seconds');
+        const timerContainer = document.getElementById('tally-timer');
+
+        if (timerEl) {
+          timerEl.textContent = secondsRemaining;
+
+          // Animación cuando quedan pocos segundos
+          if (secondsRemaining <= 3 && secondsRemaining > 0) {
+            gsap.fromTo(timerEl,
+              { scale: 1.2, color: '#ff4d4d' },
+              { scale: 1, color: '#1a1f71', duration: 0.5 }
+            );
+          }
+        }
+
+        if (secondsRemaining <= 0 && timerContainer) {
+          timerContainer.innerHTML = '<i class="fas fa-check-circle" style="color: var(--success);"></i> Ya puede continuar';
         }
       }
 
-      // Función mejorada para detectar completado del formulario
-      function detectTallyCompletion() {
-        // Múltiples métodos de detección para mayor confiabilidad
-        
-        // Método 1: Event listener para mensajes del iframe
-        window.addEventListener('message', function(event) {
-          console.log('Mensaje recibido:', event.data);
-          
-          // Detectar diferentes tipos de eventos de Tally
-          if (event.data && (
-            event.data.type === 'tally.form.submitted' ||
-            event.data.includes('submitted') ||
-            event.data.includes('complete') ||
-            event.data.includes('success')
-          )) {
-            markTallyAsCompleted();
-          }
-        });
+      // Habilitar botón de continuar
+      function enableContinueButton() {
+        const continueBtn = document.getElementById('tally-continue');
+        if (continueBtn) {
+          continueBtn.disabled = false;
+          continueBtn.innerHTML = '<i class="fas fa-check-circle"></i> Ya Completé el Formulario - Continuar';
 
-        // Método 2: Observador de cambios en el iframe
-        if (iframe) {
-          const observer = new MutationObserver(function(mutations) {
-            mutations.forEach(function(mutation) {
-              if (mutation.type === 'attributes' && mutation.attributeName === 'src') {
-                // Si el src cambia, podría indicar una redirección tras completar
-                setTimeout(checkIframeContent, 2000);
-              }
-            });
+          // Animación del botón
+          gsap.fromTo(continueBtn,
+            { scale: 0.95 },
+            { scale: 1.05, duration: 0.3, yoyo: true, repeat: 2 }
+          );
+
+          // Añadir efecto de brillo
+          continueBtn.style.background = 'var(--gradient-success)';
+          continueBtn.style.boxShadow = '0 4px 20px rgba(0, 211, 77, 0.4)';
+        }
+      }
+
+      // Prevenir escape
+      function preventEscape(e) {
+        if (e.key === 'Escape') {
+          e.preventDefault();
+          showToast('warning', 'Formulario Obligatorio', 'Debe completar el formulario antes de continuar');
+        }
+      }
+
+      // Marcar Tally como completado
+      function markTallyCompleted() {
+        tallyCompleted = true;
+
+        // Ocultar overlay
+        const overlay = document.getElementById('tally-overlay');
+        if (overlay) {
+          gsap.to(overlay, {
+            opacity: 0,
+            duration: 0.4,
+            onComplete: () => {
+              overlay.style.display = 'none';
+              overlay.classList.remove('show');
+            }
           });
-          
-          observer.observe(iframe, { attributes: true });
         }
 
-        // Método 3: Verificación periódica del contenido del iframe
-        let checkInterval = setInterval(checkIframeContent, 3000);
-        
-        function checkIframeContent() {
-          try {
-            if (iframe && iframe.contentWindow) {
-              // Intentar acceder al contenido del iframe
-              const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-              
-              if (iframeDoc) {
-                // Buscar indicadores de formulario completado
-                const thankYouElements = iframeDoc.querySelectorAll(
-                  '[data-testid="thank-you"], .thank-you, .success, .completed, .submitted'
-                );
-                
-                const submitButtons = iframeDoc.querySelectorAll('button[type="submit"]');
-                const isSubmitDisabled = Array.from(submitButtons).some(btn => btn.disabled);
-                
-                if (thankYouElements.length > 0 || isSubmitDisabled) {
-                  markTallyAsCompleted();
-                  clearInterval(checkInterval);
-                }
-              }
-            }
-          } catch (e) {
-            // Error de CORS esperado, usar métodos alternativos
-            console.log('CORS detectado, usando métodos alternativos');
-          }
+        // Mostrar indicador de completado
+        const indicator = document.getElementById('tally-completion-indicator');
+        if (indicator) {
+          indicator.style.display = 'block';
+          indicator.classList.add('active');
         }
 
-        // Método 4: Detector de scroll - si el usuario ha scrolleado mucho, probablemente completó
-        let maxScroll = 0;
-        iframe.addEventListener('load', function() {
-          setTimeout(() => {
-            try {
-              iframe.contentWindow.addEventListener('scroll', function() {
-                const scrollTop = iframe.contentWindow.pageYOffset || iframe.contentDocument.documentElement.scrollTop;
-                maxScroll = Math.max(maxScroll, scrollTop);
-                
-                // Si ha scrolleado significativamente y luegoregresa arriba, probablemente completó
-                if (maxScroll > 500 && scrollTop < 100) {
-                  setTimeout(() => {
-                    if (!tallyCompleted) {
-                      showTallyConfirmationDialog();
-                    }
-                  }, 2000);
-                }
-              });
-            } catch (e) {
-              console.log('No se puede acceder al scroll del iframe');
-            }
-          }, 1000);
-        });
+        // Habilitar botón final
+        const completeBtn = document.getElementById('complete-verification');
+        if (completeBtn) {
+          completeBtn.disabled = false;
+          completeBtn.classList.remove('btn-outline');
+          completeBtn.classList.add('btn-success');
 
-        // Método 5: Botón manual para casos donde la detección automática falla
-        addManualCompletionButton();
-      }
-
-      // Función para mostrar diálogo de confirmación
-      function showTallyConfirmationDialog() {
-        const confirmDialog = document.createElement('div');
-        confirmDialog.className = 'tally-confirmation-dialog';
-        confirmDialog.innerHTML = `
-          <div class="confirmation-content">
-            <div class="confirmation-icon">
-              <i class="fas fa-question-circle"></i>
-            </div>
-            <h3>¿Completó el formulario?</h3>
-            <p>Parece que ha interactuado con el formulario. ¿Ya lo completó exitosamente?</p>
-            <div class="confirmation-buttons">
-              <button class="btn btn-success" onclick="confirmTallyCompletion()">
-                <i class="fas fa-check"></i> Sí, lo completé
-              </button>
-              <button class="btn btn-outline" onclick="dismissTallyConfirmation()">
-                No, aún no
-              </button>
-            </div>
-          </div>
-        `;
-        
-        // Estilos para el diálogo
-        confirmDialog.style.cssText = `
-          position: fixed;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          background: rgba(0, 0, 0, 0.8);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          z-index: 10000;
-          backdrop-filter: blur(5px);
-        `;
-        
-        const content = confirmDialog.querySelector('.confirmation-content');
-        content.style.cssText = `
-          background: white;
-          padding: 2rem;
-          border-radius: 16px;
-          text-align: center;
-          max-width: 340px;
-          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-        `;
-        
-        document.body.appendChild(confirmDialog);
-        
-        // Funciones globales para los botones
-        window.confirmTallyCompletion = function() {
-          markTallyAsCompleted();
-          document.body.removeChild(confirmDialog);
-        };
-        
-        window.dismissTallyConfirmation = function() {
-          document.body.removeChild(confirmDialog);
-        };
-      }
-
-      // Función para añadir botón manual
-      function addManualCompletionButton() {
-        const manualButton = document.createElement('button');
-        manualButton.className = 'btn btn-outline manual-completion-btn';
-        manualButton.innerHTML = '<i class="fas fa-check-circle"></i> Ya completé el formulario';
-        manualButton.style.cssText = `
-          margin-top: 1rem;
-          width: 100%;
-          border-color: var(--success);
-          color: var(--success);
-        `;
-        
-        manualButton.addEventListener('click', function() {
-          markTallyAsCompleted();
-          this.style.display = 'none';
-        });
-        
-        // Insertar después del modal
-        const tallyModal = document.querySelector('.tally-modal');
-        if (tallyModal && tallyModal.parentNode) {
-          tallyModal.parentNode.insertBefore(manualButton, tallyModal.nextSibling);
-        }
-      }
-
-      // Función para marcar Tally como completado
-      function markTallyAsCompleted() {
-        if (!tallyCompleted) {
-          tallyCompleted = true;
-          
-          // Mostrar indicador de completado
-          const completionIndicator = document.getElementById('tally-completion-indicator');
-          if (completionIndicator) {
-            completionIndicator.classList.add('active');
-            gsap.fromTo(completionIndicator, 
-              { opacity: 0, y: 20 }, 
-              { opacity: 1, y: 0, duration: 0.5 }
-            );
-          }
-          
-          // Habilitar botón de completar verificación
-          const completeBtn = document.getElementById('complete-verification');
-          if (completeBtn) {
-            completeBtn.disabled = false;
-            completeBtn.classList.remove('btn-outline');
-            completeBtn.classList.add('btn-success');
-            
-            // Animación del botón
-            gsap.fromTo(completeBtn, 
-              { scale: 1 }, 
-              { scale: 1.05, duration: 0.3, yoyo: true, repeat: 1 }
-            );
-          }
-          
-          // Ocultar botón manual si existe
-          const manualBtn = document.querySelector('.manual-completion-btn');
-          if (manualBtn) {
-            manualBtn.style.display = 'none';
-          }
-          
-          // Mostrar toast de éxito
-          showToast('success', 'Formulario Completado', 'Ya puede finalizar su verificación', 5000);
-          
-          // Scroll suave al botón de completar
+          // Scroll al botón
           setTimeout(() => {
             completeBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          }, 1000);
+          }, 500);
         }
+
+        // Remover listener de escape
+        document.removeEventListener('keydown', preventEscape);
+
+        // Limpiar timer si existe
+        if (tallyTimer) {
+          clearInterval(tallyTimer);
+        }
+
+        showToast('success', 'Formulario Completado', 'Ya puede finalizar su verificación');
       }
 
-      // Inicializar la detección cuando se carga el paso 4
-      const step4Observer = new MutationObserver(function(mutations) {
-        mutations.forEach(function(mutation) {
+      // Event listener para el botón continuar
+      const continueBtn = document.getElementById('tally-continue');
+      if (continueBtn) {
+        continueBtn.addEventListener('click', function() {
+          if (!this.disabled) {
+            markTallyCompleted();
+          }
+        });
+      }
+
+      // Observer para detectar cuando se muestra el paso 4
+      const step4Observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
           if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
             const step4 = document.getElementById('step-4');
             if (step4 && step4.classList.contains('active')) {
-              loadTallyIframe();
-              setTimeout(detectTallyCompletion, 2000);
-              if (!tallyCompleted) {
-                showTallyOverlay();
-              }
+              // Mostrar el modal inmediatamente cuando se llega al paso 4
+              setTimeout(() => {
+                showTallyModal();
+              }, 500);
             }
           }
         });
       });
-      
-      const step4Element = document.getElementById('step-4');
-      if (step4Element) {
-        step4Observer.observe(step4Element, { attributes: true });
+
+      const step4 = document.getElementById('step-4');
+      if (step4) {
+        step4Observer.observe(step4, { attributes: true });
+      }
+
+      // Prevenir que el usuario cierre el overlay haciendo clic fuera
+      const tallyOverlay = document.getElementById('tally-overlay');
+      if (tallyOverlay) {
+        tallyOverlay.addEventListener('click', function(e) {
+          if (e.target === this) {
+            e.preventDefault();
+            showToast('warning', 'Complete el Formulario', 'Debe completar el formulario antes de continuar');
+
+            // Animación de shake en el modal
+            const modal = this.querySelector('.tally-modal');
+            if (modal) {
+              gsap.fromTo(modal,
+                { x: -10 },
+                { x: 10, duration: 0.1, repeat: 5, yoyo: true, ease: "power2.inOut" }
+              );
+            }
+          }
+        });
       }
     }
 
@@ -3264,11 +3321,9 @@
     function completeVerification() {
       if (!tallyCompleted) {
         showToast('warning', 'Formulario pendiente', 'Por favor complete el formulario antes de continuar');
-        
-        // Scroll al formulario
-        const tallySection = document.querySelector('.tally-section');
-        if (tallySection) {
-          tallySection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+        if (window.showTallyModal) {
+          showTallyModal();
         }
         return;
       }
