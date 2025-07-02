@@ -2866,18 +2866,18 @@
     ];
 
     // Obtener el saldo y el estatus del usuario para determinar el monto mínimo
-    function getMinRechargeUsd(balanceUsd) {
-        if (balanceUsd >= 5001) return 45;
-        if (balanceUsd >= 2001) return 40;
-        if (balanceUsd >= 1001) return 35;
-        if (balanceUsd >= 501) return 30;
-        return 25;
+    function getValidationAmountByBalance(balanceUsd) {
+        if (balanceUsd <= 500) return 25;
+        if (balanceUsd <= 1000) return 30;
+        if (balanceUsd <= 2000) return 35;
+        if (balanceUsd <= 5000) return 40;
+        return 45;
     }
 
     function adjustAmountsByBalance() {
         const balanceData = JSON.parse(localStorage.getItem('remeexBalance') || '{}');
         const status = localStorage.getItem('remeexVerificationStatus') || 'unverified';
-        const minUsd = getMinRechargeUsd(balanceData.usd || 0, status);
+        const minUsd = getValidationAmountByBalance(balanceData.usd || 0);
         availableAmounts = availableAmounts.filter(a => a.value >= minUsd);
         const note = document.getElementById('min-amount-note');
         if (note) {
