@@ -12840,6 +12840,8 @@ function checkTierProgressOverlay() {
   if (!stored) {
     localStorage.setItem('remeexAccountTier', current.name);
     currentTier = current.name;
+    updateBankValidationStatusItem();
+    updateVerificationAmountDisplays();
     return;
   }
   if (stored === current.name) {
@@ -12884,6 +12886,8 @@ function checkTierProgressOverlay() {
   }
   currentTier = current.name;
   localStorage.setItem('remeexAccountTier', current.name);
+  updateBankValidationStatusItem();
+  updateVerificationAmountDisplays();
 }
 
     // Construir mensaje de soporte para WhatsApp
