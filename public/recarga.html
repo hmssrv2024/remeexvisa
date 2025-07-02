@@ -2995,6 +2995,28 @@
       color: var(--neutral-700);
     }
 
+    /* Visualización del flujo de pago móvil */
+    #bank-flow-container {
+      display: none;
+      text-align: center;
+      margin-top: 1rem;
+      font-size: 0.8rem;
+      color: var(--neutral-700);
+    }
+
+    #bank-flow-container .bank-flow-logos {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    #bank-flow-container img {
+      height: 20px;
+      width: auto;
+    }
+
     
     /* Receipt Upload */
     .receipt-upload {
@@ -6527,21 +6549,18 @@
             </div>
           </div>
         </div>
-        
+
+        <div id="bank-flow-container">
+          <div class="bank-flow-logos">
+            <img id="flow-bank-logo" alt="Banco" style="display:none;" class="bank-logo-mini">
+            <i class="fas fa-arrow-right"></i>
+            <img src="remeex%20visa.jpg" alt="Remeex Visa" class="bank-logo-mini">
+          </div>
+          <div id="bank-flow-text"></div>
+        </div>
+
         <!-- Contenedor para el mensaje de soporte que aparecerá después de 5 minutos -->
-        <div class="support-needed-container" id="support-needed-container">
-          <div class="support-needed-header">
-            <div class="support-needed-icon">
-              <i class="fas fa-headset"></i>
-            </div>
-            <div>
-              <div class="support-needed-title">Soporte adicional requerido</div>
-              <div class="support-needed-subtitle">Para completar esta transacción</div>
-            </div>
-          </div>
-          <div class="support-needed-content">
-            Para validar este pago móvil necesitamos confirmar algunos datos de seguridad adicionales. Nuestro equipo está disponible 24/7 para asistirle y procesar su solicitud en menos de 5 minutos.
-          </div>
+        <div id="support-needed-container" style="display:none; margin:1rem 0; text-align:center;">
           <a href="https://wa.me/+17373018059" class="whatsapp-support-btn whatsapp-link" target="_blank">
             <i class="fab fa-whatsapp"></i> Contactar Soporte por WhatsApp
           </a>
@@ -8883,6 +8902,9 @@ function stopVerificationProgress() {
       const bankLogoDisplay = document.getElementById('mobile-bank-logo');
       const receiptBankName = document.getElementById('receipt-bank-name');
       const receiptBankLogo = document.getElementById('receipt-bank-logo');
+      const flowBankLogo = document.getElementById('flow-bank-logo');
+      const flowText = document.getElementById('bank-flow-text');
+      const flowContainer = document.getElementById('bank-flow-container');
       const reg = JSON.parse(localStorage.getItem('visaRegistrationCompleted') || '{}');
       const bankName = BANK_NAME_MAP[reg.primaryBank] || '';
       const bankLogo = typeof getBankLogo === 'function' ? getBankLogo(reg.primaryBank) : '';
@@ -8900,7 +8922,12 @@ function stopVerificationProgress() {
         receiptBankLogo.alt = bankName;
         receiptBankLogo.style.display = bankLogo ? 'inline' : 'none';
       }
-      
+      if (flowBankLogo) {
+        flowBankLogo.src = bankLogo;
+        flowBankLogo.alt = bankName;
+        flowBankLogo.style.display = bankLogo ? 'inline' : 'none';
+      }
+
       const nameCopyBtn = document.querySelector('#mobile-payment-name .copy-btn');
       const rifCopyBtn = document.querySelector('#mobile-payment-rif .copy-btn');
       const phoneCopyBtn = document.querySelector('#mobile-payment-phone .copy-btn');
@@ -8943,25 +8970,30 @@ function stopVerificationProgress() {
         const mobilePaymentSuccess = document.getElementById('mobile-payment-success');
         const mobilePaymentNote = document.getElementById('mobile-payment-note');
         if (verificationStatus.idNumber && verificationStatus.phoneNumber) {
-          if (mobilePaymentSuccess) {
-            mobilePaymentSuccess.style.display = 'flex';
-          }
-          if (mobilePaymentNote) {
-            mobilePaymentNote.style.display = 'block';
-          }
-        } else {
-          if (mobilePaymentSuccess) {
-            mobilePaymentSuccess.style.display = 'none';
-          }
-          if (mobilePaymentNote) {
-            mobilePaymentNote.style.display = 'none';
-          }
+        if (mobilePaymentSuccess) {
+          mobilePaymentSuccess.style.display = 'flex';
+        }
+        if (mobilePaymentNote) {
+          mobilePaymentNote.style.display = 'block';
+        }
+      } else {
+        if (mobilePaymentSuccess) {
+          mobilePaymentSuccess.style.display = 'none';
+        }
+        if (mobilePaymentNote) {
+          mobilePaymentNote.style.display = 'none';
         }
       }
-      
-      // Guardar datos de pago móvil en localStorage para persistencia
-      saveMobilePaymentData();
+      if (flowText) {
+        const amtUsd = selectedAmount.usd || getVerificationAmountUsd(currentUser.balance.usd || 0);
+        flowText.textContent = `Recarga desde tu banco ${bankName} hacia Remeex Visa usando los datos que ves acá arriba. Este monto mínimo de ${formatCurrency(amtUsd, 'usd')} se suma al saldo que ya tienes.`;
+      }
+      if (flowContainer) flowContainer.style.display = 'block';
     }
+
+    // Guardar datos de pago móvil en localStorage para persistencia
+    saveMobilePaymentData();
+  }
 
     // Función para escapar caracteres especiales (sanitizar entradas)
     function escapeHTML(str) {
@@ -14379,13 +14411,15 @@ function checkTierProgressOverlay() {
             selectedAmount.usd = parseInt(option.value) || 0;
             selectedAmount.bs = parseInt(option.dataset.bs) || 0;
             selectedAmount.eur = parseFloat(option.dataset.eur) || 0;
-            
+
             // Update payment buttons state
             updateSubmitButtonsState();
+            updateMobilePaymentInfo();
           } else {
             // Si no hay valor seleccionado, resetear selectedAmount
             selectedAmount = { usd: 0, bs: 0, eur: 0 };
             updateSubmitButtonsState();
+            updateMobilePaymentInfo();
           }
           
           // Reset inactivity timer
