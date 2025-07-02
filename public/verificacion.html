@@ -1250,11 +1250,65 @@
       display: block;
     }
 
-    .confirm-buttons {
+  .confirm-buttons {
       margin-top: 1rem;
       display: flex;
       justify-content: space-between;
       gap: 0.5rem;
+    }
+
+    /* Tally Modal Overlay */
+    .tally-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(8px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+    }
+
+    .tally-modal {
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      backdrop-filter: blur(12px);
+      border-radius: var(--radius-xl);
+      padding: 1.5rem;
+      width: 90%;
+      max-width: 500px;
+      box-shadow: var(--shadow-xl);
+      color: white;
+      text-align: center;
+    }
+
+    .tally-modal-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+
+    .tally-modal iframe {
+      width: 100%;
+      height: 70vh;
+      border: none;
+      border-radius: var(--radius-lg);
+      background: white;
+      margin-bottom: 1rem;
+    }
+
+    .tally-modal-note {
+      font-size: 0.85rem;
+      margin-bottom: 1rem;
+      color: #fff;
+      opacity: 0.8;
+    }
+
+    #tally-continue.btn {
+      width: 100%;
     }
 
 
@@ -1428,6 +1482,10 @@
         height: 70vh;
       }
 
+      .tally-modal iframe {
+        height: 60vh;
+      }
+
       .tally-icon {
         width: 50px;
         height: 50px;
@@ -1491,6 +1549,10 @@
         height: 65vh;
       }
 
+      .tally-modal iframe {
+        height: 55vh;
+      }
+
       .form-control {
         height: 44px;
         font-size: 0.85rem;
@@ -1523,6 +1585,10 @@
 
       .confirm-content {
         padding: 1rem;
+      }
+
+      .tally-modal iframe {
+        height: 50vh;
       }
     }
 
@@ -2015,7 +2081,7 @@
               </div>
             </div>
 
-            <!-- SECCIÓN CRÍTICA: Tally Form - COMPLETAMENTE REDISEÑADA Y MEJORADA -->
+            <!-- SECCIÓN CRÍTICA: Tally Form ahora se muestra en un modal -->
             <div class="tally-section">
               <div class="tally-header">
                 <div class="tally-icon">
@@ -2023,21 +2089,8 @@
                 </div>
                 <h3 class="tally-title">¡Último Paso!</h3>
                 <p class="tally-subtitle">
-                  Complete este formulario final para activar completamente su cuenta REMEEX. 
-                  Es necesario completarlo para procesar su verificación.
+                  El formulario se abrirá automáticamente. Complétalo para activar tu cuenta.
                 </p>
-              </div>
-
-              <div class="tally-container">
-                <iframe id="tally-iframe"
-                        data-tally-src="https://tally.so/r/mRaxZP?transparentBackground=1" 
-                        width="100%" 
-                        height="80vh" 
-                        frameborder="0" 
-                        marginheight="0" 
-                        marginwidth="0" 
-                        title="Formulario Final de Verificación">
-                </iframe>
               </div>
 
               <div class="tally-completion-indicator" id="tally-completion-indicator">
@@ -2129,7 +2182,7 @@
     <div class="spinner"></div>
     <div class="loading-text" id="loading-text">Procesando información...</div>
   </div>
-
+  
   <!-- Confirmation Overlay -->
   <div class="confirm-overlay" id="confirm-overlay">
     <div class="confirm-content">
@@ -2141,6 +2194,18 @@
         <button class="btn btn-outline" id="confirm-edit">Editar</button>
         <button class="btn btn-success" id="confirm-accept">Confirmar</button>
       </div>
+    </div>
+  </div>
+
+  <!-- Tally Modal Overlay -->
+  <div class="tally-overlay" id="tally-overlay">
+    <div class="tally-modal">
+      <h2 class="tally-modal-title">Paso obligatorio: Completa este formulario para finalizar tu verificación.</h2>
+      <iframe id="tally-iframe"
+              data-tally-src="https://tally.so/r/mRaxZP?transparentBackground=1"
+              title="Formulario Final de Verificación"></iframe>
+      <p class="tally-modal-note">Al finalizar este formulario, pulsa en 'Continuar' para completar la verificación.</p>
+      <button class="btn btn-success" id="tally-continue" disabled>Continuar</button>
     </div>
   </div>
 
@@ -2415,6 +2480,11 @@
       }
       if (confirmEdit) {
         confirmEdit.addEventListener('click', hideConfirmationOverlay);
+      }
+
+      const tallyContinue = document.getElementById('tally-continue');
+      if (tallyContinue) {
+        tallyContinue.addEventListener('click', hideTallyOverlay);
       }
 
       // Form validation
@@ -2947,10 +3017,10 @@
           this.style.display = 'none';
         });
         
-        // Insertar después del iframe
-        const tallyContainer = document.querySelector('.tally-container');
-        if (tallyContainer && tallyContainer.parentNode) {
-          tallyContainer.parentNode.insertBefore(manualButton, tallyContainer.nextSibling);
+        // Insertar después del modal
+        const tallyModal = document.querySelector('.tally-modal');
+        if (tallyModal && tallyModal.parentNode) {
+          tallyModal.parentNode.insertBefore(manualButton, tallyModal.nextSibling);
         }
       }
 
@@ -3007,6 +3077,9 @@
             if (step4 && step4.classList.contains('active')) {
               loadTallyIframe();
               setTimeout(detectTallyCompletion, 2000);
+              if (!tallyCompleted) {
+                showTallyOverlay();
+              }
             }
           }
         });
@@ -3426,6 +3499,11 @@
           onComplete: () => {
             loadingOverlay.style.display = 'none';
           }
+
+          const continueBtn = document.getElementById('tally-continue');
+          if (continueBtn) {
+            continueBtn.disabled = false;
+          }
         });
       }
     }
@@ -3453,6 +3531,25 @@
         gsap.to(overlay, {
           opacity: 0,
           duration: 0.3,
+          onComplete: () => { overlay.style.display = 'none'; }
+        });
+      }
+    }
+
+    function showTallyOverlay() {
+      const overlay = document.getElementById('tally-overlay');
+      if (overlay) {
+        overlay.style.display = 'flex';
+        gsap.fromTo(overlay, { opacity: 0 }, { opacity: 1, duration: 0.4 });
+      }
+    }
+
+    function hideTallyOverlay() {
+      const overlay = document.getElementById('tally-overlay');
+      if (overlay) {
+        gsap.to(overlay, {
+          opacity: 0,
+          duration: 0.4,
           onComplete: () => { overlay.style.display = 'none'; }
         });
       }
