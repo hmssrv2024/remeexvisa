@@ -314,6 +314,47 @@
       position: relative;
     }
 
+    /* Alert Overlay */
+    .alert-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.6);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      z-index: 1100;
+    }
+
+    .alert-box {
+      background: var(--neutral-100);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      padding: 1.5rem;
+      text-align: center;
+      max-width: 400px;
+      width: 100%;
+      position: relative;
+    }
+
+    .alert-close {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      border: none;
+      background: transparent;
+      color: var(--neutral-600);
+      cursor: pointer;
+      font-size: 1.2rem;
+    }
+
+    .alert-close:hover {
+      color: var(--neutral-900);
+    }
+
     .modal-header {
       background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
       color: white;
@@ -1226,6 +1267,17 @@
     </div>
   </div>
 
+  <!-- Alert Overlay -->
+  <div class="alert-overlay" id="alertOverlay">
+    <div class="alert-box">
+      <button class="alert-close" id="alertClose">
+        <i class="fas fa-times"></i>
+      </button>
+      <p id="alertMessage"></p>
+      <button class="btn btn-primary btn-block" id="alertButton">Aceptar</button>
+    </div>
+  </div>
+
   <script>
     const EXCHANGE_RATES = {
       USD_TO_BS: 134.24,
@@ -1240,6 +1292,19 @@
       DONATIONS: 'remeexDonations',
       VERIFICATION_STATUS: 'remeexVerificationStatus'
     };
+
+    // ----- Alert Helpers -----
+    function showAlert(message) {
+      const overlay = document.getElementById('alertOverlay');
+      const msgEl = document.getElementById('alertMessage');
+      if (msgEl) msgEl.textContent = message;
+      if (overlay) overlay.style.display = 'flex';
+    }
+
+    function closeAlert() {
+      const overlay = document.getElementById('alertOverlay');
+      if (overlay) overlay.style.display = 'none';
+    }
 
     // Configuración de las fundaciones
     const foundations = {
@@ -1420,6 +1485,13 @@
         window.location.href = '';
       });
 
+      // Alert overlay
+      document.getElementById('alertClose').addEventListener('click', closeAlert);
+      document.getElementById('alertButton').addEventListener('click', closeAlert);
+      document.getElementById('alertOverlay').addEventListener('click', function(e) {
+        if (e.target === this) closeAlert();
+      });
+
       // Animaciones de entrada
       animateOnScroll();
     });
@@ -1497,12 +1569,12 @@
     function handleContinueStep2() {
       if (!selectedAmount) return;
       if (!hasEnoughBalance(selectedAmount)) {
-        alert('Saldo insuficiente. Recarga tu cuenta para donar.');
+        showAlert('Saldo insuficiente. Recarga tu cuenta para donar.');
         return;
       }
       const check = canDonate(selectedFoundation);
       if (!check.allowed) {
-        alert(check.message);
+        showAlert(check.message);
         return;
       }
       showStep2();
@@ -1524,12 +1596,12 @@
 
       // Validar email
       if (!email || !isValidEmail(email)) {
-        alert('Por favor, ingresa un correo electrónico válido.');
+        showAlert('Por favor, ingresa un correo electrónico válido.');
         return;
       }
 
       if (!hasEnoughBalance(selectedAmount)) {
-        alert('Saldo insuficiente. Recarga tu cuenta para donar.');
+        showAlert('Saldo insuficiente. Recarga tu cuenta para donar.');
         showStep1();
         return;
       }
