@@ -159,15 +159,21 @@
     .balance-card {
       background: var(--card-gradient);
       border-radius: var(--radius-lg);
-      padding: 1.5rem;
+      padding: 1.25rem;
       color: white;
       box-shadow: var(--shadow-lg);
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.25rem;
       position: relative;
       overflow: hidden;
+      transition: transform 0.3s var(--animation-bounce), box-shadow 0.3s ease;
     }
 
-    .balance-card::before {
+    .balance-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-xl);
+    }
+
+    .balance-card::after {
       content: '';
       position: absolute;
       top: 0;
@@ -176,6 +182,29 @@
       height: 100%;
       background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
       animation: shine 3s infinite;
+    }
+
+    .balance-card.blurred {
+      filter: blur(4px);
+      pointer-events: none;
+    }
+
+    .card-decoration {
+      position: absolute;
+      right: -50px;
+      bottom: -50px;
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+      z-index: 1;
+    }
+
+    .card-decoration:nth-child(2) {
+      left: -30px;
+      top: -30px;
+      width: 150px;
+      height: 150px;
     }
 
     @keyframes shine {
@@ -211,14 +240,30 @@
     }
 
     .balance-label {
-      font-size: 0.75rem;
+      font-size: 0.8rem;
       opacity: 0.8;
       margin-bottom: 0.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .balance-label i {
+      font-size: 0.9rem;
     }
 
     .balance-value {
       font-size: 1.25rem;
       font-weight: 700;
+    }
+
+    .currency-flag {
+      width: 20px;
+      height: 14px;
+      border-radius: 2px;
+      object-fit: cover;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      flex-shrink: 0;
     }
 
     /* Exchange Grid */
@@ -970,6 +1015,8 @@
     <div class="container-padding">
   <!-- Balance Card -->
   <div class="balance-card">
+    <div class="card-decoration"></div>
+    <div class="card-decoration"></div>
     <div class="balance-content">
       <div class="balance-header">
         <div class="balance-title">Saldos Disponibles para Intercambio</div>
@@ -979,15 +1026,24 @@
       </div>
       <div class="balance-amounts">
         <div class="balance-amount">
-          <div class="balance-label">USD</div>
+          <div class="balance-label">
+            <img src="https://flagcdn.com/us.svg" class="currency-flag" alt="Bandera de EEUU">
+            USD
+          </div>
           <div class="balance-value" id="balance-usd">$0.00</div>
         </div>
         <div class="balance-amount">
-          <div class="balance-label">Bolívares</div>
+          <div class="balance-label">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/0/06/Flag_of_Venezuela.svg" class="currency-flag" alt="Bandera de Venezuela">
+            Bolívares
+          </div>
           <div class="balance-value" id="balance-bs">Bs 0,00</div>
         </div>
         <div class="balance-amount">
-          <div class="balance-label">EUR</div>
+          <div class="balance-label">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/b/b7/Flag_of_Europe.svg" class="currency-flag" alt="Bandera de la Unión Europea">
+            EUR
+          </div>
           <div class="balance-value" id="balance-eur">€0.00</div>
         </div>
       </div>
