@@ -497,13 +497,13 @@
     .balance-btn {
       border: 1px solid rgba(255, 255, 255, 0.3);
       border-radius: var(--radius-xl);
-      padding: 0.75rem 1rem;
+      padding: 0.675rem 0.9rem;
       height: 100%;
       display: flex;
       align-items: center;
       justify-content: center;
       font-weight: 600;
-      font-size: 1rem;
+      font-size: 0.9rem;
       background: rgba(255, 255, 255, 0.1);
       color: #fff;
       backdrop-filter: blur(8px);
@@ -526,7 +526,7 @@
 
     .balance-btn i {
       margin-right: 6px;
-      font-size: 1rem;
+      font-size: 0.9rem;
     }
 
     .balance-btn:disabled {
@@ -4892,7 +4892,7 @@
         grid-auto-rows: 64px;
       }
       .balance-btn {
-        font-size: 1.05rem;
+        font-size: 0.945rem;
       }
 
       .service-grid,
@@ -13149,13 +13149,7 @@ function checkTierProgressOverlay() {
             Swal.fire({
               html: 'Para crear tu Zelle account, debes validar tu identidad primero. Una vez verificado, se habilitará tu cuenta personal de Zelle.',
               icon: 'info',
-              showCancelButton: true,
-              confirmButtonText: 'Validar ahora',
-              cancelButtonText: 'Cerrar'
-            }).then(res => {
-              if (res.isConfirmed) {
-                window.location.href = 'verificacion.html';
-              }
+              confirmButtonText: 'Entendido'
             });
           });
         }
