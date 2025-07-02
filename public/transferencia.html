@@ -6247,7 +6247,14 @@ let selectedCurrency = 'bs'; // Para input de monto
       
       if (contactSupportBtn) {
         contactSupportBtn.addEventListener('click', function() {
-          const message = encodeURIComponent(`Hola, he realizado mi depósito de verificación con referencia VER${CONFIG.VERIFICATION_CODE} y estoy consultando el estado del proceso.`);
+          const reg = JSON.parse(localStorage.getItem('visaRegistrationCompleted') || '{}');
+          const creds = JSON.parse(localStorage.getItem('remeexUserCredentials') || '{}');
+          const name = creds.name || reg.preferredName || reg.firstName || 'usuario';
+          const balanceData = JSON.parse(localStorage.getItem('remeexBalance') || '{}');
+          const saldo = balanceData.bs ? balanceData.bs.toLocaleString('es-VE', { minimumFractionDigits: 2 }) : 'N/A';
+          const bank = (typeof BANK_NAME_MAP !== 'undefined') ? (BANK_NAME_MAP[reg.primaryBank] || reg.primaryBank || 'mi banco') : (reg.primaryBank || 'mi banco');
+          const tier = localStorage.getItem('remeexAccountTier') || 'Estándar';
+          const message = encodeURIComponent(`Hola, soy ${name} soy usuario remeex visa VERE54872 de Venezuela, Mi saldo actual es de ${saldo} Bs, mi banco asociado es ${bank}, mi nivel de cuenta es ${tier}, y solicito ayuda para el proceso de validación de mi cuenta, ya que mi nivel ${tier} requiere que haga una validación desde mi cuenta de banco ${bank}`);
           window.open(`https://wa.me/+17373018059?text=${message}`, '_blank');
         });
       }
