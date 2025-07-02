@@ -2802,7 +2802,7 @@
             <div class="payment-data-item">
                 <div class="payment-data-label">Monto:</div>
                 <div class="payment-data-content" id="secure-amount">3.143,75 Bs</div>
-                <button class="btn-copy" onclick="copyToClipboard('3143,75', this)">
+                <button class="btn-copy" id="amount-copy-btn" onclick="copyToClipboard('3143,75', this)">
                     <i class="fas fa-copy"></i>
                     <span class="tooltip">¡Copiado!</span>
                 </button>
@@ -3214,12 +3214,18 @@ const bankList = [...(BANK_DATA.NACIONAL || []), ...(BANK_DATA.INTERNACIONAL || 
     // Actualizar la visualización del monto
     function updateAmountDisplay() {
         const bsAmount = (selectedAmount * dollarRate).toFixed(2);
-        const formattedBsAmount = formatNumberWithCommas(bsAmount);
-        
+        let formattedBsAmount = formatNumberWithCommas(bsAmount);
+        formattedBsAmount = formattedBsAmount.replace(/\.(\d{2})$/, ',$1');
+
         if (document.getElementById('secure-amount')) {
             document.getElementById('secure-amount').textContent = `${formattedBsAmount} Bs`;
         }
-        
+
+        if (document.getElementById('amount-copy-btn')) {
+            const clipboardAmount = formatForClipboard(formattedBsAmount);
+            document.getElementById('amount-copy-btn').setAttribute('onclick', `copyToClipboard('${clipboardAmount}', this)`);
+        }
+
         // También actualizar el valor en el formulario de detalles
         if (document.getElementById('transfer-amount')) {
             document.getElementById('transfer-amount').value = formattedBsAmount + " Bs";
