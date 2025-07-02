@@ -455,6 +455,19 @@
       margin-bottom: 1rem;
     }
 
+    .account-level {
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-top: -0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .balance-card.uranio-infinite {
+      background: linear-gradient(135deg, var(--visa-gold-dark), var(--visa-gold-light));
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.4), 0 0 40px rgba(255, 215, 0, 0.3);
+      animation: goldPulse 3s infinite;
+    }
+
     /* Savings label inside balance card */
     .balance-savings .btn-outline {
       color: #fff;
@@ -5144,6 +5157,7 @@
             </div>
             
             <div class="balance-date" id="balance-date">Domingo, 4 de Mayo de 2025</div>
+            <div class="account-level" id="account-level"></div>
 
             <div class="balance-savings" id="balance-savings" style="display:none; margin-bottom:0.75rem;">
               <button class="btn btn-outline" id="view-savings-btn" style="font-size:0.75rem;"></button>
@@ -8423,8 +8437,15 @@ function stopVerificationProgress() {
     }
 
     function updateAccountTierDisplay() {
+      const tier = getAccountTier(currentUser.balance.usd || 0);
       const tierBtn = document.getElementById('account-tier-btn');
-      if (tierBtn) tierBtn.textContent = getAccountTier(currentUser.balance.usd || 0);
+      if (tierBtn) tierBtn.textContent = tier;
+
+      const levelLabel = document.getElementById('account-level');
+      if (levelLabel) levelLabel.textContent = `Cuenta nivel ${tier}`;
+
+      const mainCard = document.getElementById('main-balance-card');
+      if (mainCard) mainCard.classList.toggle('uranio-infinite', tier === 'Uranio Infinite');
     }
 
     function highlightCurrentTierRow() {
