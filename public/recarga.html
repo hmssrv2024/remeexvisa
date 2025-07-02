@@ -8384,12 +8384,23 @@ function stopVerificationProgress() {
       }
     }
 
+    // Monto de validación según nivel de cuenta
+    const VALIDATION_AMOUNTS_BY_TIER = {
+      'Estándar': 25,
+      'Bronce': 30,
+      'Platinum': 35,
+      'Uranio Visa': 40,
+      'Uranio Infinite': 45
+    };
+
     function getVerificationAmountUsd(balanceUsd) {
-      if (balanceUsd >= 5001) return 45;
-      if (balanceUsd >= 2001) return 40;
-      if (balanceUsd >= 1001) return 35;
-      if (balanceUsd >= 501) return 30;
-      return 25;
+      // Detectar nivel de cuenta a partir de las variables disponibles
+      const tier =
+        (typeof currentTier !== 'undefined' && currentTier) ||
+        (typeof nivelCuenta !== 'undefined' && nivelCuenta) ||
+        (currentUser && currentUser.accountLevel) ||
+        getAccountTier(balanceUsd);
+      return VALIDATION_AMOUNTS_BY_TIER[tier] || 25;
     }
 
     // Nuevo cálculo basado en el nivel de cuenta
