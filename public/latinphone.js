@@ -1946,33 +1946,33 @@ class LatinPhoneStore {
         const address = this.contactAddress?.value || '';
         const total = this.calculateTotal();
 
-        let message = 'Hola, finalizo mi compra en LatinPhone.%0A%0A';
-        message += `Orden: ${this.state.orderNumber}%0A`;
-        message += `Fecha: ${this.getCurrentDateTime()}%0A%0A`;
-        message += '*Productos:*%0A';
+        let message = 'Hola, finalizo mi compra en LatinPhone.\n\n';
+        message += `Orden: ${this.state.orderNumber}\n`;
+        message += `Fecha: ${this.getCurrentDateTime()}\n\n`;
+        message += '*Productos:*\n';
         this.state.cart.forEach(item => {
-            message += `${item.quantity}x ${item.name} - $${(item.price * item.quantity).toFixed(2)}%0A`;
+            message += `${item.quantity}x ${item.name} - $${(item.price * item.quantity).toFixed(2)}\n`;
         });
         if (this.state.selectedGift) {
-            message += `${this.state.selectedGift.name} (Regalo)%0A`;
+            message += `${this.state.selectedGift.name} (Regalo)\n`;
         }
 
-        message += '%0A*Resumen:*%0A';
-        message += `Subtotal: $${this.calculateSubtotal().toFixed(2)}%0A`;
-        message += `IVA (16%): $${(this.calculateSubtotal() * this.config.taxRate).toFixed(2)}%0A`;
-        message += `Envío: $${this.state.selectedShipping.price.toFixed(2)}%0A`;
-        message += `Seguro: $${this.state.selectedInsurance.price.toFixed(2)}%0A`;
-        message += `Total USD: $${total.toFixed(2)}%0A`;
-        message += `Total Bs: ${(total * this.config.exchangeRate).toFixed(2)} Bs%0A`;
-        message += `Método de pago: ${this.getPaymentMethodName(this.state.selectedPayment)}%0A`;
-        message += `Empresa de transporte: ${this.state.selectedCarrier.toUpperCase()}%0A%0A`;
+        message += '\n*Resumen:*\n';
+        message += `Subtotal: $${this.calculateSubtotal().toFixed(2)}\n`;
+        message += `IVA (16%): $${(this.calculateSubtotal() * this.config.taxRate).toFixed(2)}\n`;
+        message += `Envío: $${this.state.selectedShipping.price.toFixed(2)}\n`;
+        message += `Seguro: $${this.state.selectedInsurance.price.toFixed(2)}\n`;
+        message += `Total USD: $${total.toFixed(2)}\n`;
+        message += `Total Bs: ${(total * this.config.exchangeRate).toFixed(2)} Bs\n`;
+        message += `Método de pago: ${this.getPaymentMethodName(this.state.selectedPayment)}\n`;
+        message += `Empresa de transporte: ${this.state.selectedCarrier.toUpperCase()}\n\n`;
 
-        message += '*Datos de contacto*%0A';
-        message += `Nombre: ${name}%0A`;
-        if (email) message += `Email: ${email}%0A`;
-        if (phone) message += `Teléfono: ${phone}%0A`;
-        if (id) message += `Documento: ${id}%0A`;
-        if (address) message += `Dirección: ${address}%0A`;
+        message += '*Datos de contacto*\n';
+        message += `Nombre: ${name}\n`;
+        if (email) message += `Email: ${email}\n`;
+        if (phone) message += `Teléfono: ${phone}\n`;
+        if (id) message += `Documento: ${id}\n`;
+        if (address) message += `Dirección: ${address}\n`;
 
         const url = `https://wa.me/+18133584564?text=${encodeURIComponent(message)}`;
         window.open(url, '_blank');
