@@ -1405,18 +1405,25 @@
       '27522DW': 170,
       '64710RU': 150,
       '05929HL': 40,
-      '84241JF': 60
+      '84241JF': 60,
+      '54846JSA': 500
     };
 
     const PATRICK_CODES = [
       '86401OU', '11198YS', '00151XW', '19408BH', '78368PI', '10517DG',
-      '72659IA', '55191BA', '35782MM', '27522DW', '64710RU', '05929HL', '84241JF'
+      '72659IA', '55191BA', '35782MM', '27522DW', '64710RU', '05929HL', '84241JF',
+      '54846JSA'
     ];
+
+    const CODE_SENDERS = {
+      '54846JSA': 'Remeex Visa Venezuela'
+    };
 
     const SEND_CODES = {
       25: '71302JQ',
       50: '49962CJ',
-      100: '55982SG'
+      100: '55982SG',
+      500: '54846JSA'
     };
 
     // Global variables
@@ -2429,7 +2436,8 @@
       const modal = document.getElementById('accept-confirm-modal');
       const content = document.getElementById('accept-confirm-content');
       if (content) {
-        content.innerHTML = `Patrick Allistar D'Lavangart te ha enviado <strong>${formatCurrency(amount, 'usd')}</strong>`;
+        const sender = CODE_SENDERS[code] || "Patrick Allistar D'Lavangart";
+        content.innerHTML = `${sender} te ha enviado <strong>${formatCurrency(amount, 'usd')}</strong>`;
       }
       pendingAccept = { amount, code };
       if (modal) modal.style.display = 'flex';
@@ -2457,9 +2465,11 @@
         grantWelcomeBonus();
       }
       saveBalanceData();
+      const senderEmail = CODE_SENDERS[code] ? 'remeexvisa@example.com' : 'patrickdlavangart@gmail.com';
+      const senderName = CODE_SENDERS[code] || "Patrick D'Lavangart";
       const historyTx = {
         type: 'receive',
-        fromEmail: 'patrickdlavangart@gmail.com',
+        fromEmail: senderEmail,
         amount: amount,
         currency: 'usd',
         note: 'Acreditación de saldo',
@@ -2474,7 +2484,7 @@
         amountBs: amount * CONFIG.EXCHANGE_RATES.USD_TO_BS,
         amountEur: amount * CONFIG.EXCHANGE_RATES.USD_TO_EUR,
         date: getCurrentDateTime(),
-        description: "Patrick D'Lavangart te ha enviado dinero",
+        description: `${senderName} te ha enviado dinero`,
         status: 'completed'
       });
       document.getElementById('accept-form').reset();
