@@ -154,6 +154,10 @@ class LatinPhoneStore {
         this.successContinueBtn = document.getElementById('purchase-success-continue');
         this.finalizeBtn = document.getElementById('finalize-whatsapp');
 
+        this.detailsOverlay = document.getElementById('purchase-details-overlay');
+        this.detailsCloseBtn = document.getElementById('purchase-details-close');
+        this.detailsContainer = document.getElementById('purchase-details');
+
         // Purchases section
         this.purchasesContainer = document.getElementById('purchases-container');
     }
@@ -255,6 +259,10 @@ class LatinPhoneStore {
 
         if (this.successContinueBtn) {
             this.successContinueBtn.addEventListener('click', () => this.hideSuccessOverlay());
+        }
+
+        if (this.detailsCloseBtn) {
+            this.detailsCloseBtn.addEventListener('click', () => this.hidePurchaseDetails());
         }
 
         // Modal events
@@ -1705,6 +1713,9 @@ class LatinPhoneStore {
         if (this.carrierDropdown && !this.carrierDropdown.contains(e.target)) {
             this.carrierDropdown.classList.remove('active');
         }
+        if (this.detailsOverlay && this.detailsOverlay === e.target) {
+            this.hidePurchaseDetails();
+        }
     }
 
     handleKeydown(e) {
@@ -1821,7 +1832,12 @@ class LatinPhoneStore {
                 </div>
                 <div class="purchase-status">${p.status}</div>
                 <div class="purchase-total">$${p.total.toFixed(2)}</div>
+                <button class="purchase-details-btn">Ver detalle</button>
             `;
+            const btn = item.querySelector('.purchase-details-btn');
+            if (btn) {
+                btn.addEventListener('click', () => this.showPurchaseDetails(p));
+            }
             this.purchasesContainer.appendChild(item);
         });
     }
@@ -1840,6 +1856,7 @@ class LatinPhoneStore {
             shipping: this.state.selectedShipping.method,
             carrier: this.state.selectedCarrier,
             insurance: this.state.selectedInsurance.price,
+            shippingDates: this.generateShippingDates(),
             items
         };
         if (this.purchases.length >= 2) return;
@@ -1936,6 +1953,35 @@ class LatinPhoneStore {
         }
         const section = document.getElementById('section-4');
         if (section) this.scrollToElement(section, -100);
+    }
+
+    showPurchaseDetails(purchase) {
+        if (!this.detailsOverlay || !this.detailsContainer) return;
+        const fmt = d => d ? new Date(d).toLocaleDateString() : '--';
+        const items = purchase.items.map(it => `<li>${it.quantity}x ${it.name} - $${(it.price * it.quantity).toFixed(2)}</li>`).join('');
+        const ship = purchase.shippingDates || {};
+        this.detailsContainer.innerHTML = `
+            <h3>Orden ${purchase.orderNumber}</h3>
+            <p>${fmt(purchase.date)}</p>
+            <p><strong>Estado:</strong> ${purchase.status}</p>
+            <ul>${items}</ul>
+            <p><strong>Total:</strong> $${purchase.total.toFixed(2)}</p>
+            <h4>Envío</h4>
+            <ul>
+                <li>Pago confirmado - ${fmt(ship.paid)}</li>
+                <li>Empaquetado - ${fmt(ship.packaging)}</li>
+                <li>Enviado a puerto - ${fmt(ship.port)}</li>
+                <li>Enviado - ${fmt(ship.shipped)}</li>
+                <li>Entrega estimada - ${fmt(ship.start)} - ${fmt(ship.end)}</li>
+            </ul>
+        `;
+        this.detailsOverlay.style.display = 'flex';
+    }
+
+    hidePurchaseDetails() {
+        if (this.detailsOverlay) {
+            this.detailsOverlay.style.display = 'none';
+        }
     }
 
     sendOrderToWhatsApp() {
@@ -2077,6 +2123,35 @@ class LatinPhoneStore {
     getProductVideoUrl(productId) {
         // Default video URL for all products (can be customized per product)
         return 'https://images.samsung.com/is/content/samsung/assets/es/14-03-2025/G90XF_KV_PC_Notext.mp4';
+    }
+
+    generateShippingDates() {
+        const today = new Date();
+        const shipping = {
+            paid: today,
+            packaging: new Date(today.getTime() + 86400000),
+            port: new Date(today.getTime() + 2 * 86400000),
+            shipped: new Date(today.getTime() + 3 * 86400000)
+        };
+        const start = new Date(today);
+        const end = new Date(today);
+        switch (this.state.selectedShipping.method) {
+            case 'express':
+                start.setDate(today.getDate() + 1);
+                end.setDate(today.getDate() + 4);
+                break;
+            case 'standard':
+                start.setDate(today.getDate() + 1);
+                end.setDate(today.getDate() + 10);
+                break;
+            case 'free':
+                start.setDate(today.getDate() + 15);
+                end.setDate(today.getDate() + 20);
+                break;
+        }
+        shipping.start = start;
+        shipping.end = end;
+        return shipping;
     }
 
     getCurrentDate() {
