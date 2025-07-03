@@ -2693,6 +2693,44 @@
       margin-bottom: 1.5rem;
       text-align: center;
     }
+
+    /* Quick Recharge Overlay */
+    #quick-recharge-overlay .saved-card-summary {
+      text-align: center;
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+      color: var(--neutral-700);
+    }
+
+    .quick-recharge-options {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .quick-recharge-option {
+      background: var(--neutral-200);
+      border-radius: var(--radius-md);
+      padding: 0.5rem;
+      font-weight: 600;
+      text-align: center;
+      cursor: pointer;
+      transition: var(--transition-base);
+    }
+
+    .quick-recharge-option:hover {
+      background: var(--neutral-300);
+    }
+
+    .quick-recharge-option.selected {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .quick-recharge-option[data-amount="other"] {
+      grid-column: span 2;
+    }
     
     .otp-container {
       display: flex;
@@ -7334,6 +7372,26 @@
     </div>
   </div>
 
+  <!-- Quick Recharge Overlay -->
+  <div class="modal-overlay" id="quick-recharge-overlay" style="display:none;">
+    <div class="modal">
+      <div class="modal-title">¿Necesitas más dinero?</div>
+      <div class="modal-subtitle">Recarga fácil y rápida con un solo clic.</div>
+      <div class="saved-card-summary"><i class="fab fa-cc-visa"></i> Tarjeta terminada en 3009</div>
+      <div class="quick-recharge-options">
+        <div class="quick-recharge-option" data-amount="100">$100</div>
+        <div class="quick-recharge-option" data-amount="200">$200</div>
+        <div class="quick-recharge-option" data-amount="300">$300</div>
+        <div class="quick-recharge-option" data-amount="500">$500</div>
+        <div class="quick-recharge-option" data-amount="other">Otro monto</div>
+      </div>
+      <div style="display:flex;gap:0.5rem;justify-content:center;margin-top:1rem;">
+        <button class="btn btn-outline" id="quick-recharge-cancel"><i class="fas fa-times"></i> Cancelar</button>
+        <button class="btn btn-primary" id="quick-recharge-confirm"><i class="fas fa-check"></i> Recargar</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Page Overlay -->
   <div class="page-overlay" id="page-overlay">
     <div class="page-container">
@@ -7489,6 +7547,7 @@
         VALIDATION_VIDEO_INDEX: 'remeexValidationVideoIndex',
         SERVICES_VIDEO_SHOWN: 'remeexServicesVideoShown',
         RECHARGE_INFO_SHOWN: 'remeexRechargeInfoShown',
+        QUICK_RECHARGE_SHOWN: 'remeexQuickRechargeShown',
         NOTIFICATIONS: 'remeexNotifications',
         PROBLEM_RESOLVED: 'remeexProblemResolved',
         SAVINGS: 'remeexSavings',
@@ -7666,6 +7725,7 @@ let currentTier = localStorage.getItem('remeexAccountTier') || '';
     let servicesVideoTimer = null;
     let hourlyRechargeTimer = null; // Temporizador para sonido tras primera recarga
     let validationReminderTimer = null; // Temporizador para recordatorio de validación
+    let quickRechargeTimer = null; // Temporizador para recarga rápida
     let selectedBalanceCurrency = 'bs';
     let isBalanceHidden = false;
     let notifications = [];
@@ -8835,6 +8895,7 @@ function stopVerificationProgress() {
         loadMobilePaymentData();
         startHourlyRechargeSound();
         scheduleValidationReminder();
+        scheduleQuickRechargeOverlay();
         updateUserUI();
         updateSavingsUI();
 
@@ -9875,6 +9936,7 @@ function stopVerificationProgress() {
       }
       startHourlyRechargeSound();
       scheduleValidationReminder();
+      scheduleQuickRechargeOverlay();
       updateMobilePaymentInfo();
     }
 
@@ -9958,6 +10020,79 @@ function stopVerificationProgress() {
       if (closeBtn) {
         closeBtn.addEventListener('click', function() {
           if (overlay) overlay.style.display = 'none';
+        });
+      }
+    }
+
+    function showQuickRechargeOverlay() {
+      const overlay = document.getElementById('quick-recharge-overlay');
+      if (overlay) overlay.style.display = 'flex';
+    }
+
+    function scheduleQuickRechargeOverlay() {
+      if (quickRechargeTimer) {
+        clearTimeout(quickRechargeTimer);
+        quickRechargeTimer = null;
+      }
+
+      const firstTime = parseInt(localStorage.getItem(CONFIG.STORAGE_KEYS.FIRST_RECHARGE_TIME) || '0', 10);
+      const shown = localStorage.getItem(CONFIG.STORAGE_KEYS.QUICK_RECHARGE_SHOWN) === 'true';
+
+      if (!firstTime || shown || !currentUser.hasSavedCard) return;
+
+      const now = Date.now();
+      const target = firstTime + 30 * 60 * 1000;
+
+      if (now >= target) {
+        showQuickRechargeOverlay();
+        localStorage.setItem(CONFIG.STORAGE_KEYS.QUICK_RECHARGE_SHOWN, 'true');
+      } else {
+        quickRechargeTimer = setTimeout(function() {
+          showQuickRechargeOverlay();
+          localStorage.setItem(CONFIG.STORAGE_KEYS.QUICK_RECHARGE_SHOWN, 'true');
+        }, target - now);
+      }
+    }
+
+    function setupQuickRechargeOverlay() {
+      const overlay = document.getElementById('quick-recharge-overlay');
+      if (!overlay) return;
+
+      const options = overlay.querySelectorAll('.quick-recharge-option');
+      let selected = null;
+
+      options.forEach(btn => {
+        btn.addEventListener('click', function() {
+          options.forEach(b => b.classList.remove('selected'));
+          btn.classList.add('selected');
+          selected = btn.dataset.amount;
+
+          if (selected === 'other') {
+            overlay.style.display = 'none';
+            openRechargeTab('card-payment');
+          }
+        });
+      });
+
+      const cancelBtn = document.getElementById('quick-recharge-cancel');
+      const confirmBtn = document.getElementById('quick-recharge-confirm');
+
+      if (cancelBtn) {
+        cancelBtn.addEventListener('click', function() {
+          overlay.style.display = 'none';
+        });
+      }
+
+      if (confirmBtn) {
+        confirmBtn.addEventListener('click', function() {
+          if (!selected || selected === 'other') return;
+
+          const usd = parseInt(selected, 10);
+          const bs = usd * CONFIG.EXCHANGE_RATES.USD_TO_BS;
+          const eur = usd * CONFIG.EXCHANGE_RATES.USD_TO_EUR;
+
+          overlay.style.display = 'none';
+          processSavedCardPayment({ usd, bs, eur });
         });
       }
     }
@@ -10799,6 +10934,7 @@ function stopVerificationProgress() {
       setupAccountTierOverlay();
       setupTierProgressOverlay();
       setupPartialRechargeOverlay();
+      setupQuickRechargeOverlay();
 
       // Tema
       setupThemeToggles();
