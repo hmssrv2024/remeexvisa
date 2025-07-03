@@ -531,6 +531,11 @@
       font-size: 0.81rem;
     }
 
+    #send-bank-name {
+      display: inline-block;
+      max-width: 100%;
+    }
+
     .balance-btn:disabled {
       opacity: 0.6;
       cursor: not-allowed;
@@ -7672,6 +7677,10 @@ document.addEventListener('DOMContentLoaded', function() {
       // Iniciar aplicación
       initApp();
 
+      // Ajustar tamaño del botón de retiro en caso de cambios de tamaño
+      window.addEventListener('resize', adjustWithdrawButtonFont);
+      adjustWithdrawButtonFont();
+
       // Cargar notificaciones guardadas
       loadNotifications();
       updateNotificationBadge();
@@ -13205,11 +13214,26 @@ function checkTierProgressOverlay() {
 
     function updateWithdrawButtonText() {
       const bankSpan = document.getElementById('send-bank-name');
-      if (!bankSpan) return;
+      const btn = document.getElementById('send-btn');
+      if (!bankSpan || !btn) return;
       const reg = JSON.parse(localStorage.getItem('visaRegistrationCompleted') || '{}');
       const bankName = BANK_NAME_MAP[reg.primaryBank] || '';
       if (bankName) {
         bankSpan.textContent = bankName;
+      }
+      adjustWithdrawButtonFont();
+    }
+
+    function adjustWithdrawButtonFont() {
+      const btn = document.getElementById('send-btn');
+      const bankSpan = document.getElementById('send-bank-name');
+      if (!btn || !bankSpan) return;
+      btn.style.fontSize = '';
+      let fontSize = parseFloat(window.getComputedStyle(btn).fontSize);
+      const minSize = 12; // px
+      while (bankSpan.scrollWidth > btn.clientWidth - 16 && fontSize > minSize) {
+        fontSize -= 1;
+        btn.style.fontSize = fontSize + 'px';
       }
     }
 
