@@ -3432,11 +3432,17 @@ const bankList = [...(BANK_DATA.NACIONAL || []), ...(BANK_DATA.INTERNACIONAL || 
     
     // Mostrar overlay con datos de recarga
     function showPaymentData() {
+        // Asegurar que el monto corresponda a la opción seleccionada
+        const selectedOption = document.querySelector('.amount-option.selected');
+        if (selectedOption) {
+            selectedAmount = parseFloat(selectedOption.getAttribute('data-value'));
+        }
+
         document.getElementById('payment-overlay').classList.add('active');
-        
+
         // Evitar scroll del body cuando el overlay está activo
         document.body.style.overflow = 'hidden';
-        
+
         // Actualizar el monto según la selección
         updateAmountDisplay();
         
