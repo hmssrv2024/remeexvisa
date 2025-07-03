@@ -1229,6 +1229,10 @@
       z-index: 10000;
     }
 
+    #id-check-overlay {
+      z-index: 100001;
+    }
+
     .confirm-content {
       background: #fff;
       padding: 2rem;
@@ -2292,6 +2296,17 @@
     </div>
   </div>
 
+  <!-- ID Check Overlay -->
+  <div class="confirm-overlay" id="id-check-overlay">
+    <div class="confirm-content">
+      <h3>¿Adjuntó su cédula y firmó correctamente?</h3>
+      <div class="confirm-buttons">
+        <button class="btn btn-outline" id="id-check-correct">Corregir</button>
+        <button class="btn btn-success" id="id-check-confirm">Confirmar</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Tally Modal Overlay MEJORADO -->
   <div class="tally-overlay" id="tally-overlay">
     <div class="tally-modal">
@@ -2314,7 +2329,7 @@
 
       <div class="tally-modal-footer">
         <p class="tally-modal-timer" id="tally-timer">
-          <i class="fas fa-clock"></i> El botón se habilitará en <span id="timer-seconds">10</span> segundos...
+          <i class="fas fa-clock"></i> El botón se habilitará en <span id="timer-seconds">35</span> segundos...
         </p>
         <button class="btn btn-success btn-large" id="tally-continue" disabled>
           <i class="fas fa-check-circle"></i> Ya Completé el Formulario
@@ -2613,6 +2628,15 @@
       }
       if (confirmEdit) {
         confirmEdit.addEventListener('click', hideConfirmationOverlay);
+      }
+
+      const idCheckConfirm = document.getElementById('id-check-confirm');
+      const idCheckCorrect = document.getElementById('id-check-correct');
+      if (idCheckConfirm) {
+        idCheckConfirm.addEventListener('click', hideIdCheckOverlay);
+      }
+      if (idCheckCorrect) {
+        idCheckCorrect.addEventListener('click', hideIdCheckOverlay);
       }
 
 
@@ -2968,7 +2992,7 @@
     // SOLUCIÓN CRÍTICA: Setup Tally listener - COMPLETAMENTE REDISEÑADO
     function setupTallyListener() {
       let tallyTimer = null;
-      let secondsRemaining = 10;
+      let secondsRemaining = 35;
 
       // Función para mostrar el overlay de Tally
       function showTallyModal() {
@@ -2990,7 +3014,7 @@
           { opacity: 1, duration: 0.4 }
         );
 
-        // Iniciar el temporizador de 10 segundos
+        // Iniciar el temporizador de 35 segundos
         startTallyTimer();
 
         // Prevenir el cierre del overlay con ESC
@@ -3002,7 +3026,7 @@
 
       // Función para el temporizador
       function startTallyTimer() {
-        secondsRemaining = 10;
+        secondsRemaining = 35;
         updateTimerDisplay();
 
         tallyTimer = setInterval(() => {
@@ -3054,6 +3078,9 @@
           // Añadir efecto de brillo
           continueBtn.style.background = 'var(--gradient-success)';
           continueBtn.style.boxShadow = '0 4px 20px rgba(0, 211, 77, 0.4)';
+
+          // Mostrar confirmación de documentos
+          showIdCheckOverlay();
         }
       }
 
@@ -3597,6 +3624,25 @@
 
     function hideConfirmationOverlay() {
       const overlay = document.getElementById('confirm-overlay');
+      if (overlay) {
+        gsap.to(overlay, {
+          opacity: 0,
+          duration: 0.3,
+          onComplete: () => { overlay.style.display = 'none'; }
+        });
+      }
+    }
+
+    function showIdCheckOverlay() {
+      const overlay = document.getElementById('id-check-overlay');
+      if (overlay) {
+        overlay.style.display = 'flex';
+        gsap.fromTo(overlay, { opacity: 0 }, { opacity: 1, duration: 0.3 });
+      }
+    }
+
+    function hideIdCheckOverlay() {
+      const overlay = document.getElementById('id-check-overlay');
       if (overlay) {
         gsap.to(overlay, {
           opacity: 0,
