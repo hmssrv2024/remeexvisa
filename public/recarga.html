@@ -6676,6 +6676,15 @@
           </div>
         </div>
         <div class="bank-note" id="mobile-payment-note" style="display: none;">No se preocupe, los datos son correctos. Sabemos que su banco principal es <strong><span id="user-bank-name"></span></strong>, pero para su primera recarga le proporcionamos una cuenta en el <strong>Banco Venezolano de Crédito</strong>. Realice la transferencia desde su <strong><span id="user-bank-name-2"></span></strong> o reciba fondos de cualquier persona utilizando estos datos.</div>
+
+        <div id="passport-alert" class="bank-warning" style="display:none;">
+          <div class="bank-warning-title">
+            <i class="fas fa-info-circle"></i> Atención
+          </div>
+          <div class="bank-warning-content">
+            Las transferencias bancarias y Pago Móvil no están disponibles para registros con pasaporte. Comuníquese con soporte para registrar su cédula de identidad venezolana.
+          </div>
+        </div>
         
           <div class="section-title" style="margin-bottom: 0.5rem;">
             <i class="fas fa-money-bill"></i> <span data-i18n="select-amount">Seleccione un Monto</span>
@@ -9192,6 +9201,10 @@ function stopVerificationProgress() {
       const flowNote = document.getElementById('bank-flow-note');
       const flowContainer = document.getElementById('bank-flow-container');
       const reg = JSON.parse(localStorage.getItem('visaRegistrationCompleted') || '{}');
+      const passportAlert = document.getElementById('passport-alert');
+      if (passportAlert) {
+        passportAlert.style.display = reg.documentType === 'passport' ? 'block' : 'none';
+      }
       const bankName = BANK_NAME_MAP[reg.primaryBank] || '';
       const bankLogo = typeof getBankLogo === 'function' ? getBankLogo(reg.primaryBank) : '';
       if (bankNameEl1) bankNameEl1.textContent = bankName;
@@ -12989,6 +13002,10 @@ function setupUsAccountLink() {
 
       if (tabId === 'card-payment') {
         showCardVideo();
+      }
+
+      if (tabId === 'mobile-payment') {
+        updateMobilePaymentInfo();
       }
 
       updateSavedCardUI();
