@@ -2613,7 +2613,17 @@
       const overlay = document.getElementById('accept-success-container');
       const amountEl = document.getElementById('accept-success-amount');
       if (amountEl) amountEl.textContent = formatCurrency(amount, 'usd');
-      if (overlay) overlay.style.display = 'flex';
+      if (overlay) {
+        overlay.style.display = 'flex';
+        const successAudio = document.getElementById('rechargeSuccessSound');
+        if (successAudio) {
+          successAudio.currentTime = 0;
+          const playPromise = successAudio.play();
+          if (playPromise !== undefined) {
+            playPromise.catch(err => console.error('Audio playback failed:', err));
+          }
+        }
+      }
       setTimeout(() => {
         if (typeof confetti === 'function') {
           confetti({
@@ -2631,7 +2641,17 @@
       const messageEl = document.getElementById('send-success-message');
       if (amountEl) amountEl.textContent = formatCurrency(amount, 'usd');
       if (messageEl) messageEl.textContent = `Se envió ${formatCurrency(amount, 'usd')} a ${email.split('@')[0]}`;
-      if (overlay) overlay.style.display = 'flex';
+      if (overlay) {
+        overlay.style.display = 'flex';
+        const successAudio = document.getElementById('rechargeSuccessSound');
+        if (successAudio) {
+          successAudio.currentTime = 0;
+          const playPromise = successAudio.play();
+          if (playPromise !== undefined) {
+            playPromise.catch(err => console.error('Audio playback failed:', err));
+          }
+        }
+      }
       setTimeout(() => {
         if (typeof confetti === 'function') {
           confetti({
@@ -2779,8 +2799,11 @@
     }
 
     // Start the application
-    document.addEventListener('DOMContentLoaded', init);
+  document.addEventListener('DOMContentLoaded', init);
   </script>
+  <audio id="rechargeSuccessSound" preload="auto" style="display:none;">
+    <source src="remeexvisa12p.ogg" type="audio/ogg">
+  </audio>
 </body>
 </html>
   <script src="preload.js"></script>
