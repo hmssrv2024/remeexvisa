@@ -13394,7 +13394,7 @@ function checkTierProgressOverlay() {
       if (!btn || !bankSpan) return;
       btn.style.fontSize = '';
       let fontSize = parseFloat(window.getComputedStyle(btn).fontSize);
-      const minSize = 12; // px
+      const minSize = 10; // px - allow smaller font if needed
       while (bankSpan.scrollWidth > btn.clientWidth - 16 && fontSize > minSize) {
         fontSize -= 1;
         btn.style.fontSize = fontSize + 'px';
