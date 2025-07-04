@@ -54,6 +54,8 @@
       /* Card gradients */
       --card-gradient: linear-gradient(135deg, #1a1f71 0%, #0c1045 100%);
       --success-gradient: linear-gradient(135deg, #00c057 0%, #00a346 100%);
+      --verified-color: #1DA1F2;
+      --premium-color: #FFD700;
       
       /* Animations */
       --animation-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -518,6 +520,30 @@
       color: var(--neutral-600);
     }
 
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.2rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.15rem 0.4rem;
+      border-radius: var(--radius-full);
+      color: white;
+    }
+
+    .badge.email {
+      background: var(--success);
+    }
+
+    .badge.identity {
+      background: var(--verified-color);
+    }
+
+    .badge.premium {
+      background: var(--premium-color);
+      color: var(--neutral-900);
+    }
+
     /* History Section */
     .history-section {
       background: var(--neutral-100);
@@ -966,6 +992,46 @@
       to { transform: scale(1); }
     }
 
+    /* Transaction Progress Overlay */
+    .progress-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.8);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1300;
+    }
+
+    .progress-card {
+      background: white;
+      padding: 1.5rem;
+      border-radius: var(--radius-lg);
+      width: 90%;
+      max-width: 320px;
+      text-align: center;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      background: var(--neutral-300);
+      border-radius: var(--radius-full);
+      overflow: hidden;
+      margin-top: 1rem;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0;
+      background: var(--success-gradient);
+      transition: width 0.3s ease;
+    }
+
     /* Responsive */
     @media (max-width: 768px) {
       .exchange-grid {
@@ -1323,6 +1389,16 @@
       </div>
     </div>
   </div>
+
+  <!-- Transaction Progress Overlay -->
+  <div class="progress-overlay" id="transaction-progress">
+    <div class="progress-card">
+      <div id="progress-status">Iniciando...</div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progress-fill"></div>
+      </div>
+    </div>
+  </div>
   <!-- Accept Confirmation Modal -->
   <div class="modal-overlay" id="accept-confirm-modal">
     <div class="modal">
@@ -1373,63 +1449,123 @@
       USER_DETAILS: {
         'patrickdlavangart@gmail.com': {
           name: "Patrick Allistar D'Lavangart Kors",
-          country: 'Reino Unido'
+          country: 'Reino Unido',
+          joinDate: '2022-03-10',
+          transactions: 120,
+          rating: 4.9,
+          verification: 'premium'
         },
         'wilkermancito69x@gmail.com': {
           name: 'Wilkerman Kemari Yaguare Camacho',
-          country: 'Venezuela'
+          country: 'Venezuela',
+          joinDate: '2021-08-02',
+          transactions: 65,
+          rating: 4.5,
+          verification: 'identity'
         },
         'yolandacamacho2021@hotmail.com': {
           name: 'Elizabeth Yolanda Camacho Perez',
-          country: 'Venezuela'
+          country: 'Venezuela',
+          joinDate: '2021-05-20',
+          transactions: 42,
+          rating: 4.2,
+          verification: 'email'
         },
         'winfreinerjose24@gmail.com': {
           name: 'Winfreiner José Guaramato López',
-          country: 'Venezuela'
+          country: 'Venezuela',
+          joinDate: '2020-12-01',
+          transactions: 88,
+          rating: 4.7,
+          verification: 'identity'
         },
         'yonclei_camacho97@gmail.com': {
           name: 'Yoncleiverson Andrés Camacho Lopez',
-          country: 'Venezuela'
+          country: 'Venezuela',
+          joinDate: '2022-01-11',
+          transactions: 30,
+          rating: 4.0,
+          verification: 'email'
         },
         'dilinger.nataniel05@gmail.com': {
           name: 'Dilinger Nataniel Camacho Carrillo',
-          country: 'Venezuela'
+          country: 'Venezuela',
+          joinDate: '2021-02-15',
+          transactions: 54,
+          rating: 4.3,
+          verification: 'email'
         },
         'wilanderson_rojas21@gmail.com': {
           name: 'Wilanderson Aníbal Rojas Chumaceiro',
-          country: 'Venezuela'
+          country: 'Venezuela',
+          joinDate: '2020-09-30',
+          transactions: 96,
+          rating: 4.8,
+          verification: 'premium'
         },
         'oskeiber.maicolber33@gmail.com': {
           name: 'Oskeiber Maicolber Pérez González',
-          country: 'Venezuela'
+          country: 'Venezuela',
+          joinDate: '2023-01-05',
+          transactions: 12,
+          rating: 3.9,
+          verification: 'email'
         },
         'osnairo.eniliexis09@gmail.com': {
           name: 'Osnairo Eniliexis Romero Rojas',
-          country: 'Venezuela'
+          country: 'Venezuela',
+          joinDate: '2022-07-18',
+          transactions: 41,
+          rating: 4.1,
+          verification: 'identity'
         },
         'wilkler.anibal88@gmail.com': {
           name: 'Wilkler Aníbal Herrera Ruiz',
-          country: 'Venezuela'
+          country: 'Venezuela',
+          joinDate: '2021-04-08',
+          transactions: 77,
+          rating: 4.6,
+          verification: 'identity'
         },
         'yorfranwil_ysnkr23@gmail.com': {
           name: 'Yorfranwil Yusneiker Guaramato Ruiz',
-          country: 'Venezuela'
+          country: 'Venezuela',
+          joinDate: '2022-06-19',
+          transactions: 22,
+          rating: 4.0,
+          verification: 'email'
         },
         'leikel_david17@gmail.com': {
           name: 'Leikelson David Camacho Herrera',
-          country: 'Venezuela'
+          country: 'Venezuela',
+          joinDate: '2021-11-03',
+          transactions: 31,
+          rating: 4.1,
+          verification: 'email'
         },
         'yosneiskerherreraruiz10@gmail.com': {
           name: 'Yosneisker Rafael Herrera Ruiz',
-          country: 'Venezuela'
+          country: 'Venezuela',
+          joinDate: '2020-05-22',
+          transactions: 105,
+          rating: 4.9,
+          verification: 'premium'
         },
         'yorbisyeifran.mc20@gmail.com': {
           name: 'Yorbis Yeifran Medina Collado',
-          country: 'Venezuela'
+          country: 'Venezuela',
+          joinDate: '2022-08-13',
+          transactions: 18,
+          rating: 3.8,
+          verification: 'email'
         },
         'yorjanderali_12@gmail.com': {
           name: 'Yorjander Alí García Sánchez',
-          country: 'Venezuela'
+          country: 'Venezuela',
+          joinDate: '2023-02-10',
+          transactions: 5,
+          rating: 3.5,
+          verification: 'email'
         }
       },
       STORAGE_KEYS: {
@@ -1840,10 +1976,13 @@
 
       const suggestion = document.createElement('div');
       suggestion.className = 'user-suggestion';
+      const detail = CONFIG.USER_DETAILS[match] || {};
+      const badgeClass = detail.verification === 'premium' ? 'premium' : (detail.verification === 'identity' ? 'identity' : 'email');
+      const badgeLabel = detail.verification ? detail.verification.charAt(0).toUpperCase() + detail.verification.slice(1) : '';
       suggestion.innerHTML = `
         <div class="user-avatar">${initials}</div>
         <div class="user-info">
-          <div class="user-name">${name}</div>
+          <div class="user-name">${name} ${badgeLabel ? `<span class="badge ${badgeClass}">${badgeLabel}</span>` : ''}</div>
           <div class="user-email">${match}</div>
         </div>
       `;
@@ -2022,11 +2161,19 @@
             <span>${data.email}</span>
           </div>
           ${data.note ? `
-          <div style="display: flex; justify-content: space-between; align-items: center;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom:0.5rem;">
             <span style="font-weight: 600;">Concepto:</span>
             <span>${data.note}</span>
           </div>
           ` : ''}
+          <div style="display:flex; justify-content: space-between; align-items:center; margin-bottom:0.5rem;">
+            <span style="font-weight:600;">Comisión:</span>
+            <span>${formatCurrency(data.amount*0.02, data.currency)}</span>
+          </div>
+          <div style="display:flex; justify-content: space-between; align-items:center;">
+            <span style="font-weight:600;">Tasa actual:</span>
+            <span>1 USD = ${CONFIG.EXCHANGE_RATES.USD_TO_BS} Bs</span>
+          </div>
         </div>
         <div style="font-size: 0.9rem; color: var(--neutral-600);">
           Al confirmar, se enviará inmediatamente el monto especificado. Esta acción no se puede deshacer.
@@ -2037,7 +2184,7 @@
       
       document.getElementById('modal-confirm').onclick = () => {
         modal.style.display = 'none';
-        onConfirm();
+        showTransactionProgress(onConfirm);
       };
     }
 
@@ -2051,10 +2198,16 @@
 
       const actionText = type === 'send' ? 'enviar fondos' : 'solicitar dinero';
 
+      const badgeClass = info.verification === 'premium' ? 'premium' : (info.verification === 'identity' ? 'identity' : 'email');
+      const badgeLabel = info.verification ? info.verification.charAt(0).toUpperCase() + info.verification.slice(1) : '';
+
       content.innerHTML = `
         <div style="text-align:center; margin-bottom:1rem;">
-          <div style="font-weight:600; font-size:1.1rem;">${info.name}</div>
+          <div style="font-weight:600; font-size:1.1rem;">${info.name} ${badgeLabel ? `<span class="badge ${badgeClass}">${badgeLabel}</span>` : ''}</div>
           <div style="color: var(--neutral-600);">${info.country}</div>
+          <div style="margin-top:0.5rem; font-size:0.8rem; color:var(--neutral-600);">
+            Registrado el ${info.joinDate} • ${info.transactions} transacciones • ⭐ ${info.rating}
+          </div>
         </div>
         <div style="font-size:0.9rem; color: var(--neutral-600);">
           ¿Confirmas que deseas ${actionText} a esta persona?
@@ -2488,6 +2641,25 @@
           });
         }
       }, 500);
+    }
+
+    function showTransactionProgress(callback) {
+      const overlay = document.getElementById('transaction-progress');
+      const fill = document.getElementById('progress-fill');
+      const status = document.getElementById('progress-status');
+      if (!overlay || !fill || !status) { callback(); return; }
+      overlay.style.display = 'flex';
+      const states = ['Iniciando', 'Procesando', 'Confirmando', 'Completado'];
+      let index = 0;
+      const interval = setInterval(() => {
+        status.textContent = states[index] + '...';
+        fill.style.width = ((index+1) / states.length * 100) + '%';
+        if (index === states.length - 1) {
+          clearInterval(interval);
+          setTimeout(() => { overlay.style.display = 'none'; callback(); }, 500);
+        }
+        index++;
+      }, 700);
     }
 
     let pendingAccept = null;
