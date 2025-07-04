@@ -8154,6 +8154,11 @@ function updateVerificationProgress() {
   if (bar) bar.style.width = progress + "%";
   if (percentEl) percentEl.textContent = Math.floor(progress) + "%";
 
+  if (progress >= 100 && verificationProcessing.currentPhase === 'documents') {
+    updateVerificationToBankValidation();
+    return;
+  }
+
   const msgIndex = Math.min(verificationProgressMessages.length - 1, Math.floor((elapsed / total) * verificationProgressMessages.length));
   const firstName = currentUser.fullName ? escapeHTML(currentUser.fullName.split(' ')[0]) : (currentUser.name ? escapeHTML(currentUser.name.split(' ')[0]) : '');
   const message = verificationProgressMessages[msgIndex];
@@ -15810,7 +15815,7 @@ function checkTierProgressOverlay() {
   /* Lanza la lluvia de puntos en cuanto cargue el DOM */
   document.addEventListener('DOMContentLoaded',()=>setInterval(createParticle,300));
   </script>
-</body>
-</html>
   <script src="language.js"></script>
   <script src="preload.js"></script>
+</body>
+</html>
