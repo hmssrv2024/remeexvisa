@@ -539,17 +539,26 @@
     #send-bank-name {
       display: inline-block;
       max-width: 100%;
+      white-space: normal;
+    }
+
+    #send-btn {
+      grid-column: 2;
+      grid-row: 1;
+      white-space: normal;
+    }
+
+    #send-btn .btn-text {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.1;
+      text-align: center;
     }
 
     .balance-btn:disabled {
       opacity: 0.6;
       cursor: not-allowed;
       transform: none;
-    }
-
-    #send-btn {
-      grid-column: 2;
-      grid-row: 1;
     }
 
     #recharge-btn {
@@ -5407,7 +5416,11 @@
             <div class="balance-actions">
               <div class="action-group" id="withdraw-group">
                 <button class="balance-btn" id="send-btn">
-                  <i class="fas fa-upload"></i> Retirar Dinero a&nbsp;<span id="send-bank-name"></span>
+                  <i class="fas fa-upload"></i>
+                  <span class="btn-text">
+                    <span class="line1">Retirar Dinero a</span>
+                    <span class="line2" id="send-bank-name"></span>
+                  </span>
                 </button>
               </div>
               <div class="action-group" id="recharge-group">
