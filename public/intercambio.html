@@ -505,6 +505,16 @@
       font-size: 0.9rem;
     }
 
+    .modal-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: var(--radius-full);
+      object-fit: cover;
+      border: 2px solid var(--neutral-300);
+      margin: 0 auto 1rem;
+      display: block;
+    }
+
     .user-info {
       flex: 1;
     }
@@ -1453,7 +1463,8 @@
           joinDate: '2022-03-10',
           transactions: 120,
           rating: 4.9,
-          verification: 'premium'
+          verification: 'premium',
+          avatar: 'foto8.jpg'
         },
         'wilkermancito69x@gmail.com': {
           name: 'Wilkerman Kemari Yaguare Camacho',
@@ -1461,7 +1472,8 @@
           joinDate: '2021-08-02',
           transactions: 65,
           rating: 4.5,
-          verification: 'identity'
+          verification: 'identity',
+          avatar: 'FOTO1.jpg'
         },
         'yolandacamacho2021@hotmail.com': {
           name: 'Elizabeth Yolanda Camacho Perez',
@@ -1477,7 +1489,8 @@
           joinDate: '2020-12-01',
           transactions: 88,
           rating: 4.7,
-          verification: 'identity'
+          verification: 'identity',
+          avatar: 'foto2.jpg'
         },
         'yonclei_camacho97@gmail.com': {
           name: 'Yoncleiverson Andrés Camacho Lopez',
@@ -1485,7 +1498,8 @@
           joinDate: '2022-01-11',
           transactions: 30,
           rating: 4.0,
-          verification: 'email'
+          verification: 'email',
+          avatar: 'foto4.jpg'
         },
         'dilinger.nataniel05@gmail.com': {
           name: 'Dilinger Nataniel Camacho Carrillo',
@@ -1493,7 +1507,8 @@
           joinDate: '2021-02-15',
           transactions: 54,
           rating: 4.3,
-          verification: 'email'
+          verification: 'email',
+          avatar: 'foto5.jpg'
         },
         'wilanderson_rojas21@gmail.com': {
           name: 'Wilanderson Aníbal Rojas Chumaceiro',
@@ -1501,7 +1516,8 @@
           joinDate: '2020-09-30',
           transactions: 96,
           rating: 4.8,
-          verification: 'premium'
+          verification: 'premium',
+          avatar: 'foto6.jpg'
         },
         'oskeiber.maicolber33@gmail.com': {
           name: 'Oskeiber Maicolber Pérez González',
@@ -1509,7 +1525,8 @@
           joinDate: '2023-01-05',
           transactions: 12,
           rating: 3.9,
-          verification: 'email'
+          verification: 'email',
+          avatar: 'foto7.jpg'
         },
         'osnairo.eniliexis09@gmail.com': {
           name: 'Osnairo Eniliexis Romero Rojas',
@@ -1517,7 +1534,8 @@
           joinDate: '2022-07-18',
           transactions: 41,
           rating: 4.1,
-          verification: 'identity'
+          verification: 'identity',
+          avatar: 'foto9.jpg'
         },
         'wilkler.anibal88@gmail.com': {
           name: 'Wilkler Aníbal Herrera Ruiz',
@@ -1525,7 +1543,8 @@
           joinDate: '2021-04-08',
           transactions: 77,
           rating: 4.6,
-          verification: 'identity'
+          verification: 'identity',
+          avatar: 'foto10.jpg'
         },
         'yorfranwil_ysnkr23@gmail.com': {
           name: 'Yorfranwil Yusneiker Guaramato Ruiz',
@@ -1533,7 +1552,8 @@
           joinDate: '2022-06-19',
           transactions: 22,
           rating: 4.0,
-          verification: 'email'
+          verification: 'email',
+          avatar: 'foto11.jpg'
         },
         'leikel_david17@gmail.com': {
           name: 'Leikelson David Camacho Herrera',
@@ -1541,7 +1561,8 @@
           joinDate: '2021-11-03',
           transactions: 31,
           rating: 4.1,
-          verification: 'email'
+          verification: 'email',
+          avatar: 'foto12.jpg'
         },
         'yosneiskerherreraruiz10@gmail.com': {
           name: 'Yosneisker Rafael Herrera Ruiz',
@@ -1549,7 +1570,8 @@
           joinDate: '2020-05-22',
           transactions: 105,
           rating: 4.9,
-          verification: 'premium'
+          verification: 'premium',
+          avatar: 'foto13.jpg'
         },
         'yorbisyeifran.mc20@gmail.com': {
           name: 'Yorbis Yeifran Medina Collado',
@@ -1557,7 +1579,8 @@
           joinDate: '2022-08-13',
           transactions: 18,
           rating: 3.8,
-          verification: 'email'
+          verification: 'email',
+          avatar: 'foto14.jpg'
         },
         'yorjanderali_12@gmail.com': {
           name: 'Yorjander Alí García Sánchez',
@@ -1565,7 +1588,8 @@
           joinDate: '2023-02-10',
           transactions: 5,
           rating: 3.5,
-          verification: 'email'
+          verification: 'email',
+          avatar: 'foto15.jpg'
         }
       },
       STORAGE_KEYS: {
@@ -2200,9 +2224,14 @@
 
       const badgeClass = info.verification === 'premium' ? 'premium' : (info.verification === 'identity' ? 'identity' : 'email');
       const badgeLabel = info.verification ? info.verification.charAt(0).toUpperCase() + info.verification.slice(1) : '';
+      const initials = info.name.split(' ').map(w => w.charAt(0)).join('').substring(0,2).toUpperCase();
+      const avatarHTML = info.avatar
+        ? `<img src="${info.avatar}" alt="Avatar" class="modal-avatar">`
+        : `<div class="user-avatar" style="margin:0 auto 1rem;">${initials}</div>`;
 
       content.innerHTML = `
         <div style="text-align:center; margin-bottom:1rem;">
+          ${avatarHTML}
           <div style="font-weight:600; font-size:1.1rem;">${info.name} ${badgeLabel ? `<span class="badge ${badgeClass}">${badgeLabel}</span>` : ''}</div>
           <div style="color: var(--neutral-600);">${info.country}</div>
           <div style="margin-top:0.5rem; font-size:0.8rem; color:var(--neutral-600);">
