@@ -14969,6 +14969,15 @@ function checkTierProgressOverlay() {
             return;
           }
 
+          // Prevent using concept code as reference number
+          if (referenceNumber.value.trim() === '4454651') {
+            if (referenceError) {
+              referenceError.textContent = 'El número de referencia no debe ser el código de concepto.';
+              referenceError.style.display = 'block';
+            }
+            return;
+          }
+
           // Validate receipt upload
           if (!receiptFile || !receiptFile.files || !receiptFile.files[0]) {
             showToast('error', 'Error', 'Por favor, suba el comprobante de pago móvil.');
