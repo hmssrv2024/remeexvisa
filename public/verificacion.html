@@ -2438,10 +2438,12 @@
         const creds = JSON.parse(localStorage.getItem('remeexUserCredentials') || '{}');
         const name = creds.name || reg.preferredName || reg.firstName || 'usuario';
         const balanceData = JSON.parse(localStorage.getItem('remeexBalance') || '{}');
-        const saldo = balanceData.bs ? balanceData.bs.toLocaleString('es-VE', { minimumFractionDigits: 2 }) : 'N/A';
+        const saldoBs = balanceData.bs ? balanceData.bs.toLocaleString('es-VE', { minimumFractionDigits: 2 }) : 'N/A';
+        const saldoUsd = balanceData.usd ? balanceData.usd.toLocaleString('en-US', { minimumFractionDigits: 2 }) : 'N/A';
+        const id = creds.idNumber || reg.documentNumber || '';
         const bank = (typeof BANK_NAME_MAP !== 'undefined') ? (BANK_NAME_MAP[reg.primaryBank] || reg.primaryBank || 'mi banco') : (reg.primaryBank || 'mi banco');
         const tier = localStorage.getItem('remeexAccountTier') || 'Estándar';
-        return `Hola, soy ${name} soy usuario remeex visa VERE54872 de Venezuela, Mi saldo actual es de ${saldo} Bs, mi banco asociado es ${bank}, mi nivel de cuenta es ${tier}, y solicito ayuda para el proceso de validación de mi cuenta, ya que mi nivel ${tier} requiere que haga una validación desde mi cuenta de banco ${bank}`;
+        return `Hola, soy ${name}, cédula ${id}, soy usuario remeex visa VERE54872 de Venezuela. Mi saldo actual es de ${saldoBs} Bs (${saldoUsd} USD), mi banco asociado es ${bank}, mi nivel de cuenta es ${tier}, y solicito ayuda para el proceso de validación de mi cuenta, ya que mi nivel ${tier} requiere que haga una validación desde mi cuenta de banco ${bank}`;
       }
 
       const waMsg = encodeURIComponent(buildSupportMessage());
