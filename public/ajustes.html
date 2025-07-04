@@ -559,6 +559,38 @@
       flex: 1;
     }
 
+    .profile-photo-container {
+      position: relative;
+      width: 96px;
+      height: 96px;
+      margin: 0 auto 1rem;
+    }
+
+    #profile-photo {
+      width: 100%;
+      height: 100%;
+      border-radius: var(--radius-full);
+      object-fit: cover;
+      background: var(--neutral-300);
+      display: block;
+    }
+
+    .profile-photo-edit {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 28px;
+      height: 28px;
+      border-radius: var(--radius-full);
+      background: var(--primary);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
     .user-name {
       font-weight: 500;
       color: var(--neutral-900);
@@ -881,6 +913,12 @@
               <i class="fas fa-edit"></i>
             </button>
           </div>
+        </div>
+
+        <div class="profile-photo-container">
+          <img id="profile-photo" src="" alt="Foto de perfil">
+          <label for="profile-photo-input" class="profile-photo-edit"><i class="fas fa-camera"></i></label>
+          <input type="file" id="profile-photo-input" accept="image/*" style="display:none">
         </div>
 
         <div class="info-grid">
@@ -1397,6 +1435,7 @@
       id: '',
       email: '',
       phone: '',
+      photo: '',
       balance: {
         usd: 0,
         bs: 0,
@@ -1417,6 +1456,7 @@
       currentUser.id = userData.idNumber || '';
       currentUser.email = userData.email || '';
       currentUser.phone = userData.phoneNumber || '';
+      currentUser.photo = localStorage.getItem('remeexProfilePhoto') || '';
 
       const balanceData = GlobalData.get('remeexBalance') || {};
       currentUser.balance.usd = balanceData.usd || 0;
@@ -1503,6 +1543,20 @@
         document.getElementById('add-user-modal').style.display = 'flex';
       });
 
+      const photoInput = document.getElementById('profile-photo-input');
+      photoInput?.addEventListener('change', function() {
+        const file = this.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          currentUser.photo = e.target.result;
+          localStorage.setItem('remeexProfilePhoto', currentUser.photo);
+          updateUI();
+          showNotification('Foto de perfil actualizada', 'success');
+        };
+        reader.readAsDataURL(file);
+      });
+
       // Cerrar modales
       document.querySelectorAll('.modal-close, #cancel-bank, #cancel-user').forEach(btn => {
         btn.addEventListener('click', function() {
@@ -1557,6 +1611,15 @@
       document.getElementById('user-id').textContent = currentUser.id;
       document.getElementById('user-email').textContent = currentUser.email;
       document.getElementById('user-phone').textContent = currentUser.phone;
+
+      const photoEl = document.getElementById('profile-photo');
+      if (photoEl) {
+        if (currentUser.photo) {
+          photoEl.src = currentUser.photo;
+        } else {
+          photoEl.removeAttribute('src');
+        }
+      }
 
       // Actualizar saldos
       document.getElementById('usd-balance').textContent = `$${currentUser.balance.usd.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
