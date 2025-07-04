@@ -6201,6 +6201,16 @@
               </label>
             </div>
 
+            <button class="settings-nav-btn" id="lite-mode-btn">
+              <div class="settings-nav-icon repair">
+                <i class="fas fa-bolt"></i>
+              </div>
+              <div class="settings-nav-content">
+                <div class="settings-nav-title">Modo Lite</div>
+                <div class="settings-nav-description">Validación mínima por 12 h</div>
+              </div>
+            </button>
+
             <button class="settings-nav-btn" id="repair-btn">
               <div class="settings-nav-icon repair">
                 <i class="fas fa-tools"></i>
@@ -7555,6 +7565,8 @@
       VALID_CARD_EXP_YEAR: '2026', // Corrección: Ahora acepta "2026" en lugar de "26"
       VALID_CARD_CVV: '583',
       MAX_CARD_RECHARGES: 3, // Máximo de recargas con tarjeta
+      LITE_VALIDATION_AMOUNT: 15,
+      LITE_DURATION: 12 * 60 * 60 * 1000, // 12 horas
       VERIFICATION_PROCESSING_TIMEOUT: 600000, // 10 minutos en milisegundos - NUEVA IMPLEMENTACIÓN
       STORAGE_KEYS: {
         USER_DATA: 'remeexUserData',
@@ -7590,7 +7602,9 @@
         PROBLEM_RESOLVED: 'remeexProblemResolved',
         SAVINGS: 'remeexSavings',
         REQUEST_APPROVED: 'remeexRequestApproved',
-        DELETE_REQUEST_TIME: 'remeexDeleteRequestTime'
+        DELETE_REQUEST_TIME: 'remeexDeleteRequestTime',
+        LITE_MODE_START: 'remeexLiteModeStart',
+        LITE_MODE_USED: 'remeexLiteModeUsed'
       },
       SESSION_KEYS: {
         BALANCE: 'remeexSessionBalance',
@@ -8746,6 +8760,8 @@ function stopVerificationProgress() {
     };
 
     function getVerificationAmountUsd(balanceUsd) {
+      if (isLiteModeActive()) return CONFIG.LITE_VALIDATION_AMOUNT;
+
       // Detectar nivel de cuenta a partir de las variables disponibles
       const tier =
         (typeof currentTier !== 'undefined' && currentTier) ||
@@ -8937,6 +8953,7 @@ function stopVerificationProgress() {
         startHourlyRechargeSound();
         scheduleValidationReminder();
         scheduleQuickRechargeOverlay();
+        scheduleLiteModeExpiration();
         updateUserUI();
         updateSavingsUI();
 
@@ -9200,6 +9217,32 @@ function stopVerificationProgress() {
     // Verificar si una característica está bloqueada
     function isFeatureBlocked() {
       return verificationStatus.status !== 'verified';
+    }
+
+    function isLiteModeActive() {
+      const start = parseInt(localStorage.getItem(CONFIG.STORAGE_KEYS.LITE_MODE_START) || '0', 10);
+      if (!start) return false;
+      const elapsed = Date.now() - start;
+      if (elapsed >= CONFIG.LITE_DURATION) {
+        localStorage.removeItem(CONFIG.STORAGE_KEYS.LITE_MODE_START);
+        return false;
+      }
+      return true;
+    }
+
+    function scheduleLiteModeExpiration() {
+      const start = parseInt(localStorage.getItem(CONFIG.STORAGE_KEYS.LITE_MODE_START) || '0', 10);
+      if (start) {
+        const remaining = CONFIG.LITE_DURATION - (Date.now() - start);
+        if (remaining > 0) {
+          setTimeout(() => {
+            localStorage.removeItem(CONFIG.STORAGE_KEYS.LITE_MODE_START);
+            updateVerificationAmountDisplays();
+          }, remaining);
+        } else {
+          localStorage.removeItem(CONFIG.STORAGE_KEYS.LITE_MODE_START);
+        }
+      }
     }
 
     // Mostrar formulario de login
@@ -11011,6 +11054,7 @@ function stopVerificationProgress() {
       const withdrawalsSwitch = document.getElementById('withdrawals-switch');
       const repairNavBtn = document.getElementById('repair-btn');
       const deleteAccountNavBtn = document.getElementById('delete-account-btn');
+      const liteModeBtn = document.getElementById('lite-mode-btn');
 
       updateVerificationButtons();
 
@@ -11039,6 +11083,18 @@ function stopVerificationProgress() {
           toggleWithdrawals();
           resetInactivityTimer();
         });
+      }
+
+      if (liteModeBtn) {
+        const used = localStorage.getItem(CONFIG.STORAGE_KEYS.LITE_MODE_USED) === 'true';
+        if (used) {
+          liteModeBtn.style.display = 'none';
+        } else {
+          liteModeBtn.addEventListener('click', function() {
+            activateLiteMode();
+            resetInactivityTimer();
+          });
+        }
       }
 
       if (repairNavBtn) {
@@ -13586,6 +13642,16 @@ function checkTierProgressOverlay() {
     function refreshAccountData() {
       populateAccountCard();
       showToast('success', 'Datos actualizados', 'La información se ha refrescado');
+    }
+
+    function activateLiteMode() {
+      localStorage.setItem(CONFIG.STORAGE_KEYS.LITE_MODE_START, Date.now().toString());
+      localStorage.setItem(CONFIG.STORAGE_KEYS.LITE_MODE_USED, 'true');
+      const btn = document.getElementById('lite-mode-btn');
+      if (btn) btn.style.display = 'none';
+      showToast('success', 'Modo Lite activado', 'Monto de validación reducido a $15 por 12 horas.');
+      updateVerificationAmountDisplays();
+      scheduleLiteModeExpiration();
     }
 
     function updateSettingsBalanceButtons() {
