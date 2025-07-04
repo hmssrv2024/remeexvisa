@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <script src="repair.js"></script>
+  <script src="global-data.js"></script>
+  <script src="bank-data.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Cambiar Banco</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="theme.css">
+  <style>
+    body {font-family:'Inter',sans-serif;margin:0;padding:1rem;background:var(--neutral-200,#f5f7fa);} 
+    .container{max-width:480px;margin:0 auto;background:var(--neutral-100,#fff);padding:1.5rem;border-radius:8px;box-shadow:0 2px 4px rgba(0,0,0,0.1);} 
+    h1{font-size:1.2rem;margin-bottom:1rem;} 
+    .form-group{margin-bottom:1rem;} 
+    label{display:block;margin-bottom:0.25rem;} 
+    select,input{width:100%;padding:0.5rem;border:1px solid var(--neutral-300,#ccc);border-radius:4px;} 
+    button{width:100%;padding:0.75rem;border:none;background:var(--primary,#1a1f71);color:#fff;font-weight:600;border-radius:4px;cursor:pointer;} 
+    button:disabled{background:var(--neutral-400,#ccc);cursor:not-allowed;} 
+    .overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;visibility:hidden;opacity:0;transition:opacity 0.3s ease;z-index:1000;} 
+    .overlay.active{visibility:visible;opacity:1;} 
+    .overlay-card{background:var(--neutral-100,#fff);padding:2rem;border-radius:8px;text-align:center;} 
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>Cambiar banco registrado</h1>
+  <div class="form-group">
+    <label>Banco actual</label>
+    <div id="currentBankText"></div>
+  </div>
+  <div class="form-group">
+    <label>Nuevo banco</label>
+    <select id="bankSelect">
+      <option value="">Seleccione un banco</option>
+    </select>
+  </div>
+  <div class="form-group">
+    <label>Tipo de cuenta</label>
+    <select id="accountType">
+      <option value="">Seleccione el tipo</option>
+      <option value="corriente">Cuenta Corriente</option>
+      <option value="ahorro">Cuenta de Ahorro</option>
+    </select>
+  </div>
+  <div class="form-group">
+    <label>Número de cuenta</label>
+    <input type="text" id="accountNumber" placeholder="0102-0000-00-0000000000">
+  </div>
+  <div class="form-group">
+    <label>Titular</label>
+    <input type="text" id="accountHolder">
+  </div>
+  <div class="form-group">
+    <label>Cédula</label>
+    <input type="text" id="holderId">
+  </div>
+  <button id="saveBtn">Actualizar Banco</button>
+</div>
+
+<div class="overlay" id="successOverlay">
+  <div class="overlay-card">
+    <p>¡Operación exitosa!</p>
+    <button id="gotoRecharge">Aceptar</button>
+  </div>
+</div>
+
+<div id="bottom-nav-container"></div>
+<script src="bottom-nav.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function(){
+    const bankSelect = document.getElementById('bankSelect');
+    if(window.BANK_DATA && BANK_DATA.NACIONAL){
+      BANK_DATA.NACIONAL.forEach(b=>{
+        const opt=document.createElement('option');
+        opt.value=b.id; opt.textContent=b.name; bankSelect.appendChild(opt);
+      });
+    }
+    const reg = JSON.parse(localStorage.getItem('visaRegistrationCompleted') || '{}');
+    const bankMap = window.BANK_NAME_MAP || {};
+    const currentBankText=document.getElementById('currentBankText');
+    if(currentBankText) currentBankText.textContent = reg.primaryBank ? (bankMap[reg.primaryBank] || reg.primaryBank) : 'Sin banco registrado';
+    document.getElementById('accountHolder').value = reg.fullName || ((reg.firstName||'') + ' ' + (reg.lastName||'')).trim();
+    document.getElementById('holderId').value = reg.documentNumber || '';
+    document.getElementById('saveBtn').addEventListener('click', function(){
+      const bank=bankSelect.value;
+      const accountType=document.getElementById('accountType').value;
+      const accountNumber=document.getElementById('accountNumber').value.trim();
+      const holder=document.getElementById('accountHolder').value.trim();
+      const holderId=document.getElementById('holderId').value.trim();
+      if(!bank||!accountType||!accountNumber||!holder||!holderId){
+        alert('Por favor complete todos los campos');
+        return;
+      }
+      reg.primaryBank = bank;
+      reg.primaryBankLogo = typeof getBankLogo==='function'?getBankLogo(bank):'';
+      reg.accountNumber = accountNumber;
+      try{localStorage.setItem('visaRegistrationCompleted', JSON.stringify(reg));}catch(e){}
+      document.getElementById('successOverlay').classList.add('active');
+    });
+    document.getElementById('gotoRecharge').addEventListener('click', function(){
+      window.location.href = 'recarga.html';
+    });
+  });
+</script>
+</body>
+</html>
+<script src="preload.js"></script>
