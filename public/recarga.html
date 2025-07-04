@@ -504,7 +504,9 @@
       align-items: center;
       justify-content: center;
       font-weight: 600;
-      font-size: 0.81rem;
+      font-size: clamp(0.72rem, 2.5vw, 0.85rem);
+      overflow: hidden;
+      text-overflow: ellipsis;
       background: rgba(255, 255, 255, 0.1);
       color: #fff;
       backdrop-filter: blur(8px);
@@ -4963,7 +4965,7 @@
         grid-auto-rows: 58px;
       }
       .balance-btn {
-        font-size: 0.85rem;
+        font-size: clamp(0.72rem, 2vw, 0.85rem);
       }
 
       .service-grid,
