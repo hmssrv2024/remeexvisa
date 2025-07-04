@@ -13046,7 +13046,11 @@ function setupUsAccountLink() {
               if (settingsEmail) settingsEmail.value = currentUser.email;
             }
           } else if (section === 'home') {
-            // Actualizar navegación
+            const dashboardContainer = document.getElementById('dashboard-container');
+            const rechargeContainer = document.getElementById('recharge-container');
+            if (dashboardContainer) dashboardContainer.style.display = 'block';
+            if (rechargeContainer) rechargeContainer.style.display = 'none';
+
             navItems.forEach(navItem => {
               navItem.classList.remove('active');
             });
