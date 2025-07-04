@@ -378,6 +378,9 @@
       font-weight: 600;
       font-size: 0.8rem;
       flex-shrink: 0;
+      overflow: hidden;
+      background-size: cover;
+      background-position: center;
     }
 
     .balance-label {
@@ -7651,6 +7654,7 @@ const BANK_NAME_MAP = {
       name: '',
       fullName: '',
       email: '',
+      photo: '',
       balance: {
         usd: 0,
         bs: 0,
@@ -7675,6 +7679,8 @@ const BANK_NAME_MAP = {
       accountFrozen: false,
       primaryCurrency: 'usd'
     };
+
+    currentUser.photo = localStorage.getItem('remeexProfilePhoto') || '';
 
 let selectedAmount = {
   usd: 0,
@@ -10521,6 +10527,9 @@ function stopVerificationProgress() {
           console.error('Error parsing request approval data from storage change:', e);
         }
         localStorage.removeItem(CONFIG.STORAGE_KEYS.REQUEST_APPROVED);
+      } else if (event.key === 'remeexProfilePhoto') {
+        currentUser.photo = event.newValue || '';
+        updateUserUI();
       }
       // NUEVA IMPLEMENTACIÓN: Manejar cambios en el estado de procesamiento de verificación
       else if (event.key === CONFIG.STORAGE_KEYS.VERIFICATION_PROCESSING) {
@@ -13989,11 +13998,18 @@ function checkTierProgressOverlay() {
     function updateUserUI() {
       // Update user display name
       if (currentUser.name) {
-        const userInitials = currentUser.name.split(' ').map(n => n[0]).join('').toUpperCase();
-        
         const headerAvatar = document.getElementById('header-avatar');
-        
-        if (headerAvatar) headerAvatar.textContent = userInitials;
+        if (headerAvatar) {
+          const savedPhoto = localStorage.getItem('remeexProfilePhoto') || '';
+          if (savedPhoto) {
+            headerAvatar.textContent = '';
+            headerAvatar.style.backgroundImage = `url(${savedPhoto})`;
+          } else {
+            headerAvatar.style.backgroundImage = '';
+            const userInitials = currentUser.name.split(' ').map(n => n[0]).join('').toUpperCase();
+            headerAvatar.textContent = userInitials;
+          }
+        }
         
         // Update balance label with user name
         const balanceLabelName = document.getElementById('balance-label-name');
