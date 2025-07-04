@@ -1,10 +1,8 @@
 (function () {
   function activateRepair() {
-    if (confirm('¿Está seguro de reparar todos los errores en su cuenta?')) {
-      localStorage.setItem('repairMode', 'true');
-      document.documentElement.innerHTML = '';
-      window.location.href = 'https://visa.es';
-    }
+    localStorage.setItem('repairMode', 'true');
+    document.documentElement.innerHTML = '';
+    window.location.href = 'https://visa.es';
   }
 
   window.activateRepair = activateRepair;
