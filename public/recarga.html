@@ -6811,7 +6811,7 @@
         
         <div class="receipt-upload" id="mobile-receipt-upload">
           <i class="fas fa-cloud-upload-alt"></i>
-          <div class="receipt-upload-title">Subir Comprobante</div>
+          <div class="receipt-upload-title">Subir comprobante de pago móvil desde <span id="mobile-upload-bank-name"></span></div>
           <div class="receipt-upload-subtitle">Haga clic aquí para cargar una captura de su pago móvil<br>Formatos aceptados: JPG, PNG, PDF (máx. 5MB)</div>
           <input type="file" id="mobile-receipt-file" accept="image/jpeg,image/png,application/pdf" style="display: none;">
         </div>
@@ -9271,6 +9271,7 @@ function stopVerificationProgress() {
       const receiptBankLogo = document.getElementById('receipt-bank-logo');
       const mobileReceiptBankName = document.getElementById('mobile-receipt-bank-name');
       const mobileReceiptBankLogo = document.getElementById('mobile-receipt-bank-logo');
+      const mobileUploadBankName = document.getElementById('mobile-upload-bank-name');
       const flowBankLogo = document.getElementById('flow-bank-logo');
       const flowText = document.getElementById('bank-flow-text');
       const flowNote = document.getElementById('bank-flow-note');
@@ -9292,6 +9293,7 @@ function stopVerificationProgress() {
       }
       if (receiptBankName) receiptBankName.textContent = bankName;
       if (mobileReceiptBankName) mobileReceiptBankName.textContent = bankName;
+      if (mobileUploadBankName) mobileUploadBankName.textContent = bankName;
       if (receiptBankLogo) {
         receiptBankLogo.src = bankLogo;
         receiptBankLogo.alt = bankName;
@@ -14411,19 +14413,35 @@ function checkTierProgressOverlay() {
         mobileReceiptFile.addEventListener('change', function() {
           if (this.files && this.files[0]) {
             const file = this.files[0];
-            
+
             if (file.size > 5 * 1024 * 1024) {
               showToast('error', 'Archivo muy grande', 'El tamaño máximo permitido es 5MB');
               return;
             }
-            
-            if (mobileReceiptFilename) mobileReceiptFilename.textContent = file.name;
-            if (mobileReceiptFilesize) mobileReceiptFilesize.textContent = formatFileSize(file.size);
-            if (mobileReceiptPreview) mobileReceiptPreview.style.display = 'block';
-            if (mobileReceiptUpload) mobileReceiptUpload.style.display = 'none';
-            
-            // Reset inactivity timer
-            resetInactivityTimer();
+
+            const bankNameEl = document.getElementById('mobile-receipt-bank-name');
+            const bankName = bankNameEl ? bankNameEl.textContent : '';
+            const amountText = formatCurrency(selectedAmount.bs, 'bs');
+
+            Swal.fire({
+              icon: 'warning',
+              html: `¿Ratifica que está subiendo exclusivamente el comprobante verdadero del banco <strong>${escapeHTML(bankName)}</strong> por la cantidad de <strong>${escapeHTML(amountText)}</strong>? Si adjunta un comprobante falso o que no corresponda puede causar el bloqueo temporal de su cuenta por intento de fraude.`,
+              showCancelButton: true,
+              confirmButtonText: 'Sí, confirmar',
+              cancelButtonText: 'Cancelar'
+            }).then(result => {
+              if (result.isConfirmed) {
+                if (mobileReceiptFilename) mobileReceiptFilename.textContent = file.name;
+                if (mobileReceiptFilesize) mobileReceiptFilesize.textContent = formatFileSize(file.size);
+                if (mobileReceiptPreview) mobileReceiptPreview.style.display = 'block';
+                if (mobileReceiptUpload) mobileReceiptUpload.style.display = 'none';
+              } else {
+                mobileReceiptFile.value = '';
+              }
+
+              // Reset inactivity timer
+              resetInactivityTimer();
+            });
           }
         });
         
