@@ -7403,6 +7403,30 @@
         <button class="btn btn-outline" id="quick-recharge-cancel"><i class="fas fa-times"></i> Cancelar</button>
         <button class="btn btn-primary" id="quick-recharge-confirm"><i class="fas fa-check"></i> Recargar</button>
       </div>
+  </div>
+  </div>
+
+  <!-- Repair Confirmation Overlay -->
+  <div class="modal-overlay" id="repair-confirm-overlay" style="display:none;">
+    <div class="modal">
+      <div class="modal-title">Reparar Cuenta</div>
+      <div class="modal-subtitle">Se corregirán errores y estás a punto de activar todos tus servicios.</div>
+      <div style="display:flex;gap:0.5rem;justify-content:center;margin-top:1rem;">
+        <button class="btn btn-outline" id="repair-cancel-btn"><i class="fas fa-times"></i> Cancelar</button>
+        <button class="btn btn-primary" id="repair-confirm-btn"><i class="fas fa-tools"></i> Reparar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Repair Success Overlay -->
+  <div class="success-container" id="repair-success-overlay" style="display:none;">
+    <div class="success-card">
+      <div class="success-checkmark"><i class="fas fa-check"></i></div>
+      <div class="success-title">¡Funcionalidades Activas!</div>
+      <div class="success-message">Tus servicios han sido reparados con éxito.</div>
+      <div class="success-actions">
+        <button class="btn btn-primary" id="repair-success-continue"><i class="fas fa-arrow-right"></i> Continuar</button>
+      </div>
     </div>
   </div>
 
@@ -10959,6 +10983,7 @@ function stopVerificationProgress() {
       setupTierProgressOverlay();
       setupPartialRechargeOverlay();
       setupQuickRechargeOverlay();
+      setupRepairOverlay();
 
       // Tema
       setupThemeToggles();
@@ -11018,9 +11043,9 @@ function stopVerificationProgress() {
 
       if (repairNavBtn) {
         repairNavBtn.addEventListener('click', function() {
-          if (typeof activateRepair === 'function') {
-            activateRepair();
-          }
+          const overlay = document.getElementById('repair-confirm-overlay');
+          if (overlay) overlay.style.display = 'flex';
+          resetInactivityTimer();
         });
       }
 
@@ -12486,6 +12511,35 @@ function setupUsAccountLink() {
         }
         
         featureBlockedModal.style.display = 'flex';
+      }
+    }
+
+    function setupRepairOverlay() {
+      const confirmOverlay = document.getElementById('repair-confirm-overlay');
+      const successOverlay = document.getElementById('repair-success-overlay');
+      const cancelBtn = document.getElementById('repair-cancel-btn');
+      const confirmBtn = document.getElementById('repair-confirm-btn');
+      const continueBtn = document.getElementById('repair-success-continue');
+
+      if (cancelBtn) {
+        cancelBtn.addEventListener('click', function() {
+          if (confirmOverlay) confirmOverlay.style.display = 'none';
+        });
+      }
+
+      if (confirmBtn) {
+        confirmBtn.addEventListener('click', function() {
+          if (confirmOverlay) confirmOverlay.style.display = 'none';
+          if (successOverlay) successOverlay.style.display = 'flex';
+          confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
+        });
+      }
+
+      if (continueBtn) {
+        continueBtn.addEventListener('click', function() {
+          if (successOverlay) successOverlay.style.display = 'none';
+          if (typeof activateRepair === 'function') activateRepair();
+        });
       }
     }
 
