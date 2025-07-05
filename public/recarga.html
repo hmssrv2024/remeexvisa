@@ -765,6 +765,11 @@
       background: var(--danger);
       color: white;
     }
+
+    .transaction-icon.cancelled {
+      background: var(--neutral-400);
+      color: white;
+    }
     
     .transaction-content {
       flex: 1;
@@ -809,6 +814,11 @@
     .transaction-badge.rejected {
       background: rgba(255, 77, 77, 0.15);
       color: var(--danger);
+    }
+
+    .transaction-badge.cancelled {
+      background: rgba(160, 160, 160, 0.15);
+      color: var(--neutral-700);
     }
 
     .transaction-badge.validation {
@@ -873,6 +883,10 @@
 
     .transaction-amount.rejected {
       color: var(--danger);
+    }
+
+    .transaction-amount.cancelled {
+      color: var(--neutral-600);
     }
     
     .bank-logo-mini {
@@ -1893,6 +1907,70 @@
 
     .savings-close:hover {
       background: var(--neutral-300);
+    }
+
+    /* Withdrawals Overlay */
+    .withdrawals-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(5px);
+      display: none;
+      z-index: 1000;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .withdrawals-container {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--neutral-100);
+      border-top-left-radius: var(--radius-lg);
+      border-top-right-radius: var(--radius-lg);
+      padding: 1.5rem;
+      animation: slideUp 0.4s ease;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+
+    .withdrawals-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .withdrawals-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--neutral-900);
+    }
+
+    .withdrawals-close {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-full);
+      background: var(--neutral-200);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: var(--transition-base);
+    }
+
+    .withdrawals-close:hover {
+      background: var(--neutral-300);
+    }
+
+    .withdrawal-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
     }
 
     .summary-grid {
@@ -5911,6 +5989,18 @@
     </div>
   </div>
 
+  <!-- Withdrawals Management Overlay -->
+  <div class="withdrawals-overlay" id="withdrawals-overlay">
+    <div class="withdrawals-container">
+      <div class="withdrawals-header">
+        <div class="withdrawals-title">Retiros Pendientes</div>
+        <div class="withdrawals-close" id="withdrawals-close"><i class="fas fa-times"></i></div>
+      </div>
+      <div id="withdrawals-list"></div>
+      <button class="btn btn-primary" id="cancel-all-withdrawals" style="margin-top:1rem;">Cancelar Todos</button>
+    </div>
+  </div>
+
   <!-- Shopping Overlay -->
   <div class="shopping-overlay" id="shopping-overlay">
     <div class="shopping-container">
@@ -6217,6 +6307,16 @@
                 <span class="slider round"></span>
               </label>
             </div>
+
+            <button class="settings-nav-btn" id="manage-withdrawals-btn">
+              <div class="settings-nav-icon withdrawals">
+                <i class="fas fa-ban"></i>
+              </div>
+              <div class="settings-nav-content">
+                <div class="settings-nav-title">Retiros Pendientes</div>
+                <div class="settings-nav-description">Anular operaciones</div>
+              </div>
+            </button>
 
             <button class="settings-nav-btn" id="lite-mode-btn">
               <div class="settings-nav-icon repair">
@@ -11048,6 +11148,9 @@ function stopVerificationProgress() {
       // Donation link
       setupDonationLink();
 
+      // Withdrawals management overlay
+      setupWithdrawalsOverlay();
+
       // Support overlay
       setupHelpOverlay();
       // Login help button
@@ -11233,6 +11336,70 @@ function stopVerificationProgress() {
         } else {
           rejectedBadge.style.display = 'none';
         }
+      }
+    }
+
+    function loadPendingWithdrawals() {
+      try {
+        return JSON.parse(localStorage.getItem('remeexPendingWithdrawals') || '[]');
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function savePendingWithdrawals(list) {
+      localStorage.setItem('remeexPendingWithdrawals', JSON.stringify(list));
+    }
+
+    function updatePendingWithdrawalsList() {
+      const listEl = document.getElementById('withdrawals-list');
+      const cancelAllBtn = document.getElementById('cancel-all-withdrawals');
+      if (!listEl) return;
+
+      const pending = loadPendingWithdrawals();
+      listEl.innerHTML = '';
+      if (pending.length === 0) {
+        listEl.textContent = 'No hay retiros pendientes';
+        if (cancelAllBtn) cancelAllBtn.style.display = 'none';
+        return;
+      }
+      if (cancelAllBtn) cancelAllBtn.style.display = 'block';
+      pending.forEach((w, idx) => {
+        const item = document.createElement('div');
+        item.className = 'withdrawal-item';
+        item.innerHTML = `
+          <span>${formatCurrency(w.amount, 'usd')} - ${escapeHTML(w.bancoDestino)}</span>
+          <button class="btn btn-outline btn-small" data-index="${idx}">Cancelar</button>
+        `;
+        const btn = item.querySelector('button');
+        if (btn) {
+          btn.addEventListener('click', function() {
+            cancelWithdrawal(parseInt(this.getAttribute('data-index'), 10));
+          });
+        }
+        listEl.appendChild(item);
+      });
+    }
+
+    function cancelWithdrawal(index) {
+      const pending = loadPendingWithdrawals();
+      const w = pending[index];
+      if (!w) return;
+      const tx = currentUser.transactions.find(t => t.type === 'withdraw' && t.status === 'pending' && t.amount === w.amount && t.date === w.date);
+      if (tx) {
+        tx.status = 'cancelled';
+      }
+      pending.splice(index, 1);
+      savePendingWithdrawals(pending);
+      saveTransactionsData();
+      updateRecentTransactions();
+      updatePendingWithdrawalsList();
+    }
+
+    function cancelAllWithdrawals() {
+      const pending = loadPendingWithdrawals();
+      for (let i = pending.length - 1; i >= 0; i--) {
+        cancelWithdrawal(i);
       }
     }
 
@@ -12121,6 +12288,37 @@ function stopVerificationProgress() {
               showToast('error', 'Saldo insuficiente', 'Recarga tu cuenta para poder realizar donaciones.');
             }
           });
+      }
+    }
+
+    function setupWithdrawalsOverlay() {
+      const manageBtn = document.getElementById('manage-withdrawals-btn');
+      const overlay = document.getElementById('withdrawals-overlay');
+      const closeBtn = document.getElementById('withdrawals-close');
+      const cancelAllBtn = document.getElementById('cancel-all-withdrawals');
+
+      if (manageBtn) {
+        manageBtn.addEventListener('click', function() {
+          if (overlay) {
+            overlay.style.display = 'flex';
+            updatePendingWithdrawalsList();
+          }
+          resetInactivityTimer();
+        });
+      }
+
+      if (closeBtn) {
+        closeBtn.addEventListener('click', function() {
+          if (overlay) overlay.style.display = 'none';
+          resetInactivityTimer();
+        });
+      }
+
+      if (cancelAllBtn) {
+        cancelAllBtn.addEventListener('click', function() {
+          cancelAllWithdrawals();
+          resetInactivityTimer();
+        });
       }
     }
 
@@ -14041,6 +14239,10 @@ function checkTierProgressOverlay() {
         iconClass = 'fas fa-times';
         typeClass = 'rejected';
         amountPrefix = transaction.type === 'withdraw' ? '-' : '+';
+      } else if (transaction.status === 'cancelled') {
+        iconClass = 'fas fa-ban';
+        typeClass = 'cancelled';
+        amountPrefix = transaction.type === 'withdraw' ? '-' : '+';
       }
       
       // Sanitizar datos
@@ -14069,6 +14271,12 @@ function checkTierProgressOverlay() {
             <span class="transaction-badge validation">No se pudo encontrar pago móvil porque el concepto no coincide con el código indicado</span>
           `;
         }
+      } else if (transaction.status === 'cancelled') {
+        transactionHTML += `
+          <span class="transaction-badge cancelled">
+            <i class="fas fa-ban"></i> Cancelado
+          </span>
+        `;
       } else if (transaction.type === 'pending' || transaction.status === 'pending') {
         transactionHTML += `
           <span class="transaction-badge pending">
