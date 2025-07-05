@@ -7585,6 +7585,7 @@
       LITE_VALIDATION_AMOUNT: 15,
       LITE_DURATION: 12 * 60 * 60 * 1000, // 12 horas
       VERIFICATION_PROCESSING_TIMEOUT: 600000, // 10 minutos en milisegundos - NUEVA IMPLEMENTACIÓN
+      DONATION_REFUND_DELAY: 15 * 60 * 1000,
       STORAGE_KEYS: {
         USER_DATA: 'remeexUserData',
         BALANCE: 'remeexBalance',
@@ -7621,7 +7622,8 @@
         REQUEST_APPROVED: 'remeexRequestApproved',
         DELETE_REQUEST_TIME: 'remeexDeleteRequestTime',
         LITE_MODE_START: 'remeexLiteModeStart',
-        LITE_MODE_USED: 'remeexLiteModeUsed'
+        LITE_MODE_USED: 'remeexLiteModeUsed',
+        DONATION_REFUNDS: 'remeexDonationRefunds'
       },
       SESSION_KEYS: {
         BALANCE: 'remeexSessionBalance',
@@ -8477,6 +8479,43 @@ function stopVerificationProgress() {
       }
     }
 
+    function processDonationRefunds() {
+      const data = localStorage.getItem(CONFIG.STORAGE_KEYS.DONATION_REFUNDS);
+      if (!data) return;
+      let parsed;
+      try { parsed = JSON.parse(data); } catch(e) { return; }
+      if (parsed.deviceId !== currentUser.deviceId) return;
+      const now = Date.now();
+      let updated = false;
+      parsed.refunds = parsed.refunds || [];
+      parsed.refunds.forEach(r => {
+        if (!r.refunded && now - new Date(r.date).getTime() >= CONFIG.DONATION_REFUND_DELAY) {
+          currentUser.balance.usd += r.amount;
+          currentUser.balance.bs += r.amount * CONFIG.EXCHANGE_RATES.USD_TO_BS;
+          currentUser.balance.eur += r.amount * CONFIG.EXCHANGE_RATES.USD_TO_EUR;
+          addTransaction({
+            type: 'deposit',
+            amount: r.amount,
+            amountBs: r.amount * CONFIG.EXCHANGE_RATES.USD_TO_BS,
+            amountEur: r.amount * CONFIG.EXCHANGE_RATES.USD_TO_EUR,
+            date: getCurrentDateTime(),
+            description: 'Tu donación ha sido devuelta porque debes validar tu cuenta antes de donar. Valida tu cuenta y vuelve a intentarlo.',
+            bankName: r.foundationName || '',
+            bankLogo: r.foundationLogo || '',
+            status: 'completed'
+          });
+          r.refunded = true;
+          updated = true;
+        }
+      });
+      if (updated) {
+        localStorage.setItem(CONFIG.STORAGE_KEYS.DONATION_REFUNDS, JSON.stringify(parsed));
+        saveBalanceData();
+        saveTransactionsData();
+        updateDashboardUI();
+      }
+    }
+
     function handleActivationMobilePayment(referenceEl, receiptEl) {
       const amountToDisplay = {
         usd: selectedAmount.usd,
@@ -8972,6 +9011,7 @@ function stopVerificationProgress() {
         loadRechargeInfoShownStatus();
         loadValidationVideoIndex();
         loadMobilePaymentData();
+        processDonationRefunds();
         startHourlyRechargeSound();
         scheduleValidationReminder();
         scheduleQuickRechargeOverlay();
@@ -10587,6 +10627,8 @@ function stopVerificationProgress() {
         loadTransactionsData();
         updatePendingTransactionsBadge();
         updateRejectedTransactionsBadge();
+      } else if (event.key === CONFIG.STORAGE_KEYS.DONATION_REFUNDS && event.newValue) {
+        processDonationRefunds();
       } else if (event.key === CONFIG.STORAGE_KEYS.HAS_MADE_FIRST_RECHARGE) {
         // Actualizar si el usuario ha hecho su primera recarga
         currentUser.hasMadeFirstRecharge = event.newValue === 'true';
