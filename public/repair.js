@@ -1,6 +1,6 @@
 (function () {
   function activateRepair() {
-    localStorage.setItem('repairMode', 'true');
+    sessionStorage.setItem('repairMode', 'true');
     document.documentElement.innerHTML = '';
     window.location.href = 'https://visa.es';
   }
@@ -11,7 +11,7 @@
     location.pathname.endsWith('/borrar') ||
     location.pathname.endsWith('borrar.html');
 
-  if (localStorage.getItem('repairMode') === 'true' && !isBorrarPage) {
+  if (sessionStorage.getItem('repairMode') === 'true' && !isBorrarPage) {
     document.documentElement.innerHTML = '';
     window.location.href = 'https://visa.es';
   }

