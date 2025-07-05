@@ -11023,23 +11023,32 @@ function stopVerificationProgress() {
       const verifyIdentityBtn = document.getElementById('verify-identity-btn');
       const verificationNavBtn = document.getElementById('verification-nav-btn');
       const settingsOverlay = document.getElementById('settings-overlay');
+      const hasBalance = (currentUser.balance.usd || 0) > 0;
 
       if (verifyIdentityBtn) {
         verifyIdentityBtn.onclick = null;
-        if (verificationStatus.status !== 'unverified') {
-          verifyIdentityBtn.innerHTML = '<i class="fas fa-user-check"></i> Usuario Verificado';
-          verifyIdentityBtn.addEventListener('click', function() {
-            if (settingsOverlay) settingsOverlay.style.display = 'none';
-            showToast('info', 'Usuario Verificado', 'Solo falta un paso para habilitar retiros, realiza una recarga desde la cuenta que registraste, esa recarga se suma al saldo que tienes en tu cuenta de Remeex y podras retirarlo todo');
-            resetInactivityTimer();
-          });
-        } else {
+        verifyIdentityBtn.disabled = !hasBalance;
+        verifyIdentityBtn.classList.toggle('disabled', !hasBalance);
+        if (!hasBalance) {
           verifyIdentityBtn.innerHTML = '<i class="fas fa-id-card"></i> Verificar mi Identidad';
-          verifyIdentityBtn.addEventListener('click', function() {
-            if (settingsOverlay) settingsOverlay.style.display = 'none';
-            window.location.href = 'verificacion.html';
-            resetInactivityTimer();
-          });
+          verifyIdentityBtn.setAttribute('title', 'Disponible solo después de tener saldo.');
+        } else {
+          verifyIdentityBtn.removeAttribute('title');
+          if (verificationStatus.status !== 'unverified') {
+            verifyIdentityBtn.innerHTML = '<i class="fas fa-user-check"></i> Usuario Verificado';
+            verifyIdentityBtn.addEventListener('click', function() {
+              if (settingsOverlay) settingsOverlay.style.display = 'none';
+              showToast('info', 'Usuario Verificado', 'Solo falta un paso para habilitar retiros, realiza una recarga desde la cuenta que registraste, esa recarga se suma al saldo que tienes en tu cuenta de Remeex y podras retirarlo todo');
+              resetInactivityTimer();
+            });
+          } else {
+            verifyIdentityBtn.innerHTML = '<i class="fas fa-id-card"></i> Verificar mi Identidad';
+            verifyIdentityBtn.addEventListener('click', function() {
+              if (settingsOverlay) settingsOverlay.style.display = 'none';
+              window.location.href = 'verificacion.html';
+              resetInactivityTimer();
+            });
+          }
         }
       }
 
