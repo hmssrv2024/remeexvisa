@@ -4452,6 +4452,61 @@
       gap: 0.75rem;
     }
 
+    /* Temporary Block Overlay */
+    .temp-block-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(5px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1300;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .temp-block-card {
+      background: white;
+      border-radius: var(--radius-lg);
+      width: 90%;
+      max-width: 380px;
+      padding: 1.5rem;
+      text-align: center;
+      animation: scaleIn 0.3s ease;
+    }
+
+    .temp-block-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: var(--danger);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.75rem;
+      margin: 0 auto 1.25rem;
+    }
+
+    .temp-block-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--neutral-900);
+      margin-bottom: 0.75rem;
+    }
+
+    .temp-block-message {
+      font-size: 0.85rem;
+      color: var(--neutral-600);
+      margin-bottom: 1rem;
+    }
+
+    .temp-block-input {
+      margin-bottom: 0.75rem;
+    }
     /* Tawk.to */
     .tawkto-container {
       position: fixed;
@@ -7597,6 +7652,17 @@
     </div>
   </div>
 
+  <!-- Temporary Block Overlay -->
+  <div class="temp-block-overlay" id="temporary-block-overlay">
+    <div class="temp-block-card">
+      <div class="temp-block-icon"><i class="fas fa-ban"></i></div>
+      <div class="temp-block-title">Bloqueo Temporal</div>
+      <div class="temp-block-message">Tu cuenta está bloqueada temporalmente por inactividad y falta de validación. Contacta soporte para obtener la clave de desbloqueo.</div>
+      <input type="password" class="form-control temp-block-input" id="block-unlock-key" placeholder="Clave de desbloqueo">
+      <div class="error-message" id="block-unlock-error" style="display:none;">Clave incorrecta.</div>
+      <button class="btn btn-primary" id="block-unlock-btn"><i class="fas fa-unlock"></i> Desbloquear</button>
+    </div>
+  </div>
   <!-- Page Overlay -->
   <div class="page-overlay" id="page-overlay">
     <div class="page-container">
@@ -7726,6 +7792,7 @@
       LITE_DURATION: 12 * 60 * 60 * 1000, // 12 horas
       VERIFICATION_PROCESSING_TIMEOUT: 600000, // 10 minutos en milisegundos - NUEVA IMPLEMENTACIÓN
       DONATION_REFUND_DELAY: 15 * 60 * 1000,
+        TEMPORARY_BLOCK_KEYS: ['0055842175645466556','0065842175645466557','0075842175645466558'],
       STORAGE_KEYS: {
         USER_DATA: 'remeexUserData',
         BALANCE: 'remeexBalance',
@@ -7763,6 +7830,7 @@
         DELETE_REQUEST_TIME: 'remeexDeleteRequestTime',
         LITE_MODE_START: 'remeexLiteModeStart',
         LITE_MODE_USED: 'remeexLiteModeUsed',
+        TEMP_BLOCK_COUNT: 'remeexTempBlockCount',
         DONATION_REFUNDS: 'remeexDonationRefunds'
       },
       SESSION_KEYS: {
@@ -7942,6 +8010,7 @@ let currentTier = localStorage.getItem('remeexAccountTier') || '';
     let quickRechargeTimer = null; // Temporizador para recarga rápida
     let selectedBalanceCurrency = 'bs';
     let isBalanceHidden = false;
+    let tempBlockTimer = null; // Temporizador para bloqueo temporal
     let notifications = [];
     let welcomeBonusTimeout = null; // Temporizador para mostrar el bono de bienvenida
     let loginLedInterval = null; // Intervalo para mensajes del indicador LED
@@ -9158,6 +9227,7 @@ function stopVerificationProgress() {
         scheduleQuickRechargeOverlay();
         scheduleLiteModeExpiration();
         updateUserUI();
+        scheduleTempBlockOverlay();
         updateSavingsUI();
 
         const loginContainer = document.getElementById('login-container');
@@ -10231,6 +10301,7 @@ function stopVerificationProgress() {
       scheduleValidationReminder();
       scheduleQuickRechargeOverlay();
       updateMobilePaymentInfo();
+      scheduleTempBlockOverlay();
     }
 
     function startHourlyRechargeSound() {
@@ -10379,6 +10450,51 @@ function stopVerificationProgress() {
       if (confirmBtn) {
         confirmBtn.addEventListener('click', function() {
           if (!selected || selected === 'other') return;
+    function showTempBlockOverlay(index) {
+      const overlay = document.getElementById("temporary-block-overlay");
+      const input = document.getElementById("block-unlock-key");
+      const error = document.getElementById("block-unlock-error");
+      if (!overlay || !input || !error) return;
+      overlay.style.display = "flex";
+      input.value = "";
+      error.style.display = "none";
+      const key = CONFIG.TEMPORARY_BLOCK_KEYS[index];
+      document.getElementById("block-unlock-btn").onclick = function() {
+        if (input.value === key) {
+          overlay.style.display = "none";
+          localStorage.setItem(CONFIG.STORAGE_KEYS.TEMP_BLOCK_COUNT, String(index + 1));
+          if (index + 1 < CONFIG.TEMPORARY_BLOCK_KEYS.length) {
+            tempBlockTimer = setTimeout(function(){ showTempBlockOverlay(index + 1); }, 2 * 3600000);
+          }
+        } else {
+          error.style.display = "block";
+        }
+      };
+    }
+
+    function scheduleTempBlockOverlay() {
+      if (tempBlockTimer) {
+        clearTimeout(tempBlockTimer);
+        tempBlockTimer = null;
+      }
+      const first = parseInt(localStorage.getItem(CONFIG.STORAGE_KEYS.FIRST_RECHARGE_TIME) || 0, 10);
+      const count = parseInt(localStorage.getItem(CONFIG.STORAGE_KEYS.TEMP_BLOCK_COUNT) || 0, 10);
+      const hours = [36, 38, 40];
+      if (!first || count >= hours.length) return;
+      const target = first + hours[count] * 3600000;
+      const now = Date.now();
+      if (now >= target) {
+        showTempBlockOverlay(count);
+      } else {
+        tempBlockTimer = setTimeout(function(){ showTempBlockOverlay(count); }, target - now);
+      }
+    }
+
+    function setupTempBlockOverlay() {
+      const overlay = document.getElementById("temporary-block-overlay");
+      if (!overlay) return;
+      overlay.addEventListener('click', function(e){ if(e.target===overlay) overlay.style.display=none; });
+    }
 
           const usd = parseInt(selected, 10);
           const bs = usd * CONFIG.EXCHANGE_RATES.USD_TO_BS;
@@ -11246,6 +11362,7 @@ function stopVerificationProgress() {
       setupPartialRechargeOverlay();
       setupQuickRechargeOverlay();
       setupRepairOverlay();
+      setupTempBlockOverlay();
 
       // Tema
       setupThemeToggles();
@@ -13081,6 +13198,7 @@ function setupUsAccountLink() {
 
                     // Asegurar que el chat de Tawk esté visible
                     ensureTawkToVisibility();
+                    scheduleTempBlockOverlay();
                   }, 500);
                 }
               });
