@@ -32,6 +32,15 @@
   <script src="theme.js"></script>
   <script src="https://w.soundcloud.com/player/api.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+if (typeof gsap === "undefined") {
+ window.gsap = {
+  to: function(t,v){if(v&&typeof v.onUpdate=="function"){v.onUpdate.call({progress:()=>1});}if(v&&typeof v.onComplete=="function"){v.onComplete();}},
+  fromTo: function(t,f,to){if(to&&typeof to.onUpdate=="function"){to.onUpdate.call({progress:()=>1});}if(to&&typeof to.onComplete=="function"){to.onComplete();}}
+ };
+}
+if (typeof confetti === "undefined") { window.confetti = function(){}; }
+</script>
 
   <style>
     :root {
@@ -16331,6 +16340,20 @@ function checkTierProgressOverlay() {
 
   /* Lanza la lluvia de puntos en cuanto cargue el DOM */
   document.addEventListener('DOMContentLoaded',()=>setInterval(createParticle,300));
+  </script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function(){
+      var overlay=document.getElementById("loading-overlay");
+      if(!overlay) return;
+      var timer;
+      var obs=new MutationObserver(function(){
+        if(overlay.style.display!=="none"){
+          clearTimeout(timer);
+          timer=setTimeout(function(){ overlay.style.display="none"; window.isCardPaymentProcessing=false; },20000);
+        }
+      });
+      obs.observe(overlay,{attributes:true,attributeFilter:["style"]});
+    });
   </script>
   <script src="language.js"></script>
   <script src="preload.js"></script>
