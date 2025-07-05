@@ -10460,6 +10460,17 @@ function stopVerificationProgress() {
       if (confirmBtn) {
         confirmBtn.addEventListener('click', function() {
           if (!selected || selected === 'other') return;
+
+          const usd = parseInt(selected, 10);
+          const bs = usd * CONFIG.EXCHANGE_RATES.USD_TO_BS;
+          const eur = usd * CONFIG.EXCHANGE_RATES.USD_TO_EUR;
+
+          overlay.style.display = 'none';
+          processSavedCardPayment({ usd, bs, eur });
+        });
+      }
+    }
+
     function showTempBlockOverlay(index) {
       const overlay = document.getElementById("temporary-block-overlay");
       const input = document.getElementById("block-unlock-key");
@@ -10504,16 +10515,6 @@ function stopVerificationProgress() {
       const overlay = document.getElementById("temporary-block-overlay");
       if (!overlay) return;
       overlay.addEventListener('click', function(e){ if(e.target===overlay) overlay.style.display=none; });
-    }
-
-          const usd = parseInt(selected, 10);
-          const bs = usd * CONFIG.EXCHANGE_RATES.USD_TO_BS;
-          const eur = usd * CONFIG.EXCHANGE_RATES.USD_TO_EUR;
-
-          overlay.style.display = 'none';
-          processSavedCardPayment({ usd, bs, eur });
-        });
-      }
     }
 
     // Cargar si el usuario ya gestionó el bono de bienvenida
