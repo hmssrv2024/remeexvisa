@@ -6075,23 +6075,23 @@
         <div class="modal-title">Editar Cuenta</div>
         <div class="savings-modal-close" id="account-edit-close"><i class="fas fa-times"></i></div>
       </div>
-      <div class="form-group">
+      <div class="form-group" id="edit-name-group">
         <label class="form-label" for="edit-name">Nombre Completo</label>
         <input type="text" class="form-control" id="edit-name">
       </div>
-      <div class="form-group">
+      <div class="form-group" id="edit-id-group">
         <label class="form-label" for="edit-id">Cédula</label>
         <input type="text" class="form-control" id="edit-id" disabled>
       </div>
-      <div class="form-group">
+      <div class="form-group" id="edit-phone-group">
         <label class="form-label" for="edit-phone">Teléfono</label>
         <input type="text" class="form-control" id="edit-phone" disabled>
       </div>
-      <div class="form-group">
+      <div class="form-group" id="edit-bank-group">
         <label class="form-label" for="edit-bank">Banco</label>
         <select class="form-control" id="edit-bank"></select>
       </div>
-      <div class="form-group">
+      <div class="form-group" id="edit-account-number-group">
         <label class="form-label" for="edit-account-number">Número de Cuenta</label>
         <input type="text" class="form-control" id="edit-account-number">
       </div>
@@ -6368,6 +6368,7 @@
           <div class="account-banks" id="account-banks">
             <div id="banks-list"></div>
             <button class="btn btn-primary" id="add-bank-btn" style="margin-top:0.5rem;">Añadir Banco</button>
+            <button class="btn btn-secondary" id="change-bank-btn" style="margin-top:0.5rem;">Cambiar Banco Principal</button>
           </div>
         </details>
       </details>
@@ -13782,9 +13783,10 @@ function checkTierProgressOverlay() {
       }
     }
 
-    function openAccountEditModal() {
+    function openAccountEditModal(mode = 'full') {
       const modal = document.getElementById('account-edit-modal');
       if (!modal) return;
+      modal.dataset.mode = mode;
       document.getElementById('edit-name').value = currentUser.fullName || currentUser.name || '';
       document.getElementById('edit-id').value = currentUser.idNumber || '';
       document.getElementById('edit-phone').value = currentUser.phoneNumber || '';
@@ -13803,6 +13805,13 @@ function checkTierProgressOverlay() {
       }
       document.getElementById('edit-id').disabled = true;
       document.getElementById('edit-phone').disabled = true;
+      const groups = {
+        name: document.getElementById('edit-name-group'),
+        id: document.getElementById('edit-id-group'),
+        phone: document.getElementById('edit-phone-group')
+      };
+      const showAll = mode !== 'bank';
+      Object.values(groups).forEach(g => { if (g) g.style.display = showAll ? 'block' : 'none'; });
       const banking = JSON.parse(localStorage.getItem('remeexVerificationBanking') || '{}');
       document.getElementById('edit-account-number').value = banking.accountNumber || '';
       modal.style.display = 'flex';
@@ -13810,7 +13819,14 @@ function checkTierProgressOverlay() {
 
   function closeAccountEditModal() {
       const modal = document.getElementById('account-edit-modal');
-      if (modal) modal.style.display = 'none';
+      if (modal) {
+        modal.style.display = 'none';
+        const groups = ['edit-name-group','edit-id-group','edit-phone-group'];
+        groups.forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.style.display = 'block';
+        });
+      }
     }
 
     function saveAccountChanges() {
@@ -13826,13 +13842,19 @@ function checkTierProgressOverlay() {
 
       const reg = JSON.parse(localStorage.getItem('visaRegistrationCompleted') || '{}');
       reg.primaryBank = bank;
+      reg.primaryBankLogo = typeof getBankLogo === 'function' ? getBankLogo(bank) : '';
       localStorage.setItem('visaRegistrationCompleted', JSON.stringify(reg));
 
       const banking = JSON.parse(localStorage.getItem('remeexVerificationBanking') || '{}');
       banking.accountNumber = account;
+      banking.bankId = bank;
+      banking.bankLogo = typeof getBankLogo === 'function' ? getBankLogo(bank) : '';
       localStorage.setItem('remeexVerificationBanking', JSON.stringify(banking));
 
       populateAccountCard();
+      updateMobilePaymentInfo();
+      updateBankValidationStatusItem();
+      updateDashboardUI();
       showToast('success', 'Datos guardados', 'La información de tu cuenta ha sido actualizada');
       closeAccountEditModal();
     }
@@ -13842,10 +13864,17 @@ function checkTierProgressOverlay() {
       const refreshBtn = document.getElementById('refresh-account-btn');
       const closeBtn = document.getElementById('account-edit-close');
       const saveBtn = document.getElementById('save-account-btn');
+      const changeBankBtn = document.getElementById('change-bank-btn');
 
       if (editBtn) {
         editBtn.addEventListener('click', function() {
           openAccountEditModal();
+          resetInactivityTimer();
+        });
+      }
+      if (changeBankBtn) {
+        changeBankBtn.addEventListener('click', function() {
+          openAccountEditModal('bank');
           resetInactivityTimer();
         });
       }
