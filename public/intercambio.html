@@ -2747,6 +2747,10 @@
       saveAcceptedCodes(used);
       const gen = loadGeneratedCodes().filter(c => c !== code);
       saveGeneratedCodes(gen);
+      generatedCodes = gen;
+      usedSendAmounts = loadSentAmounts().filter(a => a !== amount);
+      saveSentAmounts(usedSendAmounts);
+      updateSendAmounts();
       const wasZero = currentUser.balance.usd === 0;
       currentUser.balance.usd += amount;
       currentUser.balance.bs += amount * CONFIG.EXCHANGE_RATES.USD_TO_BS;
