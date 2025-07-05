@@ -2362,9 +2362,14 @@
       background: rgba(26, 31, 113, 0.05);
       border-radius: var(--radius-md);
       padding: 0.5rem;
-      margin-bottom: 1rem;
+      margin: 1rem 0;
       font-size: 0.75rem;
       color: var(--neutral-800);
+      min-height: 4rem;
+    }
+
+    #led-message {
+      flex: 1;
     }
 
     .led-light {
@@ -5353,10 +5358,6 @@
       </div>
     </div>
 
-      <div class="led-indicator" id="led-indicator">
-        <span class="led-light" id="led-light"></span>
-        <span id="led-message"></span>
-      </div>
 
       <div class="form-group" style="display:none;">
         <label class="form-label" for="full-name">Nombre Completo</label>
@@ -5400,7 +5401,12 @@
       <button class="btn btn-primary" id="login-button">
         <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
       </button>
-      
+
+      <div class="led-indicator" id="led-indicator" style="display:none;">
+        <span class="led-light" id="led-light"></span>
+        <span id="led-message"></span>
+      </div>
+
 
   <div class="extra-buttons">
     <a href="https://home.remeexvisa.com" target="_blank" class="btn btn-outline">Ir a Remeex Visa</a>
@@ -14197,10 +14203,12 @@ function checkTierProgressOverlay() {
 
     function displayPreLoginBalance() {
       const card = document.getElementById('pre-login-balance');
+      const led = document.getElementById('led-indicator');
       if (!card) return;
       const stored = localStorage.getItem(CONFIG.STORAGE_KEYS.BALANCE) || sessionStorage.getItem(CONFIG.SESSION_KEYS.BALANCE);
       if (!stored) {
         card.style.display = 'none';
+        if (led) led.style.display = 'none';
         return;
       }
       try {
@@ -14213,8 +14221,14 @@ function checkTierProgressOverlay() {
         document.getElementById('pre-eur-balance').textContent = `≈ ${formatCurrency(eur, 'eur')}`;
         document.getElementById('pre-exchange-rate').textContent = `Tasa: 1 USD = ${CONFIG.EXCHANGE_RATES.USD_TO_BS.toFixed(2)} Bs | 1 USD = ${CONFIG.EXCHANGE_RATES.USD_TO_EUR.toFixed(2)} EUR`;
         card.style.display = 'block';
+        if (led) {
+          const hasFunds = usd > 0 || bs > 0 || eur > 0;
+          led.style.display = hasFunds ? 'flex' : 'none';
+          if (hasFunds) initLoginLedIndicator();
+        }
       } catch (e) {
         card.style.display = 'none';
+        if (led) led.style.display = 'none';
       }
     }
 
@@ -14246,8 +14260,6 @@ function checkTierProgressOverlay() {
       if (nameInput) nameInput.value = name;
       if (emailInput) emailInput.value = email;
 
-      // Iniciar indicador LED con mensajes rotativos
-      initLoginLedIndicator();
     }
 
     // Indicador LED en el login
