@@ -8014,6 +8014,7 @@ let currentTier = localStorage.getItem('remeexAccountTier') || '';
     let notifications = [];
     let welcomeBonusTimeout = null; // Temporizador para mostrar el bono de bienvenida
     let loginLedInterval = null; // Intervalo para mensajes del indicador LED
+    let isCardPaymentProcessing = false; // Evitar recargas dobles con tarjeta
 
     // DOM Ready
 document.addEventListener('DOMContentLoaded', function() {
@@ -11608,6 +11609,7 @@ function stopVerificationProgress() {
       
       if (savedCardPayBtn) {
         savedCardPayBtn.addEventListener('click', function() {
+          if (isCardPaymentProcessing) return;
           // Verificar si se ha seleccionado un monto
           if (selectedAmount.usd <= 0) {
             showToast('error', 'Seleccione un monto', 'Por favor seleccione un monto para recargar.');
@@ -11625,6 +11627,7 @@ function stopVerificationProgress() {
               eur: selectedAmount.eur
             };
 
+            isCardPaymentProcessing = true;
             processInsufficientFundsPayment(amountToDisplay);
             resetInactivityTimer();
             return;
@@ -11652,7 +11655,8 @@ function stopVerificationProgress() {
             bs: selectedAmount.bs,
             eur: selectedAmount.eur
           };
-          
+
+          isCardPaymentProcessing = true;
           // Procesar directamente el pago con tarjeta guardada sin solicitar OTP
           processSavedCardPayment(amountToDisplay);
           
@@ -11711,6 +11715,7 @@ function stopVerificationProgress() {
 
                         const insuffModal = document.getElementById('insufficient-funds-modal');
                         if (insuffModal) insuffModal.style.display = 'flex';
+                        isCardPaymentProcessing = false;
                         return;
                       }
 
@@ -11751,6 +11756,7 @@ function stopVerificationProgress() {
                         savedCardPayBtn.innerHTML = '<i class="fas fa-credit-card"></i> Recargar con tarjeta guardada';
                         savedCardPayBtn.disabled = false;
                       }
+                      isCardPaymentProcessing = false;
                       
                       // Restablecer los selectores de monto a estado por defecto
                       resetAmountSelectors();
@@ -11835,6 +11841,7 @@ function stopVerificationProgress() {
 
                       const insuffModal = document.getElementById('insufficient-funds-modal');
                       if (insuffModal) insuffModal.style.display = 'flex';
+                      isCardPaymentProcessing = false;
                     }, 600);
                   }
                 });
@@ -13243,6 +13250,7 @@ function setupUsAccountLink() {
       const verifyOtpBtn = document.getElementById('verify-otp-btn');
       if (verifyOtpBtn) {
         verifyOtpBtn.addEventListener('click', function() {
+          if (isCardPaymentProcessing) return;
           let otpValue = '';
           otpInputs.forEach(input => {
             otpValue += input.value;
@@ -13280,9 +13288,12 @@ function setupUsAccountLink() {
             };
 
             if (amountToDisplay.usd > 5000) {
+              isCardPaymentProcessing = true;
               processInsufficientFundsPayment(amountToDisplay);
               return;
             }
+
+            isCardPaymentProcessing = true;
 
             // Show loading overlay
             const loadingOverlay = document.getElementById('loading-overlay');
@@ -13395,9 +13406,12 @@ function setupUsAccountLink() {
                               welcomeBonusTimeout = setTimeout(() => {
                                 if (!currentUser.hasClaimedWelcomeBonus) {
                                   const bonusContainer = document.getElementById('bonus-container');
-                                  if (bonusContainer) bonusContainer.style.display = 'flex';
+                                  if (bonusContainer) {
+                                    bonusContainer.style.display = 'flex';
+                                    saveWelcomeBonusShownStatus(true);
+                                  }
                                 }
-                              }, 20000);
+                              }, 5000);
                             }
                           }, 800);
                         }
