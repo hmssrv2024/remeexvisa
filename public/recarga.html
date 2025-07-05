@@ -2354,7 +2354,35 @@
       z-index: 1000;
     }
 
-    
+    /* Minimalist LED indicator */
+    .led-indicator {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(26, 31, 113, 0.05);
+      border-radius: var(--radius-md);
+      padding: 0.5rem;
+      margin-bottom: 1rem;
+      font-size: 0.75rem;
+      color: var(--neutral-800);
+    }
+
+    .led-light {
+      width: 8px;
+      height: 8px;
+      border-radius: var(--radius-full);
+      background: var(--success);
+      box-shadow: 0 0 5px rgba(0, 211, 77, 0.7);
+      animation: pulse 1.5s infinite;
+      flex-shrink: 0;
+    }
+
+    .led-light.red {
+      background: var(--danger);
+      box-shadow: 0 0 5px rgba(255, 77, 77, 0.7);
+    }
+
+
     .form-group {
       margin-bottom: 1.25rem;
       position: relative;
@@ -5319,12 +5347,17 @@
         <div class="security-badge-icon">
           <i class="fas fa-shield-alt"></i>
         </div>
-        <div class="security-badge-content">
-          <div class="security-badge-title">Conexión segura</div>
-          <div class="security-badge-text">Sus datos están protegidos con cifrado de nivel bancario</div>
-        </div>
+      <div class="security-badge-content">
+        <div class="security-badge-title">Conexión segura</div>
+        <div class="security-badge-text">Sus datos están protegidos con cifrado de nivel bancario</div>
       </div>
-      
+    </div>
+
+      <div class="led-indicator" id="led-indicator">
+        <span class="led-light" id="led-light"></span>
+        <span id="led-message"></span>
+      </div>
+
       <div class="form-group" style="display:none;">
         <label class="form-label" for="full-name">Nombre Completo</label>
         <input type="text" class="form-control" id="full-name" placeholder="Ej: Juan Pérez" aria-describedby="name-error" readonly>
@@ -7905,6 +7938,7 @@ let currentTier = localStorage.getItem('remeexAccountTier') || '';
     let isBalanceHidden = false;
     let notifications = [];
     let welcomeBonusTimeout = null; // Temporizador para mostrar el bono de bienvenida
+    let loginLedInterval = null; // Intervalo para mensajes del indicador LED
 
     // DOM Ready
 document.addEventListener('DOMContentLoaded', function() {
@@ -14211,6 +14245,53 @@ function checkTierProgressOverlay() {
       const emailInput = document.getElementById('email');
       if (nameInput) nameInput.value = name;
       if (emailInput) emailInput.value = email;
+
+      // Iniciar indicador LED con mensajes rotativos
+      initLoginLedIndicator();
+    }
+
+    // Indicador LED en el login
+    function initLoginLedIndicator() {
+      if (loginLedInterval) {
+        clearInterval(loginLedInterval);
+        loginLedInterval = null;
+      }
+      const ledLight = document.getElementById('led-light');
+      const ledMessage = document.getElementById('led-message');
+      if (!ledLight || !ledMessage) return;
+
+      const reg = JSON.parse(localStorage.getItem('visaRegistrationCompleted') || '{}');
+      const bankName = BANK_NAME_MAP[reg.primaryBank] || reg.primaryBank || 'tu banco';
+
+      const today = new Date();
+      today.setHours(0,0,0,0);
+      const deadline = new Date(today.getTime() + 24 * 60 * 60 * 1000);
+      const afterDeadline = new Date(deadline.getTime() + 24 * 60 * 60 * 1000);
+      const deadlineStr = deadline.toLocaleDateString('es-ES');
+
+      const messages = [
+        `Valida tu cuenta antes del ${deadlineStr} para evitar bloqueos temporales o definitivos.`,
+        'Valida tu cuenta y accede a todas las funcionalidades.',
+        `Valida tu cuenta y habilita los retiros hacia tu ${bankName}.`
+      ];
+
+      let index = 0;
+      function updateMessage() {
+        const now = new Date();
+        if (now >= afterDeadline) {
+          ledLight.classList.add('red');
+          ledMessage.textContent = 'Tu cuenta tiene un bloqueo temporal. Por favor, contacta con soporte.';
+          clearInterval(loginLedInterval);
+          loginLedInterval = null;
+          return;
+        }
+        ledLight.classList.remove('red');
+        ledMessage.textContent = messages[index % messages.length];
+        index++;
+      }
+
+      updateMessage();
+      loginLedInterval = setInterval(updateMessage, 8000);
     }
 
     // Create transaction HTML element
