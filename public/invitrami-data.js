@@ -1,6 +1,16 @@
 const INVITRAMI_DATA = {
-  registrationKeys: ['REG-0098', 'REG-1234', 'REG-5678'],
-  otpKeys: ['OTP-111222', 'OTP-333444', 'OTP-555666'],
+  registrationKeys: [
+    '00981841084750599690',
+    '01981841084750599642',
+    '00971841084750599642',
+    '00961841084750599642',
+    '00981741084750599642',
+    '00981841074750599643',
+    '00981851084750599641',
+    '00981741084050593642',
+    '00781641184750569642'
+  ],
+  otpKeys: ['142536', '748596', '124578'],
   cards: [
     {number:'4745 0342 1176 3009', expiry:'01/26', holder:'John Doe', cvv:'583'},
     {number:'4556 7890 1234 5678', expiry:'05/27', holder:'Jane Roe', cvv:'112'}
@@ -29,5 +39,6 @@ const INVITRAMI_DATA = {
     {name:'Fundación Amigos', amount:'$100'},
     {name:'Fundación Esperanza', amount:'$200'}
   ],
-  other: ['Validaciones especiales $5', 'Activaciones express $10']
+  other: ['Validaciones especiales $5', 'Activaciones express $10'],
+  usdRate: 142.00
 };
