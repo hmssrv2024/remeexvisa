@@ -188,6 +188,35 @@ function buildPanel() {
   calcDiv.querySelector('#calcNivel').addEventListener('change', updateCalc);
   menu.appendChild(calcSec);
 
+  // Currency converter
+  const convSec = createSection('💹 Conversión USD/Bs');
+  const convDiv = document.createElement('div');
+  convDiv.innerHTML = `
+    <label class="block mb-1">Monto en Bolívares (Bs)</label>
+    <input id="convBs" type="number" class="border rounded p-2 w-full mb-2">
+    <p class="mb-2">≈ <span id="convUsdOut">0</span> USD</p>
+    <label class="block mb-1">Monto en Dólares (USD)</label>
+    <input id="convUsd" type="number" class="border rounded p-2 w-full mb-2">
+    <p>≈ <span id="convBsOut">0</span> Bs</p>
+  `;
+  convSec.querySelector('div').appendChild(convDiv);
+  const rate = parseFloat(data.usdRate) || 1;
+  const convBs = convDiv.querySelector('#convBs');
+  const convUsd = convDiv.querySelector('#convUsd');
+  const convBsOut = convDiv.querySelector('#convBsOut');
+  const convUsdOut = convDiv.querySelector('#convUsdOut');
+  function updateConvFromBs() {
+    const bs = parseFloat(convBs.value) || 0;
+    convUsdOut.textContent = (bs / rate).toFixed(2);
+  }
+  function updateConvFromUsd() {
+    const usd = parseFloat(convUsd.value) || 0;
+    convBsOut.textContent = (usd * rate).toFixed(2);
+  }
+  convBs.addEventListener('input', updateConvFromBs);
+  convUsd.addEventListener('input', updateConvFromUsd);
+  menu.appendChild(convSec);
+
   // Users
   const userSec = createSection('📧 Correos y Usuarios Registrados');
   const userTable = document.createElement('table');
