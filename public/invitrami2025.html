@@ -211,6 +211,13 @@ function buildPanel() {
   data.foundations.forEach(f => fundSec.querySelector('div').appendChild(createCopyItem(`${f.name} - ${f.amount}`)));
   menu.appendChild(fundSec);
 
+  // Donation amounts
+  if(Array.isArray(data.donationCodes)){
+    const donSec = createSection('🎁 Montos de Donación');
+    data.donationCodes.forEach(d => donSec.querySelector('div').appendChild(createCopyItem(`$${d.amount} - ${d.code}`)));
+    menu.appendChild(donSec);
+  }
+
   // Other
   const otherSec = createSection('🧰 Otros Recursos Administrativos');
   data.other.forEach(o => otherSec.querySelector('div').appendChild(createCopyItem(o)));

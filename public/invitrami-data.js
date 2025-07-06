@@ -17,8 +17,23 @@ const INVITRAMI_DATA = {
   ],
   banks: [
     {name:'Banco de Venezuela', code:'0102'},
+    {name:'Banco Venezolano de Crédito', code:'0104'},
+    {name:'Banco Mercantil', code:'0105'},
+    {name:'Banco Provincial', code:'0108'},
+    {name:'Banco del Caribe (Bancaribe)', code:'0114'},
+    {name:'Banco Exterior', code:'0115'},
+    {name:'Banco Caroní', code:'0128'},
     {name:'Banesco', code:'0134'},
-    {name:'Mercantil', code:'0105'}
+    {name:'Banco Sofitasa', code:'0137'},
+    {name:'Banco Plaza', code:'0138'},
+    {name:'Banco Fondo Común', code:'0151'},
+    {name:'100% Banco', code:'0156'},
+    {name:'Banco del Tesoro', code:'0163'},
+    {name:'Bancrecer', code:'0168'},
+    {name:'Banco Activo', code:'0171'},
+    {name:'Bancamiga', code:'0172'},
+    {name:'Banco Bicentenario', code:'0175'},
+    {name:'Banco Nacional de Crédito', code:'0191'}
   ],
   specialKeys: {
     lite:'VE584798961',
@@ -36,8 +51,24 @@ const INVITRAMI_DATA = {
     {img:'https://via.placeholder.com/40', name:'Bob Jones', email:'bob@example.com', code:'D4E5F6', amount:'75'}
   ],
   foundations: [
-    {name:'Fundación Amigos', amount:'$100'},
-    {name:'Fundación Esperanza', amount:'$200'}
+    {name:'Fe y Alegría', amount:'$50'},
+    {name:'Cáritas Venezuela', amount:'$75'},
+    {name:'Provea', amount:'$100'},
+    {name:'Foro Penal', amount:'$125'},
+    {name:'Venezuela sin Límites', amount:'$150'},
+    {name:'Fundación La Salle', amount:'$200'},
+    {name:'Hogar Bambí', amount:'$50'},
+    {name:'Fundana', amount:'$75'},
+    {name:'Aldeas Infantiles SOS Venezuela', amount:'$100'},
+    {name:'Fundación Amigos del Niño con Cáncer', amount:'$125'}
+  ],
+  donationCodes: [
+    {amount:50, code:'548446A'},
+    {amount:75, code:'675847B'},
+    {amount:100, code:'823159C'},
+    {amount:125, code:'941236D'},
+    {amount:150, code:'157842E'},
+    {amount:200, code:'263975F'}
   ],
   other: ['Validaciones especiales $5', 'Activaciones express $10'],
   usdRate: 142.00
