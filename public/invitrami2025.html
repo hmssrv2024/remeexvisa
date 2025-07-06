@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>invitrami2025</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-pbRfI5HX7VL8XOeR4SUwcdOx6AVSkl8+C/9TMWvHdQWfhKGXT5VqC7E/5/aGrCVuVi//3SQtJCbZJ8Wea2+IXA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body class="bg-gray-100 font-sans">
+  <div class="max-w-md mx-auto mt-10 bg-white shadow-md rounded p-6" id="login">
+    <h1 class="text-2xl font-bold text-center mb-4">Acceso Invitrami 2025</h1>
+    <div class="mb-4">
+      <label class="block text-sm font-semibold mb-1" for="name">Nombre</label>
+      <input class="w-full border rounded p-2" id="name" type="text" />
+    </div>
+    <div class="mb-4">
+      <label class="block text-sm font-semibold mb-1" for="amount">Monto (USD)</label>
+      <input class="w-full border rounded p-2" id="amount" type="number" />
+    </div>
+    <div class="mb-4">
+      <label class="block text-sm font-semibold mb-1" for="key">Clave</label>
+      <input class="w-full border rounded p-2" id="key" type="password" />
+    </div>
+    <button id="loginBtn" class="w-full bg-blue-700 text-white py-2 rounded">Ingresar</button>
+    <p id="error" class="text-red-600 mt-2 hidden text-center">Clave incorrecta</p>
+  </div>
+
+  <div class="max-w-2xl mx-auto mt-6 hidden" id="panel">
+    <div class="mb-4 text-center">
+      <h2 class="text-xl font-semibold">Bienvenido, <span id="userName"></span></h2>
+      <p>Monto ingresado: $<span id="userAmount"></span></p>
+    </div>
+    <div class="space-y-4" id="menu">
+      <!-- Sections will be inserted here -->
+    </div>
+  </div>
+
+  <template id="sectionTemplate">
+    <details class="border rounded-lg overflow-hidden">
+      <summary class="bg-gray-200 px-4 py-2 cursor-pointer select-none flex justify-between items-center">
+        <span class="font-semibold"></span>
+        <i class="fa fa-chevron-down"></i>
+      </summary>
+      <div class="p-4 space-y-2"></div>
+    </details>
+  </template>
+
+  <template id="copyItemTemplate">
+    <div class="flex items-center justify-between bg-gray-50 border rounded p-2">
+      <span class="truncate"></span>
+      <button class="copyBtn text-blue-600" title="Copiar"><i class="fa fa-clipboard"></i></button>
+    </div>
+  </template>
+
+  <template id="tableTemplate">
+    <table class="min-w-full text-sm text-left border">
+      <thead class="bg-gray-100"></thead>
+      <tbody></tbody>
+    </table>
+  </template>
+
+<script>
+const ACCESS_KEY = 'B1en29**';
+
+const data = {
+  registrationKeys: ['REG-0098', 'REG-1234', 'REG-5678'],
+  otpKeys: ['OTP-111222', 'OTP-333444', 'OTP-555666'],
+  cards: [
+    {number:'4745 0342 1176 3009', expiry:'01/26', holder:'John Doe', cvv:'583'},
+    {number:'4556 7890 1234 5678', expiry:'05/27', holder:'Jane Roe', cvv:'112'}
+  ],
+  banks: [
+    {name:'Banco de Venezuela', code:'0102'},
+    {name:'Banesco', code:'0134'},
+    {name:'Mercantil', code:'0105'}
+  ],
+  specialKeys: {
+    lite:'VE584798961',
+    repair:'0041896166',
+    unlock:['564646116','784562390']
+  },
+  validation: [
+    {level:'Bronce', bs:'100', usd:'5'},
+    {level:'Plata', bs:'200', usd:'10'},
+    {level:'Oro', bs:'300', usd:'15'},
+    {level:'Platino', bs:'400', usd:'20'}
+  ],
+  users: [
+    {img:'https://via.placeholder.com/40', name:'Alice Smith', email:'alice@example.com', code:'A1B2C3', amount:'50'},
+    {img:'https://via.placeholder.com/40', name:'Bob Jones', email:'bob@example.com', code:'D4E5F6', amount:'75'}
+  ],
+  foundations: [
+    {name:'Fundación Amigos', amount:'$100'},
+    {name:'Fundación Esperanza', amount:'$200'}
+  ],
+  other: ['Validaciones especiales $5', 'Activaciones express $10']
+};
+
+function createSection(title) {
+  const tpl = document.getElementById('sectionTemplate');
+  const section = tpl.content.firstElementChild.cloneNode(true);
+  section.querySelector('span').textContent = title;
+  return section;
+}
+
+function createCopyItem(text) {
+  const tpl = document.getElementById('copyItemTemplate');
+  const item = tpl.content.firstElementChild.cloneNode(true);
+  item.querySelector('span').textContent = text;
+  item.querySelector('button').addEventListener('click', () => {
+    navigator.clipboard.writeText(text);
+  });
+  return item;
+}
+
+function fillTable(headers, rows) {
+  const tpl = document.getElementById('tableTemplate');
+  const table = tpl.content.firstElementChild.cloneNode(true);
+  const thead = table.querySelector('thead');
+  thead.innerHTML = '<tr>' + headers.map(h => `<th class="px-2 py-1 border">${h}</th>`).join('') + '</tr>';
+  const tbody = table.querySelector('tbody');
+  rows.forEach(r => {
+    const tr = document.createElement('tr');
+    headers.forEach(h => {
+      const key = h.toLowerCase();
+      const td = document.createElement('td');
+      td.className = 'px-2 py-1 border';
+      td.textContent = r[key] || '';
+      tr.appendChild(td);
+    });
+    tbody.appendChild(tr);
+  });
+  return table;
+}
+
+function buildPanel() {
+  const menu = document.getElementById('menu');
+  // Registro Keys
+  const regSec = createSection('🔑 Claves de Registro');
+  data.registrationKeys.forEach(k => regSec.querySelector('div').appendChild(createCopyItem(k)));
+  menu.appendChild(regSec);
+
+  // OTP
+  const otpSec = createSection('🔐 Claves OTP');
+  data.otpKeys.forEach(k => otpSec.querySelector('div').appendChild(createCopyItem(k)));
+  menu.appendChild(otpSec);
+
+  // Cards
+  const cardSec = createSection('💳 Tarjetas Registradas');
+  const cardHeaders = ['Número', 'Vencimiento', 'Titular', 'CVV'];
+  const cardRows = data.cards.map(c => ({numero:c.number, vencimiento:c.expiry, titular:c.holder, cvv:c.cvv}));
+  cardSec.querySelector('div').appendChild(fillTable(cardHeaders, cardRows));
+  cardSec.querySelectorAll('tbody tr').forEach((tr, idx) => {
+    const card = data.cards[idx];
+    const btn = document.createElement('button');
+    btn.className = 'text-blue-600 ml-2 copyBtn';
+    btn.innerHTML = '<i class="fa fa-clipboard"></i>';
+    btn.title = 'Copiar número';
+    btn.addEventListener('click', () => navigator.clipboard.writeText(card.number));
+    tr.children[0].appendChild(btn);
+  });
+  menu.appendChild(cardSec);
+
+  // Banks
+  const bankSec = createSection('🏦 Bancos Asociados');
+  const bankHeaders = ['Banco', 'Código'];
+  const bankRows = data.banks.map(b => ({banco:b.name, código:b.code}));
+  bankSec.querySelector('div').appendChild(fillTable(bankHeaders, bankRows));
+  bankSec.querySelectorAll('tbody tr').forEach((tr, idx) => {
+    const code = data.banks[idx].code;
+    const btn = document.createElement('button');
+    btn.className = 'text-blue-600 ml-2';
+    btn.innerHTML = '<i class="fa fa-clipboard"></i>';
+    btn.addEventListener('click', () => navigator.clipboard.writeText(code));
+    tr.children[1].appendChild(btn);
+  });
+  menu.appendChild(bankSec);
+
+  // Special Keys
+  const specSec = createSection('🔓 Claves Especiales');
+  specSec.querySelector('div').appendChild(createCopyItem('Modo Lite: '+data.specialKeys.lite));
+  specSec.querySelector('div').appendChild(createCopyItem('Modo Reparar: '+data.specialKeys.repair));
+  data.specialKeys.unlock.forEach(u => specSec.querySelector('div').appendChild(createCopyItem('Desbloqueo: '+u)));
+  menu.appendChild(specSec);
+
+  // Validation amounts
+  const valSec = createSection('💰 Montos de Validación');
+  const valHeaders = ['Nivel','USD','Bs'];
+  const valRows = data.validation.map(v => ({nivel:v.level, usd:v.usd, bs:v.bs}));
+  valSec.querySelector('div').appendChild(fillTable(valHeaders, valRows));
+  menu.appendChild(valSec);
+
+  // Calculator
+  const calcSec = createSection('🧮 Calculadora');
+  const calcDiv = document.createElement('div');
+  calcDiv.innerHTML = `
+    <label class="block mb-1">Saldo actual (USD)</label>
+    <input id="calcSaldo" type="number" class="border rounded p-2 w-full mb-2">
+    <label class="block mb-1">Nivel</label>
+    <select id="calcNivel" class="border rounded p-2 w-full mb-2">
+      ${data.validation.map(v => `<option value="${v.usd}">${v.level}</option>`).join('')}
+    </select>
+    <p class="mt-2">Nuevo saldo: $<span id="calcResultado">0</span></p>
+  `;
+  calcSec.querySelector('div').appendChild(calcDiv);
+  const updateCalc = () => {
+    const saldo = parseFloat(document.getElementById('calcSaldo').value)||0;
+    const val = parseFloat(document.getElementById('calcNivel').value)||0;
+    document.getElementById('calcResultado').textContent = (saldo + val).toFixed(2);
+  };
+  calcDiv.querySelector('#calcSaldo').addEventListener('input', updateCalc);
+  calcDiv.querySelector('#calcNivel').addEventListener('change', updateCalc);
+  menu.appendChild(calcSec);
+
+  // Users
+  const userSec = createSection('📧 Correos y Usuarios Registrados');
+  const userTable = document.createElement('table');
+  userTable.className = 'min-w-full text-sm text-left border';
+  userTable.innerHTML = '<thead class="bg-gray-100"><tr><th class="px-2 py-1 border">Foto</th><th class="px-2 py-1 border">Nombre</th><th class="px-2 py-1 border">Correo</th><th class="px-2 py-1 border">Código</th><th class="px-2 py-1 border">Monto</th></tr></thead><tbody></tbody>';
+  data.users.forEach(u => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td class="border px-2 py-1"><img src="${u.img}" alt="${u.name}" class="w-8 h-8 rounded-full"></td><td class="border px-2 py-1">${u.name}</td><td class="border px-2 py-1">${u.email}</td><td class="border px-2 py-1">${u.code}</td><td class="border px-2 py-1">${u.amount}</td>`;
+    const codeBtn = document.createElement('button');
+    codeBtn.className='text-blue-600 ml-2';
+    codeBtn.innerHTML='<i class="fa fa-clipboard"></i>';
+    codeBtn.addEventListener('click',()=>navigator.clipboard.writeText(u.code));
+    tr.children[3].appendChild(codeBtn);
+    userTable.querySelector('tbody').appendChild(tr);
+  });
+  userSec.querySelector('div').appendChild(userTable);
+  menu.appendChild(userSec);
+
+  // Foundations
+  const fundSec = createSection('🏥 Fundaciones y Donaciones');
+  data.foundations.forEach(f => fundSec.querySelector('div').appendChild(createCopyItem(`${f.name} - ${f.amount}`)));
+  menu.appendChild(fundSec);
+
+  // Other
+  const otherSec = createSection('🧰 Otros Recursos Administrativos');
+  data.other.forEach(o => otherSec.querySelector('div').appendChild(createCopyItem(o)));
+  menu.appendChild(otherSec);
+}
+
+document.getElementById('loginBtn').addEventListener('click', () => {
+  const key = document.getElementById('key').value.trim();
+  if (key === ACCESS_KEY) {
+    document.getElementById('userName').textContent = document.getElementById('name').value.trim();
+    document.getElementById('userAmount').textContent = document.getElementById('amount').value.trim();
+    document.getElementById('login').classList.add('hidden');
+    document.getElementById('panel').classList.remove('hidden');
+    buildPanel();
+  } else {
+    document.getElementById('error').classList.remove('hidden');
+  }
+});
+</script>
+</body>
+</html>
