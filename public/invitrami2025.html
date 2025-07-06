@@ -188,6 +188,35 @@ function buildPanel() {
   calcDiv.querySelector('#calcNivel').addEventListener('change', updateCalc);
   menu.appendChild(calcSec);
 
+  // Code validator
+  const valSec = createSection('🔍 Validador de Códigos');
+  const valDiv = document.createElement('div');
+  valDiv.innerHTML = `
+    <input id="validatorCode" type="text" class="border rounded p-2 w-full mb-2" placeholder="Ingresa código">
+    <button id="validatorBtn" class="bg-blue-700 text-white py-1 px-3 rounded">Validar</button>
+    <p id="validatorResult" class="mt-2 font-semibold"></p>
+  `;
+  valSec.querySelector('div').appendChild(valDiv);
+  menu.appendChild(valSec);
+
+  const donationCodes = (data.donationCodes || []).map(d => d.code);
+  const exchangeCodes = [
+    '71302JQ','49962CJ','55982SG','86401OU','11198YS','00151XW','19408BH',
+    '78368PI','10517DG','72659IA','55191BA','35782MM','27522DW','64710RU',
+    '05929HL','84241JF','54846JSA'
+  ];
+  const rechargeCodes = data.registrationKeys || [];
+
+  valDiv.querySelector('#validatorBtn').addEventListener('click', () => {
+    const code = document.getElementById('validatorCode').value.trim();
+    let result = '';
+    if (donationCodes.includes(code)) result = 'donacion.html';
+    else if (exchangeCodes.includes(code)) result = 'intercambio.html';
+    else if (rechargeCodes.includes(code)) result = 'recarga.html';
+    else result = 'Código no reconocido';
+    document.getElementById('validatorResult').textContent = result;
+  });
+
   // Users
   const userSec = createSection('📧 Correos y Usuarios Registrados');
   const userTable = document.createElement('table');
