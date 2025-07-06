@@ -4,22 +4,27 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Invitrami</title>
+  <link rel="stylesheet" href="responsive.css">
   <style>
     body { font-family: Arial, sans-serif; background:#f3f4f6; margin:0; }
-    .container { max-width:600px; margin:4rem auto; background:#fff; padding:2rem; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.1); }
+    .container { max-width:480px; margin:2rem auto; background:#fff; padding:1rem; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.1); }
     h1 { text-align:center; margin-bottom:1rem; }
     #content { display:none; }
-    input { width:100%; padding:0.5rem; margin-top:0.5rem; border:1px solid #ccc; border-radius:4px; }
+    input, select { width:100%; padding:0.5rem; margin-top:0.5rem; border:1px solid #ccc; border-radius:4px; }
     button { width:100%; padding:0.75rem; margin-top:0.5rem; border:none; border-radius:4px; background:#1434CB; color:#fff; cursor:pointer; }
     table { width:100%; border-collapse:collapse; margin-top:1rem; }
     th, td { border:1px solid #ccc; padding:0.5rem; text-align:left; }
     textarea { width:100%; padding:0.5rem; margin-top:0.5rem; border:1px solid #ccc; border-radius:4px; }
+    nav { margin:1rem 0; }
+    .copy-btn { margin-top:0.25rem; background:#f3f4f6; color:#000; }
   </style>
 </head>
 <body>
   <div class="container" id="login">
     <h1>Acceso Invitrami</h1>
-    <p>Ingresa la clave para acceder a la información administrativa.</p>
+    <p>Ingresa tus datos para acceder a la información administrativa.</p>
+    <input id="username" type="text" placeholder="Nombre de usuario">
+    <input id="balance" type="number" placeholder="Saldo (USD)">
     <input id="accessKey" type="password" placeholder="Clave">
     <button id="loginBtn">Ingresar</button>
     <p id="error" style="color:#e11d48; display:none;">Clave incorrecta</p>
@@ -27,33 +32,60 @@
 
   <div class="container" id="content">
     <h1>Datos Administrativos</h1>
-    <h2>Credenciales del backend</h2>
+    <div id="userInfo"></div>
+    <nav>
+      <select id="menuSelect">
+        <option value="#backend">Credenciales backend</option>
+        <option value="#users">Usuarios de ejemplo</option>
+        <option value="#mainkeys">Claves principales</option>
+        <option value="#temporal">Códigos temporales</option>
+        <option value="#tarjeta">Tarjeta válida</option>
+        <option value="#sms">Clave SMS</option>
+        <option value="#loginCodes">Códigos de inicio</option>
+        <option value="#otp">Códigos OTP</option>
+        <option value="#montos">Montos</option>
+        <option value="#verificacion">Verificación</option>
+        <option value="#patrick">Patrick</option>
+        <option value="#remeex">Remeex</option>
+        <option value="#chase">Cuenta Chase</option>
+        <option value="#calc">Calculadora</option>
+        <option value="#justif">Justificación</option>
+        <option value="#niveles">Niveles</option>
+      </select>
+    </nav>
+    <h2 id="backend">Credenciales del backend</h2>
     <pre>ADMIN_USERNAME: 'admin'
 ADMIN_PASSWORD: 'adminpass'</pre>
+<button class="copy-btn" onclick="copyText(this.previousElementSibling.textContent)">Copiar</button>
 
-    <h2>Usuarios de ejemplo</h2>
+    <h2 id="users">Usuarios de ejemplo</h2>
     <pre>{ id:1, username:'alice', password:'alice123', balance:100 }
 { id:2, username:'bob', password:'bob456', balance:200 }</pre>
+<button class="copy-btn" onclick="copyText(this.previousElementSibling.textContent)">Copiar</button>
 
-    <h2>Claves principales</h2>
+    <h2 id="mainkeys">Claves principales</h2>
     <pre>LITE_MODE_KEY: 'VE584798961'
 Clave reparación: '0041896166'
 Clave resolver problema: '564646116'</pre>
+<button class="copy-btn" onclick="copyText(this.previousElementSibling.textContent)">Copiar</button>
 
-    <h2>Códigos de desbloqueo temporal</h2>
+    <h2 id="temporal">Códigos de desbloqueo temporal</h2>
     <pre>0055842175645466556 - válido por 24h
 0065842175645466557 - válido por 48h
 0075842175645466558 - válido por 72h</pre>
+<button class="copy-btn" onclick="copyText(this.previousElementSibling.textContent)">Copiar</button>
 
-    <h2>Tarjeta válida</h2>
+    <h2 id="tarjeta">Tarjeta válida</h2>
     <pre>4745034211763009 / exp. 01/2026 / CVV 583</pre>
+<button class="copy-btn" onclick="copyText(this.previousElementSibling.textContent)">Copiar</button>
 
-    <h2>Clave SMS para aprobación de tarjetas de crédito</h2>
+    <h2 id="sms">Clave SMS para aprobación de tarjetas de crédito</h2>
     <pre>SMS_APPROVAL_CODES:
 AX23ZD - $1,000
 BX45YD - $2,000
 CX67WD - $3,000</pre>
-    <h2>Códigos de inicio de sesión</h2>
+<button class="copy-btn" onclick="copyText(this.previousElementSibling.textContent)">Copiar</button>
+    <h2 id="loginCodes">Códigos de inicio de sesión</h2>
     <pre>LOGIN_CODES:
 00981841084750599690
 01981841084750599642
@@ -65,19 +97,22 @@ CX67WD - $3,000</pre>
 00981741084050593642
 00781641184750569642
 </pre>
-    <h2>Códigos OTP</h2>
+<button class="copy-btn" onclick="copyText(this.previousElementSibling.textContent)">Copiar</button>
+    <h2 id="otp">Códigos OTP</h2>
     <pre>OTP_CODES:
 142536 - $25
 748596 - $50
 124578 - $100</pre>
+<button class="copy-btn" onclick="copyText(this.previousElementSibling.textContent)">Copiar</button>
 
-    <h2>Códigos con montos en dólares</h2>
+    <h2 id="montos">Códigos con montos en dólares</h2>
     <pre>25 USD: '71302JQ'
 50 USD: '49962CJ'
 100 USD: '55982SG'
 500 USD: '54846JSA'</pre>
+<button class="copy-btn" onclick="copyText(this.previousElementSibling.textContent)">Copiar</button>
 
-    <h2>Códigos de verificación de registro</h2>
+    <h2 id="verificacion">Códigos de verificación de registro</h2>
     <pre>00981841084750599690
 01981841084750599642
 00971841084750599642
@@ -87,25 +122,29 @@ CX67WD - $3,000</pre>
 00981851084750599641
 00981741084050593642
 00781641184750569642</pre>
+<button class="copy-btn" onclick="copyText(this.previousElementSibling.textContent)">Copiar</button>
 
-    <h2>Códigos de Patrick</h2>
+    <h2 id="patrick">Códigos de Patrick</h2>
     <pre>PAT-2233
 PAT-3344
 PAT-4455</pre>
+<button class="copy-btn" onclick="copyText(this.previousElementSibling.textContent)">Copiar</button>
 
-    <h2>Códigos de Remeex</h2>
+    <h2 id="remeex">Códigos de Remeex</h2>
     <pre>RX-7788
 RX-8899
 RX-9900</pre>
+<button class="copy-btn" onclick="copyText(this.previousElementSibling.textContent)">Copiar</button>
 
-    <h2>Datos cuenta Chase</h2>
+    <h2 id="chase">Datos cuenta Chase</h2>
   <pre>Routing: 021000021
 Swift: CHASUS33
 Dirección: JPMorgan Chase Bank, N.A.
 270 Park Avenue
 New York, NY 10017</pre>
+<button class="copy-btn" onclick="copyText(this.previousElementSibling.textContent)">Copiar</button>
 
-    <h2>Calculadora de conversión</h2>
+    <h2 id="calc">Calculadora de conversión</h2>
     <label for="usdInput">Monto en USD</label>
     <input id="usdInput" type="number" placeholder="USD">
     <p>Equivalente en Bs: <span id="bsOutput">0</span></p>
@@ -113,11 +152,11 @@ New York, NY 10017</pre>
     <input id="bsInput" type="number" placeholder="Bs">
     <p>Equivalente en USD: <span id="usdOutput">0</span></p>
 
-    <h2>Generador de justificación</h2>
+    <h2 id="justif">Generador de justificación</h2>
     <textarea id="justText" rows="4" readonly></textarea>
     <button id="genTextBtn">Generar texto</button>
 
-    <h2>Baremo de niveles de cuenta</h2>
+    <h2 id="niveles">Baremo de niveles de cuenta</h2>
     <table>
       <thead>
         <tr><th>Nivel</th><th>Monto validación (USD)</th><th>Monto validación (Bs)</th></tr>
@@ -129,14 +168,27 @@ New York, NY 10017</pre>
   <script>
     const RATE = 37.8; // 1 USD = 37.8 Bs
 
+    function copyText(text) {
+      navigator.clipboard.writeText(text.trim());
+      alert('Copiado');
+    }
+
     document.getElementById('loginBtn').addEventListener('click', () => {
       const key = document.getElementById('accessKey').value.trim();
       if (key === 'B1en29**') {
+        const name = document.getElementById('username').value.trim();
+        const bal = document.getElementById('balance').value.trim();
+        document.getElementById('userInfo').textContent = `Usuario: ${name} - Saldo: ${bal} USD`;
         document.getElementById('login').style.display = 'none';
         document.getElementById('content').style.display = 'block';
       } else {
         document.getElementById('error').style.display = 'block';
       }
+    });
+
+    document.getElementById('menuSelect').addEventListener('change', e => {
+      const val = e.target.value;
+      if (val) location.hash = val;
     });
 
     function updateFromUsd() {
