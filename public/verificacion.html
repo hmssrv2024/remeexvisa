@@ -2329,10 +2329,10 @@
 
       <div class="tally-modal-footer">
         <p class="tally-modal-timer" id="tally-timer">
-          <i class="fas fa-clock"></i> El botón se habilitará en <span id="timer-seconds">35</span> segundos...
+          <i class="fas fa-clock"></i> El botón se habilitará en <span id="timer-seconds">180</span> segundos...
         </p>
         <button class="btn btn-success btn-large" id="tally-continue" disabled>
-          <i class="fas fa-check-circle"></i> Ya Completé el Formulario
+          <i class="fas fa-spinner fa-spin"></i> Ya Completé el Formulario - Continuar
         </button>
         <p class="tally-modal-warning">
           <i class="fas fa-exclamation-triangle"></i> No podrá continuar sin completar este formulario
@@ -2994,7 +2994,7 @@
     // SOLUCIÓN CRÍTICA: Setup Tally listener - COMPLETAMENTE REDISEÑADO
     function setupTallyListener() {
       let tallyTimer = null;
-      let secondsRemaining = 35;
+      let secondsRemaining = 180;
 
       // Función para mostrar el overlay de Tally
       function showTallyModal() {
@@ -3016,7 +3016,7 @@
           { opacity: 1, duration: 0.4 }
         );
 
-        // Iniciar el temporizador de 35 segundos
+        // Iniciar el temporizador de 180 segundos
         startTallyTimer();
 
         // Prevenir el cierre del overlay con ESC
@@ -3028,7 +3028,7 @@
 
       // Función para el temporizador
       function startTallyTimer() {
-        secondsRemaining = 35;
+        secondsRemaining = 180;
         updateTimerDisplay();
 
         tallyTimer = setInterval(() => {
