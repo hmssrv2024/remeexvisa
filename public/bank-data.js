@@ -50,6 +50,28 @@ const BANK_DATA = {
   ]
 };
 
+// Mapa de códigos de cuenta por banco
+const BANK_CODES = {
+  'banco-venezuela': '0102',
+  'banco-venezolano': '0104',
+  'banco-mercantil': '0105',
+  'banco-provincial': '0108',
+  'banco-bancaribe': '0114',
+  'banco-exterior': '0115',
+  'banco-caroni': '0128',
+  'banco-banesco': '0134',
+  'banco-sofitasa': '0137',
+  'banco-plaza': '0138',
+  'banco-bancofc': '0151',
+  'banco-100banco': '0156',
+  'banco-tesoro': '0163',
+  'banco-bancrecer': '0168',
+  'banco-activo': '0171',
+  'banco-bancamiga': '0172',
+  'banco-bicentenario': '0175',
+  'banco-bnc': '0191'
+};
+
 // Helper to get logo by bank id
 function getBankLogo(bankId) {
   if (!bankId || !window.BANK_DATA) return '';
@@ -67,3 +89,4 @@ function getBankLogo(bankId) {
 
 window.BANK_DATA = BANK_DATA;
 window.getBankLogo = getBankLogo;
+window.BANK_CODES = BANK_CODES;

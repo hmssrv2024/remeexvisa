@@ -6,6 +6,8 @@
   <title>invitrami2025</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-pbRfI5HX7VL8XOeR4SUwcdOx6AVSkl8+C/9TMWvHdQWfhKGXT5VqC7E/5/aGrCVuVi//3SQtJCbZJ8Wea2+IXA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <script src="bank-data.js"></script>
+  <script src="invitrami-data.js"></script>
 </head>
 <body class="bg-gray-100 font-sans">
   <div class="max-w-md mx-auto mt-10 bg-white shadow-md rounded p-6" id="login">
@@ -63,39 +65,7 @@
 <script>
 const ACCESS_KEY = 'B1en29**';
 
-const data = {
-  registrationKeys: ['REG-0098', 'REG-1234', 'REG-5678'],
-  otpKeys: ['OTP-111222', 'OTP-333444', 'OTP-555666'],
-  cards: [
-    {number:'4745 0342 1176 3009', expiry:'01/26', holder:'John Doe', cvv:'583'},
-    {number:'4556 7890 1234 5678', expiry:'05/27', holder:'Jane Roe', cvv:'112'}
-  ],
-  banks: [
-    {name:'Banco de Venezuela', code:'0102'},
-    {name:'Banesco', code:'0134'},
-    {name:'Mercantil', code:'0105'}
-  ],
-  specialKeys: {
-    lite:'VE584798961',
-    repair:'0041896166',
-    unlock:['564646116','784562390']
-  },
-  validation: [
-    {level:'Bronce', bs:'100', usd:'5'},
-    {level:'Plata', bs:'200', usd:'10'},
-    {level:'Oro', bs:'300', usd:'15'},
-    {level:'Platino', bs:'400', usd:'20'}
-  ],
-  users: [
-    {img:'https://via.placeholder.com/40', name:'Alice Smith', email:'alice@example.com', code:'A1B2C3', amount:'50'},
-    {img:'https://via.placeholder.com/40', name:'Bob Jones', email:'bob@example.com', code:'D4E5F6', amount:'75'}
-  ],
-  foundations: [
-    {name:'Fundación Amigos', amount:'$100'},
-    {name:'Fundación Esperanza', amount:'$200'}
-  ],
-  other: ['Validaciones especiales $5', 'Activaciones express $10']
-};
+const data = typeof INVITRAMI_DATA !== 'undefined' ? INVITRAMI_DATA : {};
 
 function createSection(title) {
   const tpl = document.getElementById('sectionTemplate');
@@ -255,5 +225,7 @@ document.getElementById('loginBtn').addEventListener('click', () => {
   }
 });
 </script>
+<div id="bottom-nav-container"></div>
+<script src="bottom-nav.js"></script>
 </body>
 </html>
