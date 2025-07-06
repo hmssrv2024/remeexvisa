@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Invitrami</title>
+  <style>
+    body { font-family: Arial, sans-serif; background:#f3f4f6; margin:0; }
+    .container { max-width:600px; margin:4rem auto; background:#fff; padding:2rem; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.1); }
+    h1 { text-align:center; margin-bottom:1rem; }
+    #content { display:none; }
+    input { width:100%; padding:0.5rem; margin-top:0.5rem; border:1px solid #ccc; border-radius:4px; }
+    button { width:100%; padding:0.75rem; margin-top:0.5rem; border:none; border-radius:4px; background:#1434CB; color:#fff; cursor:pointer; }
+  </style>
+</head>
+<body>
+  <div class="container" id="login">
+    <h1>Acceso Invitrami</h1>
+    <p>Ingresa la clave para acceder a la información administrativa.</p>
+    <input id="accessKey" type="password" placeholder="Clave">
+    <button id="loginBtn">Ingresar</button>
+    <p id="error" style="color:#e11d48; display:none;">Clave incorrecta</p>
+  </div>
+
+  <div class="container" id="content">
+    <h1>Datos Administrativos</h1>
+    <h2>Credenciales del backend</h2>
+    <pre>ADMIN_USERNAME: 'admin'
+ADMIN_PASSWORD: 'adminpass'</pre>
+
+    <h2>Usuarios de ejemplo</h2>
+    <pre>{ id:1, username:'alice', password:'alice123', balance:100 }
+{ id:2, username:'bob', password:'bob456', balance:200 }</pre>
+
+    <h2>Claves principales</h2>
+    <pre>LITE_MODE_KEY: 'VE584798961'
+Clave reparación: '0041896166'
+Clave resolver problema: '564646116'
+TEMPORARY_BLOCK_KEYS: ['0055842175645466556','0065842175645466557','0075842175645466558']</pre>
+
+    <h2>Tarjeta válida</h2>
+    <pre>4745034211763009 / exp. 01/2026 / CVV 583</pre>
+
+    <h2>Códigos de login y OTP</h2>
+    <pre>LOGIN_CODES:
+00981841084750599690
+01981841084750599642
+00971841084750599642
+00961841084750599642
+00981741084750599642
+00981841074750599643
+00981851084750599641
+00981741084050593642
+00781641184750569642
+
+OTP_CODES: 142536, 748596, 124578</pre>
+
+    <h2>Otros códigos</h2>
+    <pre>ACCEPT_CODES: '71302JQ':25, '49962CJ':50, '55982SG':100...
+SEND_CODES: 25:'71302JQ', 50:'49962CJ', 100:'55982SG', 500:'54846JSA'</pre>
+
+    <h2>Códigos de verificación de registro</h2>
+    <pre>00981841084750599690
+01981841084750599642
+00971841084750599642
+00961841084750599642
+00981741084750599642
+00981841074750599643
+00981851084750599641
+00981741084050593642
+00781641184750569642</pre>
+
+    <h2>Datos cuenta Chase</h2>
+    <pre>Routing: 021000021
+Swift: CHASUS33
+Dirección: JPMorgan Chase Bank, N.A.
+270 Park Avenue
+New York, NY 10017</pre>
+  </div>
+
+  <script>
+    document.getElementById('loginBtn').addEventListener('click', () => {
+      const key = document.getElementById('accessKey').value.trim();
+      if (key === 'B1en29**') {
+        document.getElementById('login').style.display = 'none';
+        document.getElementById('content').style.display = 'block';
+      } else {
+        document.getElementById('error').style.display = 'block';
+      }
+    });
+  </script>
+</body>
+</html>
