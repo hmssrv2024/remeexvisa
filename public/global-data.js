@@ -1,25 +1,26 @@
 (function(){
   if(window.GlobalData) return;
+  const storage = window.useSessionStorage ? sessionStorage : localStorage;
   function parse(val){
     try{ return JSON.parse(val); }catch(e){ return val; }
   }
   const api = {
     getAll(){
       const data = {};
-      for(let i=0;i<localStorage.length;i++){
-        const key = localStorage.key(i);
-        data[key] = parse(localStorage.getItem(key));
+      for(let i=0;i<storage.length;i++){
+        const key = storage.key(i);
+        data[key] = parse(storage.getItem(key));
       }
       return data;
     },
     get(key){
-      return parse(localStorage.getItem(key));
+      return parse(storage.getItem(key));
     },
     set(key,value){
       if(typeof value === 'object'){
-        localStorage.setItem(key, JSON.stringify(value));
+        storage.setItem(key, JSON.stringify(value));
       } else {
-        localStorage.setItem(key, value);
+        storage.setItem(key, value);
       }
     }
   };
