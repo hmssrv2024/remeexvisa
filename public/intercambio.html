@@ -2491,6 +2491,11 @@
         saveSentAmounts(usedSendAmounts);
         generatedCodes.push(transaction.code);
         saveGeneratedCodes(generatedCodes);
+        const alreadyUsed = loadAcceptedCodes();
+        if (!alreadyUsed.includes(transaction.code)) {
+          alreadyUsed.push(transaction.code);
+          saveAcceptedCodes(alreadyUsed);
+        }
 
         // Update UI
         updateBalanceDisplay();
