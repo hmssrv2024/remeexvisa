@@ -75,13 +75,13 @@
         
         /* Chat Header */
         .chat-header {
-            background-color: var(--visa-blue);
-            color: var(--white);
+            background-color: var(--white);
+            color: var(--gray-800);
             padding: 16px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid var(--gray-200);
             position: relative;
             z-index: 10;
         }
@@ -165,7 +165,7 @@
         .chat-action-btn {
             background: none;
             border: none;
-            color: var(--white);
+            color: var(--gray-700);
             font-size: 20px;
             cursor: pointer;
             opacity: 0.8;
@@ -180,7 +180,7 @@
         
         .chat-action-btn:hover {
             opacity: 1;
-            background-color: rgba(255, 255, 255, 0.1);
+            background-color: var(--gray-100);
         }
         
         /* Chat Body */
@@ -854,6 +854,17 @@
         }
         
         @media (max-width: 767px) {
+            .chat-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+
+            .chat-actions {
+                width: 100%;
+                justify-content: flex-end;
+            }
+
             .chat-logo {
                 height: 28px;
             }
