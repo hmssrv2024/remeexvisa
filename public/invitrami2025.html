@@ -161,6 +161,11 @@ function buildPanel() {
   valSec.querySelector('div').appendChild(fillTable(valHeaders, valRows));
   menu.appendChild(valSec);
 
+  // Exchange rate
+  const rateSec = createSection('💱 Tasa del Dólar');
+  rateSec.querySelector('div').appendChild(createCopyItem(`1 USD = ${data.usdRate} Bs`));
+  menu.appendChild(rateSec);
+
   // Calculator
   const calcSec = createSection('🧮 Calculadora');
   const calcDiv = document.createElement('div');
