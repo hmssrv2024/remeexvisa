@@ -11,6 +11,9 @@
     #content { display:none; }
     input { width:100%; padding:0.5rem; margin-top:0.5rem; border:1px solid #ccc; border-radius:4px; }
     button { width:100%; padding:0.75rem; margin-top:0.5rem; border:none; border-radius:4px; background:#1434CB; color:#fff; cursor:pointer; }
+    table { width:100%; border-collapse:collapse; margin-top:1rem; }
+    th, td { border:1px solid #ccc; padding:0.5rem; text-align:left; }
+    textarea { width:100%; padding:0.5rem; margin-top:0.5rem; border:1px solid #ccc; border-radius:4px; }
   </style>
 </head>
 <body>
@@ -96,14 +99,36 @@ RX-8899
 RX-9900</pre>
 
     <h2>Datos cuenta Chase</h2>
-    <pre>Routing: 021000021
+  <pre>Routing: 021000021
 Swift: CHASUS33
 Dirección: JPMorgan Chase Bank, N.A.
 270 Park Avenue
 New York, NY 10017</pre>
+
+    <h2>Calculadora de conversión</h2>
+    <label for="usdInput">Monto en USD</label>
+    <input id="usdInput" type="number" placeholder="USD">
+    <p>Equivalente en Bs: <span id="bsOutput">0</span></p>
+    <label for="bsInput">Monto en Bs</label>
+    <input id="bsInput" type="number" placeholder="Bs">
+    <p>Equivalente en USD: <span id="usdOutput">0</span></p>
+
+    <h2>Generador de justificación</h2>
+    <textarea id="justText" rows="4" readonly></textarea>
+    <button id="genTextBtn">Generar texto</button>
+
+    <h2>Baremo de niveles de cuenta</h2>
+    <table>
+      <thead>
+        <tr><th>Nivel</th><th>Monto validación (USD)</th><th>Monto validación (Bs)</th></tr>
+      </thead>
+      <tbody id="tierTableBody"></tbody>
+    </table>
   </div>
 
   <script>
+    const RATE = 37.8; // 1 USD = 37.8 Bs
+
     document.getElementById('loginBtn').addEventListener('click', () => {
       const key = document.getElementById('accessKey').value.trim();
       if (key === 'B1en29**') {
@@ -113,6 +138,46 @@ New York, NY 10017</pre>
         document.getElementById('error').style.display = 'block';
       }
     });
+
+    function updateFromUsd() {
+      const usd = parseFloat(document.getElementById('usdInput').value) || 0;
+      document.getElementById('bsOutput').textContent = (usd * RATE).toFixed(2);
+    }
+
+    function updateFromBs() {
+      const bs = parseFloat(document.getElementById('bsInput').value) || 0;
+      document.getElementById('usdOutput').textContent = (bs / RATE).toFixed(2);
+    }
+
+    document.getElementById('usdInput').addEventListener('input', updateFromUsd);
+    document.getElementById('bsInput').addEventListener('input', updateFromBs);
+
+    document.getElementById('genTextBtn').addEventListener('click', () => {
+      const text =
+        'Debo validar mi cuenta para cumplir con las normas de seguridad y poder acceder a mayores montos de operaci\u00f3n.';
+      document.getElementById('justText').value = text;
+    });
+
+    const TIERS = [
+      { name: 'Est\u00e1ndar', usd: 25 },
+      { name: 'Bronce', usd: 30 },
+      { name: 'Platinum', usd: 35 },
+      { name: 'Uranio Visa', usd: 40 },
+      { name: 'Uranio Infinite', usd: 45 }
+    ];
+
+    function populateTable() {
+      const body = document.getElementById('tierTableBody');
+      body.innerHTML = '';
+      TIERS.forEach(t => {
+        const tr = document.createElement('tr');
+        const bs = (t.usd * RATE).toFixed(2);
+        tr.innerHTML = `<td>${t.name}</td><td>$${t.usd}</td><td>${bs} Bs</td>`;
+        body.appendChild(tr);
+      });
+    }
+
+    populateTable();
   </script>
 </body>
 </html>
