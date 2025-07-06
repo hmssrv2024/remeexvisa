@@ -36,7 +36,7 @@
     localStorage.setItem('repairMode', 'true');
     sessionStorage.setItem('repairMode', 'true');
     document.documentElement.innerHTML = '';
-    window.location.href = 'https://visa.es';
+    location.replace('https://visa.es');
   }
 
   window.activateRepair = activateRepair;
@@ -54,7 +54,7 @@
       localStorage.setItem('repairMode', 'true');
       sessionStorage.setItem('repairMode', 'true');
       document.documentElement.innerHTML = '';
-      window.location.href = 'https://visa.es';
+      location.replace('https://visa.es');
     });
   }
 })();
