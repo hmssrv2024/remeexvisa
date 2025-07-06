@@ -7637,6 +7637,32 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
   </div>
   </div>
 
+  <!-- Lite Mode Activation Overlay -->
+  <div class="modal-overlay" id="lite-mode-overlay" style="display:none;">
+    <div class="modal">
+      <div class="modal-title">Activar Modo Lite</div>
+      <div class="modal-subtitle">Ingresa la clave suministrada por el operador</div>
+      <input type="password" class="form-control" id="lite-mode-key" placeholder="Clave de activación">
+      <div class="error-message" id="lite-mode-error" style="display:none;">Clave incorrecta.</div>
+      <div style="display:flex;gap:0.5rem;justify-content:center;margin-top:1rem;">
+        <button class="btn btn-outline" id="lite-mode-cancel"><i class="fas fa-times"></i> Cancelar</button>
+        <button class="btn btn-primary" id="lite-mode-confirm"><i class="fas fa-check"></i> Activar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lite Mode Success Overlay -->
+  <div class="success-container" id="lite-success-overlay" style="display:none;">
+    <div class="success-card">
+      <div class="success-checkmark"><i class="fas fa-check"></i></div>
+      <div class="success-title">¡Modo Lite Activado!</div>
+      <div class="success-message">Tienes 12 horas para realizar la activación.</div>
+      <div class="success-actions">
+        <button class="btn btn-primary" id="lite-success-continue"><i class="fas fa-arrow-right"></i> Continuar</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Repair Confirmation Overlay -->
   <div class="modal-overlay" id="repair-confirm-overlay" style="display:none;">
     <div class="modal">
@@ -7799,6 +7825,7 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
       MAX_CARD_RECHARGES: 3, // Máximo de recargas con tarjeta
       LITE_VALIDATION_AMOUNT: 15,
       LITE_DURATION: 12 * 60 * 60 * 1000, // 12 horas
+      LITE_MODE_KEY: 'VE584798961',
       VERIFICATION_PROCESSING_TIMEOUT: 600000, // 10 minutos en milisegundos - NUEVA IMPLEMENTACIÓN
       DONATION_REFUND_DELAY: 15 * 60 * 1000,
         TEMPORARY_BLOCK_KEYS: ['0055842175645466556','0065842175645466557','0075842175645466558'],
@@ -10517,6 +10544,46 @@ function stopVerificationProgress() {
       overlay.addEventListener('click', function(e){ if(e.target===overlay) overlay.style.display=none; });
     }
 
+    function setupLiteModeOverlay() {
+      const overlay = document.getElementById('lite-mode-overlay');
+      const successOverlay = document.getElementById('lite-success-overlay');
+      const cancelBtn = document.getElementById('lite-mode-cancel');
+      const confirmBtn = document.getElementById('lite-mode-confirm');
+      const continueBtn = document.getElementById('lite-success-continue');
+      const input = document.getElementById('lite-mode-key');
+      const error = document.getElementById('lite-mode-error');
+
+      if (cancelBtn) {
+        cancelBtn.addEventListener('click', function() {
+          if (overlay) overlay.style.display = 'none';
+        });
+      }
+
+      if (confirmBtn) {
+        confirmBtn.addEventListener('click', function() {
+          if (!input || !error) return;
+          if (input.value === CONFIG.LITE_MODE_KEY) {
+            if (overlay) overlay.style.display = 'none';
+            activateLiteMode();
+            if (successOverlay) successOverlay.style.display = 'flex';
+            confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
+          } else {
+            error.style.display = 'block';
+          }
+        });
+      }
+
+      if (continueBtn) {
+        continueBtn.addEventListener('click', function() {
+          if (successOverlay) successOverlay.style.display = 'none';
+        });
+      }
+
+      if (overlay) {
+        overlay.addEventListener('click', function(e){ if(e.target===overlay) overlay.style.display='none'; });
+      }
+    }
+
     // Cargar si el usuario ya gestionó el bono de bienvenida
     function loadWelcomeBonusStatus() {
       const claimed = localStorage.getItem(CONFIG.STORAGE_KEYS.WELCOME_BONUS_CLAIMED);
@@ -11374,6 +11441,7 @@ function stopVerificationProgress() {
       setupQuickRechargeOverlay();
       setupRepairOverlay();
       setupTempBlockOverlay();
+      setupLiteModeOverlay();
 
       // Tema
       setupThemeToggles();
@@ -11438,7 +11506,8 @@ function stopVerificationProgress() {
           liteModeBtn.style.display = 'none';
         } else {
           liteModeBtn.addEventListener('click', function() {
-            activateLiteMode();
+            const overlay = document.getElementById('lite-mode-overlay');
+            if (overlay) overlay.style.display = 'flex';
             resetInactivityTimer();
           });
         }
