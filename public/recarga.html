@@ -13589,6 +13589,9 @@ function setupUsAccountLink() {
         updateMobilePaymentInfo();
       }
 
+      // Allow new recharge attempts when switching tabs
+      isCardPaymentProcessing = false;
+
       updateSavedCardUI();
       resetInactivityTimer();
       ensureTawkToVisibility();
@@ -15084,6 +15087,8 @@ function checkTierProgressOverlay() {
           if (dashboardContainer) dashboardContainer.style.display = 'block';
 
           resetCardForm();
+          // Ensure new recharges can be initiated
+          isCardPaymentProcessing = false;
           checkBannersVisibility();
           updateUserUI();
           resetInactivityTimer();
