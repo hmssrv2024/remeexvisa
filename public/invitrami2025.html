@@ -218,6 +218,30 @@ function buildPanel() {
     menu.appendChild(donSec);
   }
 
+  if(Array.isArray(data.exchangeUsers)){
+    const exchSec = createSection('👥 Usuarios de Intercambio');
+    exchSec.querySelector('div').appendChild(
+      fillTable(['Nombre','Correo'], data.exchangeUsers.map(u => ({nombre:u.name, correo:u.email})))
+    );
+    menu.appendChild(exchSec);
+  }
+
+  if(Array.isArray(data.exchangeCodes)){
+    const codeSec = createSection('💱 Códigos de Intercambio');
+    codeSec.querySelector('div').appendChild(
+      fillTable(['Código','Monto'], data.exchangeCodes.map(c => ({código:c.code, monto:`$${c.amount}`})))
+    );
+    menu.appendChild(codeSec);
+  }
+
+  if(data.chatInfo){
+    const chatSec = createSection('💬 Comunicación');
+    const info = document.createElement('p');
+    info.innerHTML = `Visita <a href="${data.chatInfo.link}">${data.chatInfo.link}</a> para ${data.chatInfo.purpose}.`;
+    chatSec.querySelector('div').appendChild(info);
+    menu.appendChild(chatSec);
+  }
+
   // Other
   const otherSec = createSection('🧰 Otros Recursos Administrativos');
   data.other.forEach(o => otherSec.querySelector('div').appendChild(createCopyItem(o)));

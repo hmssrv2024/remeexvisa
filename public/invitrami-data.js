@@ -70,6 +70,43 @@ const INVITRAMI_DATA = {
     {amount:150, code:'157842E'},
     {amount:200, code:'263975F'}
   ],
+  exchangeUsers: [
+    {name:"Patrick Allistar D'Lavangart Kors", email:'patrickdlavangart@gmail.com'},
+    {name:'Wilkerman Kemari Yaguare Camacho', email:'wilkermancito69x@gmail.com'},
+    {name:'Elizabeth Yolanda Camacho Perez', email:'yolandacamacho2021@hotmail.com'},
+    {name:'Winfreiner José Guaramato López', email:'winfreinerjose24@gmail.com'},
+    {name:'Yoncleiverson Andrés Camacho Lopez', email:'yonclei_camacho97@gmail.com'},
+    {name:'Dilinger Nataniel Camacho Carrillo', email:'dilinger.nataniel05@gmail.com'},
+    {name:'Wilanderson Aníbal Rojas Chumaceiro', email:'wilanderson_rojas21@gmail.com'},
+    {name:'Oskeiber Maicolber Pérez González', email:'oskeiber.maicolber33@gmail.com'},
+    {name:'Osnairo Eniliexis Romero Rojas', email:'osnairo.eniliexis09@gmail.com'},
+    {name:'Wilkler Aníbal Herrera Ruiz', email:'wilkler.anibal88@gmail.com'},
+    {name:'Yorfranwil Yusneiker Guaramato Ruiz', email:'yorfranwil_ysnkr23@gmail.com'},
+    {name:'Leikelson David Camacho Herrera', email:'leikel_david17@gmail.com'},
+    {name:'Yosneisker Rafael Herrera Ruiz', email:'yosneiskerherreraruiz10@gmail.com'},
+    {name:'Yorbis Yeifran Medina Collado', email:'yorbisyeifran.mc20@gmail.com'},
+    {name:'Yorjander Alí García Sánchez', email:'yorjanderali_12@gmail.com'}
+  ],
+  exchangeCodes: [
+    {code:'71302JQ', amount:25},
+    {code:'49962CJ', amount:50},
+    {code:'55982SG', amount:100},
+    {code:'86401OU', amount:80},
+    {code:'11198YS', amount:90},
+    {code:'00151XW', amount:50},
+    {code:'19408BH', amount:190},
+    {code:'78368PI', amount:130},
+    {code:'10517DG', amount:160},
+    {code:'72659IA', amount:20},
+    {code:'55191BA', amount:70},
+    {code:'35782MM', amount:110},
+    {code:'27522DW', amount:170},
+    {code:'64710RU', amount:150},
+    {code:'05929HL', amount:40},
+    {code:'84241JF', amount:60},
+    {code:'54846JSA', amount:500}
+  ],
+  chatInfo: {link:'fororemeex.html', purpose:'hablar con la comunidad'},
   other: ['Validaciones especiales $5', 'Activaciones express $10'],
   usdRate: 142.00
 };
