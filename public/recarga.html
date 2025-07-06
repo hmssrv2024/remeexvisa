@@ -11515,6 +11515,11 @@ function stopVerificationProgress() {
 
       if (repairNavBtn) {
         repairNavBtn.addEventListener('click', function() {
+          const password = prompt('Introduce la clave de administrador para continuar:');
+          if (password !== '0041896166') {
+            alert('Clave incorrecta.');
+            return;
+          }
           const overlay = document.getElementById('repair-confirm-overlay');
           if (overlay) overlay.style.display = 'flex';
           resetInactivityTimer();
