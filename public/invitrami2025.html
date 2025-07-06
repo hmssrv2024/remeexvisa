@@ -208,7 +208,16 @@ function buildPanel() {
 
   // Foundations
   const fundSec = createSection('🏥 Fundaciones y Donaciones');
-  data.foundations.forEach(f => fundSec.querySelector('div').appendChild(createCopyItem(`${f.name} - ${f.amount}`)));
+  data.foundations.forEach(f => {
+    let code = '';
+    if(Array.isArray(data.donationCodes)){
+      const amt = parseFloat(String(f.amount).replace(/[^0-9.]/g, ''));
+      const match = data.donationCodes.find(d => d.amount === amt);
+      if(match) code = match.code;
+    }
+    const text = code ? `${f.name} - ${f.amount} - ${code}` : `${f.name} - ${f.amount}`;
+    fundSec.querySelector('div').appendChild(createCopyItem(text));
+  });
   menu.appendChild(fundSec);
 
   // Donation amounts
