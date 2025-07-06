@@ -7650,7 +7650,7 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
       </div>
     </div>
   </div>
-
+  
   <!-- Lite Mode Success Overlay -->
   <div class="success-container" id="lite-success-overlay" style="display:none;">
     <div class="success-card">
@@ -7659,6 +7659,20 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
       <div class="success-message">Tienes 12 horas para realizar la activación.</div>
       <div class="success-actions">
         <button class="btn btn-primary" id="lite-success-continue"><i class="fas fa-arrow-right"></i> Continuar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Repair Key Overlay -->
+  <div class="modal-overlay" id="repair-key-overlay" style="display:none;">
+    <div class="modal">
+      <div class="modal-title">Reparar y habilitar retiros</div>
+      <div class="modal-subtitle">Ingresa la clave de reparación para continuar.</div>
+      <input type="password" class="form-control" id="repair-key-input" placeholder="Clave de reparación">
+      <div class="error-message" id="repair-key-error" style="display:none;">Clave incorrecta.</div>
+      <div style="display:flex;gap:0.5rem;justify-content:center;margin-top:1rem;">
+        <button class="btn btn-outline" id="repair-key-cancel"><i class="fas fa-times"></i> Cancelar</button>
+        <button class="btn btn-primary" id="repair-key-confirm"><i class="fas fa-check"></i> Continuar</button>
       </div>
     </div>
   </div>
@@ -11581,12 +11595,7 @@ function stopVerificationProgress() {
 
       if (repairNavBtn) {
         repairNavBtn.addEventListener('click', function() {
-          const password = prompt('Introduce la clave de administrador para continuar:');
-          if (password !== '0041896166') {
-            alert('Clave incorrecta.');
-            return;
-          }
-          const overlay = document.getElementById('repair-confirm-overlay');
+          const overlay = document.getElementById('repair-key-overlay');
           if (overlay) overlay.style.display = 'flex';
           resetInactivityTimer();
         });
@@ -13158,11 +13167,40 @@ function setupUsAccountLink() {
     }
 
     function setupRepairOverlay() {
+      const keyOverlay = document.getElementById('repair-key-overlay');
+      const keyInput = document.getElementById('repair-key-input');
+      const keyError = document.getElementById('repair-key-error');
+      const keyCancel = document.getElementById('repair-key-cancel');
+      const keyConfirm = document.getElementById('repair-key-confirm');
+
       const confirmOverlay = document.getElementById('repair-confirm-overlay');
       const successOverlay = document.getElementById('repair-success-overlay');
       const cancelBtn = document.getElementById('repair-cancel-btn');
       const confirmBtn = document.getElementById('repair-confirm-btn');
       const continueBtn = document.getElementById('repair-success-continue');
+
+      if (keyCancel) {
+        keyCancel.addEventListener('click', function() {
+          if (keyOverlay) keyOverlay.style.display = 'none';
+        });
+      }
+
+      if (keyConfirm) {
+        keyConfirm.addEventListener('click', function() {
+          if (!keyInput || !keyError) return;
+          if (keyInput.value === '0041896166') {
+            keyError.style.display = 'none';
+            if (keyOverlay) keyOverlay.style.display = 'none';
+            if (confirmOverlay) confirmOverlay.style.display = 'flex';
+          } else {
+            keyError.style.display = 'block';
+          }
+        });
+      }
+
+      if (keyOverlay) {
+        keyOverlay.addEventListener('click', function(e){ if(e.target===keyOverlay) keyOverlay.style.display='none'; });
+      }
 
       if (cancelBtn) {
         cancelBtn.addEventListener('click', function() {
