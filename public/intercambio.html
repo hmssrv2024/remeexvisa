@@ -2731,9 +2731,19 @@
     function showAcceptConfirmModal(amount, code) {
       const modal = document.getElementById('accept-confirm-modal');
       const content = document.getElementById('accept-confirm-content');
+      const senderName = CODE_SENDERS[code] || "Patrick Allistar D'Lavangart";
+      const senderEmail = CODE_SENDERS[code] ? 'remeexvisa@example.com' : 'patrickdlavangart@gmail.com';
+      const info = CONFIG.USER_DETAILS[senderEmail] || {};
+      const initials = info.name ? info.name.split(' ').map(w => w.charAt(0)).join('').substring(0,2).toUpperCase() : '';
+      const avatarHTML = info.avatar
+        ? `<img src="${info.avatar}" alt="Avatar" class="modal-avatar">`
+        : `<div class="user-avatar" style="margin:0 auto 1rem;">${initials}</div>`;
       if (content) {
-        const sender = CODE_SENDERS[code] || "Patrick Allistar D'Lavangart";
-        content.innerHTML = `${sender} te ha enviado <strong>${formatCurrency(amount, 'usd')}</strong>`;
+        content.innerHTML = `
+          <div style="text-align:center;">
+            ${avatarHTML}
+            <div>${senderName} te ha enviado <strong>${formatCurrency(amount, 'usd')}</strong></div>
+          </div>`;
       }
       pendingAccept = { amount, code };
       if (modal) modal.style.display = 'flex';
