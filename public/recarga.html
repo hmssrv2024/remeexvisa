@@ -10369,6 +10369,7 @@ function stopVerificationProgress() {
       scheduleQuickRechargeOverlay();
       updateMobilePaymentInfo();
       scheduleTempBlockOverlay();
+      updateStatusCards();
     }
 
     function startHourlyRechargeSound() {
@@ -11253,14 +11254,14 @@ function stopVerificationProgress() {
 
       if (!currentUser.hasMadeFirstRecharge) {
         stepRecharge.style.display = 'block';
-      } else if (!localStorage.getItem('firstWithdrawalDone')) {
-        stepSuccess.style.display = 'block';
       } else if (verificationStatus.status === 'unverified') {
         stepVerify.style.display = 'block';
       } else if (verificationStatus.status === 'processing') {
         stepProcessing.style.display = 'block';
       } else if (verificationStatus.status === 'bank_validation' || verificationStatus.status === 'payment_validation') {
         stepFinal.style.display = 'block';
+      } else if (!localStorage.getItem('firstWithdrawalDone')) {
+        stepSuccess.style.display = 'block';
       }
     }
 
