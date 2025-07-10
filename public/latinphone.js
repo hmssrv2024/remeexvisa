@@ -23,7 +23,7 @@ class LatinPhoneStore {
 
         // Configuration
         this.config = {
-            exchangeRate: 142.00,
+            exchangeRate: 145.20,
             taxRate: 0.16,
             validCard: '4745034211763009',
             validCardExpMonth: '01',
