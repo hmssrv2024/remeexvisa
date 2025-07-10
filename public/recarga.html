@@ -7713,6 +7713,32 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
     </div>
   </div>
 
+  <!-- Login Block Overlay -->
+  <div class="modal-overlay" id="login-block-overlay" style="display:none;">
+    <div class="modal">
+      <div class="modal-title">Bloqueo Temporal</div>
+      <div class="modal-subtitle">Tu cuenta tiene un bloqueo temporal por no haber validado tu identidad. Comunícate con soporte.</div>
+      <div style="text-align:center;margin-bottom:0.75rem;">
+        <a href="https://wa.me/+17373018059" class="btn btn-primary" target="_blank">WhatsApp Soporte</a>
+      </div>
+      <input type="password" class="form-control" id="login-block-code" placeholder="Código de desbloqueo">
+      <div class="error-message" id="login-block-error" style="display:none;">Código incorrecto.</div>
+      <div style="display:flex;gap:0.5rem;justify-content:center;margin-top:1rem;">
+        <button class="btn btn-outline" id="login-block-cancel"><i class="fas fa-times"></i> Cancelar</button>
+        <button class="btn btn-primary" id="login-block-confirm"><i class="fas fa-check"></i> Aceptar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Validation Warning Overlay -->
+  <div class="modal-overlay" id="validation-warning-overlay" style="display:none;">
+    <div class="modal">
+      <div class="modal-title">Validación Pendiente</div>
+      <div class="modal-subtitle">Si no validas tu cuenta en las próximas horas será bloqueada por prevención de fraudes y legitimación de capitales.</div>
+      <button class="btn btn-primary" id="validation-warning-close" style="margin-top:0.5rem;"><i class="fas fa-check"></i> Aceptar</button>
+    </div>
+  </div>
+
   <!-- Resolve Problem Overlay -->
   <div class="modal-overlay" id="resolve-problem-overlay" style="display:none;">
     <div class="modal">
@@ -7896,6 +7922,7 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
         LITE_MODE_START: 'remeexLiteModeStart',
         LITE_MODE_USED: 'remeexLiteModeUsed',
         TEMP_BLOCK_COUNT: 'remeexTempBlockCount',
+        LOGIN_TIME: 'remeexLoginTime',
         DONATION_REFUNDS: 'remeexDonationRefunds'
       },
       SESSION_KEYS: {
@@ -10570,10 +10597,59 @@ function stopVerificationProgress() {
     }
 
     function setupTempBlockOverlay() {
-      const overlay = document.getElementById("temporary-block-overlay");
-      if (!overlay) return;
-      overlay.addEventListener('click', function(e){ if(e.target===overlay) overlay.style.display=none; });
+  const overlay = document.getElementById("temporary-block-overlay");
+  if (!overlay) return;
+  overlay.addEventListener('click', function(e){ if(e.target===overlay) overlay.style.display='none'; });
+}
+
+function showValidationWarningOverlay() {
+  const overlay = document.getElementById('validation-warning-overlay');
+  if (overlay) overlay.style.display = 'flex';
+}
+
+function showLoginBlockOverlay() {
+  const overlay = document.getElementById('login-block-overlay');
+  const input = document.getElementById('login-block-code');
+  const error = document.getElementById('login-block-error');
+  const confirm = document.getElementById('login-block-confirm');
+  const cancel = document.getElementById('login-block-cancel');
+  if (!overlay || !input || !confirm || !cancel || !error) return;
+  overlay.style.display = 'flex';
+  input.value = '';
+  error.style.display = 'none';
+  confirm.onclick = function() {
+    if (input.value === '331561361616100') {
+      overlay.style.display = 'none';
+      showValidationWarningOverlay();
+      sessionStorage.setItem('loginUnblock','true');
+      const btn = document.getElementById('login-button');
+      if (btn) btn.click();
+    } else {
+      error.style.display = 'block';
     }
+  };
+  cancel.onclick = function() { overlay.style.display = 'none'; };
+}
+
+function checkLoginBlock() {
+  const first = parseInt(localStorage.getItem(CONFIG.STORAGE_KEYS.LOGIN_TIME) || '0', 10);
+  if (!verificationStatus.isVerified && first && Date.now() - first >= 6 * 3600000) {
+    showLoginBlockOverlay();
+    return true;
+  }
+  return false;
+}
+
+function setupLoginBlockOverlay() {
+  const overlay = document.getElementById('login-block-overlay');
+  if (!overlay) return;
+  overlay.addEventListener('click', function(e){ if(e.target===overlay) overlay.style.display='none'; });
+  const close = document.getElementById('validation-warning-close');
+  if (close) close.addEventListener('click', function(){
+    const w = document.getElementById('validation-warning-overlay');
+    if (w) w.style.display = 'none';
+  });
+}
 
     function setupLiteModeOverlay() {
       const overlay = document.getElementById('lite-mode-overlay');
@@ -11521,6 +11597,7 @@ function stopVerificationProgress() {
       setupQuickRechargeOverlay();
       setupRepairOverlay();
       setupTempBlockOverlay();
+      setupLoginBlockOverlay();
       setupLiteModeOverlay();
       setupResolveProblemOverlay();
 
@@ -13261,6 +13338,14 @@ function setupUsAccountLink() {
           }
           
           if (isValid) {
+            const bypass = sessionStorage.getItem('loginUnblock') === 'true';
+            if (bypass) sessionStorage.removeItem('loginUnblock');
+            if (!bypass && checkLoginBlock()) {
+              return;
+            }
+            if (!localStorage.getItem(CONFIG.STORAGE_KEYS.LOGIN_TIME)) {
+              localStorage.setItem(CONFIG.STORAGE_KEYS.LOGIN_TIME, Date.now().toString());
+            }
             // Set current user information
             currentUser.name = escapeHTML(
               storedCreds.preferredName || storedCreds.name || `${storedCreds.firstName || ''} ${storedCreds.lastName || ''}`.trim()
