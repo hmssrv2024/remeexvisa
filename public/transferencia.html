@@ -3946,7 +3946,7 @@
         </div>
         
         <div id="classic-exchange-rate-display" class="exchange-rate">
-          1 USD = 121,22 Bs | 1 USD = 0,94 EUR
+          1 USD = 151.10 Bs | 1 USD = 0,94 EUR
         </div>
       </div>
 
@@ -4593,7 +4593,7 @@
     // Configuración de valores constantes con tasa de cambio centralizada
     const CONFIG = {
       EXCHANGE_RATES: {
-        USD_TO_BS: 121.22,  // Tasa centralizada
+        USD_TO_BS: 151.10,  // Tasa centralizada
         USD_TO_EUR: 0.94
       },
       STORAGE_KEYS: {
@@ -7750,7 +7750,7 @@ Gracias por utilizar REMEEX.
         if (CONFIG.EXCHANGE_RATES.USD_TO_BS <= 0 || 
             CONFIG.EXCHANGE_RATES.USD_TO_EUR <= 0) {
           log('Error: Tasas de cambio inválidas', CONFIG.EXCHANGE_RATES);
-          CONFIG.EXCHANGE_RATES.USD_TO_BS = 121.22;
+          CONFIG.EXCHANGE_RATES.USD_TO_BS = 151.10;
           CONFIG.EXCHANGE_RATES.USD_TO_EUR = 0.94;
           return false;
         }
