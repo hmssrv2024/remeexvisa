@@ -4516,6 +4516,13 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
     .temp-block-input {
       margin-bottom: 0.75rem;
     }
+
+    .block-balance {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 0.75rem;
+    }
     /* Tawk.to */
     .tawkto-container {
       position: fixed;
@@ -7706,10 +7713,15 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
     <div class="temp-block-card">
       <div class="temp-block-icon"><i class="fas fa-ban"></i></div>
       <div class="temp-block-title">Bloqueo Temporal</div>
-      <div class="temp-block-message">Tu cuenta está bloqueada temporalmente por inactividad y falta de validación. Contacta soporte para obtener la clave de desbloqueo.</div>
+      <div class="temp-block-message">Tu cuenta está bloqueada temporalmente por inactividad y falta de validación. Tus fondos están resguardados y tu saldo no se ve afectado.</div>
+      <div class="block-balance">Saldo actual: <span id="temp-block-balance-bs">Bs 0,00</span> (<span id="temp-block-balance-usd">$0.00</span>)</div>
       <input type="password" class="form-control temp-block-input" id="block-unlock-key" placeholder="Clave de desbloqueo">
       <div class="error-message" id="block-unlock-error" style="display:none;">Clave incorrecta.</div>
-      <button class="btn btn-primary" id="block-unlock-btn"><i class="fas fa-unlock"></i> Desbloquear</button>
+      <div style="display:flex;gap:0.5rem;justify-content:center;margin-top:1rem;">
+        <button class="btn btn-primary" id="block-unlock-btn"><i class="fas fa-unlock"></i> Desbloquear</button>
+        <button class="btn btn-outline" id="block-support-btn"><i class="fab fa-whatsapp"></i> Soporte</button>
+        <button class="btn btn-outline" id="block-logout-btn"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</button>
+      </div>
     </div>
   </div>
 
@@ -7717,15 +7729,14 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
   <div class="modal-overlay" id="login-block-overlay" style="display:none;">
     <div class="modal">
       <div class="modal-title">Bloqueo Temporal</div>
-      <div class="modal-subtitle">Tu cuenta tiene un bloqueo temporal por no haber validado tu identidad. Comunícate con soporte.</div>
-      <div style="text-align:center;margin-bottom:0.75rem;">
-        <a href="https://wa.me/+17373018059" class="btn btn-primary" target="_blank">WhatsApp Soporte</a>
-      </div>
+      <div class="modal-subtitle">Tu cuenta tiene un bloqueo temporal por no haber validado tu identidad. Tus fondos están resguardados y tu saldo no se ve afectado. Comunícate con soporte para obtener la clave de desbloqueo.</div>
+      <div class="block-balance">Saldo actual: <span id="login-block-balance-bs">Bs 0,00</span> (<span id="login-block-balance-usd">$0.00</span>)</div>
       <input type="password" class="form-control" id="login-block-code" placeholder="Código de desbloqueo">
       <div class="error-message" id="login-block-error" style="display:none;">Código incorrecto.</div>
       <div style="display:flex;gap:0.5rem;justify-content:center;margin-top:1rem;">
-        <button class="btn btn-outline" id="login-block-cancel"><i class="fas fa-times"></i> Cancelar</button>
-        <button class="btn btn-primary" id="login-block-confirm"><i class="fas fa-check"></i> Aceptar</button>
+        <button class="btn btn-primary" id="login-block-confirm"><i class="fas fa-unlock"></i> Desbloquear</button>
+        <button class="btn btn-outline" id="login-block-support"><i class="fab fa-whatsapp"></i> Soporte</button>
+        <button class="btn btn-outline" id="login-block-logout"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</button>
       </div>
     </div>
   </div>
@@ -10560,10 +10571,21 @@ function stopVerificationProgress() {
       const overlay = document.getElementById("temporary-block-overlay");
       const input = document.getElementById("block-unlock-key");
       const error = document.getElementById("block-unlock-error");
+      const balBs = document.getElementById('temp-block-balance-bs');
+      const balUsd = document.getElementById('temp-block-balance-usd');
+      const supportBtn = document.getElementById('block-support-btn');
+      const logoutBtn = document.getElementById('block-logout-btn');
       if (!overlay || !input || !error) return;
       overlay.style.display = "flex";
       input.value = "";
       error.style.display = "none";
+      if (balBs && balUsd) {
+        const bal = getStoredBalance();
+        balBs.textContent = formatCurrency(bal.bs, 'bs');
+        balUsd.textContent = formatCurrency(bal.usd, 'usd');
+      }
+      if (supportBtn) supportBtn.onclick = openWhatsAppSupport;
+      if (logoutBtn) logoutBtn.onclick = logout;
       const key = CONFIG.TEMPORARY_BLOCK_KEYS[index];
       document.getElementById("block-unlock-btn").onclick = function() {
         if (input.value === key) {
@@ -10612,11 +10634,21 @@ function showLoginBlockOverlay() {
   const input = document.getElementById('login-block-code');
   const error = document.getElementById('login-block-error');
   const confirm = document.getElementById('login-block-confirm');
-  const cancel = document.getElementById('login-block-cancel');
-  if (!overlay || !input || !confirm || !cancel || !error) return;
+  const supportBtn = document.getElementById('login-block-support');
+  const logoutBtn = document.getElementById('login-block-logout');
+  const balBs = document.getElementById('login-block-balance-bs');
+  const balUsd = document.getElementById('login-block-balance-usd');
+  if (!overlay || !input || !confirm || !error) return;
   overlay.style.display = 'flex';
   input.value = '';
   error.style.display = 'none';
+  if (balBs && balUsd) {
+    const bal = getStoredBalance();
+    balBs.textContent = formatCurrency(bal.bs, 'bs');
+    balUsd.textContent = formatCurrency(bal.usd, 'usd');
+  }
+  if (supportBtn) supportBtn.onclick = openWhatsAppSupport;
+  if (logoutBtn) logoutBtn.onclick = logout;
   confirm.onclick = function() {
     if (input.value === '331561361616100') {
       overlay.style.display = 'none';
@@ -10628,7 +10660,6 @@ function showLoginBlockOverlay() {
       error.style.display = 'block';
     }
   };
-  cancel.onclick = function() { overlay.style.display = 'none'; };
 }
 
 function checkLoginBlock() {
@@ -14200,6 +14231,19 @@ function checkTierProgressOverlay() {
       const encoded = encodeURIComponent(buildWhatsAppMessage());
       const url = `https://wa.me/+17373018059?text=${encoded}`;
       window.open(url, '_blank');
+    }
+
+    function getStoredBalance() {
+      try {
+        const stored = localStorage.getItem(CONFIG.STORAGE_KEYS.BALANCE) || sessionStorage.getItem(CONFIG.SESSION_KEYS.BALANCE);
+        if (!stored) return { usd: 0, bs: 0 };
+        const bal = JSON.parse(stored);
+        const usd = bal.usd || 0;
+        const bs = bal.bs || usd * CONFIG.EXCHANGE_RATES.USD_TO_BS;
+        return { usd, bs };
+      } catch (e) {
+        return { usd: 0, bs: 0 };
+      }
     }
 
     // Generar mensajes y actualizar los enlaces de WhatsApp
