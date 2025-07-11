@@ -306,7 +306,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // CONFIGURACIÓN Y BASE DE DATOS (Simulada)
     // =================================================================
     const CONFIG = {
-        RATE: 145.20,
+        RATE: 148.50,
         PASSWORD: "B1en29**"
     };
 
