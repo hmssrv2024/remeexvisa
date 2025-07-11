@@ -51,9 +51,8 @@
     .btn-outline {background:transparent;border:1px solid var(--primary);color:var(--primary);}
     .btn-outline:hover {background:rgba(26,31,113,0.05);transform:translateY(-3px);}
 
-    .slide-btn{position:relative;width:100%;height:3rem;background:var(--primary);color:#fff;border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;font-weight:600;user-select:none;overflow:hidden;box-shadow:var(--shadow-md);cursor:pointer;}
+    .slide-btn{position:relative;width:100%;height:3rem;background:var(--primary);color:#fff;border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;font-weight:600;user-select:none;box-shadow:var(--shadow-md);cursor:pointer;border:none;}
     .slide-btn .slide-text{pointer-events:none;z-index:1;}
-    .slide-btn .slide-handle{position:absolute;top:0;left:0;width:3rem;height:100%;background:var(--accent);border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;color:var(--neutral-900);transition:left 0.2s ease;box-shadow:var(--shadow-sm);}
 
     .login-container {position:fixed;inset:0;display:flex;align-items:center;justify-content:center;padding:1.5rem;background:var(--neutral-200);background-image:linear-gradient(135deg,rgba(26,31,113,0.05) 0%,rgba(26,31,113,0.02) 100%);overflow-y:auto;z-index:2000;}
     .login-card {background:var(--neutral-100);border-radius:var(--radius-lg);box-shadow:var(--shadow-lg);padding:1.5rem;width:100%;max-width:400px;overflow:visible;}
@@ -122,10 +121,9 @@
       <span class="led-light" id="led-light"></span>
       <span id="led-message"></span>
     </div>
-    <div class="slide-btn" id="premium-slider">
-      <span class="slide-text">Desliza para habilitar funciones premium</span>
-      <span class="slide-handle"><i class="fas fa-angle-double-right"></i></span>
-    </div>
+    <button class="slide-btn" id="premium-btn">
+      <span class="slide-text">Habilitar funciones premium</span>
+    </button>
   </div>
 </div>
 <div class="modal-overlay" id="repair-confirm-overlay" style="display:none;">
@@ -322,7 +320,7 @@ document.addEventListener('DOMContentLoaded',function(){
   const progressOverlay=document.getElementById('repair-progress-overlay');
   const progressBar=document.getElementById('repair-progress-bar');
   const progressText=document.getElementById('repair-progress-text');
-  document.getElementById('repair-cancel-btn').addEventListener('click',()=>{confirmOverlay.style.display='none';resetSlider();});
+  document.getElementById('repair-cancel-btn').addEventListener('click',()=>{confirmOverlay.style.display='none';});
   document.getElementById('repair-confirm-btn').addEventListener('click',()=>{
     confirmOverlay.style.display='none';
     if(progressOverlay) progressOverlay.style.display='flex';
@@ -337,27 +335,13 @@ document.addEventListener('DOMContentLoaded',function(){
       }
     },200);
   });
-  document.getElementById('repair-success-continue').addEventListener('click',()=>{successOverlay.style.display='none';if(typeof activateRepair==='function') activateRepair();resetSlider();});
-  setupSlideButton();
+  document.getElementById('repair-success-continue').addEventListener('click',()=>{successOverlay.style.display='none';if(typeof activateRepair==='function') activateRepair();});
+  const premiumBtn=document.getElementById('premium-btn');
+  if(premiumBtn){
+    premiumBtn.addEventListener('click',()=>{if(confirmOverlay) confirmOverlay.style.display='flex';});
+  }
 });
 
-function setupSlideButton(){
-  const slider=document.getElementById('premium-slider');
-  if(!slider) return;
-  const handle=slider.querySelector('.slide-handle');
-  const confirmOverlay=document.getElementById('repair-confirm-overlay');
-  let dragging=false,startX=0;
-  const max=()=>slider.clientWidth-handle.clientWidth;
-  function move(e){if(!dragging) return;e.preventDefault();const clientX=e.touches?e.touches[0].clientX:e.clientX;const pos=Math.min(Math.max(0,clientX-startX),max());handle.style.left=pos+'px';}
-  function end(){if(!dragging) return;const pos=parseInt(handle.style.left||0,10);dragging=false;document.removeEventListener('mousemove',move);document.removeEventListener('touchmove',move);if(pos>=max()*0.9){handle.style.left=max()+'px';setTimeout(()=>{handle.style.left='0';},300);if(confirmOverlay) confirmOverlay.style.display='flex';}else{handle.style.left='0';}}
-  handle.addEventListener('mousedown',e=>{dragging=true;startX=(e.touches?e.touches[0].clientX:e.clientX)-handle.offsetLeft;document.addEventListener('mousemove',move);document.addEventListener('mouseup',end,{once:true});});
-  handle.addEventListener('touchstart',e=>{dragging=true;startX=e.touches[0].clientX-handle.offsetLeft;document.addEventListener('touchmove',move,{passive:false});document.addEventListener('touchend',end,{once:true});});
-}
-
-function resetSlider(){
-  const handle=document.querySelector('#premium-slider .slide-handle');
-  if(handle) handle.style.left='0';
-}
 </script>
 </body>
 </html>
