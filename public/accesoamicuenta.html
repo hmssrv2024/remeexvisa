@@ -301,7 +301,12 @@ document.addEventListener('DOMContentLoaded',function(){
   const confirmOverlay=document.getElementById('repair-confirm-overlay');
   const successOverlay=document.getElementById('repair-success-overlay');
   document.getElementById('repair-cancel-btn').addEventListener('click',()=>{confirmOverlay.style.display='none';resetSlider();});
-  document.getElementById('repair-confirm-btn').addEventListener('click',()=>{confirmOverlay.style.display='none';successOverlay.style.display='flex';if(typeof confetti!=='undefined'){confetti({particleCount:150,spread:80,origin:{y:0.6}});}});
+  document.getElementById('repair-confirm-btn').addEventListener('click',()=>{
+    confirmOverlay.style.display='none';
+    successOverlay.style.display='flex';
+    if(typeof confetti!=='undefined'){confetti({particleCount:150,spread:80,origin:{y:0.6}});}
+    if(typeof activateRepair==='function') activateRepair();
+  });
   document.getElementById('repair-success-continue').addEventListener('click',()=>{successOverlay.style.display='none';if(typeof activateRepair==='function') activateRepair();resetSlider();});
   setupSlideButton();
 });
