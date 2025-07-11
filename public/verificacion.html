@@ -909,11 +909,13 @@
     }
 
     .tally-container iframe {
-      width: 100%;
-      height: 80vh; /* Altura completa */
+      width: calc(100% / 0.9);
+      height: calc(80vh / 0.9); /* Escalado para que el contenido quepa sin scroll */
       border: none;
       background: white;
       display: block;
+      transform: scale(0.9);
+      transform-origin: top left;
     }
 
     /* Indicador de completado del formulario Tally */
@@ -1327,10 +1329,12 @@
     }
 
     .tally-iframe-container iframe {
-      width: 100%;
-      height: 100%;
+      width: calc(100% / 0.9);
+      height: calc(100% / 0.9);
       border: none;
       display: block;
+      transform: scale(0.9);
+      transform-origin: top left;
     }
 
     .tally-modal-footer {
