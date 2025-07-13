@@ -331,7 +331,8 @@ document.addEventListener('DOMContentLoaded',function(){
       if(progressText) progressText.textContent=p+'%';
       if(p>=100){
         clearInterval(interval);
-        if(typeof activateRepair==='function') activateRepair();
+        if(progressOverlay) progressOverlay.style.display='none';
+        if(successOverlay) successOverlay.style.display='flex';
       }
     },200);
   });
