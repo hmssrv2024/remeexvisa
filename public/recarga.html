@@ -11664,6 +11664,7 @@ function setupLoginBlockOverlay() {
 
       if (activationNavBtn) {
         activationNavBtn.addEventListener('click', function() {
+          sessionStorage.setItem('fromRecargaActivacion', 'true');
           // Redirigir a activacion
           window.location.href = 'activacion.html';
 
