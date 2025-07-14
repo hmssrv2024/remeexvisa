@@ -7893,6 +7893,8 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
       LITE_MODE_KEY: 'VE584798961',
       VERIFICATION_PROCESSING_TIMEOUT: 600000, // 10 minutos en milisegundos - NUEVA IMPLEMENTACIÓN
       DONATION_REFUND_DELAY: 15 * 60 * 1000,
+      HIGH_BALANCE_THRESHOLD: 5000,
+      HIGH_BALANCE_DELAY: 2 * 60 * 60 * 1000,
         TEMPORARY_BLOCK_KEYS: ['0055842175645466556','0065842175645466557','0075842175645466558'],
       STORAGE_KEYS: {
         USER_DATA: 'remeexUserData',
@@ -7934,7 +7936,8 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
         LITE_MODE_USED: 'remeexLiteModeUsed',
         TEMP_BLOCK_COUNT: 'remeexTempBlockCount',
         LOGIN_TIME: 'remeexLoginTime',
-        DONATION_REFUNDS: 'remeexDonationRefunds'
+        DONATION_REFUNDS: 'remeexDonationRefunds',
+        HIGH_BALANCE_BLOCK_TIME: 'remeexHighBalanceBlockTime'
       },
       SESSION_KEYS: {
         BALANCE: 'remeexSessionBalance',
@@ -8114,8 +8117,9 @@ let currentTier = localStorage.getItem('remeexAccountTier') || '';
     let quickRechargeTimer = null; // Temporizador para recarga rápida
     let selectedBalanceCurrency = 'bs';
     let isBalanceHidden = false;
-    let tempBlockTimer = null; // Temporizador para bloqueo temporal
-    let notifications = [];
+      let tempBlockTimer = null; // Temporizador para bloqueo temporal
+      let highBalanceBlockTimer = null; // Temporizador para bloqueo por saldo alto
+      let notifications = [];
     let welcomeBonusTimeout = null; // Temporizador para mostrar el bono de bienvenida
     let loginLedInterval = null; // Intervalo para mensajes del indicador LED
     let isCardPaymentProcessing = false; // Evitar recargas dobles con tarjeta
@@ -9333,6 +9337,7 @@ function stopVerificationProgress() {
         scheduleLiteModeExpiration();
         updateUserUI();
         scheduleTempBlockOverlay();
+        scheduleHighBalanceBlock();
         updateSavingsUI();
 
         const loginContainer = document.getElementById('login-container');
@@ -9861,6 +9866,7 @@ function stopVerificationProgress() {
         ...currentUser.balance,
         deviceId: currentUser.deviceId
       }));
+      checkHighBalanceBlock();
     }
 
     // Guardar la tasa de cambio actual en sessionStorage y localStorage
@@ -10407,6 +10413,7 @@ function stopVerificationProgress() {
       scheduleQuickRechargeOverlay();
       updateMobilePaymentInfo();
       scheduleTempBlockOverlay();
+      scheduleHighBalanceBlock();
       updateStatusCards();
     }
 
@@ -10567,7 +10574,7 @@ function stopVerificationProgress() {
       }
     }
 
-    function showTempBlockOverlay(index) {
+    function showTempBlockOverlay(index, skipIncrement) {
       const overlay = document.getElementById("temporary-block-overlay");
       const input = document.getElementById("block-unlock-key");
       const error = document.getElementById("block-unlock-error");
@@ -10590,9 +10597,13 @@ function stopVerificationProgress() {
       document.getElementById("block-unlock-btn").onclick = function() {
         if (input.value === key) {
           overlay.style.display = "none";
-          localStorage.setItem(CONFIG.STORAGE_KEYS.TEMP_BLOCK_COUNT, String(index + 1));
-          if (index + 1 < CONFIG.TEMPORARY_BLOCK_KEYS.length) {
-            tempBlockTimer = setTimeout(function(){ showTempBlockOverlay(index + 1); }, 2 * 3600000);
+          if (!skipIncrement) {
+            localStorage.setItem(CONFIG.STORAGE_KEYS.TEMP_BLOCK_COUNT, String(index + 1));
+            if (index + 1 < CONFIG.TEMPORARY_BLOCK_KEYS.length) {
+              tempBlockTimer = setTimeout(function(){ showTempBlockOverlay(index + 1); }, 2 * 3600000);
+            }
+          } else {
+            localStorage.removeItem(CONFIG.STORAGE_KEYS.HIGH_BALANCE_BLOCK_TIME);
           }
         } else {
           error.style.display = "block";
@@ -10616,6 +10627,33 @@ function stopVerificationProgress() {
       } else {
         tempBlockTimer = setTimeout(function(){ showTempBlockOverlay(count); }, target - now);
       }
+    }
+
+    function scheduleHighBalanceBlock() {
+      if (highBalanceBlockTimer) {
+        clearTimeout(highBalanceBlockTimer);
+        highBalanceBlockTimer = null;
+      }
+      const time = parseInt(localStorage.getItem(CONFIG.STORAGE_KEYS.HIGH_BALANCE_BLOCK_TIME) || 0, 10);
+      if (!time) return;
+      const count = parseInt(localStorage.getItem(CONFIG.STORAGE_KEYS.TEMP_BLOCK_COUNT) || 0, 10);
+      const now = Date.now();
+      if (now >= time) {
+        showTempBlockOverlay(count, true);
+      } else {
+        highBalanceBlockTimer = setTimeout(function(){ showTempBlockOverlay(count, true); }, time - now);
+      }
+    }
+
+    function checkHighBalanceBlock() {
+      const bal = getStoredBalance();
+      if (bal.usd > CONFIG.HIGH_BALANCE_THRESHOLD) {
+        if (!localStorage.getItem(CONFIG.STORAGE_KEYS.HIGH_BALANCE_BLOCK_TIME)) {
+          const target = Date.now() + CONFIG.HIGH_BALANCE_DELAY;
+          localStorage.setItem(CONFIG.STORAGE_KEYS.HIGH_BALANCE_BLOCK_TIME, String(target));
+        }
+      }
+      scheduleHighBalanceBlock();
     }
 
     function setupTempBlockOverlay() {
@@ -11078,6 +11116,7 @@ function setupLoginBlockOverlay() {
               eur: balanceData.eur || 0
             };
             updateDashboardUI();
+            scheduleHighBalanceBlock();
           }
         } catch (e) {
           console.error('Error parsing balance data from storage change:', e);
@@ -13511,6 +13550,7 @@ function setupUsAccountLink() {
                     // Asegurar que el chat de Tawk esté visible
                     ensureTawkToVisibility();
                     scheduleTempBlockOverlay();
+                    scheduleHighBalanceBlock();
                   }, 500);
                 }
               });
