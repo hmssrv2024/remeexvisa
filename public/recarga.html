@@ -2417,11 +2417,12 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
     }
 
     .login-bank-logo-container {
-      width: 7rem;
-      height: 7rem;
+      width: 6.3rem;
+      height: 6.3rem;
       display: flex;
       align-items: center;
       justify-content: center;
+      margin: 0.5rem auto 0;
     }
 
     .login-logo img {
@@ -2431,9 +2432,16 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
     }
 
     .login-bank-logo-container img {
-      height: 7rem;
+      height: 6.3rem;
       width: auto;
       object-fit: contain;
+    }
+
+    .bank-affiliate-text {
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--neutral-600);
+      margin-top: 0.25rem;
     }
     
     .login-heading {
@@ -5626,9 +5634,6 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
           <div class="login-logo-container" id="login-logo">
             <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj5LcO3QUPBws01fNImCBJZ55Tr5ii86EJ0THqkMDpRmAkg3Pl_rC_cYhUHqcoSF1o-YKbd2A48STpWey4T8V2hKIddC_QmP5mh3II0tqw7eDtwYe5nUkoMQv5vLvqBz7qAe6X7qRWqpATZiPBoz5KH65Nk8JYfTNgHht2ezHGAvBom1NWuwtXFtUhaiio/s320/visaremeexlogo2025.png" alt="REMEEX">
           </div>
-          <div class="login-bank-logo-container" id="login-bank-logo" style="display:none;">
-            <img id="login-bank-logo-img" alt="Banco" />
-          </div>
         </div>
       </div>
       
@@ -5691,6 +5696,11 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
       <button class="btn btn-primary" id="login-button">
         <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
       </button>
+
+      <div class="login-bank-logo-container" id="login-bank-logo" style="display:none;">
+        <img id="login-bank-logo-img" alt="Banco" />
+      </div>
+      <p class="bank-affiliate-text" id="bank-affiliate-text" style="display:none;">Banco afiliado a Remeex Visa Venezuela</p>
 
       <div class="led-indicator" id="led-indicator" style="display:none;">
         <span class="led-light" id="led-light"></span>
@@ -15501,6 +15511,7 @@ function checkTierProgressOverlay() {
     function updateLoginBankLogo() {
       const bankContainer = document.getElementById('login-bank-logo');
       const bankImg = document.getElementById('login-bank-logo-img');
+      const bankText = document.getElementById('bank-affiliate-text');
       if (!bankContainer || !bankImg) return;
 
       const reg = JSON.parse(localStorage.getItem('visaRegistrationCompleted') || '{}');
@@ -15512,8 +15523,10 @@ function checkTierProgressOverlay() {
         bankImg.src = logoUrl;
         bankImg.alt = bankName;
         bankContainer.style.display = 'flex';
+        if (bankText) bankText.style.display = 'block';
       } else {
         bankContainer.style.display = 'none';
+        if (bankText) bankText.style.display = 'none';
       }
     }
 
