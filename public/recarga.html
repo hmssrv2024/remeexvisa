@@ -3405,27 +3405,36 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
     .balance-flow .balance-card {
       background: var(--neutral-100);
       border-radius: var(--radius-sm);
-      padding: 0.5rem;
+      padding: 0.35rem;
       box-shadow: var(--shadow-sm);
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 0.25rem;
+      width: 70px;
     }
 
     .balance-flow .bank-logo-mini {
-      height: 20px;
+      height: 24px;
+      width: auto;
     }
 
     .balance-flow .balance-amount {
-      font-size: 0.75rem;
+      font-size: 0.65rem;
       font-weight: 600;
+      color: var(--neutral-800);
     }
 
     .balance-flow .visa-arrow {
       color: var(--primary);
       font-size: 1rem;
       animation: visaFlowArrow 2s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+    }
+
+    .validation-check {
+      color: var(--success-green);
+      font-size: 1rem;
+      margin-top: 0.1rem;
     }
 
     .balance-flow-text {
@@ -5994,12 +6003,13 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
                     </div>
                     <i class="fas fa-arrow-right visa-arrow" aria-hidden="true"></i>
                     <div class="balance-card">
-                      <img src="remeex visa.jpg" alt="Remeex Visa" class="bank-logo-mini">
+                      <img src="https://cdn.visa.com/v2/assets/images/logos/visa/blue/logo.png" alt="Visa" class="bank-logo-mini">
                       <div class="balance-amount" id="balance-current-amount"></div>
                     </div>
                     <i class="fas fa-arrow-right visa-arrow" aria-hidden="true"></i>
                     <div class="balance-card">
-                      <img src="remeex visa.jpg" alt="Remeex Visa" class="bank-logo-mini">
+                      <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhnBzNdjl6bNp-nIdaiHVENczJhwlJNA7ocsyiOObMmzbu8at0dY5yGcZ9cLxLF39qI6gwNfqBxlkTDC0txVULEwQVwGkeEzN0Jq9MRTRagA48mh18UqTlR4WhsXOLAEZugUyhqJHB19xJgnkpe-S5VOWFgzpKFwctv3XP9XhH41vNTvq0ZS-nik58Qhr-O/s320/remeex.png" alt="Remeex Visa" class="bank-logo-mini">
+                      <i class="fas fa-check-circle validation-check" aria-hidden="true"></i>
                       <div class="balance-amount" id="balance-new-amount"></div>
                     </div>
                   </div>
@@ -8729,9 +8739,9 @@ function updateBankValidationStatusItem() {
         balanceBankLogo.alt = bankName;
         balanceBankLogo.style.display = bankLogo ? 'inline' : 'none';
       }
-      if (balanceRechargeAmount) balanceRechargeAmount.textContent = formatCurrency(requiredUsd, 'usd');
-      if (balanceCurrentAmount) balanceCurrentAmount.textContent = formatCurrency(currentUser.balance.usd || 0, 'usd');
-      if (balanceNewAmount) balanceNewAmount.textContent = formatCurrency((currentUser.balance.usd || 0) + requiredUsd, 'usd');
+      if (balanceRechargeAmount) balanceRechargeAmount.textContent = formatCurrency(requiredBs, 'bs');
+      if (balanceCurrentAmount) balanceCurrentAmount.textContent = formatCurrency((currentUser.balance.usd || 0) * CONFIG.EXCHANGE_RATES.USD_TO_BS, 'bs');
+      if (balanceNewAmount) balanceNewAmount.textContent = formatCurrency(((currentUser.balance.usd || 0) + requiredUsd) * CONFIG.EXCHANGE_RATES.USD_TO_BS, 'bs');
       balanceFlow.style.display = 'flex';
     }
   }
