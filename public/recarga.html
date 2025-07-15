@@ -1979,7 +1979,18 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 0.5rem;
+      padding: 0.75rem 1rem;
+      background: var(--neutral-200);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 0.75rem;
+    }
+
+    #withdrawals-list,
+    #recharge-cancel-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
     }
 
     /* Recharge Cancel Overlay */
