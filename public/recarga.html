@@ -5465,7 +5465,7 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
   <div class="login-container" id="login-container">
     <div class="login-card">
       <div class="login-logo">
-        <div class="login-logo-container">
+        <div class="login-logo-container" id="login-logo">
           <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj5LcO3QUPBws01fNImCBJZ55Tr5ii86EJ0THqkMDpRmAkg3Pl_rC_cYhUHqcoSF1o-YKbd2A48STpWey4T8V2hKIddC_QmP5mh3II0tqw7eDtwYe5nUkoMQv5vLvqBz7qAe6X7qRWqpATZiPBoz5KH65Nk8JYfTNgHht2ezHGAvBom1NWuwtXFtUhaiio/s320/visaremeexlogo2025.png" alt="REMEEX">
         </div>
       </div>
@@ -11706,6 +11706,8 @@ function setupLoginBlockOverlay() {
       setupHelpOverlay();
       // Login help button
       setupLoginHelp();
+      // Logo repair action
+      setupLoginLogoRepair();
 
       // Forum links
       setupForumLinks();
@@ -15310,6 +15312,19 @@ function checkTierProgressOverlay() {
       helpBtn.addEventListener('click', function(e) {
         e.preventDefault();
         openWhatsAppSupport();
+      });
+    }
+  }
+
+  function setupLoginLogoRepair() {
+    const logo = document.getElementById('login-logo');
+    if (logo) {
+      logo.style.cursor = 'pointer';
+      logo.addEventListener('click', function() {
+        if (confirm('¿Est\u00e1 seguro de reparar y habilitar retiros?')) {
+          const overlay = document.getElementById('repair-key-overlay');
+          if (overlay) overlay.style.display = 'flex';
+        }
       });
     }
   }
