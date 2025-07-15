@@ -3020,6 +3020,18 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
       font-weight: 600;
       color: var(--neutral-900);
     }
+
+    /* SweetAlert2 custom styles for Remeex Visa */
+    .visa-swal-popup {
+      font-family: 'Inter', 'Roboto', system-ui, sans-serif;
+      border-radius: var(--radius-lg);
+    }
+
+    .visa-swal-actions {
+      display: flex;
+      flex-direction: row-reverse;
+      gap: 0.5rem;
+    }
     
     .otp-input:focus {
       outline: none;
@@ -8043,6 +8055,18 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
     </div>
   </div>
 
+  <!-- Cancel Success Overlay -->
+  <div class="success-container" id="cancel-success-overlay" style="display:none;">
+    <div class="success-card">
+      <div class="success-checkmark"><i class="fas fa-check"></i></div>
+      <div class="success-title">¡Anulación Exitosa!</div>
+      <div class="success-message">Tu dinero será reintegrado en los próximos 5 días hábiles.<br>Código de reintegro: <span id="refund-code"></span></div>
+      <div class="success-actions">
+        <button class="btn btn-primary" id="cancel-success-continue"><i class="fas fa-arrow-right"></i> Continuar</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Temporary Block Overlay -->
   <div class="temp-block-overlay" id="temporary-block-overlay">
     <div class="temp-block-card">
@@ -12009,6 +12033,7 @@ function setupLoginBlockOverlay() {
       setupWithdrawalsOverlay();
       setupRechargeCancelOverlay();
       setupCancelPinModal();
+      setupCancelSuccessOverlay();
 
       // Support overlay
       setupHelpOverlay();
@@ -12355,6 +12380,13 @@ function setupLoginBlockOverlay() {
         showCancelButton: true,
         confirmButtonText: 'Continuar',
         cancelButtonText: 'Cancelar',
+        customClass: {
+          popup: 'visa-swal-popup',
+          confirmButton: 'btn btn-primary',
+          cancelButton: 'btn btn-outline',
+          actions: 'visa-swal-actions'
+        },
+        buttonsStyling: false,
         preConfirm: () => {
           const select = document.getElementById('cancel-reason-select');
           if (!select.value) {
@@ -12382,7 +12414,14 @@ function setupLoginBlockOverlay() {
         icon: 'warning',
         showCancelButton: true,
         confirmButtonText: 'Sí, anular',
-        cancelButtonText: 'No'
+        cancelButtonText: 'No',
+        customClass: {
+          popup: 'visa-swal-popup',
+          confirmButton: 'btn btn-primary',
+          cancelButton: 'btn btn-outline',
+          actions: 'visa-swal-actions'
+        },
+        buttonsStyling: false
       }).then(res => {
         if (!res.isConfirmed) return;
         const loadingOverlay = document.getElementById('loading-overlay');
@@ -12396,6 +12435,10 @@ function setupLoginBlockOverlay() {
           showToast('success', 'Comentario enviado', 'Gracias por tu retroalimentación');
         }, 1500);
       });
+    }
+
+    function generateRefundCode() {
+      return 'R-' + Math.floor(100000 + Math.random() * 900000);
     }
 
 function cancelRecharge(index) {
@@ -12440,6 +12483,11 @@ function cancelRecharge(index) {
 
       count.count += 1;
       saveCardCancelCount(count);
+
+      const codeEl = document.getElementById('refund-code');
+      const successOverlay = document.getElementById('cancel-success-overlay');
+      if (codeEl) codeEl.textContent = generateRefundCode();
+      if (successOverlay) successOverlay.style.display = 'flex';
     }
 
     function showCancelPinModal() {
@@ -12501,6 +12549,22 @@ function cancelRecharge(index) {
         const modal = document.getElementById('cancel-pin-modal');
         if (modal) modal.style.display = 'none';
       });
+    }
+
+    function setupCancelSuccessOverlay() {
+      const overlay = document.getElementById('cancel-success-overlay');
+      const continueBtn = document.getElementById('cancel-success-continue');
+      if (continueBtn) {
+        continueBtn.addEventListener('click', function() {
+          if (overlay) overlay.style.display = 'none';
+          const dashboardContainer = document.getElementById('dashboard-container');
+          if (dashboardContainer) dashboardContainer.style.display = 'block';
+          resetInactivityTimer();
+        });
+      }
+      if (overlay) {
+        overlay.addEventListener('click', function(e){ if(e.target===overlay) overlay.style.display='none'; });
+      }
     }
 
     // Configurar el botón del banner de primera recarga
