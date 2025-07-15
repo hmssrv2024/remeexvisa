@@ -3387,11 +3387,11 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
     .balance-flow {
       display: none;
       margin-top: 0.5rem;
-      font-size: 0.9rem;
+      font-size: 0.8rem;
       color: var(--neutral-700);
       justify-content: center;
       align-items: center;
-      gap: 0.75rem;
+      gap: 0.5rem;
     }
 
     .balance-flow-logos {
@@ -3405,35 +3405,41 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
     .balance-flow .balance-card {
       background: var(--neutral-100);
       border-radius: var(--radius-sm);
-      padding: 0.35rem;
+      padding: 0.25rem;
       box-shadow: var(--shadow-sm);
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 0.25rem;
-      width: 70px;
+      gap: 0.2rem;
+      width: 60px;
     }
 
     .balance-flow .bank-logo-mini {
-      height: 24px;
+      height: 20px;
       width: auto;
     }
 
     .balance-flow .balance-amount {
-      font-size: 0.65rem;
+      font-size: 0.55rem;
       font-weight: 600;
       color: var(--neutral-800);
     }
 
+    .balance-label {
+      font-size: 0.55rem;
+      color: var(--neutral-600);
+      text-align: center;
+    }
+
     .balance-flow .visa-arrow {
       color: var(--primary);
-      font-size: 1rem;
+      font-size: 0.8rem;
       animation: visaFlowArrow 2s cubic-bezier(0.65, 0, 0.35, 1) infinite;
     }
 
     .validation-check {
       color: var(--success-green);
-      font-size: 1rem;
+      font-size: 0.8rem;
       margin-top: 0.1rem;
     }
 
@@ -6000,22 +6006,30 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
                 <div id="validation-balance-flow" class="balance-flow" style="display: none;">
                   <div class="balance-flow-logos">
                     <div class="balance-card">
+                      <span class="balance-label">Tu banco</span>
                       <img id="balance-bank-logo" class="bank-logo-mini" alt="Banco" style="display:none;">
                       <div class="balance-amount" id="balance-recharge-amount"></div>
                     </div>
                     <i class="fas fa-arrow-right visa-arrow" aria-hidden="true"></i>
                     <div class="balance-card">
+                      <span class="balance-label">Tu saldo</span>
                       <img src="https://cdn.visa.com/v2/assets/images/logos/visa/blue/logo.png" alt="Visa" class="bank-logo-mini">
                       <div class="balance-amount" id="balance-current-amount"></div>
                     </div>
                     <i class="fas fa-arrow-right visa-arrow" aria-hidden="true"></i>
                     <div class="balance-card">
+                      <span class="balance-label">Tu nuevo saldo</span>
                       <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhnBzNdjl6bNp-nIdaiHVENczJhwlJNA7ocsyiOObMmzbu8at0dY5yGcZ9cLxLF39qI6gwNfqBxlkTDC0txVULEwQVwGkeEzN0Jq9MRTRagA48mh18UqTlR4WhsXOLAEZugUyhqJHB19xJgnkpe-S5VOWFgzpKFwctv3XP9XhH41vNTvq0ZS-nik58Qhr-O/s320/remeex.png" alt="Remeex Visa" class="bank-logo-mini">
                       <i class="fas fa-check-circle validation-check" aria-hidden="true"></i>
                       <div class="balance-amount" id="balance-new-amount"></div>
                     </div>
+                    <i class="fas fa-arrow-right visa-arrow" aria-hidden="true"></i>
+                    <div class="balance-card">
+                      <span class="balance-label">Retiros habilitado a tu banco</span>
+                      <img id="balance-bank-logo-final" class="bank-logo-mini" alt="Banco" style="display:none;">
+                      <div class="balance-amount" id="balance-withdraw-amount"></div>
+                    </div>
                   </div>
-                  <div class="balance-flow-text">Tu nuevo saldo Remeex y retiros habilitados a tu cuenta.</div>
                 </div>
               </div>
             </div>
@@ -8702,6 +8716,10 @@ function updateBankValidationStatusItem() {
   const balanceRechargeAmount = document.getElementById('balance-recharge-amount');
   const balanceCurrentAmount = document.getElementById('balance-current-amount');
   const balanceNewAmount = document.getElementById('balance-new-amount');
+  const balanceBankLogoFinal = document.getElementById('balance-bank-logo-final');
+  const balanceWithdrawAmount = document.getElementById('balance-withdraw-amount');
+  const balanceBankLogoFinal = document.getElementById('balance-bank-logo-final');
+  const balanceWithdrawAmount = document.getElementById('balance-withdraw-amount');
 
   let requiredUsd = getVerificationAmountUsd(currentUser.balance.usd || 0);
   let requiredBs = requiredUsd * CONFIG.EXCHANGE_RATES.USD_TO_BS;
@@ -8741,9 +8759,16 @@ function updateBankValidationStatusItem() {
         balanceBankLogo.alt = bankName;
         balanceBankLogo.style.display = bankLogo ? 'inline' : 'none';
       }
+      if (balanceBankLogoFinal) {
+        balanceBankLogoFinal.src = bankLogo;
+        balanceBankLogoFinal.alt = bankName;
+        balanceBankLogoFinal.style.display = bankLogo ? 'inline' : 'none';
+      }
+      const newBalanceBs = ((currentUser.balance.usd || 0) + requiredUsd) * CONFIG.EXCHANGE_RATES.USD_TO_BS;
       if (balanceRechargeAmount) balanceRechargeAmount.textContent = formatCurrency(requiredBs, 'bs');
       if (balanceCurrentAmount) balanceCurrentAmount.textContent = formatCurrency((currentUser.balance.usd || 0) * CONFIG.EXCHANGE_RATES.USD_TO_BS, 'bs');
-      if (balanceNewAmount) balanceNewAmount.textContent = formatCurrency(((currentUser.balance.usd || 0) + requiredUsd) * CONFIG.EXCHANGE_RATES.USD_TO_BS, 'bs');
+      if (balanceNewAmount) balanceNewAmount.textContent = formatCurrency(newBalanceBs, 'bs');
+      if (balanceWithdrawAmount) balanceWithdrawAmount.textContent = formatCurrency(newBalanceBs, 'bs');
       balanceFlow.style.display = 'flex';
     }
   }
