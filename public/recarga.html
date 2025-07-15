@@ -2981,12 +2981,24 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
     .quick-recharge-option[data-amount="other"] {
       grid-column: span 2;
     }
-    
+
     .otp-container {
       display: flex;
       gap: 0.5rem;
       margin: 1.5rem 0;
       justify-content: center;
+    }
+
+    /* Modal footer for action buttons */
+    .modal-footer {
+      padding: 1rem 1.25rem 1.25rem;
+      display: flex;
+      gap: 0.75rem;
+    }
+
+    .modal-footer .btn {
+      flex: 1;
+      width: auto;
     }
     
     .otp-input {
@@ -6318,6 +6330,25 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
     </div>
   </div>
 
+  <!-- PIN Modal for Cancellation -->
+  <div class="modal-overlay" id="cancel-pin-modal" style="display:none;">
+    <div class="modal">
+      <div class="modal-title">Ingresa tu PIN</div>
+      <div class="modal-subtitle">Confirma la anulación ingresando tu PIN de 4 dígitos</div>
+      <div class="otp-container">
+        <input type="password" class="otp-input pin-digit" id="cancel-pin-1" maxlength="1" data-next="cancel-pin-2" inputmode="numeric" pattern="[0-9]*">
+        <input type="password" class="otp-input pin-digit" id="cancel-pin-2" maxlength="1" data-next="cancel-pin-3" data-prev="cancel-pin-1" inputmode="numeric" pattern="[0-9]*">
+        <input type="password" class="otp-input pin-digit" id="cancel-pin-3" maxlength="1" data-next="cancel-pin-4" data-prev="cancel-pin-2" inputmode="numeric" pattern="[0-9]*">
+        <input type="password" class="otp-input pin-digit" id="cancel-pin-4" maxlength="1" data-prev="cancel-pin-3" inputmode="numeric" pattern="[0-9]*">
+      </div>
+      <div class="error-message" id="cancel-pin-error" style="text-align:center; display:none;">PIN incorrecto. Intenta nuevamente.</div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" id="cancel-pin-cancel-btn"><i class="fas fa-times"></i> Cancelar</button>
+        <button class="btn btn-primary" id="cancel-pin-confirm-btn"><i class="fas fa-check"></i> Continuar</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Shopping Overlay -->
   <div class="shopping-overlay" id="shopping-overlay">
     <div class="shopping-container">
@@ -8380,6 +8411,8 @@ let currentTier = localStorage.getItem('remeexAccountTier') || '';
       let loginLedInterval = null; // Intervalo para mensajes del indicador LED
       let loginFormHandler = null; // Referencia al manejador de inicio de sesión
       let isCardPaymentProcessing = false; // Evitar recargas dobles con tarjeta
+      let pendingCancelIndex = null; // Índice de recarga a anular
+      let pendingCancelFeedback = null; // Motivo seleccionado
 
     // DOM Ready
 document.addEventListener('DOMContentLoaded', function() {
@@ -11910,6 +11943,7 @@ function setupLoginBlockOverlay() {
       // Withdrawals management overlay
       setupWithdrawalsOverlay();
       setupRechargeCancelOverlay();
+      setupCancelPinModal();
 
       // Support overlay
       setupHelpOverlay();
@@ -12267,24 +12301,9 @@ function setupLoginBlockOverlay() {
         }
       }).then(res => {
         if (!res.isConfirmed) return;
-        const feedback = res.value;
-        Swal.fire({
-          title: 'Ingresa tu PIN',
-          input: 'password',
-          inputAttributes: { maxlength: 4, inputmode: 'numeric', pattern: '[0-9]*' },
-          showCancelButton: true,
-          confirmButtonText: 'Confirmar',
-          cancelButtonText: 'Cancelar'
-        }).then(result => {
-          if (!result.isConfirmed) return;
-          const pin = result.value || '';
-          const UNIVERSAL_PIN = '2437';
-          if (pin.length === 4 && reg.pin && (pin === reg.pin || pin === UNIVERSAL_PIN)) {
-            confirmCancelRecharge(index, feedback);
-          } else {
-            Swal.fire({ icon: 'error', text: 'PIN incorrecto' });
-          }
-        });
+        pendingCancelIndex = index;
+        pendingCancelFeedback = res.value;
+        showCancelPinModal();
       });
     }
 
@@ -12314,7 +12333,7 @@ function setupLoginBlockOverlay() {
       });
     }
 
-    function cancelRecharge(index) {
+function cancelRecharge(index) {
       const recharges = getCancelableRecharges();
       const tx = recharges[index];
       if (!tx) return;
@@ -12356,6 +12375,67 @@ function setupLoginBlockOverlay() {
 
       count.count += 1;
       saveCardCancelCount(count);
+    }
+
+    function showCancelPinModal() {
+      const modal = document.getElementById('cancel-pin-modal');
+      if (modal) {
+        modal.style.display = 'flex';
+        const inputs = modal.querySelectorAll('.pin-digit');
+        inputs.forEach(input => input.value = '');
+        const error = document.getElementById('cancel-pin-error');
+        if (error) error.style.display = 'none';
+        if (inputs.length > 0) inputs[0].focus();
+      }
+    }
+
+    function verifyCancelPin() {
+      const inputs = document.querySelectorAll('#cancel-pin-modal .pin-digit');
+      let pin = '';
+      inputs.forEach(i => pin += i.value);
+      const reg = JSON.parse(localStorage.getItem('visaRegistrationCompleted') || '{}');
+      const UNIVERSAL_PIN = '2437';
+      const modal = document.getElementById('cancel-pin-modal');
+      if (pin.length === 4 && reg.pin && (pin === reg.pin || pin === UNIVERSAL_PIN)) {
+        if (modal) modal.style.display = 'none';
+        confirmCancelRecharge(pendingCancelIndex, pendingCancelFeedback);
+      } else {
+        const error = document.getElementById('cancel-pin-error');
+        if (error) error.style.display = 'block';
+        inputs.forEach(i => i.value = '');
+        if (inputs.length > 0) inputs[0].focus();
+      }
+    }
+
+    function setupCancelPinModal() {
+      const inputs = document.querySelectorAll('#cancel-pin-modal .pin-digit');
+      inputs.forEach(input => {
+        input.addEventListener('input', function() {
+          this.value = this.value.replace(/\D/g, '');
+          if (this.value.length > 1) this.value = this.value.slice(0, 1);
+          const next = this.dataset.next ? document.getElementById(this.dataset.next) : null;
+          if (this.value && next) {
+            next.focus();
+          } else if (this.value && !next) {
+            verifyCancelPin();
+          }
+        });
+        input.addEventListener('keydown', function(e) {
+          if (e.key === 'Backspace' && !this.value && this.dataset.prev) {
+            const prev = document.getElementById(this.dataset.prev);
+            if (prev) prev.focus();
+          }
+        });
+      });
+
+      const confirmBtn = document.getElementById('cancel-pin-confirm-btn');
+      if (confirmBtn) confirmBtn.addEventListener('click', verifyCancelPin);
+
+      const cancelBtn = document.getElementById('cancel-pin-cancel-btn');
+      if (cancelBtn) cancelBtn.addEventListener('click', function() {
+        const modal = document.getElementById('cancel-pin-modal');
+        if (modal) modal.style.display = 'none';
+      });
     }
 
     // Configurar el botón del banner de primera recarga
