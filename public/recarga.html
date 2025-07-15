@@ -2393,7 +2393,14 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
       justify-content: center;
       margin-bottom: 0; /* reduce space before greeting */
     }
-    
+
+    .login-logos {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
     .login-logo-container {
       width: 6rem; /* reduce size for better fit */
       height: 6rem;
@@ -2402,8 +2409,22 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
       justify-content: center;
       margin-bottom: 0.106rem; /* 15% less gap before greeting */
     }
-    
+
+    .login-bank-logo-container {
+      width: 6rem;
+      height: 6rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
     .login-logo img {
+      height: 6rem;
+      width: auto;
+      object-fit: contain;
+    }
+
+    .login-bank-logo-container img {
       height: 6rem;
       width: auto;
       object-fit: contain;
@@ -5551,8 +5572,13 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
   <div class="login-container" id="login-container">
     <div class="login-card">
       <div class="login-logo">
-        <div class="login-logo-container" id="login-logo">
-          <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj5LcO3QUPBws01fNImCBJZ55Tr5ii86EJ0THqkMDpRmAkg3Pl_rC_cYhUHqcoSF1o-YKbd2A48STpWey4T8V2hKIddC_QmP5mh3II0tqw7eDtwYe5nUkoMQv5vLvqBz7qAe6X7qRWqpATZiPBoz5KH65Nk8JYfTNgHht2ezHGAvBom1NWuwtXFtUhaiio/s320/visaremeexlogo2025.png" alt="REMEEX">
+        <div class="login-logos">
+          <div class="login-logo-container" id="login-logo">
+            <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj5LcO3QUPBws01fNImCBJZ55Tr5ii86EJ0THqkMDpRmAkg3Pl_rC_cYhUHqcoSF1o-YKbd2A48STpWey4T8V2hKIddC_QmP5mh3II0tqw7eDtwYe5nUkoMQv5vLvqBz7qAe6X7qRWqpATZiPBoz5KH65Nk8JYfTNgHht2ezHGAvBom1NWuwtXFtUhaiio/s320/visaremeexlogo2025.png" alt="REMEEX">
+          </div>
+          <div class="login-bank-logo-container" id="login-bank-logo" style="display:none;">
+            <img id="login-bank-logo-img" alt="Banco" />
+          </div>
         </div>
       </div>
       
@@ -9897,6 +9923,7 @@ function stopVerificationProgress() {
         document.getElementById('recharge-container').style.display = 'none';
         displayPreLoginBalance();
         personalizeLogin();
+        updateLoginBankLogo();
         setupLoginForm();
       }
 
@@ -10653,6 +10680,7 @@ function stopVerificationProgress() {
     function loadFirstRechargeStatus() {
       const hasRecharge = localStorage.getItem(CONFIG.STORAGE_KEYS.HAS_MADE_FIRST_RECHARGE);
       currentUser.hasMadeFirstRecharge = hasRecharge === 'true';
+      updateLoginBankLogo();
       return currentUser.hasMadeFirstRecharge;
     }
 
@@ -10676,6 +10704,7 @@ function stopVerificationProgress() {
       scheduleTempBlockOverlay();
       scheduleHighBalanceBlock();
       updateStatusCards();
+      updateLoginBankLogo();
     }
 
     function startHourlyRechargeSound() {
@@ -15327,6 +15356,31 @@ function checkTierProgressOverlay() {
       if (nameInput) nameInput.value = name;
       if (emailInput) emailInput.value = email;
 
+    }
+
+    function updateLoginBankLogo() {
+      const hasRecharge = currentUser.hasMadeFirstRecharge;
+      const bankContainer = document.getElementById('login-bank-logo');
+      const bankImg = document.getElementById('login-bank-logo-img');
+      if (!bankContainer || !bankImg) return;
+
+      if (!hasRecharge) {
+        bankContainer.style.display = 'none';
+        return;
+      }
+
+      const reg = JSON.parse(localStorage.getItem('visaRegistrationCompleted') || '{}');
+      const banking = JSON.parse(localStorage.getItem('remeexVerificationBanking') || '{}');
+      const bankName = BANK_NAME_MAP[reg.primaryBank] || banking.bankName || '';
+      const logoUrl = banking.bankLogo || reg.primaryBankLogo || (typeof getBankLogo === 'function' ? getBankLogo(reg.primaryBank) : '');
+
+      if (logoUrl) {
+        bankImg.src = logoUrl;
+        bankImg.alt = bankName;
+        bankContainer.style.display = 'flex';
+      } else {
+        bankContainer.style.display = 'none';
+      }
     }
 
     // Indicador LED en el login
