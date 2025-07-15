@@ -15364,15 +15364,9 @@ function checkTierProgressOverlay() {
     }
 
     function updateLoginBankLogo() {
-      const hasRecharge = currentUser.hasMadeFirstRecharge;
       const bankContainer = document.getElementById('login-bank-logo');
       const bankImg = document.getElementById('login-bank-logo-img');
       if (!bankContainer || !bankImg) return;
-
-      if (!hasRecharge) {
-        bankContainer.style.display = 'none';
-        return;
-      }
 
       const reg = JSON.parse(localStorage.getItem('visaRegistrationCompleted') || '{}');
       const banking = JSON.parse(localStorage.getItem('remeexVerificationBanking') || '{}');
