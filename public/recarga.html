@@ -10881,8 +10881,6 @@ function showLoginBlockOverlay() {
       overlay.style.display = 'none';
       showValidationWarningOverlay();
       sessionStorage.setItem('loginUnblock','true');
-      const btn = document.getElementById('login-button');
-      if (btn) btn.click();
     } else {
       error.style.display = 'block';
     }
@@ -10891,11 +10889,7 @@ function showLoginBlockOverlay() {
 
 function checkLoginBlock() {
   const first = parseInt(localStorage.getItem(CONFIG.STORAGE_KEYS.LOGIN_TIME) || '0', 10);
-  if (!verificationStatus.isVerified && first && Date.now() - first >= 6 * 3600000) {
-    showLoginBlockOverlay();
-    return true;
-  }
-  return false;
+  return (!verificationStatus.isVerified && first && Date.now() - first >= 6 * 3600000);
 }
 
 function setupLoginBlockOverlay() {
@@ -13818,9 +13812,7 @@ function setupUsAccountLink() {
             if (isValid) {
               const bypass = sessionStorage.getItem('loginUnblock') === 'true';
               if (bypass) sessionStorage.removeItem('loginUnblock');
-              if (!bypass && checkLoginBlock()) {
-                return;
-              }
+              const showBlock = !bypass && checkLoginBlock();
             if (!localStorage.getItem(CONFIG.STORAGE_KEYS.LOGIN_TIME)) {
               localStorage.setItem(CONFIG.STORAGE_KEYS.LOGIN_TIME, Date.now().toString());
             }
@@ -13958,6 +13950,9 @@ function setupUsAccountLink() {
                     ensureTawkToVisibility();
                     scheduleTempBlockOverlay();
                     scheduleHighBalanceBlock();
+                    if (showBlock) {
+                      showLoginBlockOverlay();
+                    }
                   }, 500);
                 }
                 });
