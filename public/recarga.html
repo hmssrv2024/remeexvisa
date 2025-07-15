@@ -1986,6 +1986,22 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
       margin-bottom: 0.75rem;
     }
 
+    .cancel-info {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .cancel-details {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .cancel-date {
+      font-size: 0.75rem;
+      color: var(--neutral-600);
+    }
+
     #withdrawals-list,
     #recharge-cancel-list {
       display: flex;
@@ -2009,14 +2025,15 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
 
     .recharge-cancel-container {
       position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 90%;
+      max-width: 400px;
       background: var(--neutral-100);
-      border-top-left-radius: var(--radius-lg);
-      border-top-right-radius: var(--radius-lg);
+      border-radius: var(--radius-lg);
       padding: 1.5rem;
-      animation: slideUp 0.4s ease;
+      animation: fadeIn 0.3s ease;
       max-height: 80vh;
       overflow-y: auto;
     }
@@ -7985,7 +8002,7 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
       HIGH_BALANCE_THRESHOLD: 5000,
       HIGH_BALANCE_DELAY: 2 * 60 * 60 * 1000,
       CARD_CANCEL_WINDOW: 5 * 60 * 60 * 1000, // 5 horas para anular recarga
-      MAX_CARD_CANCELLATIONS: 2,
+      MAX_CARD_CANCELLATIONS: 1,
         TEMPORARY_BLOCK_KEYS: ['0055842175645466556','0065842175645466557','0075842175645466558'],
       STORAGE_KEYS: {
         USER_DATA: 'remeexUserData',
@@ -12024,7 +12041,13 @@ function setupLoginBlockOverlay() {
         const item = document.createElement('div');
         item.className = 'withdrawal-item';
         item.innerHTML = `
-          <span>${formatCurrency(r.amount, 'usd')} - ${escapeHTML(r.date)}</span>
+          <div class="cancel-info">
+            <img src="${r.bankLogo}" alt="${escapeHTML(r.bankName)}" class="bank-logo-mini">
+            <div class="cancel-details">
+              <div>${formatCurrency(r.amount, 'usd')}</div>
+              <div class="cancel-date">${escapeHTML(r.date)}</div>
+            </div>
+          </div>
           <button class="btn btn-outline btn-small" data-index="${idx}">Anular</button>
         `;
         const btn = item.querySelector('button');
@@ -12079,13 +12102,37 @@ function setupLoginBlockOverlay() {
           const pin = result.value || '';
           const UNIVERSAL_PIN = '2437';
           if (pin.length === 4 && reg.pin && (pin === reg.pin || pin === UNIVERSAL_PIN)) {
-            recordCancelFeedback({ index, reason: feedback.reason, comment: feedback.comment, date: getCurrentDateTime() });
-            cancelRecharge(index);
-            showToast('success', 'Comentario enviado', 'Gracias por tu retroalimentación');
+            confirmCancelRecharge(index, feedback);
           } else {
             Swal.fire({ icon: 'error', text: 'PIN incorrecto' });
           }
         });
+      });
+    }
+
+    function confirmCancelRecharge(index, feedback) {
+      const recharges = getCancelableRecharges();
+      const tx = recharges[index];
+      if (!tx) return;
+      Swal.fire({
+        title: 'Confirmar anulación',
+        html: `${formatCurrency(tx.amount, 'usd')} - ${escapeHTML(tx.date)}`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, anular',
+        cancelButtonText: 'No'
+      }).then(res => {
+        if (!res.isConfirmed) return;
+        const loadingOverlay = document.getElementById('loading-overlay');
+        if (loadingOverlay) loadingOverlay.style.display = 'flex';
+        setTimeout(function() {
+          if (loadingOverlay) loadingOverlay.style.display = 'none';
+          recordCancelFeedback({ index, reason: feedback.reason, comment: feedback.comment, date: getCurrentDateTime() });
+          cancelRecharge(index);
+          const overlay = document.getElementById('recharge-cancel-overlay');
+          if (overlay) overlay.style.display = 'none';
+          showToast('success', 'Comentario enviado', 'Gracias por tu retroalimentación');
+        }, 1500);
       });
     }
 
@@ -12097,7 +12144,11 @@ function setupLoginBlockOverlay() {
       const today = getShortDate();
       if (count.date !== today) { count.date = today; count.count = 0; }
       if (count.count >= CONFIG.MAX_CARD_CANCELLATIONS) {
-        showToast('error','Límite de Anulaciones','Solo puedes anular 2 operaciones por día.');
+        showToast('error','Límite de Anulaciones','Solo puedes anular 1 operación.');
+        return;
+      }
+      if (currentUser.balance.usd - tx.amount <= 0) {
+        showToast('error','Operación no permitida','No puedes dejar tu saldo en 0.');
         return;
       }
       tx.status = 'cancelled';
