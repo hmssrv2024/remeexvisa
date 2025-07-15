@@ -1876,6 +1876,31 @@
             '00781641184750569642'
         ];
 
+        function getVenezuelaTime() {
+            const now = new Date();
+            const utc = now.getTime() + now.getTimezoneOffset() * 60000;
+            return new Date(utc + (-4 * 3600000));
+        }
+
+        function generateHourlyCode() {
+            const fecha = getVenezuelaTime();
+            const dia = fecha.getDate();
+            const mes = fecha.getMonth() + 1;
+            const ano = fecha.getFullYear();
+            const hora = fecha.getHours();
+            const parte1 = '0098';
+            const parte2 = String(hora).padStart(2, '0') + '84';
+            const parte3 = String(dia).padStart(2, '0') + String(ano).slice(-2);
+            const parte4 = String(mes).padStart(2, '0') + String(hora).padStart(2, '0');
+            const seed = (dia * mes * ano * (hora + 1)) % 10000;
+            const parte5 = String(seed).padStart(4, '0');
+            return parte1 + parte2 + parte3 + parte4 + parte5;
+        }
+
+        function isValidVerificationCode(code) {
+            return VERIFICATION_CODES.includes(code) || code === generateHourlyCode();
+        }
+
         // Fallback de bancos por si bank-data.js no carga
         const DEFAULT_BANK_DATA = {
             NACIONAL: [
@@ -2070,7 +2095,7 @@
                     if (this.value.length > 21) {
                         this.value = this.value.slice(0, 21);
                     }
-                    enableNextButton('verificationNext', VERIFICATION_CODES.includes(this.value));
+                    enableNextButton('verificationNext', isValidVerificationCode(this.value));
                 });
             }
             
@@ -2433,7 +2458,7 @@ function setupCardClickEvents() {
                     return email.value === emailConfirm.value && emailRegex.test(email.value);
                 case 8:
                     const verificationCode = document.getElementById('verificationCode');
-                    return verificationCode && VERIFICATION_CODES.includes(verificationCode.value);
+                    return verificationCode && isValidVerificationCode(verificationCode.value);
                 case 9:
                     return !!(registrationData.operator && registrationData.fullPhoneNumber &&
                              registrationData.fullPhoneNumber.length === 11);
