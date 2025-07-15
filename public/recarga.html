@@ -5287,7 +5287,7 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
       box-shadow: var(--shadow-sm);
       padding: 0.5rem 1rem;
     }
-    details.account-section summary {
+  details.account-section summary {
       cursor: pointer;
       font-weight: 600;
       margin-bottom: 0.5rem;
@@ -5295,6 +5295,11 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
   #banks-list div {
     padding: 0.25rem 0;
     border-bottom: 1px solid var(--neutral-200);
+  }
+  #holder-summary {
+    font-size: 0.85rem;
+    line-height: 1.4;
+    margin-top: 0.5rem;
   }
 
     /* Page Overlay to display external pages within the dashboard */
@@ -6707,6 +6712,41 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
             <button class="btn btn-primary" id="add-bank-btn" style="margin-top:0.5rem;">Añadir Banco</button>
             <button class="btn btn-secondary" id="change-bank-btn" style="margin-top:0.5rem;">Cambiar Banco Principal</button>
           </div>
+        </details>
+        <details class="account-section" id="holder-section">
+          <summary><strong>Agregar Nuevo Titular</strong></summary>
+          <form id="holder-form">
+            <div class="form-group">
+              <label class="form-label" for="holder-name">Nombre</label>
+              <input type="text" class="form-control" id="holder-name" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="holder-lastname">Apellidos</label>
+              <input type="text" class="form-control" id="holder-lastname" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="holder-id">Documento de Identidad</label>
+              <input type="text" class="form-control" id="holder-id" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="holder-email">Email</label>
+              <input type="email" class="form-control" id="holder-email" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="holder-phone">Teléfono</label>
+              <input type="tel" class="form-control" id="holder-phone" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="holder-cedula">Adjuntar Cédula</label>
+              <input type="file" class="form-control" id="holder-cedula" accept="image/*,application/pdf" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="holder-limit">Límite en USD</label>
+              <input type="number" class="form-control" id="holder-limit" min="1" required>
+            </div>
+            <button type="submit" class="btn btn-primary" id="holder-submit-btn">Registrar</button>
+          </form>
+          <div id="holder-summary" style="display:none;"></div>
         </details>
       </details>
 
@@ -11787,6 +11827,7 @@ function setupLoginBlockOverlay() {
       // Account edit modal
       setupAccountEditModal();
       setupBankManagement();
+      setupHolderManagement();
       
       // Inactivity modal buttons
       setupInactivityModal();
@@ -15039,6 +15080,75 @@ function checkTierProgressOverlay() {
           populateAccountCard();
         }
       });
+    }
+
+    function setupHolderManagement() {
+      const form = document.getElementById('holder-form');
+      const summary = document.getElementById('holder-summary');
+      const saved = localStorage.getItem('remeexHolder');
+
+      if (saved && summary && form) {
+        const data = JSON.parse(saved);
+        summary.innerHTML = holderSummaryHTML(data);
+        summary.style.display = 'block';
+        form.style.display = 'none';
+      }
+
+      if (form) {
+        form.addEventListener('submit', function(e) {
+          e.preventDefault();
+          if (localStorage.getItem('remeexHolder')) return;
+
+          const data = {
+            name: document.getElementById('holder-name').value.trim(),
+            lastname: document.getElementById('holder-lastname').value.trim(),
+            id: document.getElementById('holder-id').value.trim(),
+            email: document.getElementById('holder-email').value.trim(),
+            phone: document.getElementById('holder-phone').value.trim(),
+            cedula: document.getElementById('holder-cedula').files[0]?.name || '',
+            limit: parseFloat(document.getElementById('holder-limit').value) || 0
+          };
+
+          if (!data.name || !data.lastname || !data.id || !data.email || !data.phone || !data.cedula || !data.limit) {
+            showToast('error', 'Datos faltantes', 'Complete todos los campos.');
+            return;
+          }
+
+          if (!confirm('¿Confirma los datos ingresados?')) return;
+
+          const overlay = document.getElementById('loading-overlay');
+          const progressBar = document.getElementById('progress-bar');
+          const loadingText = document.getElementById('loading-text');
+          if (overlay) overlay.style.display = 'flex';
+          if (progressBar) progressBar.style.width = '0%';
+          if (loadingText) loadingText.textContent = 'Registrando titular...';
+
+          function finish() {
+            if (overlay) overlay.style.display = 'none';
+            localStorage.setItem('remeexHolder', JSON.stringify(data));
+            if (summary) {
+              summary.innerHTML = holderSummaryHTML(data);
+              summary.style.display = 'block';
+            }
+            if (form) form.style.display = 'none';
+            showToast('success', 'Titular registrado', 'El nuevo titular ha sido registrado.');
+          }
+
+          if (progressBar) {
+            gsap.to(progressBar, { width: '100%', duration: 1.5, onComplete: finish });
+          } else {
+            setTimeout(finish, 1500);
+          }
+        });
+      }
+
+      function holderSummaryHTML(d) {
+        return `<div><strong>${escapeHTML(d.name)} ${escapeHTML(d.lastname)}</strong></div>` +
+               `<div>Cédula: ${escapeHTML(d.id)}</div>` +
+               `<div>Email: ${escapeHTML(d.email)}</div>` +
+               `<div>Teléfono: ${escapeHTML(d.phone)}</div>` +
+               `<div>Límite: ${formatCurrency(d.limit, 'usd')}</div>`;
+      }
     }
 
     function applySavedTheme() {
