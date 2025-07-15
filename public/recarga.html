@@ -10,7 +10,7 @@
       const fromRegistro = sessionStorage.getItem('fromRegistro') === 'true';
       const isRegistered = !!localStorage.getItem('visaRegistrationCompleted');
       if (referrerPart !== 'registro' && !fromRegistro && !isRegistered) {
-        window.location.replace('registro');
+        window.location.replace('registro.html');
       } else {
         sessionStorage.removeItem('fromRegistro');
       }

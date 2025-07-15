@@ -3699,7 +3699,7 @@
 
     // Redirige al panel principal y cierra la ventana si es un popup
     function redirectToDashboard() {
-      const targetUrl = 'recarga';
+        const targetUrl = 'recarga.html';
       if (window.opener && !window.opener.closed) {
         window.opener.location.href = targetUrl;
         window.close();
