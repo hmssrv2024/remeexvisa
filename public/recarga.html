@@ -3401,7 +3401,10 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
       margin-bottom: 0.25rem;
     }
 
-    .balance-card {
+    /* Solo las tarjetas que aparecen dentro del flujo de validación
+       necesitan la distribución centrada en columna. Ajustamos el
+       selector para no afectar la tarjeta principal de saldo */
+    .balance-flow .balance-card {
       display: flex;
       flex-direction: column;
       align-items: center;
