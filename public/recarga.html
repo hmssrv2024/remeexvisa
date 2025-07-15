@@ -7871,9 +7871,9 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
   <!-- High Balance Validation Overlay -->
   <div class="modal-overlay" id="high-balance-overlay" style="display:none;">
     <div class="modal">
-      <div class="modal-title">Monto de Validación Actualizado</div>
+      <div class="modal-title">Aumento de Saldo Detectado</div>
       <div class="modal-subtitle">
-        Has superado los $3,000 de saldo. Según
+        Has superado los $3,000 de saldo. Aumentar tu saldo de forma súbita siendo una cuenta nueva implica que el monto de validación es mayor, porque el saldo es considerablemente mayor. El tiempo de espera de validación se reduce, el proceso será más expedito y minucioso y puede levantar alertas por posibles fraudes. Según
         <a href="estatus" target="_blank">nuestros niveles</a>, el monto para validar tu cuenta será
         <span id="high-validation-usd">$0.00</span>
         (<span id="high-validation-bs">Bs 0,00</span>).
@@ -10991,6 +10991,8 @@ function stopVerificationProgress() {
           const bs = usd * CONFIG.EXCHANGE_RATES.USD_TO_BS;
           const eur = usd * CONFIG.EXCHANGE_RATES.USD_TO_EUR;
 
+          maybeShowHighBalanceAttemptOverlay(usd);
+
           overlay.style.display = 'none';
           processSavedCardPayment({ usd, bs, eur });
         });
@@ -12657,6 +12659,8 @@ function cancelRecharge(index) {
             resetInactivityTimer();
             return;
           }
+
+          maybeShowHighBalanceAttemptOverlay(selectedAmount.usd);
 
           
           // Verificar si se ha alcanzado el límite de recargas con tarjeta
@@ -14924,6 +14928,23 @@ function setupUsAccountLink() {
       }
     }
 
+    function maybeShowHighBalanceAttemptOverlay(amountUsd) {
+      const overlay = document.getElementById('high-balance-overlay');
+      if (!overlay) return;
+      const shown = sessionStorage.getItem('highBalanceShown') === 'true';
+      const newBalance = (currentUser.balance.usd || 0) + amountUsd;
+      if (newBalance > 3000 && !shown) {
+        const amtUsd = getVerificationAmountUsd(newBalance);
+        const amtBs = amtUsd * CONFIG.EXCHANGE_RATES.USD_TO_BS;
+        const usdEl = document.getElementById('high-validation-usd');
+        const bsEl = document.getElementById('high-validation-bs');
+        if (usdEl) usdEl.textContent = formatCurrency(amtUsd, 'usd');
+        if (bsEl) bsEl.textContent = formatCurrency(amtBs, 'bs');
+        overlay.style.display = 'flex';
+        sessionStorage.setItem('highBalanceShown', 'true');
+      }
+    }
+
 function checkTierProgressOverlay() {
   const overlay = document.getElementById('tier-progress-overlay');
   if (!overlay) return;
@@ -16554,6 +16575,8 @@ function checkTierProgressOverlay() {
             resetInactivityTimer();
             return;
           }
+
+          maybeShowHighBalanceAttemptOverlay(selectedAmount.usd);
             
           // Si se está usando una tarjeta guardada
           const useSavedCard = document.getElementById('use-saved-card');
@@ -16669,6 +16692,8 @@ function checkTierProgressOverlay() {
             return;
           }
             if (isBelowMinimum(selectedAmount.usd)) return;
+
+          maybeShowHighBalanceAttemptOverlay(selectedAmount.usd);
           
           const referenceNumber = document.getElementById('reference-number');
           const referenceError = document.getElementById('reference-error');
