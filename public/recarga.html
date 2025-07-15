@@ -2025,15 +2025,14 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
 
     .recharge-cancel-container {
       position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 90%;
-      max-width: 400px;
+      bottom: 0;
+      left: 0;
+      right: 0;
       background: var(--neutral-100);
-      border-radius: var(--radius-lg);
+      border-top-left-radius: var(--radius-lg);
+      border-top-right-radius: var(--radius-lg);
       padding: 1.5rem;
-      animation: fadeIn 0.3s ease;
+      animation: slideUp 0.4s ease;
       max-height: 80vh;
       overflow-y: auto;
     }
@@ -2043,6 +2042,8 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
       justify-content: space-between;
       align-items: center;
       margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--neutral-300);
     }
 
     .recharge-cancel-title {
@@ -12120,7 +12121,7 @@ function setupLoginBlockOverlay() {
               <div class="cancel-date">${escapeHTML(r.date)}</div>
             </div>
           </div>
-          <button class="btn btn-outline btn-small" data-index="${idx}">Anular</button>
+          <button class="btn btn-primary btn-small" data-index="${idx}">Anular</button>
         `;
         const btn = item.querySelector('button');
         if (btn) {
