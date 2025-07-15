@@ -3437,17 +3437,17 @@
         ].filter(Boolean);
 
         loginButtons.forEach(btn => {
-          btn.setAttribute('href', isRegistered ? 'recarga' : '#');
+          btn.setAttribute('href', isRegistered ? 'recarga.html' : '#');
         });
         registerButtons.forEach(btn => {
-          btn.setAttribute('href', isRegistered ? 'recarga' : '#');
+          btn.setAttribute('href', isRegistered ? 'recarga.html' : '#');
         });
 
         loginButtons.forEach(btn => {
           btn.addEventListener('click', e => {
             e.preventDefault();
             if (isRegistered) {
-              window.location.href = 'recarga';
+              window.location.href = 'recarga.html';
             } else {
               openTallyForm('login_button');
             }
@@ -3458,7 +3458,7 @@
           btn.addEventListener('click', e => {
             e.preventDefault();
             if (isRegistered) {
-              window.location.href = 'recarga';
+              window.location.href = 'recarga.html';
             } else {
               openTallyForm('register_button');
             }

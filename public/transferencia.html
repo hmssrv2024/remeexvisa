@@ -9,7 +9,7 @@
         : '';
       const fromRecarga = sessionStorage.getItem('fromRecarga') === 'true';
       if (referrerPart !== 'recarga' && !fromRecarga) {
-        window.location.replace('recarga');
+        window.location.replace('recarga.html');
       } else {
         sessionStorage.removeItem('fromRecarga');
       }
