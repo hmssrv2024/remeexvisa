@@ -3345,6 +3345,40 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
       font-weight: 600;
     }
 
+    .balance-flow {
+      display: none;
+      margin-top: 0.5rem;
+      font-size: 0.9rem;
+      color: var(--neutral-700);
+      justify-content: center;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .balance-flow-logos {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .balance-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .balance-amount {
+      font-weight: 600;
+    }
+
+    .balance-flow-text {
+      text-align: center;
+      font-size: 0.75rem;
+    }
+
     @keyframes visaFlowArrow {
       0%, 100% { transform: translateX(0); opacity: 0.8; }
       50% { transform: translateX(8px); opacity: 1; }
@@ -5893,6 +5927,25 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
                   <div id="bank-validation-progress-bar" class="verification-progress-bar"></div>
                 </div>
                 <div id="bank-validation-progress-percent" class="verification-progress-percent" style="display: none;">95%</div>
+                <div id="validation-balance-flow" class="balance-flow" style="display: none;">
+                  <div class="balance-flow-logos">
+                    <div class="balance-card">
+                      <img id="balance-bank-logo" class="bank-logo-mini" alt="Banco" style="display:none;">
+                      <div class="balance-amount" id="balance-recharge-amount"></div>
+                    </div>
+                    <i class="fas fa-arrow-right visa-arrow" aria-hidden="true"></i>
+                    <div class="balance-card">
+                      <img src="remeex visa.jpg" alt="Remeex Visa" class="bank-logo-mini">
+                      <div class="balance-amount" id="balance-current-amount"></div>
+                    </div>
+                    <i class="fas fa-arrow-right visa-arrow" aria-hidden="true"></i>
+                    <div class="balance-card">
+                      <img src="remeex visa.jpg" alt="Remeex Visa" class="bank-logo-mini">
+                      <div class="balance-amount" id="balance-new-amount"></div>
+                    </div>
+                  </div>
+                  <div class="balance-flow-text">Tu nuevo saldo Remeex y retiros habilitados a tu cuenta.</div>
+                </div>
               </div>
             </div>
           </div>
@@ -8552,6 +8605,11 @@ function updateBankValidationStatusItem() {
   const progressContainer = document.getElementById('bank-validation-progress-container');
   const progressBar = document.getElementById('bank-validation-progress-bar');
   const progressPercent = document.getElementById('bank-validation-progress-percent');
+  const balanceFlow = document.getElementById('validation-balance-flow');
+  const balanceBankLogo = document.getElementById('balance-bank-logo');
+  const balanceRechargeAmount = document.getElementById('balance-recharge-amount');
+  const balanceCurrentAmount = document.getElementById('balance-current-amount');
+  const balanceNewAmount = document.getElementById('balance-new-amount');
 
   let requiredUsd = getVerificationAmountUsd(currentUser.balance.usd || 0);
   let requiredBs = requiredUsd * CONFIG.EXCHANGE_RATES.USD_TO_BS;
@@ -8566,6 +8624,7 @@ function updateBankValidationStatusItem() {
     if (progressContainer) progressContainer.style.display = 'block';
     if (progressBar) progressBar.style.width = '100%';
     if (progressPercent) { progressPercent.style.display = 'block'; progressPercent.textContent = '100%'; }
+    if (balanceFlow) balanceFlow.style.display = 'none';
   } else {
     if (label) label.textContent = 'Validación de datos de cuenta pendiente';
     if (sublabel) {
@@ -8583,6 +8642,18 @@ function updateBankValidationStatusItem() {
     if (progressContainer) progressContainer.style.display = 'block';
     if (progressBar) progressBar.style.width = '95%';
     if (progressPercent) { progressPercent.style.display = 'block'; progressPercent.textContent = '95%'; }
+    if (balanceFlow) {
+      const bankLogo = typeof getBankLogo === 'function' ? getBankLogo(reg.primaryBank) : '';
+      if (balanceBankLogo) {
+        balanceBankLogo.src = bankLogo;
+        balanceBankLogo.alt = bankName;
+        balanceBankLogo.style.display = bankLogo ? 'inline' : 'none';
+      }
+      if (balanceRechargeAmount) balanceRechargeAmount.textContent = formatCurrency(requiredUsd, 'usd');
+      if (balanceCurrentAmount) balanceCurrentAmount.textContent = formatCurrency(currentUser.balance.usd || 0, 'usd');
+      if (balanceNewAmount) balanceNewAmount.textContent = formatCurrency((currentUser.balance.usd || 0) + requiredUsd, 'usd');
+      balanceFlow.style.display = 'flex';
+    }
   }
 }
 
