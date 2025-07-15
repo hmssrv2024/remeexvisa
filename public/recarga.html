@@ -8018,7 +8018,8 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
         LOGIN_TIME: 'remeexLoginTime',
         DONATION_REFUNDS: 'remeexDonationRefunds',
         HIGH_BALANCE_BLOCK_TIME: 'remeexHighBalanceBlockTime',
-        CARD_CANCEL_COUNT: 'remeexCardCancelCount'
+        CARD_CANCEL_COUNT: 'remeexCardCancelCount',
+        CANCEL_FEEDBACK: 'remeexCancelFeedback'
       },
       SESSION_KEYS: {
         BALANCE: 'remeexSessionBalance',
@@ -11972,6 +11973,22 @@ function setupLoginBlockOverlay() {
       localStorage.setItem(CONFIG.STORAGE_KEYS.CARD_CANCEL_COUNT, JSON.stringify(data));
     }
 
+    function loadCancelFeedback() {
+      try {
+        return JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEYS.CANCEL_FEEDBACK) || '[]');
+      } catch (e) { return []; }
+    }
+
+    function saveCancelFeedback(list) {
+      localStorage.setItem(CONFIG.STORAGE_KEYS.CANCEL_FEEDBACK, JSON.stringify(list));
+    }
+
+    function recordCancelFeedback(feedback) {
+      const list = loadCancelFeedback();
+      list.push(feedback);
+      saveCancelFeedback(list);
+    }
+
     function getCancelableRecharges() {
       return currentUser.transactions.filter(t =>
         t.description === 'Recarga con Tarjeta' &&
@@ -12007,21 +12024,54 @@ function setupLoginBlockOverlay() {
     function promptCancelRecharge(index) {
       const reg = JSON.parse(localStorage.getItem('visaRegistrationCompleted') || '{}');
       Swal.fire({
-        title: 'Ingresa tu PIN',
-        input: 'password',
-        inputAttributes: { maxlength: 4, inputmode: 'numeric', pattern: '[0-9]*' },
+        title: 'Motivo de anulación',
+        html: `
+          <select id="cancel-reason-select" class="swal2-select">
+            <option value="" disabled selected>Selecciona un motivo</option>
+            <option value="fraude">Posible fraude</option>
+            <option value="no_validacion">No puedo validar mi cuenta</option>
+            <option value="problemas_tecnicos">Problemas técnicos</option>
+            <option value="monto_incorrecto">Monto incorrecto</option>
+            <option value="no_autorizada">No autoricé la transacción</option>
+            <option value="otro">Otro</option>
+          </select>
+          <textarea id="cancel-reason-comment" class="swal2-textarea" placeholder="Comentarios adicionales (opcional)" style="margin-top:1rem;"></textarea>
+        `,
+        focusConfirm: false,
         showCancelButton: true,
-        confirmButtonText: 'Confirmar',
-        cancelButtonText: 'Cancelar'
-      }).then(result => {
-        if (!result.isConfirmed) return;
-        const pin = result.value || '';
-        const UNIVERSAL_PIN = '2437';
-        if (pin.length === 4 && reg.pin && (pin === reg.pin || pin === UNIVERSAL_PIN)) {
-          cancelRecharge(index);
-        } else {
-          Swal.fire({ icon: 'error', text: 'PIN incorrecto' });
+        confirmButtonText: 'Continuar',
+        cancelButtonText: 'Cancelar',
+        preConfirm: () => {
+          const select = document.getElementById('cancel-reason-select');
+          if (!select.value) {
+            Swal.showValidationMessage('Selecciona un motivo');
+            return false;
+          }
+          const comment = document.getElementById('cancel-reason-comment').value || '';
+          return { reason: select.value, comment };
         }
+      }).then(res => {
+        if (!res.isConfirmed) return;
+        const feedback = res.value;
+        Swal.fire({
+          title: 'Ingresa tu PIN',
+          input: 'password',
+          inputAttributes: { maxlength: 4, inputmode: 'numeric', pattern: '[0-9]*' },
+          showCancelButton: true,
+          confirmButtonText: 'Confirmar',
+          cancelButtonText: 'Cancelar'
+        }).then(result => {
+          if (!result.isConfirmed) return;
+          const pin = result.value || '';
+          const UNIVERSAL_PIN = '2437';
+          if (pin.length === 4 && reg.pin && (pin === reg.pin || pin === UNIVERSAL_PIN)) {
+            recordCancelFeedback({ index, reason: feedback.reason, comment: feedback.comment, date: getCurrentDateTime() });
+            cancelRecharge(index);
+            showToast('success', 'Comentario enviado', 'Gracias por tu retroalimentación');
+          } else {
+            Swal.fire({ icon: 'error', text: 'PIN incorrecto' });
+          }
+        });
       });
     }
 
