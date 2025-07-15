@@ -8846,7 +8846,9 @@ function startVerificationProgress() {
   verificationProgressInterval = setInterval(updateVerificationProgress, 15000);
   const progressAudio = document.getElementById('verificationProgressSound');
   if (progressAudio) {
+    progressAudio.pause();
     progressAudio.currentTime = 0;
+    progressAudio.load();
     const playPromise = progressAudio.play();
     if (playPromise !== undefined) {
       playPromise.catch(err => console.error('Audio playback failed:', err));
