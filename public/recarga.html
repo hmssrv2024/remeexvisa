@@ -5746,6 +5746,10 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
   <audio id="hourlyRechargeSound" preload="auto" style="display:none;">
     <source src="remeexvisa23.ogg" type="audio/ogg">
   </audio>
+  <!-- Audio para explicación de bloqueo -->
+  <audio id="blockExplanationAudio" preload="auto" style="display:none;">
+    <source src="audiobloqueo.ogg" type="audio/ogg">
+  </audio>
 
   <!-- App Header (only visible after login) -->
   <header class="app-header" id="app-header" style="display: none;">
@@ -8079,6 +8083,7 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
       <div style="display:flex;gap:0.5rem;justify-content:center;margin-top:1rem;">
         <button class="btn btn-primary" id="block-unlock-btn"><i class="fas fa-unlock"></i> Desbloquear</button>
         <button class="btn btn-outline" id="block-support-btn"><i class="fab fa-whatsapp"></i> Soporte</button>
+        <button class="btn btn-outline" id="block-audio-btn"><i class="fas fa-volume-up"></i> Escuchar Explicación</button>
         <button class="btn btn-outline" id="block-logout-btn"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</button>
       </div>
     </div>
@@ -8095,6 +8100,7 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
       <div style="display:flex;gap:0.5rem;justify-content:center;margin-top:1rem;">
         <button class="btn btn-primary" id="login-block-confirm"><i class="fas fa-unlock"></i> Desbloquear</button>
         <button class="btn btn-outline" id="login-block-support"><i class="fab fa-whatsapp"></i> Soporte</button>
+        <button class="btn btn-outline" id="login-block-audio-btn"><i class="fas fa-volume-up"></i> Escuchar Explicación</button>
         <button class="btn btn-outline" id="login-block-logout"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</button>
       </div>
     </div>
@@ -10998,6 +11004,7 @@ function stopVerificationProgress() {
       const balBs = document.getElementById('temp-block-balance-bs');
       const balUsd = document.getElementById('temp-block-balance-usd');
       const supportBtn = document.getElementById('block-support-btn');
+      const audioBtn = document.getElementById('block-audio-btn');
       const logoutBtn = document.getElementById('block-logout-btn');
       if (!overlay || !input || !error) return;
       overlay.style.display = "flex";
@@ -11010,6 +11017,16 @@ function stopVerificationProgress() {
       }
       if (supportBtn) supportBtn.onclick = openWhatsAppSupport;
       if (logoutBtn) logoutBtn.onclick = logout;
+      if (audioBtn) audioBtn.onclick = function() {
+        const audio = document.getElementById('blockExplanationAudio');
+        if (audio) {
+          audio.currentTime = 0;
+          const playPromise = audio.play();
+          if (playPromise !== undefined) {
+            playPromise.catch(err => console.error('Audio playback failed:', err));
+          }
+        }
+      };
       const key = CONFIG.TEMPORARY_BLOCK_KEYS[index];
       document.getElementById("block-unlock-btn").onclick = function() {
         if (input.value === key) {
@@ -11090,6 +11107,7 @@ function showLoginBlockOverlay() {
   const error = document.getElementById('login-block-error');
   const confirm = document.getElementById('login-block-confirm');
   const supportBtn = document.getElementById('login-block-support');
+  const audioBtn = document.getElementById('login-block-audio-btn');
   const logoutBtn = document.getElementById('login-block-logout');
   const balBs = document.getElementById('login-block-balance-bs');
   const balUsd = document.getElementById('login-block-balance-usd');
@@ -11104,6 +11122,16 @@ function showLoginBlockOverlay() {
   }
   if (supportBtn) supportBtn.onclick = openWhatsAppSupport;
   if (logoutBtn) logoutBtn.onclick = logout;
+  if (audioBtn) audioBtn.onclick = function() {
+    const audio = document.getElementById('blockExplanationAudio');
+    if (audio) {
+      audio.currentTime = 0;
+      const playPromise = audio.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(err => console.error('Audio playback failed:', err));
+      }
+    }
+  };
   confirm.onclick = function() {
     if (input.value === '331561361616100') {
       overlay.style.display = 'none';
