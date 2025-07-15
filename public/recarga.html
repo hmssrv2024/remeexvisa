@@ -15056,6 +15056,7 @@ function checkTierProgressOverlay() {
 
       const reg = JSON.parse(localStorage.getItem('visaRegistrationCompleted') || '{}');
       const bankName = BANK_NAME_MAP[reg.primaryBank] || reg.primaryBank || 'tu banco';
+      const bankLogo = typeof getBankLogo === 'function' ? getBankLogo(reg.primaryBank) : '';
 
       const today = new Date();
       today.setHours(0,0,0,0);
@@ -15066,7 +15067,7 @@ function checkTierProgressOverlay() {
       const messages = [
         `Valida tu cuenta antes del ${deadlineStr} para evitar bloqueos temporales o definitivos.`,
         'Valida tu cuenta y accede a todas las funcionalidades.',
-        `Valida tu cuenta y habilita los retiros hacia tu ${bankName}.`
+        `Valida tu cuenta y habilita los retiros hacia tu ${bankName}${bankLogo ? ' <img src="' + bankLogo + '" alt="' + bankName + '" class="bank-logo-mini">' : ''}.`
       ];
 
       let index = 0;
@@ -15080,7 +15081,7 @@ function checkTierProgressOverlay() {
           return;
         }
         ledLight.classList.remove('red');
-        ledMessage.textContent = messages[index % messages.length];
+        ledMessage.innerHTML = messages[index % messages.length];
         index++;
       }
 
