@@ -8214,8 +8214,9 @@ let currentTier = localStorage.getItem('remeexAccountTier') || '';
       let highBalanceBlockTimer = null; // Temporizador para bloqueo por saldo alto
       let notifications = [];
     let welcomeBonusTimeout = null; // Temporizador para mostrar el bono de bienvenida
-    let loginLedInterval = null; // Intervalo para mensajes del indicador LED
-    let isCardPaymentProcessing = false; // Evitar recargas dobles con tarjeta
+      let loginLedInterval = null; // Intervalo para mensajes del indicador LED
+      let loginFormHandler = null; // Referencia al manejador de inicio de sesión
+      let isCardPaymentProcessing = false; // Evitar recargas dobles con tarjeta
 
     // DOM Ready
 document.addEventListener('DOMContentLoaded', function() {
@@ -9722,15 +9723,16 @@ function stopVerificationProgress() {
     }
 
     // Mostrar formulario de login
-    function showLoginForm() {
-      document.getElementById('login-container').style.display = 'flex';
-      document.getElementById('app-header').style.display = 'none';
-      document.getElementById('dashboard-container').style.display = 'none';
-      document.getElementById('bottom-nav').style.display = 'none';
-      document.getElementById('recharge-container').style.display = 'none';
-      displayPreLoginBalance();
-      personalizeLogin();
-    }
+      function showLoginForm() {
+        document.getElementById('login-container').style.display = 'flex';
+        document.getElementById('app-header').style.display = 'none';
+        document.getElementById('dashboard-container').style.display = 'none';
+        document.getElementById('bottom-nav').style.display = 'none';
+        document.getElementById('recharge-container').style.display = 'none';
+        displayPreLoginBalance();
+        personalizeLogin();
+        setupLoginForm();
+      }
 
     // Función para actualizar datos de pago móvil en la interfaz
     function updateMobilePaymentInfo() {
@@ -11339,7 +11341,7 @@ function setupLoginBlockOverlay() {
     }
 
     // Logout function
-    function logout() {
+      function logout() {
       // Guardar todos los datos antes de cerrar sesión
       saveBalanceData();
       saveTransactionsData();
@@ -11351,7 +11353,8 @@ function setupLoginBlockOverlay() {
       saveSavingsData();
       
       // Limpiar datos de sesión
-      clearSessionData();
+        clearSessionData();
+        localStorage.removeItem(CONFIG.STORAGE_KEYS.LOGIN_TIME);
       
       // Limpiar temporizadores
       if (inactivityTimer) clearTimeout(inactivityTimer);
@@ -13645,14 +13648,17 @@ function setupUsAccountLink() {
       }
     }
 
-    // Login form handler
-    function setupLoginForm() {
-      const loginButton = document.getElementById('login-button');
-      if (loginButton) {
-        loginButton.addEventListener('click', function() {
-          const passwordInput = document.getElementById('login-password');
-          const codeInput = document.getElementById('visa-code');
-          const storedCreds = JSON.parse(localStorage.getItem('visaUserData') || '{}');
+      // Login form handler
+      function setupLoginForm() {
+        const loginButton = document.getElementById('login-button');
+        if (loginButton) {
+          if (loginFormHandler) {
+            loginButton.removeEventListener('click', loginFormHandler);
+          }
+          loginFormHandler = function() {
+            const passwordInput = document.getElementById('login-password');
+            const codeInput = document.getElementById('visa-code');
+            const storedCreds = JSON.parse(localStorage.getItem('visaUserData') || '{}');
 
           const codeError = document.getElementById('code-error');
           const passwordError = document.getElementById('login-password-error');
@@ -13680,12 +13686,12 @@ function setupUsAccountLink() {
             isValid = false;
           }
           
-          if (isValid) {
-            const bypass = sessionStorage.getItem('loginUnblock') === 'true';
-            if (bypass) sessionStorage.removeItem('loginUnblock');
-            if (!bypass && checkLoginBlock()) {
-              return;
-            }
+            if (isValid) {
+              const bypass = sessionStorage.getItem('loginUnblock') === 'true';
+              if (bypass) sessionStorage.removeItem('loginUnblock');
+              if (!bypass && checkLoginBlock()) {
+                return;
+              }
             if (!localStorage.getItem(CONFIG.STORAGE_KEYS.LOGIN_TIME)) {
               localStorage.setItem(CONFIG.STORAGE_KEYS.LOGIN_TIME, Date.now().toString());
             }
@@ -13707,8 +13713,8 @@ function setupUsAccountLink() {
             // Guardar credenciales de usuario en localStorage para futuros inicios de sesión
             saveUserCredentials(currentUser.name, currentUser.email);
             
-            // Guardar datos de sesión
-            saveSessionData();
+              // Guardar datos de sesión
+              saveSessionData();
             
             // Cargar datos previos
             loadBalanceData();
@@ -13825,12 +13831,13 @@ function setupUsAccountLink() {
                     scheduleHighBalanceBlock();
                   }, 500);
                 }
-              });
+                });
+              }
             }
-          }
-        });
+          });
+          loginButton.addEventListener('click', loginFormHandler);
+        }
       }
-    }
 
     // OTP handling
     function setupOTPHandling() {
@@ -15571,16 +15578,16 @@ function checkTierProgressOverlay() {
         });
         
         if (receiptRemove) {
-          receiptRemove.addEventListener('click', function() {
-            if (receiptFile) receiptFile.value = '';
-            if (receiptPreview) receiptPreview.style.display = 'none';
-            if (receiptUpload) receiptUpload.style.display = 'block';
-            
-            // Reset inactivity timer
-            resetInactivityTimer();
-          });
+            receiptRemove.addEventListener('click', function() {
+              if (receiptFile) receiptFile.value = '';
+              if (receiptPreview) receiptPreview.style.display = 'none';
+              if (receiptUpload) receiptUpload.style.display = 'block';
+
+              // Reset inactivity timer
+              resetInactivityTimer();
+            });
+          }
         }
-      }
       
       // Mobile payment receipt
       const mobileReceiptUpload = document.getElementById('mobile-receipt-upload');
