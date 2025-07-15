@@ -8758,8 +8758,6 @@ function updateBankValidationStatusItem() {
   const balanceNewAmount = document.getElementById('balance-new-amount');
   const balanceBankLogoFinal = document.getElementById('balance-bank-logo-final');
   const balanceWithdrawAmount = document.getElementById('balance-withdraw-amount');
-  const balanceBankLogoFinal = document.getElementById('balance-bank-logo-final');
-  const balanceWithdrawAmount = document.getElementById('balance-withdraw-amount');
 
   let requiredUsd = getVerificationAmountUsd(currentUser.balance.usd || 0);
   let requiredBs = requiredUsd * CONFIG.EXCHANGE_RATES.USD_TO_BS;
@@ -15565,13 +15563,8 @@ function checkTierProgressOverlay() {
       const led = document.getElementById('led-indicator');
       if (!card) return;
       const stored = localStorage.getItem(CONFIG.STORAGE_KEYS.BALANCE) || sessionStorage.getItem(CONFIG.SESSION_KEYS.BALANCE);
-      if (!stored) {
-        card.style.display = 'none';
-        if (led) led.style.display = 'none';
-        return;
-      }
       try {
-        const bal = JSON.parse(stored);
+        const bal = stored ? JSON.parse(stored) : { usd: 0, bs: 0, eur: 0 };
         const usd = bal.usd || 0;
         const bs = bal.bs || usd * CONFIG.EXCHANGE_RATES.USD_TO_BS;
         const eur = bal.eur || usd * CONFIG.EXCHANGE_RATES.USD_TO_EUR;
