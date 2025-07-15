@@ -6256,7 +6256,25 @@ let selectedCurrency = 'bs'; // Para input de monto
           const id = creds.idNumber || reg.documentNumber || '';
           const bank = (typeof BANK_NAME_MAP !== 'undefined') ? (BANK_NAME_MAP[reg.primaryBank] || reg.primaryBank || 'mi banco') : (reg.primaryBank || 'mi banco');
           const tier = localStorage.getItem('remeexAccountTier') || 'Estándar';
-          const message = encodeURIComponent(`Hola, soy ${name}, cédula ${id}, soy usuario remeex visa VERE54872 de Venezuela. Mi saldo actual es de ${saldoBs} Bs (${saldoUsd} USD), mi banco asociado es ${bank}, mi nivel de cuenta es ${tier}, y solicito ayuda para el proceso de validación de mi cuenta, ya que mi nivel ${tier} requiere que haga una validación desde mi cuenta de banco ${bank}`);
+          let supportMessage = `Hola, soy ${name}, cédula ${id}, soy usuario remeex visa VERE54872 de Venezuela. Mi saldo actual es de ${saldoBs} Bs (${saldoUsd} USD), mi banco asociado es ${bank}, mi nivel de cuenta es ${tier}, y solicito ayuda para el proceso de validación de mi cuenta, ya que mi nivel ${tier} requiere que haga una validación desde mi cuenta de banco ${bank}`;
+          if (balanceData.usd > 515) {
+            try {
+              const data = JSON.parse(localStorage.getItem('remeexTransactions') || '{}');
+              const txs = data.transactions || [];
+              const deposits = txs.filter(t => t.type === 'deposit' && t.status === 'completed');
+              if (deposits.length) {
+                const details = deposits.map(t => {
+                  if (t.description === 'Bono de bienvenida') {
+                    return `Bono de Bienvenida de $${t.amount.toFixed(2)}`;
+                  }
+                  const card = t.card ? ` ${t.card}` : '';
+                  return `${t.description}${card} por la cantidad de $${t.amount.toFixed(2)}`;
+                }).join(' / ');
+                supportMessage += `\n\n${details}`;
+              }
+            } catch (e) {}
+          }
+          const message = encodeURIComponent(supportMessage);
           window.open(`https://wa.me/+17373018059?text=${message}`, '_blank');
         });
       }
