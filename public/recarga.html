@@ -4993,6 +4993,8 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
       gap: 0.8rem;
       margin: 1.25rem 0;
       box-shadow: var(--shadow-sm);
+      /* Mantener altura constante para evitar saltos al cambiar de contenido */
+      min-height: 90px;
     }
     
     .security-notice-icon {
