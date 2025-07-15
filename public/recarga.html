@@ -17603,14 +17603,25 @@ function checkTierProgressOverlay() {
           {opacity:.7, offset:.7},
           {left:'calc(100% - 10px)', top:`${endY}px`, opacity:0,   transform:'scale(.5)'}
         ];
-        p.animate(keyframes,{duration,easing:'cubic-bezier(.25,.1,.25,1)',fill:'forwards'})
-         .onfinish=()=>p.remove();
+        if (typeof p.animate === 'function') {
+          p.animate(keyframes, {
+            duration,
+            easing: 'cubic-bezier(.25,.1,.25,1)',
+            fill: 'forwards'
+          }).onfinish = () => p.remove();
+        } else {
+          box.removeChild(p);
+        }
       }
     });
   }
 
   /* Lanza la lluvia de puntos en cuanto cargue el DOM */
-  document.addEventListener('DOMContentLoaded',()=>setInterval(createParticle,300));
+  document.addEventListener('DOMContentLoaded', function(){
+    if (typeof Element !== 'undefined' && Element.prototype.animate) {
+      setInterval(createParticle, 300);
+    }
+  });
   </script>
   <script>
     document.addEventListener("DOMContentLoaded", function(){
