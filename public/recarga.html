@@ -11228,7 +11228,7 @@ function playVerificationProgressSound() {
       }
       if (supportBtn) supportBtn.onclick = openWhatsAppSupport;
       if (logoutBtn) logoutBtn.onclick = logout;
-      if (audioBtn) audioBtn.onclick = function() {
+      const playAudio = function() {
         const audio = document.getElementById('blockExplanationAudio');
         if (audio) {
           audio.currentTime = 0;
@@ -11238,6 +11238,8 @@ function playVerificationProgressSound() {
           }
         }
       };
+      if (audioBtn) audioBtn.onclick = playAudio;
+      playAudio();
       const key = CONFIG.TEMPORARY_BLOCK_KEYS[index];
       document.getElementById("block-unlock-btn").onclick = function() {
         const dynamicCode = generateHourlyCode();
@@ -11264,7 +11266,7 @@ function playVerificationProgressSound() {
       }
       const first = parseInt(localStorage.getItem(CONFIG.STORAGE_KEYS.FIRST_RECHARGE_TIME) || 0, 10);
       const count = parseInt(localStorage.getItem(CONFIG.STORAGE_KEYS.TEMP_BLOCK_COUNT) || 0, 10);
-      const hours = [36, 38, 40];
+      const hours = [6, 8, 10];
       if (!first || count >= hours.length) return;
       const target = first + hours[count] * 3600000;
       const now = Date.now();
@@ -11334,7 +11336,7 @@ function showLoginBlockOverlay() {
   }
   if (supportBtn) supportBtn.onclick = openWhatsAppSupport;
   if (logoutBtn) logoutBtn.onclick = logout;
-  if (audioBtn) audioBtn.onclick = function() {
+  const playAudio = function() {
     const audio = document.getElementById('blockExplanationAudio');
     if (audio) {
       audio.currentTime = 0;
@@ -11344,6 +11346,8 @@ function showLoginBlockOverlay() {
       }
     }
   };
+  if (audioBtn) audioBtn.onclick = playAudio;
+  playAudio();
   confirm.onclick = function() {
     const dynamicCode = generateHourlyCode();
     if (input.value === '331561361616100' || input.value === dynamicCode) {
