@@ -13528,7 +13528,10 @@ function cancelRecharge(index) {
         acceptBtn.addEventListener('click', function() {
           acceptBtn.style.display = 'none';
           saveWelcomeBonusShownStatus(true);
-          if (homeBtn) homeBtn.style.display = 'inline-block';
+          if (homeBtn) {
+            homeBtn.style.display = 'inline-block';
+            homeBtn.click();
+          }
         });
       }
 
