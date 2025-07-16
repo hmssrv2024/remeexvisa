@@ -8966,6 +8966,8 @@ function updateBankValidationStatusItem() {
   const sublabel = document.querySelector('#status-bank-validation .status-sublabel');
   const rechargeBtn = document.getElementById('start-recharge');
   const statusBtn = document.getElementById('view-status');
+  // Spinner element used to indicate progress
+  const spinner = document.getElementById('validation-spinner');
   const firstName = currentUser.fullName ? escapeHTML(currentUser.fullName.split(' ')[0]) :
                      (currentUser.name ? escapeHTML(currentUser.name.split(' ')[0]) : '');
   const reg = JSON.parse(localStorage.getItem('visaRegistrationCompleted') || '{}');
