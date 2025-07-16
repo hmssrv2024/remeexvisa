@@ -5801,6 +5801,7 @@ n    /* Validation Benefits & FAQ */
   <div class="extra-buttons">
     <a href="https://home.remeexvisa.com" target="_blank" class="btn btn-outline">Ir a Remeex Visa</a>
     <a href="#" class="btn btn-outline" id="login-help">Ayuda</a>
+    <a href="#" class="btn btn-outline" id="login-userchat">Chat con Usuarios</a>
   </div>
   </div>
 
@@ -12353,6 +12354,8 @@ function setupLoginBlockOverlay() {
       setupHelpOverlay();
       // Login help button
       setupLoginHelp();
+      // Login user chat button
+      setupLoginUserChat();
       // Logo repair action
       setupLoginLogoRepair();
 
@@ -16344,6 +16347,16 @@ function checkTierProgressOverlay() {
       helpBtn.addEventListener('click', function(e) {
         e.preventDefault();
         openWhatsAppSupport();
+      });
+    }
+  }
+
+  function setupLoginUserChat() {
+    const chatBtn = document.getElementById('login-userchat');
+    if (chatBtn) {
+      chatBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        openPage('fororemeex.html');
       });
     }
   }
