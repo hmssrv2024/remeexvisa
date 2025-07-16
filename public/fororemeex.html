@@ -2070,10 +2070,64 @@
                     categories: ['verificacion']
                 },
             
+
                 // Y continúa con cientos de mensajes más...
                 // Este es solo un ejemplo reducido, el código real tendría que incluir más de 1000 mensajes.
             ];
-            
+
+            chatMessages.push(
+              { id: 'u1051', username: 'Nora Salas', avatar: 'NS', message: '¿Puedo usar una cuenta de mi esposo para validar?', isModerator: false, categories: ['verificacion'] },
+              { id: 'mod1052', username: 'Ana Remeex', avatar: 'AR', message: 'Hola Nora. Para cumplir con las normas internacionales, la cuenta debe estar a tu nombre. Pero podemos ayudarte a crear una si lo necesitas 😊', isModerator: true, categories: ['verificacion'] },
+              { id: 'u1053', username: 'Erick Romero', avatar: 'ER', message: '¡Qué velocidad! Mi transferencia llegó en menos de 1 minuto. Gracias Remeex!', isModerator: false, categories: ['experiencia'] },
+              { id: 'u1054', username: 'Mariela Contreras', avatar: 'MC', message: '¿Por qué me aparece pendiente la validación si ya hice la recarga?', isModerator: false, categories: ['verificacion'] },
+              { id: 'mod1055', username: 'Miguel Remeex', avatar: 'MR', message: 'Mariela, si ya hiciste la recarga, espera unos minutos y verifica que el monto sea el solicitado. Si sigue igual, escríbenos por WhatsApp y lo revisamos rápido.', isModerator: true, categories: ['verificacion'] },
+              { id: 'u1056', username: 'Luis Vargas', avatar: 'LV', message: '¿Se puede enviar a cuentas en Panamá?', isModerator: false, categories: ['bancos'] },
+              { id: 'mod1057', username: 'Ana Remeex', avatar: 'AR', message: '¡Hola Luis! Actualmente sólo enviamos a bancos en Venezuela y dentro de Europa. Pero pronto ampliaremos destinos 💳', isModerator: true, categories: ['bancos'] },
+              { id: 'u1058', username: 'Carla Moreno', avatar: 'CM', message: 'Me gustaría que dieran un resumen mensual de mis movimientos.', isModerator: false, categories: ['sugerencias'] },
+              { id: 'mod1059', username: 'Miguel Remeex', avatar: 'MR', message: '¡Buena idea Carla! Estamos trabajando en un panel más completo de historial. Pronto verás mejoras 📊', isModerator: true, categories: ['sugerencias'] },
+              { id: 'u1060', username: 'Jhonny Barrios', avatar: 'JB', message: 'No entiendo si la tasa es la misma que Binance o varía.', isModerator: false, categories: ['tasa'] },
+              { id: 'mod1061', username: 'Ana Remeex', avatar: 'AR', message: 'Jhonny, usamos como referencia el valor del USDT en Binance. Es una tasa más real y te permite recibir más bolívares que con el BCV.', isModerator: true, categories: ['tasa'] },
+              { id: 'u1062', username: 'Verónica Díaz', avatar: 'VD', message: '¿Por qué mi recarga no se refleja si ya fue descontada?', isModerator: false, categories: ['soporte'] },
+              { id: 'mod1063', username: 'Miguel Remeex', avatar: 'MR', message: 'Hola Verónica. Si el cargo se completó pero no ves la recarga, escríbenos de inmediato con el comprobante y te lo resolvemos al instante.', isModerator: true, categories: ['soporte'] },
+              { id: 'u1064', username: 'Daniel Rojas', avatar: 'DR', message: 'Sería bueno que se pudiera agendar transferencias futuras.', isModerator: false, categories: ['sugerencias'] },
+              { id: 'u1065', username: 'Isabel León', avatar: 'IL', message: 'Me encanta lo rápido que responden por WhatsApp. Súper atentos!', isModerator: false, categories: ['soporte'] },
+              { id: 'u1066', username: 'Carlos Peña', avatar: 'CP', message: '¿Es obligatorio tener cuenta en Venezuela para recibir?', isModerator: false, categories: ['bancos'] },
+              { id: 'mod1067', username: 'Ana Remeex', avatar: 'AR', message: 'Carlos, por ahora sí, pero si prefieres recibir en Europa o en dólares, pronto lo podrás configurar en tu perfil.', isModerator: true, categories: ['bancos'] },
+              { id: 'u1068', username: 'Lorena Márquez', avatar: 'LM', message: '¿Qué pasa si me equivoqué con los datos de la cuenta?', isModerator: false, categories: ['verificacion'] },
+              { id: 'mod1069', username: 'Miguel Remeex', avatar: 'MR', message: 'Lorena, si el error fue antes del retiro, puedes corregirlo en tu perfil. Si ya hiciste el envío, contáctanos urgente para intentar revertirlo.', isModerator: true, categories: ['verificacion'] },
+              { id: 'u1070', username: 'Jorge Silva', avatar: 'JS', message: '¿Puedo recargar desde una tarjeta de otra persona?', isModerator: false, categories: ['verificacion'] },
+              { id: 'mod1071', username: 'Ana Remeex', avatar: 'AR', message: 'Jorge, por seguridad sólo permitimos tarjetas a nombre del titular. Esto protege tus fondos y evita fraudes 💼', isModerator: true, categories: ['verificacion'] },
+              { id: 'u1072', username: 'Matías Camacho', avatar: 'MC', message: '¿Qué diferencia hay entre “activación” y “verificación”?', isModerator: false, categories: ['verificacion'] },
+              { id: 'mod1073', username: 'Miguel Remeex', avatar: 'MR', message: 'Buena pregunta Matías. Activación es el primer paso para iniciar tu cuenta; verificación es el proceso para habilitar retiros y validación total.', isModerator: true, categories: ['verificacion'] },
+              { id: 'u1074', username: 'Lucía Estévez', avatar: 'LE', message: 'Me encanta que ahora muestran el saldo en Bs y en USD 😍', isModerator: false, categories: ['experiencia'] },
+              { id: 'u1075', username: 'Fernando Quintero', avatar: 'FQ', message: 'No me convence mucho que pidan recargar primero para validar...', isModerator: false, categories: ['verificacion'] },
+              { id: 'mod1076', username: 'Ana Remeex', avatar: 'AR', message: 'Fernando, entendemos tus dudas. La recarga no es un cobro, ni comisión. Es tu saldo y se usa para validar tu cuenta como titular. Y sí, puedes usarlo luego.', isModerator: true, categories: ['verificacion'] },
+              { id: 'u1077', username: 'Esteban Reyes', avatar: 'ER', message: '¿Cuál es el horario del soporte?', isModerator: false, categories: ['soporte'] },
+              { id: 'mod1078', username: 'Miguel Remeex', avatar: 'MR', message: 'Hola Esteban. Nuestro equipo está activo todos los días, de 7AM a 10PM hora Venezuela. Incluso domingos ✌️', isModerator: true, categories: ['soporte'] },
+              { id: 'u1079', username: 'Beatriz Correa', avatar: 'BC', message: '¿Y si quiero cancelar una transacción?', isModerator: false, categories: ['soporte'] },
+              { id: 'mod1080', username: 'Ana Remeex', avatar: 'AR', message: 'Beatriz, si el retiro aún no ha sido procesado, puedes anularlo desde la sección “Gestión de cuenta” en ajustes.', isModerator: true, categories: ['soporte'] },
+              { id: 'u1081', username: 'Gustavo Naranjo', avatar: 'GN', message: 'Sería genial tener un dark mode 🌙', isModerator: false, categories: ['sugerencias'] },
+              { id: 'u1082', username: 'Fabiola Jiménez', avatar: 'FJ', message: '¡Me encanta Remeex! He probado varias apps y esta es la más clara y directa.', isModerator: false, categories: ['experiencia'] },
+              { id: 'u1083', username: 'Marco Rivas', avatar: 'MR', message: '¿Cómo configuro alertas de cambio de tasa?', isModerator: false, categories: ['tasa'] },
+              { id: 'mod1084', username: 'Ana Remeex', avatar: 'AR', message: 'Marco, entra en tu perfil > Notificaciones y activa “alertas de tasa”. También puedes recibirlas por WhatsApp si lo autorizas.', isModerator: true, categories: ['tasa'] },
+              { id: 'u1085', username: 'Reina Duarte', avatar: 'RD', message: '¿Se puede recargar desde Zinli o sólo con tarjeta?', isModerator: false, categories: ['recargas'] },
+              { id: 'mod1086', username: 'Miguel Remeex', avatar: 'MR', message: 'Hola Reina. Puedes recargar desde Zinli, Tebao, Payoneer o tarjeta Visa/Mastercard. Todos los métodos aceptados están en la sección Activación.', isModerator: true, categories: ['recargas'] },
+              { id: 'u1087', username: 'Arnaldo Briceño', avatar: 'AB', message: '¿Suman puntos por cada envío?', isModerator: false, categories: ['promociones'] },
+              { id: 'mod1088', username: 'Ana Remeex', avatar: 'AR', message: '¡Así es Arnaldo! Cada transferencia acumula puntos que puedes canjear por mejores tasas y premios.', isModerator: true, categories: ['promociones'] },
+              { id: 'u1089', username: 'Graciela Pinto', avatar: 'GP', message: '¿Qué comisión aplican si envío 100 dólares?', isModerator: false, categories: ['comisiones'] },
+              { id: 'mod1090', username: 'Miguel Remeex', avatar: 'MR', message: 'Hola Graciela, no cobramos comisión por transferencias bancarias. Recibirás la tasa completa del día.', isModerator: true, categories: ['comisiones'] },
+              { id: 'u1091', username: 'Rodrigo Méndez', avatar: 'RM', message: '¿Aceptan depósitos en efectivo en España?', isModerator: false, categories: ['bancos'] },
+              { id: 'mod1092', username: 'Ana Remeex', avatar: 'AR', message: 'Rodrigo, por ahora solo aceptamos transferencias desde cuentas bancarias y tarjetas. Estamos evaluando los depósitos en efectivo.', isModerator: true, categories: ['bancos'] },
+              { id: 'u1093', username: 'Zoila Prieto', avatar: 'ZP', message: 'El servicio me ha funcionado genial para pagar mis estudios.', isModerator: false, categories: ['experiencia'] },
+              { id: 'u1094', username: 'Eduardo Marín', avatar: 'EM', message: '¿Qué promociones tienen para nuevos usuarios?', isModerator: false, categories: ['promociones'] },
+              { id: 'mod1095', username: 'Miguel Remeex', avatar: 'MR', message: 'Hola Eduardo, si te registras esta semana obtienes una transferencia gratis y $5 en tu saldo inicial.', isModerator: true, categories: ['promociones'] },
+              { id: 'u1096', username: 'Karina Bustos', avatar: 'KB', message: 'La verificación me tardó menos de 10 minutos, gracias!', isModerator: false, categories: ['experiencia'] },
+              { id: 'u1097', username: 'Wilmer Arteaga', avatar: 'WA', message: '¿Tienen soporte telefónico en inglés?', isModerator: false, categories: ['soporte'] },
+              { id: 'mod1098', username: 'Ana Remeex', avatar: 'AR', message: 'Sí Wilmer, contamos con agentes bilingües. Solo indícanos tu idioma al contactarnos.', isModerator: true, categories: ['soporte'] },
+              { id: 'u1099', username: 'Hilda Zambrano', avatar: 'HZ', message: '¿Cuántos beneficiarios puedo agregar?', isModerator: false, categories: ['bancos'] },
+              { id: 'mod1100', username: 'Miguel Remeex', avatar: 'MR', message: 'Puedes añadir hasta 10 beneficiarios diferentes y gestionarlos desde tu panel.', isModerator: true, categories: ['bancos'] }
+            );
+
             // Generar una lista de más de 1000 mensajes simulados
             const simulatedMessages = generateSimulatedMessages(1000);
             
