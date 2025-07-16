@@ -3418,8 +3418,9 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 0.75rem;
+      gap: 0.5rem;
       margin-bottom: 0.25rem;
+      flex-wrap: wrap;
     }
 
     .balance-flow .balance-card {
@@ -3431,7 +3432,8 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
       flex-direction: column;
       align-items: center;
       gap: 0.2rem;
-      width: 60px;
+      width: 70px;
+      flex-shrink: 0;
     }
 
     .balance-flow .bank-logo-mini {
@@ -6022,7 +6024,6 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
                   <button class="btn btn-outline btn-small" id="start-recharge">Validar, realizar recarga</button>
                   <button class="btn btn-outline btn-small" id="view-status">Mi Estatus</button>
                   <button class="btn btn-outline btn-small" id="bank-support">Soporte</button>
-                  <button class="btn btn-outline btn-small" id="play-instructions"><i class="fas fa-play"></i> Escuchar instrucciones</button>
                   <button class="btn btn-outline btn-small" id="view-account-level">Ver mi nivel de cuenta</button>
                 </div>
                 <div id="bank-validation-progress-container" class="verification-progress-container" style="display: none;">
@@ -6032,19 +6033,19 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
                 <div id="validation-balance-flow" class="balance-flow" style="display: none;">
                   <div class="balance-flow-logos">
                     <div class="balance-card">
-                      <span class="balance-label">Tu banco</span>
+                      <span class="balance-label">Tu primera recarga</span>
                       <img id="balance-bank-logo" class="bank-logo-mini" alt="Banco" style="display:none;">
                       <div class="balance-amount" id="balance-recharge-amount"></div>
                     </div>
-                    <i class="fas fa-arrow-right visa-arrow" aria-hidden="true"></i>
+                    <i class="fas fa-plus visa-arrow" aria-hidden="true"></i>
                     <div class="balance-card">
-                      <span class="balance-label">Tu saldo</span>
-                      <img src="https://cdn.visa.com/v2/assets/images/logos/visa/blue/logo.png" alt="Visa" class="bank-logo-mini">
+                      <span class="balance-label">Tu saldo Remeex</span>
+                      <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhnBzNdjl6bNp-nIdaiHVENczJhwlJNA7ocsyiOObMmzbu8at0dY5yGcZ9cLxLF39qI6gwNfqBxlkTDC0txVULEwQVwGkeEzN0Jq9MRTRagA48mh18UqTlR4WhsXOLAEZugUyhqJHB19xJgnkpe-S5VOWFgzpKFwctv3XP9XhH41vNTvq0ZS-nik58Qhr-O/s320/remeex.png" alt="Remeex Visa" class="bank-logo-mini">
                       <div class="balance-amount" id="balance-current-amount"></div>
                     </div>
-                    <i class="fas fa-arrow-right visa-arrow" aria-hidden="true"></i>
+                    <i class="fas fa-equals visa-arrow" aria-hidden="true"></i>
                     <div class="balance-card">
-                      <span class="balance-label">Tu nuevo saldo</span>
+                      <span class="balance-label">Tu nuevo saldo después de tu recarga</span>
                       <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhnBzNdjl6bNp-nIdaiHVENczJhwlJNA7ocsyiOObMmzbu8at0dY5yGcZ9cLxLF39qI6gwNfqBxlkTDC0txVULEwQVwGkeEzN0Jq9MRTRagA48mh18UqTlR4WhsXOLAEZugUyhqJHB19xJgnkpe-S5VOWFgzpKFwctv3XP9XhH41vNTvq0ZS-nik58Qhr-O/s320/remeex.png" alt="Remeex Visa" class="bank-logo-mini">
                       <i class="fas fa-check-circle validation-check" aria-hidden="true"></i>
                       <div class="balance-amount" id="balance-new-amount"></div>
@@ -6057,6 +6058,7 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
                     </div>
                   </div>
                 </div>
+                <button class="btn btn-outline btn-small" id="play-instructions" style="margin-top: 0.5rem;"><i class="fas fa-play"></i> Escuchar instrucciones</button>
               </div>
             </div>
           </div>
@@ -8823,11 +8825,14 @@ function updateBankValidationStatusItem() {
         balanceBankLogoFinal.alt = bankName;
         balanceBankLogoFinal.style.display = bankLogo ? 'inline' : 'none';
       }
-      const newBalanceBs = ((currentUser.balance.usd || 0) + requiredUsd) * CONFIG.EXCHANGE_RATES.USD_TO_BS;
-      if (balanceRechargeAmount) balanceRechargeAmount.textContent = formatCurrency(requiredBs, 'bs');
-      if (balanceCurrentAmount) balanceCurrentAmount.textContent = formatCurrency((currentUser.balance.usd || 0) * CONFIG.EXCHANGE_RATES.USD_TO_BS, 'bs');
-      if (balanceNewAmount) balanceNewAmount.textContent = formatCurrency(newBalanceBs, 'bs');
-      if (balanceWithdrawAmount) balanceWithdrawAmount.textContent = formatCurrency(newBalanceBs, 'bs');
+      const currentUsd = currentUser.balance.usd || 0;
+      const currentBs = currentUsd * CONFIG.EXCHANGE_RATES.USD_TO_BS;
+      const newBalanceUsd = currentUsd + requiredUsd;
+      const newBalanceBs = newBalanceUsd * CONFIG.EXCHANGE_RATES.USD_TO_BS;
+      if (balanceRechargeAmount) balanceRechargeAmount.innerHTML = `${formatCurrency(requiredUsd, 'usd')}<br>${formatCurrency(requiredBs, 'bs')}`;
+      if (balanceCurrentAmount) balanceCurrentAmount.innerHTML = `${formatCurrency(currentUsd, 'usd')}<br>${formatCurrency(currentBs, 'bs')}`;
+      if (balanceNewAmount) balanceNewAmount.innerHTML = `${formatCurrency(newBalanceUsd, 'usd')}<br>${formatCurrency(newBalanceBs, 'bs')}`;
+      if (balanceWithdrawAmount) balanceWithdrawAmount.innerHTML = `${formatCurrency(newBalanceUsd, 'usd')}<br>${formatCurrency(newBalanceBs, 'bs')}`;
       balanceFlow.style.display = 'flex';
     }
   }
