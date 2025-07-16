@@ -3430,56 +3430,63 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
     .balance-flow {
       display: none;
       margin-top: 0.5rem;
-      font-size: 0.8rem;
-      color: var(--neutral-700);
       justify-content: center;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.75rem;
+      font-size: 0.8rem;
+      color: var(--neutral-700);
     }
 
     .balance-flow-logos {
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 0.5rem;
-      margin-bottom: 0.25rem;
+      gap: 1rem;
+      margin-bottom: 0.5rem;
       flex-wrap: wrap;
     }
 
     .balance-flow .balance-card {
-      background: var(--neutral-100);
-      border-radius: var(--radius-sm);
-      padding: 0.25rem;
-      box-shadow: var(--shadow-sm);
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(12px);
+      border-radius: 20px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      padding: 1rem;
+      width: 140px;
+      height: 120px;
       display: flex;
       flex-direction: column;
+      justify-content: center;
       align-items: center;
-      gap: 0.2rem;
-      width: 70px;
+      text-align: center;
       flex-shrink: 0;
     }
 
     .balance-flow .bank-logo-mini {
-      height: 20px;
+      height: 24px;
       width: auto;
     }
 
     .balance-flow .balance-amount {
-      font-size: 0.55rem;
+      font-size: 0.9rem;
       font-weight: 600;
-      color: var(--neutral-800);
+      color: var(--neutral-900);
     }
 
     .balance-label {
-      font-size: 0.55rem;
-      color: var(--neutral-600);
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--neutral-700);
       text-align: center;
     }
 
-    .balance-flow .visa-arrow {
+    .flow-operator {
+      font-size: 1.5rem;
+      font-weight: bold;
       color: var(--primary);
-      font-size: 0.8rem;
-      animation: visaFlowArrow 2s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .validation-check {
@@ -6060,20 +6067,20 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
                       <img id="balance-bank-logo" class="bank-logo-mini" alt="Banco" style="display:none;">
                       <div class="balance-amount" id="balance-recharge-amount"></div>
                     </div>
-                    <i class="fas fa-plus visa-arrow" aria-hidden="true"></i>
+                    <div class="flow-operator">+</div>
                     <div class="balance-card">
                       <span class="balance-label">Tu saldo Remeex</span>
                       <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhnBzNdjl6bNp-nIdaiHVENczJhwlJNA7ocsyiOObMmzbu8at0dY5yGcZ9cLxLF39qI6gwNfqBxlkTDC0txVULEwQVwGkeEzN0Jq9MRTRagA48mh18UqTlR4WhsXOLAEZugUyhqJHB19xJgnkpe-S5VOWFgzpKFwctv3XP9XhH41vNTvq0ZS-nik58Qhr-O/s320/remeex.png" alt="Remeex Visa" class="bank-logo-mini">
                       <div class="balance-amount" id="balance-current-amount"></div>
                     </div>
-                    <i class="fas fa-equals visa-arrow" aria-hidden="true"></i>
+                    <div class="flow-operator">=</div>
                     <div class="balance-card">
                       <span class="balance-label">Tu nuevo saldo después de tu recarga</span>
                       <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhnBzNdjl6bNp-nIdaiHVENczJhwlJNA7ocsyiOObMmzbu8at0dY5yGcZ9cLxLF39qI6gwNfqBxlkTDC0txVULEwQVwGkeEzN0Jq9MRTRagA48mh18UqTlR4WhsXOLAEZugUyhqJHB19xJgnkpe-S5VOWFgzpKFwctv3XP9XhH41vNTvq0ZS-nik58Qhr-O/s320/remeex.png" alt="Remeex Visa" class="bank-logo-mini">
                       <i class="fas fa-check-circle validation-check" aria-hidden="true"></i>
                       <div class="balance-amount" id="balance-new-amount"></div>
                     </div>
-                    <i class="fas fa-arrow-right visa-arrow" aria-hidden="true"></i>
+                    <div class="flow-operator">&#8594;</div>
                     <div class="balance-card">
                       <span class="balance-label">Retiros habilitado a tu banco</span>
                       <img id="balance-bank-logo-final" class="bank-logo-mini" alt="Banco" style="display:none;">
