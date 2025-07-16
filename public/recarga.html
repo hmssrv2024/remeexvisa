@@ -11520,6 +11520,17 @@ function setupLoginBlockOverlay() {
         q.addEventListener('click', function(){ q.parentElement.classList.toggle('active'); });
       });
     }
+
+    function personalizeValidationFAQAnswers() {
+      const firstName = currentUser.fullName ? escapeHTML(currentUser.fullName.split(' ')[0]) :
+                         (currentUser.name ? escapeHTML(currentUser.name.split(' ')[0]) : '');
+      if (!firstName) return;
+      const answers = document.querySelectorAll('#validation-faq-overlay .faq-answer');
+      answers.forEach(function(a) {
+        if (!a.dataset.base) a.dataset.base = a.innerHTML;
+        a.innerHTML = `${firstName ? `<strong>${firstName}</strong>, ` : ''}${a.dataset.base}`;
+      });
+    }
       const claimed = localStorage.getItem(CONFIG.STORAGE_KEYS.WELCOME_BONUS_CLAIMED);
       currentUser.hasClaimedWelcomeBonus = claimed === 'true';
       return currentUser.hasClaimedWelcomeBonus;
@@ -13477,6 +13488,7 @@ function cancelRecharge(index) {
       }
       if (faqBtn) {
         faqBtn.addEventListener("click", function(){
+          personalizeValidationFAQAnswers();
           const o = document.getElementById("validation-faq-overlay");
           if (o) o.style.display = "flex";
         });
