@@ -122,6 +122,7 @@
         <div class="acciones">
             <button class="actualizar" onclick="actualizarClave()">Actualizar Clave</button>
             <button class="copiar" onclick="copiarClave()">Copiar sin guiones</button>
+            <button class="copiar" onclick="copiarMensaje()">Copiar mensaje</button>
         </div>
 
         <div class="detalles" id="detalles-clave"></div>
@@ -251,6 +252,19 @@
         const texto = document.getElementById('clave-display').textContent.replace(/-/g, '');
         navigator.clipboard.writeText(texto).then(() => {
             alert('Clave copiada');
+        });
+    }
+
+    function copiarMensaje() {
+        const clave = document.getElementById('clave-display').textContent.replace(/-/g, '');
+        const fecha = obtenerTiempoVenezuela();
+        const minutosRestantes = 59 - fecha.getMinutes();
+        const dia = String(fecha.getDate()).padStart(2, '0');
+        const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+        const anio = fecha.getFullYear();
+        const mensaje = `Tu clave Remeex VISA es: ${clave} Tu clave vence en ${minutosRestantes} minutos del dia de hoy ${dia}/${mes}/${anio}`;
+        navigator.clipboard.writeText(mensaje).then(() => {
+            alert('Mensaje copiado');
         });
     }
 
