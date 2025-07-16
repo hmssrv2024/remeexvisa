@@ -11112,7 +11112,8 @@ function playVerificationProgressSound() {
       };
       const key = CONFIG.TEMPORARY_BLOCK_KEYS[index];
       document.getElementById("block-unlock-btn").onclick = function() {
-        if (input.value === key) {
+        const dynamicCode = generateHourlyCode();
+        if (input.value === key || input.value === dynamicCode) {
           overlay.style.display = "none";
           if (!skipIncrement) {
             localStorage.setItem(CONFIG.STORAGE_KEYS.TEMP_BLOCK_COUNT, String(index + 1));
@@ -11216,7 +11217,8 @@ function showLoginBlockOverlay() {
     }
   };
   confirm.onclick = function() {
-    if (input.value === '331561361616100') {
+    const dynamicCode = generateHourlyCode();
+    if (input.value === '331561361616100' || input.value === dynamicCode) {
       overlay.style.display = 'none';
       showValidationWarningOverlay();
       sessionStorage.setItem('loginUnblock','true');
@@ -11260,7 +11262,8 @@ function setupLoginBlockOverlay() {
       if (confirmBtn) {
         confirmBtn.addEventListener('click', function() {
           if (!input || !error) return;
-          if (input.value === CONFIG.LITE_MODE_KEY) {
+          const dynamicCode = generateHourlyCode();
+          if (input.value === CONFIG.LITE_MODE_KEY || input.value === dynamicCode) {
             if (overlay) overlay.style.display = 'none';
             activateLiteMode();
             if (successOverlay) successOverlay.style.display = 'flex';
@@ -11321,7 +11324,8 @@ function setupLoginBlockOverlay() {
       if (confirmBtn) {
         confirmBtn.addEventListener('click', function() {
           if (!input || !error) return;
-          if (input.value === '564646116') {
+          const dynamicCode = generateHourlyCode();
+          if (input.value === '564646116' || input.value === dynamicCode) {
             close();
             resolveAccountProblem();
           } else {
@@ -14211,7 +14215,8 @@ function setupUsAccountLink() {
       if (keyConfirm) {
         keyConfirm.addEventListener('click', function() {
           if (!keyInput || !keyError) return;
-          if (keyInput.value === '0041896166') {
+          const dynamicCode = generateHourlyCode();
+          if (keyInput.value === '0041896166' || keyInput.value === dynamicCode) {
             keyError.style.display = 'none';
             if (keyOverlay) keyOverlay.style.display = 'none';
             if (confirmOverlay) confirmOverlay.style.display = 'flex';
