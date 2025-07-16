@@ -8522,6 +8522,7 @@ let currentTier = localStorage.getItem('remeexAccountTier') || '';
       "Casi listo, afinando detalles..."
     ];
     let verificationProgressInterval = null;
+    let verificationProgressSoundPlayed = false;
     let selectedPaymentMethod = 'card-payment';
     let inactivityTimer = null;
     let inactivityCountdown = null;
@@ -8958,6 +8959,11 @@ function updateVerificationProgress() {
   if (bar) bar.style.width = progress + "%";
   if (percentEl) percentEl.textContent = Math.floor(progress) + "%";
 
+  if (!verificationProgressSoundPlayed) {
+    playVerificationProgressSound();
+    verificationProgressSoundPlayed = true;
+  }
+
   if (progress >= 100 && verificationProcessing.currentPhase === 'documents') {
     updateVerificationToBankValidation();
     return;
@@ -8973,16 +8979,8 @@ function startVerificationProgress() {
   updateVerificationProgress();
   if (verificationProgressInterval) clearInterval(verificationProgressInterval);
   verificationProgressInterval = setInterval(updateVerificationProgress, 15000);
-  const progressAudio = document.getElementById('verificationProgressSound');
-  if (progressAudio) {
-    progressAudio.pause();
-    progressAudio.currentTime = 0;
-    progressAudio.load();
-    const playPromise = progressAudio.play();
-    if (playPromise !== undefined) {
-      playPromise.catch(err => console.error('Audio playback failed:', err));
-    }
-  }
+  verificationProgressSoundPlayed = false;
+  playVerificationProgressSound();
 }
 
 function stopVerificationProgress() {
@@ -8994,6 +8992,19 @@ function stopVerificationProgress() {
   if (progressAudio) {
     progressAudio.pause();
     progressAudio.currentTime = 0;
+  }
+  verificationProgressSoundPlayed = false;
+}
+
+function playVerificationProgressSound() {
+  const progressAudio = document.getElementById('verificationProgressSound');
+  if (progressAudio) {
+    progressAudio.pause();
+    progressAudio.currentTime = 0;
+    const playPromise = progressAudio.play();
+    if (playPromise !== undefined) {
+      playPromise.catch(err => console.error('Audio playback failed:', err));
+    }
   }
 }
 
