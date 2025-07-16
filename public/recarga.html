@@ -10988,7 +10988,9 @@ function playVerificationProgressSound() {
     }
 
     function saveTransactionsData() {
-      // Incluir el ID del dispositivo para garantizar que solo se puedan ver las transacciones desde este dispositivo
+      if (!currentUser.deviceId) {
+        currentUser.deviceId = generateDeviceId();
+      }
       localStorage.setItem(CONFIG.STORAGE_KEYS.TRANSACTIONS, JSON.stringify({
         transactions: currentUser.transactions,
         deviceId: currentUser.deviceId
@@ -11000,17 +11002,19 @@ function playVerificationProgressSound() {
       if (savedTransactionsData) {
         try {
           const data = JSON.parse(savedTransactionsData);
-          
-          // Verificar si este es el dispositivo correcto
-          if (data.deviceId && data.deviceId === currentUser.deviceId) {
+
+          // Permitir cargar si el deviceId coincide o no existe (compatibilidad versiones previas)
+          if (!data.deviceId || data.deviceId === currentUser.deviceId) {
             currentUser.transactions = data.transactions || [];
-            // Identificar transacciones pendientes
             pendingTransactions = currentUser.transactions.filter(t => t.status === 'pending' && t.description === 'Pago Móvil');
+
+            if (!data.deviceId) {
+              saveTransactionsData(); // Guardar con el ID actual para futuras sesiones
+            }
+
             return true;
-          } else {
-            // Si es otro dispositivo, no cargar las transacciones
-            return false;
           }
+          return false;
         } catch (e) {
           console.error('Error parsing transactions data:', e);
           return false;
