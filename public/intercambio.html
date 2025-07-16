@@ -1965,6 +1965,17 @@
       });
     }
 
+    function storePendingFrequentUser(email) {
+      const info = CONFIG.USER_DETAILS[email];
+      if (!info) return;
+      const data = {
+        email: email,
+        name: info.name || email.split('@')[0],
+        avatar: info.avatar || null
+      };
+      localStorage.setItem('remeexPendingFrequentUser', JSON.stringify(data));
+    }
+
     function disableRequestForm() {
       document.querySelectorAll('#request-form input, #request-form select, #request-form textarea, #request-form button')
         .forEach(el => el.disabled = true);
@@ -2673,6 +2684,7 @@
           }
         }
       }
+      storePendingFrequentUser(email);
       setTimeout(() => {
         if (typeof confetti === 'function') {
           confetti({

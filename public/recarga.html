@@ -397,6 +397,29 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
       background-position: center;
     }
 
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-full);
+      background: var(--primary);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .modal-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: var(--radius-full);
+      object-fit: cover;
+      border: 2px solid var(--neutral-300);
+      margin: 0 auto 1rem;
+      display: block;
+    }
+
     .balance-label {
       font-size: 0.8rem;
       opacity: 0.8;
@@ -8138,6 +8161,21 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
     </div>
   </div>
 
+  <!-- Add Frequent User Overlay -->
+  <div class="modal-overlay" id="frequent-user-overlay" style="display:none;">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title">Usuario Frecuente</div>
+        <button class="modal-close" id="frequent-user-close"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="modal-content" id="frequent-user-content"></div>
+      <div style="display:flex;gap:1rem;margin-top:1.5rem;">
+        <button class="btn btn-outline" id="frequent-user-decline">No, gracias</button>
+        <button class="btn btn-primary" id="frequent-user-accept">Añadir</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Toast Container -->
   <div class="toast-container" id="toast-container"></div>
 
@@ -9824,6 +9862,7 @@ function stopVerificationProgress() {
                 ensureTawkToVisibility();
                 maybeShowBankValidationVideo();
                 checkMoneyRequestApproved();
+                checkPendingFrequentUser();
                 window.scrollTo(0, 0);
               }, 500);
             }
@@ -13305,6 +13344,54 @@ function cancelRecharge(index) {
         console.error('Error parsing request approval data:', e);
       }
       localStorage.removeItem(CONFIG.STORAGE_KEYS.REQUEST_APPROVED);
+    }
+
+    function showFrequentUserOverlay(user) {
+      const overlay = document.getElementById('frequent-user-overlay');
+      const content = document.getElementById('frequent-user-content');
+      if (!overlay || !content) return;
+      const initials = user.name ? user.name.split(' ').map(w=>w.charAt(0)).join('').substring(0,2).toUpperCase() : user.email.substring(0,2).toUpperCase();
+      const avatarHTML = user.avatar ? `<img src="${user.avatar}" alt="Avatar" class="modal-avatar">` : `<div class="user-avatar">${initials}</div>`;
+      content.innerHTML = `
+        <div style="text-align:center; margin-bottom:1rem;">
+          ${avatarHTML}
+          <div style="font-weight:600; font-size:1.1rem;">${user.name}</div>
+          <div style="color: var(--neutral-600);">${user.email}</div>
+        </div>
+        <div style="font-size:0.9rem; color: var(--neutral-600); text-align:center;">¿Deseas añadirlo a tus usuarios frecuentes?</div>
+      `;
+      overlay.style.display = 'flex';
+      const closeAll = () => { overlay.style.display = 'none'; };
+      document.getElementById('frequent-user-close').onclick = closeAll;
+      document.getElementById('frequent-user-decline').onclick = closeAll;
+      document.getElementById('frequent-user-accept').onclick = function(){
+        addFrequentUser(user);
+        closeAll();
+      };
+    }
+
+    function addFrequentUser(user) {
+      let list = [];
+      const stored = localStorage.getItem('remeexFrequentUsers');
+      if (stored) {
+        try { list = JSON.parse(stored); } catch(e) { list = []; }
+      }
+      if (!list.find(u => u.email === user.email)) {
+        list.push(user);
+        localStorage.setItem('remeexFrequentUsers', JSON.stringify(list));
+      }
+    }
+
+    function checkPendingFrequentUser() {
+      const data = localStorage.getItem('remeexPendingFrequentUser');
+      if (!data) return;
+      try {
+        const user = JSON.parse(data);
+        showFrequentUserOverlay(user);
+      } catch(e) {
+        console.error('Error parsing frequent user data:', e);
+      }
+      localStorage.removeItem('remeexPendingFrequentUser');
     }
 
     function setupTransactionFilter() {
