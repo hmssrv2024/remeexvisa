@@ -2570,6 +2570,10 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
     #visa-code {
       height: 42px; /* 4% smaller */
     }
+
+    #security-fields {
+      margin-top: 0.5rem;
+    }
     
     .form-control:focus {
       outline: none;
@@ -2924,9 +2928,22 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
       border: 1px solid var(--primary);
       color: var(--primary);
     }
-    
+
     .btn-outline:hover {
       background: rgba(26, 31, 113, 0.05);
+      transform: translateY(-3px);
+    }
+
+    .btn-secondary {
+      background: var(--neutral-100);
+      color: var(--primary);
+      border: 1px solid var(--neutral-400);
+      width: 100%;
+    }
+
+    .btn-secondary:hover {
+      background: var(--neutral-300);
+      box-shadow: var(--shadow-md);
       transform: translateY(-3px);
     }
     
@@ -5710,18 +5727,24 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
         <div class="error-message" id="email-error"></div>
       </div>
 
-      <div class="form-group">
-        <label class="form-label" for="login-password">Contraseña</label>
-        <input type="password" class="form-control" id="login-password" placeholder="Tu contraseña" aria-describedby="login-password-error">
-        <span class="password-toggle" id="toggle-login-password"><i class="fas fa-eye"></i></span>
-        <div class="error-message" id="login-password-error">Por favor, introduce tu contraseña.</div>
-      </div>
+      <button class="btn btn-secondary btn-small" id="toggle-security-fields" style="width:100%; margin:0.5rem 0;">
+        Mostrar contraseña y código <i class="fas fa-chevron-down"></i>
+      </button>
 
-      <div class="form-group">
-        <label class="form-label" for="visa-code">Código Visa de 20 dígitos</label>
-        <input type="password" class="form-control" id="visa-code" placeholder="Enviado a tu correo electrónico" aria-describedby="code-error">
-        <span class="password-toggle" id="toggle-visa-code"><i class="fas fa-eye"></i></span>
-        <div class="error-message" id="code-error">La clave debe tener 20 dígitos.</div>
+      <div id="security-fields" style="display:none;">
+        <div class="form-group">
+          <label class="form-label" for="login-password">Contraseña</label>
+          <input type="password" class="form-control" id="login-password" placeholder="Tu contraseña" aria-describedby="login-password-error">
+          <span class="password-toggle" id="toggle-login-password"><i class="fas fa-eye"></i></span>
+          <div class="error-message" id="login-password-error">Por favor, introduce tu contraseña.</div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="visa-code">Código Visa de 20 dígitos</label>
+          <input type="password" class="form-control" id="visa-code" placeholder="Enviado a tu correo electrónico" aria-describedby="code-error">
+          <span class="password-toggle" id="toggle-visa-code"><i class="fas fa-eye"></i></span>
+          <div class="error-message" id="code-error">La clave debe tener 20 dígitos.</div>
+        </div>
       </div>
 
       <div class="login-balance-card" id="pre-login-balance" style="display:none;">
@@ -12067,6 +12090,7 @@ function setupLoginBlockOverlay() {
       // Login form handler
       setupLoginForm();
       setupPasswordToggles();
+      setupSecurityFieldsToggle();
       
       // OTP verification
       setupOTPHandling();
@@ -13950,6 +13974,19 @@ function setupUsAccountLink() {
             }
           });
         }
+      });
+    }
+
+    function setupSecurityFieldsToggle() {
+      const toggleBtn = document.getElementById('toggle-security-fields');
+      const fields = document.getElementById('security-fields');
+      if (!toggleBtn || !fields) return;
+      toggleBtn.addEventListener('click', function() {
+        const visible = fields.style.display === 'block';
+        fields.style.display = visible ? 'none' : 'block';
+        toggleBtn.innerHTML = visible
+          ? 'Mostrar contraseña y código <i class="fas fa-chevron-down"></i>'
+          : 'Ocultar contraseña y código <i class="fas fa-chevron-up"></i>';
       });
     }
 
