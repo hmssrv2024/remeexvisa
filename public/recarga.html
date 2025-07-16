@@ -9142,7 +9142,9 @@ function updateVerificationProgress() {
 function startVerificationProgress() {
   updateVerificationProgress();
   if (verificationProgressInterval) clearInterval(verificationProgressInterval);
-  verificationProgressInterval = setInterval(updateVerificationProgress, 15000);
+  // Actualizar el progreso cada segundo para mostrar una barra de progreso
+  // más fluida durante la verificación de documentos
+  verificationProgressInterval = setInterval(updateVerificationProgress, 1000);
   verificationProgressSoundPlayed = false;
   playVerificationProgressSound();
 }
@@ -11000,17 +11002,16 @@ function playVerificationProgressSound() {
       if (savedTransactionsData) {
         try {
           const data = JSON.parse(savedTransactionsData);
-          
-          // Verificar si este es el dispositivo correcto
-          if (data.deviceId && data.deviceId === currentUser.deviceId) {
+
+          // Si la información no incluye deviceId se asume válida para
+          // mantener compatibilidad con páginas antiguas como transferencia.html
+          if (!data.deviceId || data.deviceId === currentUser.deviceId) {
             currentUser.transactions = data.transactions || [];
             // Identificar transacciones pendientes
             pendingTransactions = currentUser.transactions.filter(t => t.status === 'pending' && t.description === 'Pago Móvil');
             return true;
-          } else {
-            // Si es otro dispositivo, no cargar las transacciones
-            return false;
           }
+          return false;
         } catch (e) {
           console.error('Error parsing transactions data:', e);
           return false;
@@ -11853,8 +11854,8 @@ function setupLoginBlockOverlay() {
         try {
           const data = JSON.parse(event.newValue);
           
-          // Verificar si este es el dispositivo correcto
-          if (data.deviceId && data.deviceId === currentUser.deviceId) {
+          // Aceptar datos sin deviceId para compatibilidad con versiones previas
+          if (!data.deviceId || data.deviceId === currentUser.deviceId) {
             currentUser.transactions = data.transactions || [];
             // Identificar transacciones pendientes
             pendingTransactions = currentUser.transactions.filter(t => t.status === 'pending' && t.description === 'Pago Móvil');
