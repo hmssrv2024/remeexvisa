@@ -29,7 +29,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/v-mask@2.3.0/dist/v-mask.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.11.4/dist/gsap.min.js"></script>
@@ -207,6 +206,11 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
       height: 16px;
       display: flex;
       align-items: center;
+    .header-date {
+      font-size: 0.7rem;
+      opacity: 0.7;
+      margin-left: 0.5rem;
+    }
       justify-content: center;
       font-weight: 600;
       border: 2px solid #fff;
@@ -5842,6 +5846,7 @@ n    /* Validation Benefits & FAQ */
       <div class="users-online-badge" id="online-users-link">
         <div class="pulse-dot"></div>
         <span id="users-online-count">124 usuarios conectados</span>
+        <span class="header-date" id="header-date"></span>
       </div>
       
       <button class="header-action-btn" id="notification-btn" aria-label="Notificaciones">
@@ -5944,6 +5949,16 @@ n    /* Validation Benefits & FAQ */
                   <i class="fas fa-plus-circle"></i> Recargar Saldo
                 </button>
               </div>
+                <div class="action-group" id="quick-recharge-group" style="display:none;">
+                  <button class="balance-btn" id="quick-recharge">
+                    <i class="fas fa-bolt"></i> Recarga Rápida
+                  </button>
+                </div>
+                <div class="action-group" id="receive-group">
+                  <button class="balance-btn" id="receive-btn">
+                    <i class="fas fa-download"></i> Recibir Fondos
+                  </button>
+                </div>
             </div>
           </div>
         </div>
@@ -6191,6 +6206,10 @@ n    /* Validation Benefits & FAQ */
       <div class="nav-icon"><i class="fas fa-home"></i></div>
       <div class="nav-label" data-i18n="nav-home">Inicio</div>
     </div>
+      <div class="nav-item" data-section="messages" id="messages-nav">
+        <div class="nav-icon"><i class="fas fa-bell"></i></div>
+        <div class="nav-label">Mensajes</div>
+      </div>
     
     <div class="nav-item" data-section="support">
       <div class="nav-icon"><i class="fas fa-headset"></i></div>
