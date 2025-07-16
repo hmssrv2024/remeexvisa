@@ -3706,10 +3706,12 @@
     function redirectToDashboard() {
         const targetUrl = 'recarga.html';
       if (window.opener && !window.opener.closed) {
-        window.opener.location.href = targetUrl;
+        // Forzar recarga completa para asegurar que se inicie el proceso de
+        // verificación en la página principal
+        window.opener.location.href = `${targetUrl}?reload=${Date.now()}`;
         window.close();
       } else {
-        window.location.href = targetUrl;
+        window.location.href = `${targetUrl}?reload=${Date.now()}`;
       }
     }
 
