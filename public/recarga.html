@@ -10072,6 +10072,9 @@ function playVerificationProgressSound() {
       updateWhatsAppLinks();
 
       updateVerificationButtons();
+
+      // Verificar si se reanudó un proceso de verificación de documentos
+      checkVerificationProcessingStatus();
     }
 
     // Cargar credenciales del usuario desde localStorage
