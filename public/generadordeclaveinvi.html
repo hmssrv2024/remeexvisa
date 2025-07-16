@@ -6,28 +6,31 @@
     <title>Generador de Claves Horarias</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: "Segoe UI", Tahoma, sans-serif;
             max-width: 800px;
             margin: 0 auto;
             padding: 20px;
-            background-color: #f0f0f0;
+            background-color: #f2f4f8;
+            color: #333;
         }
         .container {
-            background-color: white;
+            background-color: #fff;
             padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
         h1 {
             color: #333;
             text-align: center;
             margin-bottom: 30px;
+            font-weight: 600;
         }
         .info-box {
             background-color: #e8f4f8;
             padding: 15px;
             border-radius: 5px;
             margin-bottom: 20px;
+            border: 1px solid #d0dae3;
         }
         .clave-actual {
             font-size: 24px;
@@ -59,19 +62,30 @@
             font-weight: bold;
             margin: 10px 0;
         }
-        .actualizar {
+        .acciones {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        .actualizar, .copiar {
             background-color: #3498db;
-            color: white;
-            padding: 10px 20px;
+            color: #fff;
+            padding: 10px 18px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 16px;
-            display: block;
-            margin: 20px auto;
+            font-size: 15px;
+            transition: background-color 0.2s ease;
         }
-        .actualizar:hover {
+        .actualizar:hover, .copiar:hover {
             background-color: #2980b9;
+        }
+        .copiar {
+            background-color: #6c757d;
+        }
+        .copiar:hover {
+            background-color: #5a6268;
         }
         .historial {
             margin-top: 30px;
@@ -89,7 +103,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>🔐 Generador de Claves Horarias</h1>
+        <h1>Generador de Claves Horarias</h1>
         
         <div class="info-box">
             <strong>Sistema:</strong> 8760 combinaciones únicas por año (24 horas × 365 días)<br>
@@ -105,12 +119,15 @@
             Cargando...
         </div>
 
-        <button class="actualizar" onclick="actualizarClave()">🔄 Actualizar Clave</button>
+        <div class="acciones">
+            <button class="actualizar" onclick="actualizarClave()">Actualizar Clave</button>
+            <button class="copiar" onclick="copiarClave()">Copiar sin guiones</button>
+        </div>
 
         <div class="detalles" id="detalles-clave"></div>
 
         <div class="historial">
-            <h3>📋 Historial de Claves (últimas 5)</h3>
+            <h3>Historial de Claves (últimas 5)</h3>
             <div id="historial-list"></div>
         </div>
     </div>
@@ -224,11 +241,18 @@
             }
 
             // Actualizar historial en pantalla
-            const historialHTML = historialClaves.map(entrada => 
-                `<div class="historial-item">${entrada}</div>`
-            ).join('');
-            document.getElementById('historial-list').innerHTML = historialHTML;
-        }
+        const historialHTML = historialClaves.map(entrada =>
+            `<div class="historial-item">${entrada}</div>`
+        ).join('');
+        document.getElementById('historial-list').innerHTML = historialHTML;
+    }
+
+    function copiarClave() {
+        const texto = document.getElementById('clave-display').textContent.replace(/-/g, '');
+        navigator.clipboard.writeText(texto).then(() => {
+            alert('Clave copiada');
+        });
+    }
 
         // Actualizar cada 30 segundos para mostrar el tiempo restante
         setInterval(actualizarClave, 30000);
