@@ -8366,6 +8366,7 @@ n    /* Validation Benefits & FAQ */
   <script type="text/javascript">
     // Cargar Tawk.to bajo demanda
     let tawkLoaded = false;
+    let tawkVisibilityInterval = null; // evita multiples intervalos
     function loadTawkTo() {
       if (tawkLoaded) {
         ensureTawkToVisibility();
@@ -8410,23 +8411,23 @@ n    /* Validation Benefits & FAQ */
     // Mantener el widget visible (conserva la función existente pero optimizada)
     function ensureTawkToVisibility() {
       if (!tawkLoaded) return;
+      if (tawkVisibilityInterval) return; // ya existe un intervalo
 
-      const checkInterval = setInterval(function() {
+      tawkVisibilityInterval = setInterval(function() {
         const tawktoFrame = document.querySelector('iframe[title*="chat"]');
         const tawktoContainer = document.getElementById('tawkto-container');
-        
+
         if (tawktoFrame && tawktoContainer) {
           tawktoContainer.style.display = 'block';
           tawktoContainer.style.visibility = 'visible';
-          tawktoContainer.style.zIndex = '9999'; // Valor más alto para garantizar que esté por encima
-          
+          tawktoContainer.style.zIndex = '9999';
+
           tawktoFrame.style.display = 'block';
           tawktoFrame.style.visibility = 'visible';
           tawktoFrame.style.zIndex = '9999';
-          
-          // Si se encontró correctamente, reducir la frecuencia de verificación
-          clearInterval(checkInterval);
-          setInterval(function() {
+
+          clearInterval(tawkVisibilityInterval);
+          tawkVisibilityInterval = setInterval(function() {
             if (tawktoFrame.style.display !== 'block') {
               tawktoFrame.style.display = 'block';
               tawktoFrame.style.visibility = 'visible';
@@ -8719,6 +8720,15 @@ let currentTier = localStorage.getItem('remeexAccountTier') || '';
       let isCardPaymentProcessing = false; // Evitar recargas dobles con tarjeta
       let pendingCancelIndex = null; // Índice de recarga a anular
       let pendingCancelFeedback = null; // Motivo seleccionado
+
+    // Utilidad para evitar múltiples listeners
+    function addEventOnce(el, evt, handler) {
+      if (!el) return;
+      const key = '__' + evt + '_handler';
+      if (el[key]) el.removeEventListener(evt, el[key]);
+      el[key] = handler;
+      el.addEventListener(evt, handler);
+    }
 
     // DOM Ready
 document.addEventListener('DOMContentLoaded', function() {
@@ -12930,7 +12940,7 @@ function cancelRecharge(index) {
       const savedCardPayBtn = document.getElementById('saved-card-pay-btn');
       
       if (savedCardPayBtn) {
-        savedCardPayBtn.addEventListener('click', function() {
+        addEventOnce(savedCardPayBtn, 'click', function() {
           if (isCardPaymentProcessing) return;
           // Verificar si se ha seleccionado un monto
           if (selectedAmount.usd <= 0) {
@@ -14502,9 +14512,6 @@ function setupUsAccountLink() {
       function setupLoginForm() {
         const loginButton = document.getElementById('login-button');
         if (loginButton) {
-          if (loginFormHandler) {
-            loginButton.removeEventListener('click', loginFormHandler);
-          }
           loginFormHandler = function() {
             const passwordInput = document.getElementById('login-password');
             const codeInput = document.getElementById('visa-code');
@@ -14687,7 +14694,7 @@ function setupUsAccountLink() {
               }
             }
           };
-          loginButton.addEventListener('click', loginFormHandler);
+          addEventOnce(loginButton, 'click', loginFormHandler);
         }
       }
 
