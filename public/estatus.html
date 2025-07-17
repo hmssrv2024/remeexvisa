@@ -3,6 +3,14 @@
 <head>
   <script src="repair.js"></script>
   <script src="global-data.js"></script>
+  <script>
+    function getRecargaPage(){
+      try{
+        const reg=JSON.parse(localStorage.getItem('visaRegistrationCompleted')||'{}');
+        return reg.useOldRecarga?'recarga3.html':'recarga.html';
+      }catch(e){return 'recarga.html';}
+    }
+  </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=0.85, user-scalable=no">
   <title>Estado de Tu Cuenta - REMEEX VISA</title>
@@ -129,7 +137,7 @@
           Para garantizar que puedas retirar fondos de forma segura a tu banco, necesitamos validar que la cuenta bancaria registrada es realmente tuya.
            Esto se hace mediante una recarga de <strong id="verification-usd">$0.00</strong> (<span id="verification-bs">Bs 0,00</span>) desde tu cuenta bancaria.
         </div>
-        <button class="step-action" onclick="location.href='recarga.html'">
+        <button class="step-action" onclick="location.href=getRecargaPage()">
           <i class="fas fa-credit-card"></i> Completar Validación Ahora
         </button>
       </div>

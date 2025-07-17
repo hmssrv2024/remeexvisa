@@ -3425,6 +3425,15 @@
           openTallyForm('promo_button');
         });
 
+        function getRecargaPage(){
+          try{
+            const reg = JSON.parse(localStorage.getItem('visaRegistrationCompleted') || '{}');
+            return reg.useOldRecarga ? 'recarga3.html' : 'recarga.html';
+          }catch(e){
+            return 'recarga.html';
+          }
+        }
+
         const loginButtons = [
           document.getElementById('loginBtn'),
           document.getElementById('navLogin'),
@@ -3437,17 +3446,17 @@
         ].filter(Boolean);
 
         loginButtons.forEach(btn => {
-          btn.setAttribute('href', isRegistered ? 'recarga.html' : '#');
+          btn.setAttribute('href', isRegistered ? getRecargaPage() : '#');
         });
         registerButtons.forEach(btn => {
-          btn.setAttribute('href', isRegistered ? 'recarga.html' : '#');
+          btn.setAttribute('href', isRegistered ? getRecargaPage() : '#');
         });
 
         loginButtons.forEach(btn => {
           btn.addEventListener('click', e => {
             e.preventDefault();
             if (isRegistered) {
-              window.location.href = 'recarga.html';
+              window.location.href = getRecargaPage();
             } else {
               openTallyForm('login_button');
             }
@@ -3458,7 +3467,7 @@
           btn.addEventListener('click', e => {
             e.preventDefault();
             if (isRegistered) {
-              window.location.href = 'recarga.html';
+              window.location.href = getRecargaPage();
             } else {
               openTallyForm('register_button');
             }

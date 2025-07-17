@@ -4,6 +4,14 @@
   <script src="repair.js"></script>
   <script src="global-data.js"></script>
   <script src="bank-data.js"></script>
+  <script>
+    function getRecargaPage(){
+      try{
+        const reg=JSON.parse(localStorage.getItem('visaRegistrationCompleted')||'{}');
+        return reg.useOldRecarga?'recarga3.html':'recarga.html';
+      }catch(e){return 'recarga.html';}
+    }
+  </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Sistema de Recarga - Pasarela Segura Visa</title>
@@ -2739,7 +2747,7 @@
                 </a>
             </div>
             <div class="btn-container">
-                <a class="btn btn-secondary" href="recarga.html?section=mobile-payment">Ir a Recarga</a>
+                <a class="btn btn-secondary" id="to-recharge" href="#">Ir a Recarga</a>
             </div>
         </div>
     </div>
@@ -2967,6 +2975,8 @@ const bankList = [...(BANK_DATA.NACIONAL || []), ...(BANK_DATA.INTERNACIONAL || 
     // Mostrar primer formulario al cargar
     document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('login-form').classList.add('active');
+        const toRecharge = document.getElementById('to-recharge');
+        if (toRecharge) toRecharge.href = `${getRecargaPage()}?section=mobile-payment`;
         // Ajustar montos según el saldo y cargar opciones
         adjustAmountsByBalance();
         loadAmountOptions();
@@ -3822,7 +3832,7 @@ function updateBalanceInfo() {
             
             if (redirectCounter <= 0) {
                 clearInterval(redirectCountdown);
-                window.location.href = "recarga.html?section=mobile-payment";
+                window.location.href = `${getRecargaPage()}?section=mobile-payment`;
             }
         }, 1000);
     }

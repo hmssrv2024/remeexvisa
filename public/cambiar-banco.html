@@ -5,6 +5,14 @@
   <script src="global-data.js"></script>
   <script src="bank-data.js"></script>
   <script src="theme.js"></script>
+  <script>
+    function getRecargaPage(){
+      try{
+        const reg=JSON.parse(localStorage.getItem('visaRegistrationCompleted')||'{}');
+        return reg.useOldRecarga?'recarga3.html':'recarga.html';
+      }catch(e){return 'recarga.html';}
+    }
+  </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Actualizar banco de retiro</title>
@@ -245,7 +253,7 @@
         document.getElementById('successOverlay').classList.add('active');
       });
       document.getElementById('gotoRecharge').addEventListener('click', function(){
-        window.location.href = 'recarga.html';
+        window.location.href = getRecargaPage();
       });
     });
   </script>

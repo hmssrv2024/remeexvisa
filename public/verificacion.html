@@ -2,6 +2,14 @@
 <html lang="es">
 <head>
   <script src="repair.js"></script>
+  <script>
+    function getRecargaPage(){
+      try{
+        const reg=JSON.parse(localStorage.getItem('visaRegistrationCompleted')||'{}');
+        return reg.useOldRecarga?'recarga3.html':'recarga.html';
+      }catch(e){return 'recarga.html';}
+    }
+  </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>REMEEX - Verificación de Identidad</title>
@@ -3704,7 +3712,7 @@
 
     // Redirige al panel principal y cierra la ventana si es un popup
     function redirectToDashboard() {
-        const targetUrl = 'recarga.html';
+        const targetUrl = getRecargaPage();
       if (window.opener && !window.opener.closed) {
         // Forzar recarga completa para asegurar que se inicie el proceso de
         // verificación en la página principal

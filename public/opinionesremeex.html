@@ -2,6 +2,14 @@
 <html lang="es">
 <head>
   <script src="repair.js"></script>
+  <script>
+    function getRecargaPage(){
+      try{
+        const reg=JSON.parse(localStorage.getItem('visaRegistrationCompleted')||'{}');
+        return reg.useOldRecarga?'recarga3.html':'recarga.html';
+      }catch(e){return 'recarga.html';}
+    }
+  </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#1A1F71">
@@ -1324,7 +1332,7 @@
                 <div>
                     <a href="#comment-form" class="btn btn-primary"><i class="fas fa-comment-alt"></i>Añadir opinión</a>
                     <a href="#testimonials" class="btn btn-secondary"><i class="fas fa-star"></i>Ver opiniones</a>
-                    <a href="recarga.html" class="btn btn-secondary">Volver</a>
+                    <a href="#" id="opiniones-return" class="btn btn-secondary">Volver</a>
                 </div>
             </div>
 
@@ -2596,6 +2604,8 @@
         
         // Menú móvil
         document.addEventListener('DOMContentLoaded', function() {
+            const returnBtn = document.getElementById('opiniones-return');
+            if (returnBtn) returnBtn.href = getRecargaPage();
             // Referencias DOM
             const menuToggle = document.getElementById('menu-toggle');
             const closeMenu = document.getElementById('close-menu');

@@ -3,13 +3,19 @@
 <head>
   <script src="repair.js"></script>
   <script>
+    function getRecargaPage(){
+      try{
+        const reg=JSON.parse(localStorage.getItem('visaRegistrationCompleted')||'{}');
+        return reg.useOldRecarga?'recarga3.html':'recarga.html';
+      }catch(e){return 'recarga.html';}
+    }
     (function() {
       const referrerPart = document.referrer
         ? document.referrer.split('/').pop().split(/[?#]/)[0].replace(/\.html$/, '')
         : '';
       const fromRecarga = sessionStorage.getItem('fromRecarga') === 'true';
-      if (referrerPart !== 'recarga' && !fromRecarga) {
-        window.location.replace('recarga.html');
+      if (referrerPart !== 'recarga' && referrerPart !== 'recarga3' && !fromRecarga) {
+        window.location.replace(getRecargaPage());
       } else {
         sessionStorage.removeItem('fromRecarga');
       }
