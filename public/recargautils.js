@@ -95,3 +95,17 @@ export function getCurrentTime() {
   const now = new Date();
   return now.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
 }
+
+// Helper to obtain the logo URL for a given bank id. Relies on BANK_DATA
+// defined globally in bank-data.js. Returns an empty string if no match is
+// found or BANK_DATA is unavailable.
+export function getBankLogo(bankId) {
+  if (!bankId || !window.BANK_DATA) return '';
+  const allBanks = [
+    ...(window.BANK_DATA.NACIONAL || []),
+    ...(window.BANK_DATA.INTERNACIONAL || []),
+    ...(window.BANK_DATA.FINTECH || [])
+  ];
+  const bank = allBanks.find(b => b.id === bankId);
+  return bank ? bank.logo : '';
+}
