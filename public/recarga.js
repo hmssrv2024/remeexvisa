@@ -372,12 +372,21 @@ let currentTier = localStorage.getItem('remeexAccountTier') || '';
       let pendingCancelFeedback = null; // Motivo seleccionado
 
     // Utilidad para evitar múltiples listeners
-    function addEventOnce(el, evt, handler) {
-      if (!el) return;
-      const key = '__' + evt + '_handler';
-      if (el[key]) el.removeEventListener(evt, el[key]);
-      el[key] = handler;
-      el.addEventListener(evt, handler);
+function addEventOnce(el, evt, handler) {
+  if (!el) return;
+  const key = '__' + evt + '_handler';
+  if (el[key]) el.removeEventListener(evt, el[key]);
+  el[key] = handler;
+  el.addEventListener(evt, handler);
+}
+
+    // Utility to register both click and touch events
+    function addUnifiedClick(el, handler) {
+      addEventOnce(el, 'click', handler);
+      addEventOnce(el, 'touchstart', function(e){
+        e.preventDefault();
+        handler();
+      });
     }
 
     // DOM Ready
@@ -4574,7 +4583,7 @@ function cancelRecharge(index) {
       const firstRechargeAction = document.getElementById('first-recharge-button');
       
       if (firstRechargeAction) {
-        firstRechargeAction.addEventListener('click', function() {
+        addUnifiedClick(firstRechargeAction, function() {
           openRechargeTab('card-payment');
         });
       }
@@ -4584,7 +4593,7 @@ function cancelRecharge(index) {
     function setupWelcomeModal() {
       const welcomeContinue = document.getElementById('welcome-continue');
       if (welcomeContinue) {
-        welcomeContinue.addEventListener('click', function() {
+        addUnifiedClick(welcomeContinue, function() {
           const welcomeModal = document.getElementById('welcome-modal');
           if (welcomeModal) welcomeModal.style.display = 'none';
 
@@ -4607,7 +4616,7 @@ function cancelRecharge(index) {
       const savedCardPayBtn = document.getElementById('saved-card-pay-btn');
       
       if (savedCardPayBtn) {
-        addEventOnce(savedCardPayBtn, 'click', function() {
+        addUnifiedClick(savedCardPayBtn, function() {
           if (isCardPaymentProcessing) return;
           // Verificar si se ha seleccionado un monto
           if (selectedAmount.usd <= 0) {
@@ -4958,7 +4967,7 @@ function cancelRecharge(index) {
     function setupWelcomeVideo() {
       const closeBtn = document.getElementById('welcome-video-close');
       if (closeBtn) {
-        closeBtn.addEventListener('click', function() {
+        addUnifiedClick(closeBtn, function() {
           const overlay = document.getElementById('welcome-video-overlay');
           if (overlay) overlay.classList.remove('active');
           if (welcomeVideoTimer) {
@@ -4999,7 +5008,7 @@ function cancelRecharge(index) {
     function setupCardVideo() {
       const closeBtn = document.getElementById('card-video-close');
       if (closeBtn) {
-        closeBtn.addEventListener('click', function() {
+        addUnifiedClick(closeBtn, function() {
           const overlay = document.getElementById('card-video-overlay');
           if (overlay) overlay.classList.remove('active');
           if (cardVideoTimer) {
@@ -5049,7 +5058,7 @@ function cancelRecharge(index) {
     function setupValidationVideo() {
       const closeBtn = document.getElementById('validation-video-close');
       if (closeBtn) {
-        closeBtn.addEventListener('click', function() {
+        addUnifiedClick(closeBtn, function() {
           const overlay = document.getElementById('validation-video-overlay');
           if (overlay) overlay.classList.remove('active');
           if (validationVideoTimer) {
@@ -5095,7 +5104,7 @@ function cancelRecharge(index) {
     function setupServicesVideo() {
       const closeBtn = document.getElementById('services-video-close');
       if (closeBtn) {
-        closeBtn.addEventListener('click', function() {
+        addUnifiedClick(closeBtn, function() {
           const overlay = document.getElementById('services-video-overlay');
           if (overlay) overlay.classList.remove('active');
           if (servicesVideoTimer) {
@@ -5117,13 +5126,13 @@ function cancelRecharge(index) {
       const logoutBtn = document.getElementById('inactivity-logout');
       
       if (continueBtn) {
-        continueBtn.addEventListener('click', function() {
+        addUnifiedClick(continueBtn, function() {
           resetInactivityTimer();
         });
       }
       
       if (logoutBtn) {
-        logoutBtn.addEventListener('click', function() {
+        addUnifiedClick(logoutBtn, function() {
           logout();
         });
       }
@@ -5147,7 +5156,7 @@ function cancelRecharge(index) {
         // --- FIN DE LÓGICA CORREGIDA Y AÑADIDA ---
 
         if (rechargeBtn) {
-          addEventOnce(rechargeBtn, 'click', function() {
+          addUnifiedClick(rechargeBtn, function() {
             if (!currentUser.hasSeenRechargeInfo) {
               const overlay = document.getElementById('mobile-recharge-info-overlay');
               if (overlay) overlay.style.display = 'flex';
@@ -5158,7 +5167,7 @@ function cancelRecharge(index) {
         }
 
         if (statusBtn) {
-          addEventOnce(statusBtn, 'click', function() {
+          addUnifiedClick(statusBtn, function() {
             sessionStorage.setItem(CONFIG.SESSION_KEYS.BALANCE, JSON.stringify(currentUser.balance));
             persistExchangeRate();
             window.location.href = 'estatus.html';
@@ -5167,7 +5176,7 @@ function cancelRecharge(index) {
         }
 
         if (playBtn && instructionAudio) {
-          addEventOnce(playBtn, 'click', function() {
+          addUnifiedClick(playBtn, function() {
             instructionAudio.currentTime = 0;
             const playPromise = instructionAudio.play();
             if (playPromise !== undefined) {
@@ -5177,7 +5186,7 @@ function cancelRecharge(index) {
         }
 
         if (supportBtn) {
-          addEventOnce(supportBtn, 'click', function() {
+          addUnifiedClick(supportBtn, function() {
             openWhatsAppSupport();
             resetInactivityTimer();
           });
@@ -5193,11 +5202,11 @@ function cancelRecharge(index) {
           }
         }
 
-        if (levelBtn) addEventOnce(levelBtn, 'click', openTierModal);
-        if (viewLevelBtn) addEventOnce(viewLevelBtn, 'click', openTierModal);
+        if (levelBtn) addUnifiedClick(levelBtn, openTierModal);
+        if (viewLevelBtn) addUnifiedClick(viewLevelBtn, openTierModal);
 
         if (gotoBtn) {
-          addEventOnce(gotoBtn, 'click', function() {
+          addUnifiedClick(gotoBtn, function() {
             openRechargeTab("mobile-payment");
             const target = document.getElementById("seccion-pago-movil");
             if (target) {
@@ -5208,14 +5217,14 @@ function cancelRecharge(index) {
         }
         
         if (benefitsBtn) {
-          addEventOnce(benefitsBtn, 'click', function() {
+          addUnifiedClick(benefitsBtn, function() {
             const o = document.getElementById("validation-benefits-overlay");
             if (o) o.style.display = "flex";
           });
         }
         
         if (faqBtn) {
-          addEventOnce(faqBtn, 'click', function() {
+          addUnifiedClick(faqBtn, function() {
             personalizeValidationFAQAnswers();
             const o = document.getElementById("validation-faq-overlay");
             if (o) o.style.display = "flex";
@@ -5231,7 +5240,7 @@ function cancelRecharge(index) {
       const bonusContainer = document.getElementById('bonus-container');
 
       if (acceptBtn) {
-        acceptBtn.addEventListener('click', function() {
+        addUnifiedClick(acceptBtn, function() {
           acceptBtn.style.display = 'none';
           saveWelcomeBonusShownStatus(true);
           if (homeBtn) {
@@ -5242,7 +5251,7 @@ function cancelRecharge(index) {
       }
       // Manejar acción del botón "Ir al Inicio"
       if (homeBtn) {
-        homeBtn.addEventListener('click', function() {
+        addUnifiedClick(homeBtn, function() {
           if (bonusContainer) bonusContainer.style.display = 'none';
           saveWelcomeBonusShownStatus(true);
           if (welcomeBonusTimeout) {
