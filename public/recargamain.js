@@ -1,5 +1,5 @@
 "use strict";
-import { CONFIG, BANK_NAME_MAP, CITY_VALIDATION_AMOUNTS, LATINPHONE_LOGO, currentUser, verificationStatus } from './recargastate.js';
+import { CONFIG, BANK_NAME_MAP, CITY_VALIDATION_AMOUNTS, LATINPHONE_LOGO, currentUser, verificationStatus, updateCurrentUser, updateVerificationStatus } from './recargastate.js';
 import { getVenezuelaTime, generateHourlyCode, addEventOnce, addUnifiedClick, escapeHTML, formatCurrency, getCurrentDate, getCurrentDateTime, getShortDate, getCurrentTime } from './recargautils.js';
     (function() {
       const referrerPart = document.referrer
@@ -3197,12 +3197,14 @@ function setupLoginBlockOverlay() {
       const isActiveSession = sessionStorage.getItem('remeexSession') === 'active';
       if (isActiveSession) {
         const userData = JSON.parse(sessionStorage.getItem('remeexUser') || '{}');
-        currentUser.name = userData.name || '';
-        currentUser.fullName = userData.fullName || '';
-        currentUser.email = userData.email || '';
-        currentUser.deviceId = userData.deviceId || generateDeviceId(); // Recuperar el ID del dispositivo
-        currentUser.idNumber = userData.idNumber || '';
-        currentUser.phoneNumber = userData.phoneNumber || '';
+        updateCurrentUser({
+          name: userData.name || '',
+          fullName: userData.fullName || '',
+          email: userData.email || '',
+          deviceId: userData.deviceId || generateDeviceId(),
+          idNumber: userData.idNumber || '',
+          phoneNumber: userData.phoneNumber || ''
+        });
         return true;
       }
       return false;
