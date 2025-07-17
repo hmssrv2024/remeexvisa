@@ -443,7 +443,9 @@ function updateBankValidationStatusItem() {
       const afterBs = afterUsd * CONFIG.EXCHANGE_RATES.USD_TO_BS;
       const rate = CONFIG.EXCHANGE_RATES.USD_TO_BS.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
       const more = `Por ejemplo, si actualmente tienes ${formatCurrency(exampleUsd, 'usd')}, luego de recargar tendrás ${formatCurrency(afterUsd, 'usd')} (${formatCurrency(afterBs, 'bs')} a tasa de ${rate} Bs). El monto de validación puede variar según tu saldo y se ajusta automáticamente para tu seguridad. Con este paso tu cuenta quedará 100% activa y lista para operar.`;
-      sublabel.innerHTML = `${base} <span id="validation-more" class="validation-more">${more}</span> <a href="#" id="validation-more-btn" class="show-more-link" onclick="toggleValidationMore(event)">Ver más</a>`;
+      sublabel.innerHTML = `${base} <span id="validation-more" class="validation-more">${more}</span> <a href="#" id="validation-more-btn" class="show-more-link">Ver más</a>`;
+      const moreBtn = document.getElementById('validation-more-btn');
+      if (moreBtn) addUnifiedClick(moreBtn, toggleValidationMore);
     }
     if (rechargeBtn) rechargeBtn.style.display = 'inline-block';
     if (statusBtn) statusBtn.style.display = 'inline-block';
@@ -9486,7 +9488,3 @@ function checkTierProgressOverlay() {
       obs.observe(overlay,{attributes:true,attributeFilter:["style"]});
     });
 
-    // Expose functions used by inline event handlers
-    window.toggleValidationMore = toggleValidationMore;
-    window.toggleWithdrawals = toggleWithdrawals;
-    window.openRechargeTab = openRechargeTab;
