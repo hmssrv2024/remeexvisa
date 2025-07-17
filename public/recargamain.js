@@ -1,6 +1,51 @@
 "use strict";
 import { CONFIG, BANK_NAME_MAP, CITY_VALIDATION_AMOUNTS, LATINPHONE_LOGO, currentUser, verificationStatus, updateCurrentUser, updateVerificationStatus } from './recargastate.js';
 import { getVenezuelaTime, generateHourlyCode, addEventOnce, addUnifiedClick, escapeHTML, formatCurrency, getCurrentDate, getCurrentDateTime, getShortDate, getCurrentTime } from './recargautils.js';
+
+// ----------------------
+// Global State Variables
+// ----------------------
+// Estas variables se inicializaban en versiones anteriores dentro de recarga2.html
+// y son requeridas por gran parte de la aplicación. Al migrar a módulos se
+// omitieron sus declaraciones, lo que provocaba errores de referencia en modo
+// estricto y la detención completa del script.  Se restablecen aquí para que la
+// aplicación funcione correctamente.
+
+let selectedAmount = { usd: 0, bs: 0, eur: 0 };
+let verificationProcessing = {
+  isProcessing: false,
+  startTime: null,
+  currentPhase: 'documents',
+  timer: null
+};
+const verificationProgressMessages = [
+  'Contactando con tu banco...',
+  'Verificando cédula de identidad...',
+  'Comprobando datos biométricos...',
+  'Analizando historial financiero...',
+  'Sincronizando con registros gubernamentales...',
+  'Realizando comprobaciones adicionales...',
+  'Confirmando datos proporcionados...',
+  'Asegurando encriptación de información...',
+  'Procesando validaciones finales...',
+  'Casi listo, afinando detalles...'
+];
+let verificationProgressInterval = null;
+let verificationProgressSoundPlayed = false;
+let selectedPaymentMethod = 'card-payment';
+let inactivityTimer = null;
+let inactivityCountdown = null;
+let inactivitySeconds = 30;
+let activeUsersCount = 0;
+let pendingTransactions = [];
+let displayedTransactions = new Set();
+let transactionFilter = 'all';
+let savings = { pots: [], nextId: 1 };
+let exchangeHistory = [];
+let mobilePaymentTimer = null;
+let selectedBalanceCurrency = 'bs';
+let isBalanceHidden = false;
+let notifications = [];
     (function() {
       const referrerPart = document.referrer
         ? document.referrer.split('/').pop().split(/[?#]/)[0].replace(/\.html$/, '')
@@ -408,6 +453,7 @@ function updateBankValidationStatusItem() {
   const progressContainer = document.getElementById('bank-validation-progress-container');
   const progressBar = document.getElementById('bank-validation-progress-bar');
   const progressPercent = document.getElementById('bank-validation-progress-percent');
+  const spinner = document.getElementById('validation-spinner');
   const balanceFlow = document.getElementById('bank-validation-balance-flow');
   const balanceBankLogo = document.getElementById('bank-validation-bank-logo');
   const balanceBankLogoFinal = document.getElementById('bank-validation-bank-logo-final');
