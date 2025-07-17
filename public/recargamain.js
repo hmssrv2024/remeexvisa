@@ -3700,6 +3700,8 @@ function setupLoginBlockOverlay() {
       // Withdrawals management overlay
       setupWithdrawalsOverlay();
       setupRechargeCancelOverlay();
+
+      // Initialize cancellation modals
       setupCancelPinModal();
       setupCancelSuccessOverlay();
 
