@@ -12452,6 +12452,8 @@ function setupLoginBlockOverlay() {
       const repairNavBtn = document.getElementById('repair-btn');
       const deleteAccountNavBtn = document.getElementById('delete-account-btn');
       const liteModeBtn = document.getElementById('lite-mode-btn');
+      const manageWithdrawalsBtn = document.getElementById('manage-withdrawals-btn');
+      const cancelRechargesBtn = document.getElementById('cancel-recharges-btn');
 
       updateVerificationButtons();
 
@@ -12506,6 +12508,28 @@ function setupLoginBlockOverlay() {
 
       if (deleteAccountNavBtn) {
         deleteAccountNavBtn.addEventListener('click', handleDeleteAccount);
+      }
+
+      if (manageWithdrawalsBtn) {
+        manageWithdrawalsBtn.addEventListener('click', function() {
+          const overlay = document.getElementById('withdrawals-overlay');
+          if (overlay) {
+            overlay.style.display = 'flex';
+            updatePendingWithdrawalsList();
+          }
+          resetInactivityTimer();
+        });
+      }
+
+      if (cancelRechargesBtn) {
+        cancelRechargesBtn.addEventListener('click', function() {
+          const overlay = document.getElementById('recharge-cancel-overlay');
+          if (overlay) {
+            overlay.style.display = 'flex';
+            updateRechargeCancellationList();
+          }
+          resetInactivityTimer();
+        });
       }
 
       updateSettingsBalanceButtons();
