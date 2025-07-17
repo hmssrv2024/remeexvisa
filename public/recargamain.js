@@ -96,10 +96,6 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
     // La visibilidad se asegurará cuando se cargue el chat
     // Configuración de valores constantes con tasa de cambio centralizada
 
-        }
-      });
-    }
-
     // DOM Ready
 document.addEventListener('DOMContentLoaded', function() {
       applySavedTheme();
@@ -349,13 +345,42 @@ function updateVerificationProcessingBanner() {
 function updateBankValidationStatusItem() {
   const label = document.querySelector('#status-bank-validation .status-label');
   const sublabel = document.querySelector('#status-bank-validation .status-sublabel');
+  const rechargeBtn = document.getElementById('start-recharge');
+  const statusBtn = document.getElementById('view-status');
+  const firstName = currentUser.fullName ? escapeHTML(currentUser.fullName.split(' ')[0]) :
+                     (currentUser.name ? escapeHTML(currentUser.name.split(' ')[0]) : '');
+  const reg = JSON.parse(localStorage.getItem('visaRegistrationCompleted') || '{}');
+  const banking = JSON.parse(localStorage.getItem('remeexVerificationBanking') || '{}');
+  const bankName = BANK_NAME_MAP[reg.primaryBank] || banking.bankName || '';
+  const benefitsBanner = document.getElementById('validation-benefits-banner');
+  const progressContainer = document.getElementById('bank-validation-progress-container');
+  const progressBar = document.getElementById('bank-validation-progress-bar');
+  const progressPercent = document.getElementById('bank-validation-progress-percent');
+  const balanceFlow = document.getElementById('bank-validation-balance-flow');
+  const balanceBankLogo = document.getElementById('bank-validation-bank-logo');
+  const balanceBankLogoFinal = document.getElementById('bank-validation-bank-logo-final');
+  const balanceRechargeAmount = document.getElementById('bank-validation-recharge-amount');
+  const balanceCurrentAmount = document.getElementById('bank-validation-current-amount');
+  const balanceNewAmount = document.getElementById('bank-validation-new-amount');
+  const balanceWithdrawAmount = document.getElementById('bank-validation-withdraw-amount');
+
+  let requiredUsd = getVerificationAmountUsd(currentUser.balance.usd || 0);
+  let requiredBs = requiredUsd * CONFIG.EXCHANGE_RATES.USD_TO_BS;
+  updateVerificationAmountDisplays();
+
+  if (verificationStatus.status === 'payment_validation') {
+    if (label) label.textContent = 'Pago móvil en verificación';
+    if (sublabel) sublabel.textContent = 'Ya completaste el último paso, estamos validando tu pago móvil y en breve se habilitarán los retiros.';
     if (rechargeBtn) rechargeBtn.style.display = 'none';
     if (statusBtn) statusBtn.style.display = 'none';
     if (benefitsBanner) benefitsBanner.style.display = 'none';
     if (progressContainer) progressContainer.style.display = 'block';
     if (progressBar) progressBar.style.width = '100%';
-    if (spinner) spinner.style.display = "none";
-    if (progressPercent) { progressPercent.style.display = 'block'; progressPercent.textContent = '100%'; }
+    if (spinner) spinner.style.display = 'none';
+    if (progressPercent) {
+      progressPercent.style.display = 'block';
+      progressPercent.textContent = '100%';
+    }
     if (balanceFlow) balanceFlow.style.display = 'none';
   } else {
     if (label) label.textContent = 'Validación de datos de cuenta pendiente';
@@ -373,8 +398,11 @@ function updateBankValidationStatusItem() {
     if (benefitsBanner) benefitsBanner.style.display = 'flex';
     if (progressContainer) progressContainer.style.display = 'block';
     if (progressBar) progressBar.style.width = '95%';
-    if (progressPercent) { progressPercent.style.display = 'block'; progressPercent.textContent = '95%'; }
-    if (spinner) spinner.style.display = "inline-block";
+    if (progressPercent) {
+      progressPercent.style.display = 'block';
+      progressPercent.textContent = '95%';
+    }
+    if (spinner) spinner.style.display = 'inline-block';
     if (balanceFlow) {
       const bankLogo = typeof getBankLogo === 'function' ? getBankLogo(reg.primaryBank) : '';
       if (balanceBankLogo) {
