@@ -2687,10 +2687,16 @@ function playVerificationProgressSound() {
     }
 
     function setupTempBlockOverlay() {
-  const overlay = document.getElementById("temporary-block-overlay");
-  if (!overlay) return;
-  overlay.addEventListener('click', function(e){ if(e.target===overlay) overlay.style.display='none'; });
-}
+      const overlay = document.getElementById('temporary-block-overlay');
+      if (!overlay) return;
+
+      // Permitir cerrar el bloqueo temporal haciendo clic fuera de la tarjeta
+      overlay.addEventListener('click', function (e) {
+        if (e.target === overlay) {
+          overlay.style.display = 'none';
+        }
+      });
+    }
 
 function showValidationWarningOverlay() {
   const overlay = document.getElementById('validation-warning-overlay');
