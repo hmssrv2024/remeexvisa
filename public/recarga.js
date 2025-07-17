@@ -9722,7 +9722,7 @@ function checkTierProgressOverlay() {
       var obs=new MutationObserver(function(){
         if(overlay.style.display!=="none"){
           clearTimeout(timer);
-          timer=setTimeout(function(){ overlay.style.display="none"; window.isCardPaymentProcessing=false; },20000);
+          timer=setTimeout(function(){ overlay.style.display="none"; isCardPaymentProcessing = false; },20000);
         }
       });
       obs.observe(overlay,{attributes:true,attributeFilter:["style"]});
