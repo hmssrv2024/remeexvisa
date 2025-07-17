@@ -9485,3 +9485,8 @@ function checkTierProgressOverlay() {
       });
       obs.observe(overlay,{attributes:true,attributeFilter:["style"]});
     });
+
+    // Expose functions used by inline event handlers
+    window.toggleValidationMore = toggleValidationMore;
+    window.toggleWithdrawals = toggleWithdrawals;
+    window.openRechargeTab = openRechargeTab;
