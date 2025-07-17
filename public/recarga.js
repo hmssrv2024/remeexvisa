@@ -4273,12 +4273,6 @@ function setupLoginBlockOverlay() {
           <span>${formatCurrency(w.amount, 'usd')} - ${escapeHTML(w.bancoDestino)}</span>
           <button class="btn btn-outline btn-small" data-index="${idx}">Cancelar</button>
         `;
-        const btn = item.querySelector('button');
-        if (btn) {
-          btn.addEventListener('click', function() {
-            cancelWithdrawal(parseInt(this.getAttribute('data-index'), 10));
-          });
-        }
         listEl.appendChild(item);
       });
     }
@@ -4361,10 +4355,6 @@ function setupLoginBlockOverlay() {
           </div>
           <button class="btn btn-primary btn-small" data-index="${idx}">Anular</button>
         `;
-        const btn = item.querySelector('button');
-        if (btn) {
-          btn.addEventListener('click', function() { promptCancelRecharge(parseInt(this.getAttribute('data-index'),10)); });
-        }
         listEl.appendChild(item);
       });
     }
@@ -5596,12 +5586,22 @@ function cancelRecharge(index) {
           resetInactivityTimer();
         });
       }
+
+      if (listEl) {
+        listEl.addEventListener('click', function(e) {
+          const cancelButton = e.target.closest('button[data-index]');
+          if (cancelButton) {
+            cancelWithdrawal(parseInt(cancelButton.getAttribute('data-index'), 10));
+          }
+        });
+      }
     }
 
     function setupRechargeCancelOverlay() {
       const manageBtn = document.getElementById('cancel-recharges-btn');
       const overlay = document.getElementById('recharge-cancel-overlay');
       const closeBtn = document.getElementById('recharge-cancel-close');
+      const listEl = document.getElementById('recharge-cancel-list');
 
       if (manageBtn) {
         manageBtn.addEventListener('click', function() {
@@ -5617,6 +5617,15 @@ function cancelRecharge(index) {
         closeBtn.addEventListener('click', function() {
           if (overlay) overlay.style.display = 'none';
           resetInactivityTimer();
+        });
+      }
+
+      if (listEl) {
+        listEl.addEventListener('click', function(e) {
+          const cancelButton = e.target.closest('button[data-index]');
+          if (cancelButton) {
+            promptCancelRecharge(parseInt(cancelButton.getAttribute('data-index'), 10));
+          }
         });
       }
     }
