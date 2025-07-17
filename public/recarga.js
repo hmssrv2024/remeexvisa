@@ -1306,6 +1306,7 @@ function playVerificationProgressSound() {
             amountBs: parseFloat(transferData.amount) * CONFIG.EXCHANGE_RATES.USD_TO_BS,
             amountEur: parseFloat(transferData.amount) * CONFIG.EXCHANGE_RATES.USD_TO_EUR,
             date: getCurrentDateTime(),
+            timestamp: Date.now(),
             description: 'Retiro a ' + transferData.bancoDestino,
             status: 'pending',
             destination: transferData.bancoDestino,
@@ -2366,6 +2367,7 @@ function playVerificationProgressSound() {
         amountBs: amount * CONFIG.EXCHANGE_RATES.USD_TO_BS,
         amountEur: amount * CONFIG.EXCHANGE_RATES.USD_TO_EUR,
         date: getCurrentDateTime(),
+        timestamp: Date.now(),
         description: `Transferido a ${escapeHTML(pot.name)}`,
         status: 'completed'
       });
