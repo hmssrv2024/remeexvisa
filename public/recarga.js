@@ -5574,6 +5574,7 @@ function cancelRecharge(index) {
       const overlay = document.getElementById('withdrawals-overlay');
       const closeBtn = document.getElementById('withdrawals-close');
       const cancelAllBtn = document.getElementById('cancel-all-withdrawals');
+      const listEl = document.getElementById('withdrawals-list');
 
       if (manageBtn) {
         manageBtn.addEventListener('click', function() {
