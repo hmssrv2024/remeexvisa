@@ -3010,7 +3010,15 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
 
     .quick-recharge-option {
       background: var(--neutral-200);
-n    /* Validation Benefits & FAQ */
+      border-radius: var(--radius-md);
+      padding: 0.5rem;
+      font-weight: 600;
+      text-align: center;
+      cursor: pointer;
+      transition: var(--transition-base);
+    }
+
+    /* Validation Benefits & FAQ */
     .benefits-list { list-style: none; padding-left: 0; margin: 0 0 1rem 0; }
     .benefits-list li { display: flex; align-items: flex-start; gap: 0.5rem; font-size: 0.85rem; margin-bottom: 0.4rem; }
     .benefits-list li i { color: var(--success-green); }
@@ -3022,13 +3030,6 @@ n    /* Validation Benefits & FAQ */
     .faq-answer { display:none; font-size:0.8rem; color: var(--neutral-600); padding-bottom:0.5rem; }
     .faq-item.active .faq-answer { display:block; }
     .faq-item.active .faq-question i { transform: rotate(180deg); }
-      border-radius: var(--radius-md);
-      padding: 0.5rem;
-      font-weight: 600;
-      text-align: center;
-      cursor: pointer;
-      transition: var(--transition-base);
-    }
 
     .quick-recharge-option:hover {
       background: var(--neutral-300);
