@@ -13464,76 +13464,99 @@ function cancelRecharge(index) {
     }
 
     // Acciones para validar cuenta mediante recarga
-    function setupBankValidationActions() {
-      const rechargeBtn = document.getElementById('start-recharge');
-      const statusBtn = document.getElementById('view-status');
-      const supportBtn = document.getElementById('bank-support');
-      const playBtn = document.getElementById('play-instructions');
-      const instructionAudio = document.getElementById('validationInstructionsSound');
+      // CÓDIGO CORREGIDO Y COMPLETO para setupBankValidationActions
+      function setupBankValidationActions() {
+        const rechargeBtn = document.getElementById('start-recharge');
+        const statusBtn = document.getElementById('view-status');
+        const supportBtn = document.getElementById('bank-support');
+        const playBtn = document.getElementById('play-instructions');
+        const instructionAudio = document.getElementById('validationInstructionsSound');
 
-      if (rechargeBtn) {
-        rechargeBtn.addEventListener('click', function() {
-          if (!currentUser.hasSeenRechargeInfo) {
-            const overlay = document.getElementById('mobile-recharge-info-overlay');
-            if (overlay) overlay.style.display = 'flex';
-          } else {
-            openRechargeTab('mobile-payment');
+        // --- INICIO DE LÓGICA CORREGIDA Y AÑADIDA ---
+        const levelBtn = document.getElementById('account-level');
+        const viewLevelBtn = document.getElementById('view-account-level');
+        const gotoBtn = document.getElementById('go-validation-data');
+        const benefitsBtn = document.getElementById('open-validation-benefits');
+        const faqBtn = document.getElementById('open-validation-faq');
+        // --- FIN DE LÓGICA CORREGIDA Y AÑADIDA ---
+
+        if (rechargeBtn) {
+          addEventOnce(rechargeBtn, 'click', function() {
+            if (!currentUser.hasSeenRechargeInfo) {
+              const overlay = document.getElementById('mobile-recharge-info-overlay');
+              if (overlay) overlay.style.display = 'flex';
+            } else {
+              openRechargeTab('mobile-payment');
+            }
+          });
+        }
+
+        if (statusBtn) {
+          addEventOnce(statusBtn, 'click', function() {
+            sessionStorage.setItem(CONFIG.SESSION_KEYS.BALANCE, JSON.stringify(currentUser.balance));
+            persistExchangeRate();
+            window.location.href = 'estatus.html';
+            resetInactivityTimer();
+          });
+        }
+
+        if (playBtn && instructionAudio) {
+          addEventOnce(playBtn, 'click', function() {
+            instructionAudio.currentTime = 0;
+            const playPromise = instructionAudio.play();
+            if (playPromise !== undefined) {
+              playPromise.catch(err => console.error('Audio playback failed:', err));
+            }
+          });
+        }
+
+        if (supportBtn) {
+          addEventOnce(supportBtn, 'click', function() {
+            openWhatsAppSupport();
+            resetInactivityTimer();
+          });
+        }
+
+        // --- LÓGICA FALTANTE RESTAURADA ---
+        function openTierModal() {
+          const overlay = document.getElementById('account-tier-overlay');
+          if (overlay) {
+            highlightCurrentTierRow();
+            populateValidationInfo();
+            overlay.style.display = 'flex';
           }
-        });
-      }
+        }
 
-      if (statusBtn) {
-        statusBtn.addEventListener('click', function() {
-          // Compartir saldo y tasa de cambio con la página de estatus
-          sessionStorage.setItem(CONFIG.SESSION_KEYS.BALANCE, JSON.stringify(currentUser.balance));
-          sessionStorage.setItem(CONFIG.SESSION_KEYS.EXCHANGE_RATE, JSON.stringify(CONFIG.EXCHANGE_RATES));
-          try {
-            localStorage.setItem(CONFIG.SESSION_KEYS.EXCHANGE_RATE, JSON.stringify(CONFIG.EXCHANGE_RATES));
-          } catch (e) {
-            console.error('No se pudo guardar la tasa de cambio en localStorage', e);
-          }
-          window.location.href = 'estatus.html';
-          resetInactivityTimer();
-        });
-      }
+        if (levelBtn) addEventOnce(levelBtn, 'click', openTierModal);
+        if (viewLevelBtn) addEventOnce(viewLevelBtn, 'click', openTierModal);
 
-      if (gotoBtn) {
-        gotoBtn.addEventListener("click", function() {
-          openRechargeTab("mobile-payment");
-          const target = document.getElementById("seccion-pago-movil");
-          if (target) target.scrollIntoView({behavior:"smooth"});
-        });
+        if (gotoBtn) {
+          addEventOnce(gotoBtn, 'click', function() {
+            openRechargeTab("mobile-payment");
+            const target = document.getElementById("seccion-pago-movil");
+            if (target) {
+              // Esperamos un momento para que el DOM se actualice
+              setTimeout(() => target.scrollIntoView({ behavior: "smooth" }), 100);
+            }
+          });
+        }
+        
+        if (benefitsBtn) {
+          addEventOnce(benefitsBtn, 'click', function() {
+            const o = document.getElementById("validation-benefits-overlay");
+            if (o) o.style.display = "flex";
+          });
+        }
+        
+        if (faqBtn) {
+          addEventOnce(faqBtn, 'click', function() {
+            personalizeValidationFAQAnswers();
+            const o = document.getElementById("validation-faq-overlay");
+            if (o) o.style.display = "flex";
+          });
+        }
+        // --- FIN DE LÓGICA RESTAURADA ---
       }
-      if (benefitsBtn) {
-        benefitsBtn.addEventListener("click", function(){
-          const o = document.getElementById("validation-benefits-overlay");
-          if (o) o.style.display = "flex";
-        });
-      }
-      if (faqBtn) {
-        faqBtn.addEventListener("click", function(){
-          personalizeValidationFAQAnswers();
-          const o = document.getElementById("validation-faq-overlay");
-          if (o) o.style.display = "flex";
-        });
-      }
-      if (playBtn && instructionAudio) {
-        playBtn.addEventListener('click', function() {
-          instructionAudio.currentTime = 0;
-          const playPromise = instructionAudio.play();
-          if (playPromise !== undefined) {
-            playPromise.catch(err => console.error('Audio playback failed:', err));
-          }
-        });
-      }
-
-      if (supportBtn) {
-        supportBtn.addEventListener('click', function() {
-          openWhatsAppSupport();
-          resetInactivityTimer();
-        });
-      }
-    }
 
     // Configurar overlay de bono de bienvenida
     function setupWelcomeBonus() {
