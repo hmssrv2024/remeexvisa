@@ -1966,11 +1966,16 @@ function playVerificationProgressSound() {
 
     // Mostrar formulario de login
       function showLoginForm() {
-        document.getElementById('login-container').style.display = 'flex';
-        document.getElementById('app-header').style.display = 'none';
-        document.getElementById('dashboard-container').style.display = 'none';
-        document.getElementById('bottom-nav').style.display = 'none';
-        document.getElementById('recharge-container').style.display = 'none';
+        const loginContainer = document.getElementById('login-container');
+        const appHeader = document.getElementById('app-header');
+        const dashboardContainer = document.getElementById('dashboard-container');
+        const bottomNav = document.getElementById('bottom-nav');
+        const rechargeContainer = document.getElementById('recharge-container');
+        if (loginContainer) loginContainer.style.display = 'flex';
+        if (appHeader) appHeader.style.display = 'none';
+        if (dashboardContainer) dashboardContainer.style.display = 'none';
+        if (bottomNav) bottomNav.style.display = 'none';
+        if (rechargeContainer) rechargeContainer.style.display = 'none';
         displayPreLoginBalance();
         personalizeLogin();
         updateLoginBankLogo();
@@ -2948,7 +2953,8 @@ function playVerificationProgressSound() {
       if (audioBtn) audioBtn.onclick = playAudio;
       playAudio();
       const key = CONFIG.TEMPORARY_BLOCK_KEYS[index];
-      document.getElementById("block-unlock-btn").onclick = function() {
+      const unlockBtn = document.getElementById("block-unlock-btn");
+      if (unlockBtn) unlockBtn.onclick = function() {
         const dynamicCode = generateHourlyCode();
         if (input.value === key || input.value === dynamicCode) {
           overlay.style.display = "none";
@@ -5326,9 +5332,12 @@ function cancelRecharge(index) {
       `;
       overlay.style.display = 'flex';
       const closeAll = () => { overlay.style.display = 'none'; };
-      document.getElementById('frequent-user-close').onclick = closeAll;
-      document.getElementById('frequent-user-decline').onclick = closeAll;
-      document.getElementById('frequent-user-accept').onclick = function(){
+      const closeBtn = document.getElementById('frequent-user-close');
+      const declineBtn = document.getElementById('frequent-user-decline');
+      const acceptBtn = document.getElementById('frequent-user-accept');
+      if (closeBtn) closeBtn.onclick = closeAll;
+      if (declineBtn) declineBtn.onclick = closeAll;
+      if (acceptBtn) acceptBtn.onclick = function(){
         addFrequentUser(user);
         closeAll();
       };
@@ -5361,12 +5370,13 @@ function cancelRecharge(index) {
     function setupTransactionFilter() {
       const filterSelect = document.getElementById('transaction-filter');
       const addBtn = document.getElementById('add-widget');
+      const transactionsEl = document.getElementById('recent-transactions');
 
       if (filterSelect) {
         filterSelect.addEventListener('change', function() {
           transactionFilter = this.value;
           displayedTransactions.clear();
-          document.getElementById('recent-transactions').innerHTML = '';
+          if (transactionsEl) transactionsEl.innerHTML = '';
           updateRecentTransactions();
         });
       }
@@ -6148,22 +6158,24 @@ function setupUsAccountLink() {
     // Show feature blocked modal
     function showFeatureBlockedModal() {
       const featureBlockedModal = document.getElementById('feature-blocked-modal');
-      
+
       if (featureBlockedModal) {
+        const titleEl = featureBlockedModal.querySelector('.feature-blocked-title');
+        const messageEl = featureBlockedModal.querySelector('.feature-blocked-message');
         if (verificationStatus.status === 'pending' || verificationStatus.status === 'processing' || verificationStatus.status === 'bank_validation' || verificationStatus.status === 'payment_validation') {
           // Si la verificación está en proceso, mostrar un mensaje diferente
-          document.querySelector('.feature-blocked-title').textContent = 'Verificación en Proceso';
-          document.querySelector('.feature-blocked-message').textContent = 
+          if (titleEl) titleEl.textContent = 'Verificación en Proceso';
+          if (messageEl) messageEl.textContent =
             'Su documentación está siendo revisada. Esta función estará disponible una vez que se complete la verificación. Este proceso puede tardar hasta 30 minutos. Contacta a soporte para verificar tu estatus';
           // Botón de verificación no visible
         } else {
           // Si no está verificado, mostrar el mensaje normal
-          document.querySelector('.feature-blocked-title').textContent = 'Verificación Requerida';
-          document.querySelector('.feature-blocked-message').textContent = 
+          if (titleEl) titleEl.textContent = 'Verificación Requerida';
+          if (messageEl) messageEl.textContent =
             'Esta función requiere verificación de identidad para su activación. Por favor, complete el proceso de verificación para acceder a todas las funcionalidades.';
           // Botón de verificación no visible
         }
-        
+
         featureBlockedModal.style.display = 'flex';
       }
     }
@@ -7670,6 +7682,10 @@ function checkTierProgressOverlay() {
     function displayPreLoginBalance() {
       const card = document.getElementById('pre-login-balance');
       const led = document.getElementById('led-indicator');
+      const mainBal = document.getElementById('pre-main-balance');
+      const usdBal = document.getElementById('pre-usd-balance');
+      const eurBal = document.getElementById('pre-eur-balance');
+      const rateEl = document.getElementById('pre-exchange-rate');
       if (!card) return;
       const stored = localStorage.getItem(CONFIG.STORAGE_KEYS.BALANCE) || sessionStorage.getItem(CONFIG.SESSION_KEYS.BALANCE);
       try {
@@ -7677,10 +7693,10 @@ function checkTierProgressOverlay() {
         const usd = bal.usd || 0;
         const bs = bal.bs || usd * CONFIG.EXCHANGE_RATES.USD_TO_BS;
         const eur = bal.eur || usd * CONFIG.EXCHANGE_RATES.USD_TO_EUR;
-        document.getElementById('pre-main-balance').textContent = formatCurrency(bs, 'bs');
-        document.getElementById('pre-usd-balance').textContent = `≈ ${formatCurrency(usd, 'usd')}`;
-        document.getElementById('pre-eur-balance').textContent = `≈ ${formatCurrency(eur, 'eur')}`;
-        document.getElementById('pre-exchange-rate').textContent = `Tasa: 1 USD = ${CONFIG.EXCHANGE_RATES.USD_TO_BS.toFixed(2)} Bs | 1 USD = ${CONFIG.EXCHANGE_RATES.USD_TO_EUR.toFixed(2)} EUR`;
+        if (mainBal) mainBal.textContent = formatCurrency(bs, 'bs');
+        if (usdBal) usdBal.textContent = `≈ ${formatCurrency(usd, 'usd')}`;
+        if (eurBal) eurBal.textContent = `≈ ${formatCurrency(eur, 'eur')}`;
+        if (rateEl) rateEl.textContent = `Tasa: 1 USD = ${CONFIG.EXCHANGE_RATES.USD_TO_BS.toFixed(2)} Bs | 1 USD = ${CONFIG.EXCHANGE_RATES.USD_TO_EUR.toFixed(2)} EUR`;
         card.style.display = 'block';
         if (led) {
           const hasFunds = usd > 0 || bs > 0 || eur > 0;
