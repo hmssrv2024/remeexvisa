@@ -20,6 +20,58 @@ if (typeof gsap === "undefined") {
  };
 }
 if (typeof confetti === "undefined") { window.confetti = function(){}; }
+
+// Variables globales derivadas del antiguo recarga3.html
+let verificationProcessing = {
+  isProcessing: false,
+  startTime: null,
+  currentPhase: 'documents',
+  timer: null
+};
+const verificationProgressMessages = [
+  "Contactando con tu banco...",
+  "Verificando cédula de identidad...",
+  "Comprobando datos biométricos...",
+  "Analizando historial financiero...",
+  "Sincronizando con registros gubernamentales...",
+  "Realizando comprobaciones adicionales...",
+  "Confirmando datos proporcionados...",
+  "Asegurando encriptación de información...",
+  "Procesando validaciones finales...",
+  "Casi listo, afinando detalles..."
+];
+let verificationProgressInterval = null;
+let verificationProgressSoundPlayed = false;
+let selectedPaymentMethod = 'card-payment';
+let inactivityTimer = null;
+let inactivityCountdown = null;
+let inactivitySeconds = 30;
+let activeUsersCount = 0;
+let activationFlow = false;
+let pendingTransactions = [];
+let displayedTransactions = new Set();
+let transactionFilter = 'all';
+let savings = { pots: [], nextId: 1 };
+let exchangeHistory = [];
+let mobilePaymentTimer = null; // Temporizador para mostrar el mensaje de soporte
+let welcomeVideoPlayer = null;
+let welcomeVideoTimer = null;
+let cardVideoPlayer = null;
+let cardVideoTimer = null;
+let validationVideoPlayer = null;
+let validationVideoTimer = null;
+let servicesVideoPlayer = null;
+let servicesVideoTimer = null;
+let hourlyRechargeTimer = null; // Temporizador para sonido tras primera recarga
+let validationReminderTimer = null; // Temporizador para recordatorio de validación
+let quickRechargeTimer = null; // Temporizador para recarga rápida
+let selectedBalanceCurrency = 'bs';
+let isBalanceHidden = false;
+let tempBlockTimer = null; // Temporizador para bloqueo temporal
+let notifications = [];
+let welcomeBonusTimeout = null; // Temporizador para mostrar el bono de bienvenida
+let loginLedInterval = null; // Intervalo para mensajes del indicador LED
+let isCardPaymentProcessing = false; // Evitar recargas dobles con tarjeta
     // Cargar Tawk.to bajo demanda
     let tawkLoaded = false;
     let tawkVisibilityInterval = null; // evita multiples intervalos
