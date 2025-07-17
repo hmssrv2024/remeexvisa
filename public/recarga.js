@@ -1074,7 +1074,7 @@ function playVerificationProgressSound() {
         finalizeConcept(reference, conceptValue);
       }
 
-      if (conceptConfirm) conceptConfirm.addEventListener('click', handler);
+      if (conceptConfirm) addEventOnce(conceptConfirm, 'click', handler);
     }
 
     function finalizeConcept(reference, conceptValue) {
@@ -2561,8 +2561,8 @@ function playVerificationProgressSound() {
           const after = current - val;
           remain.textContent = formatCurrency(after < 0 ? 0 : after, 'usd');
         };
-        if (input) input.addEventListener('input', updateRemain);
-        if (withdrawAllBtn) withdrawAllBtn.addEventListener('click', function() {
+        if (input) addEventOnce(input, 'input', updateRemain);
+        if (withdrawAllBtn) addEventOnce(withdrawAllBtn, 'click', function() {
           input.value = current;
           updateRemain();
         });
@@ -2839,7 +2839,7 @@ function playVerificationProgressSound() {
       const overlay = document.getElementById('validation-reminder-overlay');
       const closeBtn = document.getElementById('validation-reminder-close');
       if (closeBtn) {
-        closeBtn.addEventListener('click', function() {
+        addUnifiedClick(closeBtn, function() {
           if (overlay) overlay.style.display = 'none';
         });
       }
@@ -2899,13 +2899,13 @@ function playVerificationProgressSound() {
       const confirmBtn = document.getElementById('quick-recharge-confirm');
 
       if (cancelBtn) {
-        cancelBtn.addEventListener('click', function() {
+        addUnifiedClick(cancelBtn, function() {
           overlay.style.display = 'none';
         });
       }
 
       if (confirmBtn) {
-        confirmBtn.addEventListener('click', function() {
+        addUnifiedClick(confirmBtn, function() {
           if (!selected || selected === 'other') return;
 
           const usd = parseInt(selected, 10);
@@ -3164,10 +3164,10 @@ function setupLoginBlockOverlay() {
         if (overlay) overlay.style.display = 'none';
       }
 
-      if (cancelBtn) cancelBtn.addEventListener('click', function() { close(); });
-      if (overlay) overlay.addEventListener('click', function(e){ if(e.target===overlay) close(); });
+      if (cancelBtn) addUnifiedClick(cancelBtn, function() { close(); });
+      if (overlay) addEventOnce(overlay, 'click', function(e){ if(e.target===overlay) close(); });
       if (confirmBtn) {
-        confirmBtn.addEventListener('click', function() {
+        addUnifiedClick(confirmBtn, function() {
           if (!input || !error) return;
           const dynamicCode = generateHourlyCode();
           if (input.value === '564646116' || input.value === dynamicCode) {
@@ -3186,8 +3186,8 @@ function setupLoginBlockOverlay() {
       const overlay = document.getElementById('validation-benefits-overlay');
       const closeBtn = document.getElementById('benefits-close');
       if (!overlay) return;
-      if (closeBtn) closeBtn.addEventListener('click', function(){ overlay.style.display = 'none'; });
-      overlay.addEventListener('click', function(e){ if(e.target === overlay) overlay.style.display = 'none'; });
+      if (closeBtn) addUnifiedClick(closeBtn, function(){ overlay.style.display = 'none'; });
+      addEventOnce(overlay, 'click', function(e){ if(e.target === overlay) overlay.style.display = 'none'; });
     }
 
     function setupValidationFAQOverlay() {
@@ -3196,10 +3196,10 @@ function setupLoginBlockOverlay() {
       const audioBtn = document.getElementById('faq-audio-btn');
       const audio = document.getElementById('faq-audio');
       if (!overlay) return;
-      if (closeBtn) closeBtn.addEventListener('click', function(){ overlay.style.display = 'none'; });
-      overlay.addEventListener('click', function(e){ if(e.target === overlay) overlay.style.display = 'none'; });
+      if (closeBtn) addUnifiedClick(closeBtn, function(){ overlay.style.display = 'none'; });
+      addEventOnce(overlay, 'click', function(e){ if(e.target === overlay) overlay.style.display = 'none'; });
       if (audioBtn && audio) {
-        audioBtn.addEventListener('click', function(){
+        addUnifiedClick(audioBtn, function(){
           audio.currentTime = 0;
           const p = audio.play();
           if (p) p.catch(() => {});
