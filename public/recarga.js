@@ -435,6 +435,9 @@ document.addEventListener('DOMContentLoaded', function() {
           // Continuar proceso de verificación de documentos
           verificationStatus.status = 'processing';
           showVerificationProcessingBanner();
+          // Asegurar que la sección correcta quede visible
+          personalizeVerificationStatusCards();
+          updateStatusCards();
 
           // Temporizador para pasar a validación bancaria
           const remainingTime = CONFIG.VERIFICATION_PROCESSING_TIMEOUT - elapsedTime;
