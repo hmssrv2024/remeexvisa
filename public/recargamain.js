@@ -408,13 +408,14 @@ function updateBankValidationStatusItem() {
   const progressContainer = document.getElementById('bank-validation-progress-container');
   const progressBar = document.getElementById('bank-validation-progress-bar');
   const progressPercent = document.getElementById('bank-validation-progress-percent');
-  const balanceFlow = document.getElementById('bank-validation-balance-flow');
-  const balanceBankLogo = document.getElementById('bank-validation-bank-logo');
-  const balanceBankLogoFinal = document.getElementById('bank-validation-bank-logo-final');
-  const balanceRechargeAmount = document.getElementById('bank-validation-recharge-amount');
-  const balanceCurrentAmount = document.getElementById('bank-validation-current-amount');
-  const balanceNewAmount = document.getElementById('bank-validation-new-amount');
-  const balanceWithdrawAmount = document.getElementById('bank-validation-withdraw-amount');
+  // IDs ajustados para coincidir con recarga.html
+  const balanceFlow = document.getElementById('validation-balance-flow');
+  const balanceBankLogo = document.getElementById('balance-bank-logo');
+  const balanceBankLogoFinal = document.getElementById('balance-bank-logo-final');
+  const balanceRechargeAmount = document.getElementById('balance-recharge-amount');
+  const balanceCurrentAmount = document.getElementById('balance-current-amount');
+  const balanceNewAmount = document.getElementById('balance-new-amount');
+  const balanceWithdrawAmount = document.getElementById('balance-withdraw-amount');
 
   let requiredUsd = getVerificationAmountUsd(currentUser.balance.usd || 0);
   let requiredBs = requiredUsd * CONFIG.EXCHANGE_RATES.USD_TO_BS;
@@ -3504,11 +3505,9 @@ function setupLoginBlockOverlay() {
 
     // Update date displays
     function updateDateDisplay() {
-      const headerDate = document.getElementById('header-date');
       const balanceDate = document.getElementById('balance-date');
 
       if (balanceDate) balanceDate.textContent = getCurrentDateTime();
-      if (headerDate) headerDate.textContent = getCurrentDateTime();
     }
 
     // Verificar qué banners deben mostrarse según el estado del usuario
