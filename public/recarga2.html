@@ -9118,10 +9118,16 @@ function stopVerificationProgress() {
     }
 
     // Acciones para validar cuenta mediante recarga
-    function setupBankValidationActions() {
-      const rechargeBtn = document.getElementById('start-recharge');
-      const statusBtn = document.getElementById('view-status');
-      const supportBtn = document.getElementById('bank-support');
+      function setupBankValidationActions() {
+        const rechargeBtn = document.getElementById('start-recharge');
+        const statusBtn = document.getElementById('view-status');
+        const supportBtn = document.getElementById('bank-support');
+
+        const levelBtn = document.getElementById('account-level');
+        const viewLevelBtn = document.getElementById('view-account-level');
+        const gotoBtn = document.getElementById('go-validation-data');
+        const benefitsBtn = document.getElementById('open-validation-benefits');
+        const faqBtn = document.getElementById('open-validation-faq');
 
       if (rechargeBtn) {
         rechargeBtn.addEventListener('click', function() {
@@ -9155,6 +9161,43 @@ function stopVerificationProgress() {
         supportBtn.addEventListener('click', function() {
           window.open('https://wa.me/+17373018059', '_blank');
           resetInactivityTimer();
+        });
+      }
+
+      function openTierModal() {
+        const overlay = document.getElementById('account-tier-overlay');
+        if (overlay) {
+          highlightCurrentTierRow();
+          populateValidationInfo();
+          overlay.style.display = 'flex';
+        }
+      }
+
+      if (levelBtn) levelBtn.addEventListener('click', openTierModal);
+      if (viewLevelBtn) viewLevelBtn.addEventListener('click', openTierModal);
+
+      if (gotoBtn) {
+        gotoBtn.addEventListener('click', function() {
+          openRechargeTab('mobile-payment');
+          const target = document.getElementById('seccion-pago-movil');
+          if (target) {
+            setTimeout(() => target.scrollIntoView({ behavior: 'smooth' }), 100);
+          }
+        });
+      }
+
+      if (benefitsBtn) {
+        benefitsBtn.addEventListener('click', function() {
+          const o = document.getElementById('validation-benefits-overlay');
+          if (o) o.style.display = 'flex';
+        });
+      }
+
+      if (faqBtn) {
+        faqBtn.addEventListener('click', function() {
+          personalizeValidationFAQAnswers();
+          const o = document.getElementById('validation-faq-overlay');
+          if (o) o.style.display = 'flex';
         });
       }
     }
