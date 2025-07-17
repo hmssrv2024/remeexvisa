@@ -1,6 +1,6 @@
 "use strict";
 import { CONFIG, BANK_NAME_MAP, CITY_VALIDATION_AMOUNTS, LATINPHONE_LOGO, currentUser, verificationStatus, updateCurrentUser, updateVerificationStatus } from './recargastate.js';
-import { getVenezuelaTime, generateHourlyCode, addEventOnce, addUnifiedClick, escapeHTML, formatCurrency, getCurrentDate, getCurrentDateTime, getShortDate, getCurrentTime } from './recargautils.js';
+import { getVenezuelaTime, generateHourlyCode, addEventOnce, addUnifiedClick, escapeHTML, formatCurrency, getCurrentDate, getCurrentDateTime, getShortDate, getCurrentTime, getBankLogo } from './recargautils.js';
     (function() {
       const referrerPart = document.referrer
         ? document.referrer.split('/').pop().split(/[?#]/)[0].replace(/\.html$/, '')
