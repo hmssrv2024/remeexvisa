@@ -17713,6 +17713,50 @@ function checkTierProgressOverlay() {
           const progressBar = document.getElementById('progress-bar');
           const loadingText = document.getElementById('loading-text');
           
+          function finalizeVerification() {
+            if (loadingOverlay) loadingOverlay.style.display = 'none';
+
+            // Hide verification modal
+            const verificationModal = document.getElementById('verification-modal');
+            if (verificationModal) verificationModal.style.display = 'none';
+
+            // Guardar los datos de verificación
+            verificationStatus.idNumber = idNumber.value;
+            verificationStatus.phoneNumber = idPhone.value;
+            verificationStatus.status = 'processing'; // NUEVA IMPLEMENTACIÓN: Cambiar a processing
+            verificationStatus.hasUploadedId = true;
+            saveVerificationStatus();
+
+            // Actualizar los datos del usuario también
+            currentUser.idNumber = idNumber.value;
+            currentUser.phoneNumber = idPhone.value;
+            saveUserData();
+
+            // NUEVA IMPLEMENTACIÓN: Iniciar el proceso de verificación
+            startVerificationProcessing();
+
+            // Actualizar los datos de pago móvil
+            updateMobilePaymentInfo();
+
+            // Show success toast
+            showToast('success', 'Documentos Recibidos', 'Sus documentos han sido recibidos correctamente. Estamos verificando su identidad.');
+
+            // Reset form
+            if (idFrontFile) idFrontFile.value = '';
+            if (idBackFile) idBackFile.value = '';
+            if (idNumber) idNumber.value = '';
+            if (idPhone) idPhone.value = '';
+
+            const idFrontPreview = document.getElementById('id-front-preview');
+            const idBackPreview = document.getElementById('id-back-preview');
+
+            if (idFrontPreview) idFrontPreview.style.display = 'none';
+            if (idBackPreview) idBackPreview.style.display = 'none';
+
+            // Update banners
+            checkBannersVisibility();
+          }
+
           if (progressBar && loadingText) {
             gsap.to(progressBar, {
               width: '100%',
@@ -17729,51 +17773,11 @@ function checkTierProgressOverlay() {
                 }
               },
               onComplete: function() {
-                setTimeout(function() {
-                  if (loadingOverlay) loadingOverlay.style.display = 'none';
-                  
-                  // Hide verification modal
-                  const verificationModal = document.getElementById('verification-modal');
-                  if (verificationModal) verificationModal.style.display = 'none';
-                  
-                  // Guardar los datos de verificación
-                  verificationStatus.idNumber = idNumber.value;
-                  verificationStatus.phoneNumber = idPhone.value;
-                  verificationStatus.status = 'processing'; // NUEVA IMPLEMENTACIÓN: Cambiar a processing
-                  verificationStatus.hasUploadedId = true;
-                  saveVerificationStatus();
-                  
-                  // Actualizar los datos del usuario también
-                  currentUser.idNumber = idNumber.value;
-                  currentUser.phoneNumber = idPhone.value;
-                  saveUserData();
-                  
-                  // NUEVA IMPLEMENTACIÓN: Iniciar el proceso de verificación
-                  startVerificationProcessing();
-                  
-                  // Actualizar los datos de pago móvil
-                  updateMobilePaymentInfo();
-                  
-                  // Show success toast
-                  showToast('success', 'Documentos Recibidos', 'Sus documentos han sido recibidos correctamente. Estamos verificando su identidad.');
-                  
-                  // Reset form
-                  if (idFrontFile) idFrontFile.value = '';
-                  if (idBackFile) idBackFile.value = '';
-                  if (idNumber) idNumber.value = '';
-                  if (idPhone) idPhone.value = '';
-                  
-                  const idFrontPreview = document.getElementById('id-front-preview');
-                  const idBackPreview = document.getElementById('id-back-preview');
-                  
-                  if (idFrontPreview) idFrontPreview.style.display = 'none';
-                  if (idBackPreview) idBackPreview.style.display = 'none';
-                  
-                  // Update banners
-                  checkBannersVisibility();
-                }, 500);
+                setTimeout(finalizeVerification, 500);
               }
             });
+          } else {
+            finalizeVerification();
           }
           
           // Reset inactivity timer
