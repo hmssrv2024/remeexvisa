@@ -382,10 +382,22 @@ function addEventOnce(el, evt, handler) {
 
     // Utility to register both click and touch events
     function addUnifiedClick(el, handler) {
+      let startX = 0;
+      let startY = 0;
       addEventOnce(el, 'click', handler);
       addEventOnce(el, 'touchstart', function(e){
-        e.preventDefault();
-        handler();
+        const t = e.touches[0];
+        startX = t.clientX;
+        startY = t.clientY;
+      });
+      addEventOnce(el, 'touchend', function(e){
+        const t = e.changedTouches[0];
+        const dx = Math.abs(t.clientX - startX);
+        const dy = Math.abs(t.clientY - startY);
+        if (dx < 10 && dy < 10) {
+          e.preventDefault();
+          handler();
+        }
       });
     }
 
