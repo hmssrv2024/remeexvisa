@@ -6611,6 +6611,8 @@ function updateVerificationProcessingBanner() {
     expectedPhase = 'payment_validation';
   } else if (verificationStatus.status === 'bank_validation') {
     expectedPhase = 'bank_validation';
+  } else if (verificationStatus.status === 'processing') {
+    expectedPhase = 'documents';
   }
 
   if (expectedPhase && verificationProcessing.currentPhase !== expectedPhase) {
