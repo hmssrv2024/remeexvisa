@@ -191,3 +191,14 @@ export const verificationStatus = {
   idNumber: '', // Número de cédula
   phoneNumber: '' // Número de teléfono
 };
+
+// Utility functions for safely updating the shared state objects without
+// reassigning them. These help avoid errors when the objects are imported in
+// other modules as live bindings.
+export function updateCurrentUser(data = {}) {
+  Object.assign(currentUser, data);
+}
+
+export function updateVerificationStatus(data = {}) {
+  Object.assign(verificationStatus, data);
+}
