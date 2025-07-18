@@ -11515,6 +11515,11 @@ function setupLoginBlockOverlay() {
 
     // Cargar si el usuario ya gestionó el bono de bienvenida
     function loadWelcomeBonusStatus() {
+      const claimed = localStorage.getItem(CONFIG.STORAGE_KEYS.WELCOME_BONUS_CLAIMED);
+      currentUser.hasClaimedWelcomeBonus = claimed === 'true';
+      return currentUser.hasClaimedWelcomeBonus;
+    }
+
     function setupValidationBenefitsOverlay() {
       const overlay = document.getElementById('validation-benefits-overlay');
       const closeBtn = document.getElementById('benefits-close');
@@ -11552,10 +11557,6 @@ function setupLoginBlockOverlay() {
         if (!a.dataset.base) a.dataset.base = a.innerHTML;
         a.innerHTML = `${firstName ? `<strong>${firstName}</strong>, ` : ''}${a.dataset.base}`;
       });
-    }
-      const claimed = localStorage.getItem(CONFIG.STORAGE_KEYS.WELCOME_BONUS_CLAIMED);
-      currentUser.hasClaimedWelcomeBonus = claimed === 'true';
-      return currentUser.hasClaimedWelcomeBonus;
     }
 
     // Guardar el estado del bono de bienvenida
