@@ -3504,9 +3504,9 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
     .balance-flow-logos {
       display: flex;
       justify-content: center;
-      align-items: center;
+      align-items: stretch;
       gap: 1rem;
-      margin-bottom: 0.5rem;
+      margin-bottom: 1rem;
       flex-wrap: wrap;
       width: 100%;
     }
@@ -3517,14 +3517,15 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
       border-radius: 20px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
       padding: 1rem;
-      width: 140px;
+      min-width: 140px;
+      flex: 1 1 140px;
       height: 120px;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       text-align: center;
-      flex-shrink: 0;
+      gap: 0.25rem;
     }
 
     .balance-flow .bank-logo-mini {
@@ -3543,6 +3544,7 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
       font-weight: 500;
       color: var(--neutral-700);
       text-align: center;
+      margin-bottom: 0.25rem;
     }
 
     .flow-operator {
@@ -3552,12 +3554,13 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
       display: flex;
       align-items: center;
       justify-content: center;
+      margin: 0 0.25rem;
     }
 
     .validation-check {
       color: var(--success-green);
       font-size: 0.8rem;
-      margin-top: 0.1rem;
+      margin-top: 0.25rem;
     }
 
     .balance-flow-text {
@@ -3573,7 +3576,8 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
     /* Ajustes para mostrar el flujo de balance de forma responsiva */
     @media (max-width: 768px) {
       .balance-flow .balance-card {
-        width: 90px;
+        min-width: 100px;
+        flex: 1 1 100px;
         height: 100px;
         padding: 0.75rem;
       }
@@ -3584,9 +3588,10 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
     }
 
     @media (max-width: 480px) {
-      .balance-flow-logos { flex-wrap: nowrap; gap: 0.5rem; }
+      .balance-flow-logos { flex-wrap: wrap; gap: 0.5rem; }
       .balance-flow .balance-card {
-        width: 60px;
+        min-width: 90px;
+        flex: 1 1 90px;
         height: 90px;
         padding: 0.5rem;
       }
