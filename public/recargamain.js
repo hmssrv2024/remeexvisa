@@ -1060,7 +1060,15 @@ function playVerificationProgressSound() {
     } catch(e) { console.error("Error processing pending transactions from session:", e); }
     sessionStorage.removeItem("remeexPendingTransactions");
   }
-      const transferData = JSON.parse(sessionStorage.getItem(CONFIG.STORAGE_KEYS.TRANSFER_DATA) || 'null');
+      let transferData = null;
+      const rawTransfer = sessionStorage.getItem(CONFIG.STORAGE_KEYS.TRANSFER_DATA);
+      if (rawTransfer) {
+        try {
+          transferData = JSON.parse(rawTransfer);
+        } catch(e) {
+          console.error('Error parsing transfer data from session:', e);
+        }
+      }
       
       if (transferData) {
         // Recuperar los datos de la transferencia
