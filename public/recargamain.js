@@ -3837,7 +3837,6 @@ function setupLoginBlockOverlay() {
       setupValidationReminderOverlay();
 
       // Cerrar aviso de seguridad
-      setupSecurityNotice();
       
       // Añadir evento de storage para sincronización en tiempo real
       window.addEventListener('storage', handleStorageChange);
@@ -7858,80 +7857,6 @@ function checkTierProgressOverlay() {
     }
   }
 
-  function setupSecurityNotice() {
-    const notice = document.getElementById('promo-banner');
-    const closeBtn = document.getElementById('security-notice-close');
-    const title = document.getElementById('promo-title');
-    const text = document.getElementById('promo-text');
-    const icon = document.getElementById('promo-icon');
-
-    const promos = [
-      { icon: 'fas fa-lock', title: 'Acceso Exclusivo a este Dispositivo', text: 'Por su seguridad, su saldo y transacciones solo están disponibles en este dispositivo donde ha iniciado sesión.' },
-      { icon: 'fas fa-university', title: 'Abre tu Cuenta USA', text: 'Desde Servicios puedes obtener una cuenta en EEUU y activar tu Zelle.' },
-      { icon: 'fas fa-mobile-alt', title: 'Compra un Teléfono', text: 'Adquiere tu próximo teléfono usando tu saldo en Remeex Visa.' },
-      { icon: 'fas fa-exchange-alt', title: 'Intercambia Fondos', text: 'Envía y recibe dinero con otros usuarios de la app.' },
-      { icon: 'fas fa-money-bill-wave', title: 'Retira Efectivo', text: 'Solicita retiros en efectivo cuando lo necesites.' },
-      { icon: 'fas fa-piggy-bank', title: 'Crea Botes de Ahorro', text: 'Organiza tu dinero y ahorra desde la aplicación.' },
-      { icon: 'fas fa-wallet', title: 'Envía a otras Wallets', text: 'Mueve tu dinero a cualquier billetera externa fácilmente.' },
-      { icon: 'fas fa-hand-holding-usd', title: 'Pagos y Donaciones', text: 'Paga servicios o realiza donaciones con tus criptomonedas.' },
-      { icon: 'fas fa-coins', title: 'Cambio de Divisas', text: 'Convierte tus fondos en diferentes monedas al instante.' },
-      { img: 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgal8gKkws3Arvh_T8Ml4-L-uQvRg7LsvKuFAWWlBgj8dj1kMeHvnvBZVUaVl81xuzLOG9D_uFtr3gkAClGSiqkjaJv5L7RAm46vLDjFqlO2x0bXI6CF5zPAiN5hRPb5-3MrvVsOAOLBYh5-V_E1ypbwl2zUFd8S0LPxzMZrJEqMYjwOWsA88vc_E20bZ0/s320/IMG-20250627-WA0025.png', title: 'Nuevo Samsung Fold 7', text: 'Estrena el Samsung Fold 7 pagando con tu saldo en Latinphone.' },
-      { img: 'https://www.sambilonline.com/media/logo/stores/1/logo_sambil.webp', title: 'Compra en Sambil', text: 'Disfruta de tus marcas favoritas en Sambil usando Remeex Visa.' },
-      { img: 'https://beravirtual.com/wp-content/uploads/2024/08/Logo-Beramotorcycles_1.png', title: 'Tu Primera Moto Bera', text: 'Lleva tu moto Bera y págala con tu saldo Remeex Visa.' },
-      { img: 'https://runrun.es/wp-content/uploads/2024/08/cashea3-1024x768.jpg', title: 'Compras con Cashea', text: 'Realiza compras ilimitadas financiadas con Cashea.' },
-      { img: 'https://www.becoenlinea.com/wp-content/uploads/2024/02/Logo-BECO-1024x737.png', title: 'Ropa de Marca con Beco', text: 'Viste con estilo pagando en Beco desde la app.' },
-      { img: 'https://www.redticket.com.ve/assets/Logo_redticket.svg', title: 'Conciertos con Redticket', text: 'Adquiere entradas a tus eventos favoritos.' },
-      { img: 'https://cdn.prod.website-files.com/627eccaab96d0621ae273f80/628d4094d0c58d3a70abfd84_rids.png', title: 'Traslados con Yummy Rides', text: 'Solicita taxis y traslados cómodamente.' },
-      { img: 'https://cdn.prod.website-files.com/627eccaab96d0621ae273f80/67db11ce5629728b1c5320e3_logo%20yummy%20svg-p-1080.png', title: 'Comida y Medicinas con Yummy', text: 'Pide delivery directo a tu puerta.' },
-      { img: 'https://www.ivoo.com/home_2-rJh.png', title: 'Tecnología con Ivoo', text: 'Encuentra lo último en tecnología y paga con Remeex Visa.' },
-      { img: 'https://images.seeklogo.com/logo-png/3/1/daka-logo-png_seeklogo-38224.png?v=1963052372322810720', title: 'Hogar con Daka', text: 'Equipa tu hogar en Daka utilizando tu saldo.' },
-      { img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQvMUC67h27GOPpKlwN9lUe00q2r2vYZErY-w&s', title: 'Electrodomésticos en Damasco', text: 'Renueva tu casa con productos Damasco.' },
-      { img: 'https://clxicons.com/wp-content/uploads/2023/09/Revista-CLX-ICONS-1.png', title: 'Hogar Moderno con CLX Icons', text: 'Diseño y mobiliario de vanguardia para tu hogar.' },
-      { img: 'https://static.wixstatic.com/media/4b4152_90de5fac769c488f856bfc3770e89a9d~mv2.jpg/v1/fill/w_150,h_150,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/Image-empty-state.jpg', title: 'Alta Gama con SoyTechno', text: 'Obtén smartphones de alta gama en SoyTechno.' },
-      { img: 'https://static.wixstatic.com/media/15a47a_d0099a8264554b30b715d7c338f8e34e~mv2.png/v1/fill/w_150,h_150,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/Image-empty-state.png', title: 'Más Tecnología con Canguro', text: 'Explora una gran variedad de productos tecnológicos con Canguro.' }
-    ];
-
-    if (verificationStatus.status === 'bank_validation') {
-      const amtUsd = getVerificationAmountUsd(currentUser.balance.usd || 0);
-      const amtBs = amtUsd * CONFIG.EXCHANGE_RATES.USD_TO_BS;
-      promos.unshift({
-        icon: 'fas fa-shield-alt',
-        title: 'Valida tu Cuenta',
-        text: `Realiza una recarga por ${formatCurrency(amtUsd, 'usd')} (${formatCurrency(amtBs, 'bs')}) desde tu cuenta registrada. Es el \u00faltimo paso para liberar tus fondos.`
-      });
-    }
-    let promoIndex = 0;
-
-    function showPromo(index) {
-      const p = promos[index];
-      if (!p) return;
-      if (icon) {
-        if (p.img) {
-          icon.innerHTML = `<img src="${p.img}" alt="logo">`;
-        } else {
-          icon.innerHTML = `<i class="${p.icon}"></i>`;
-        }
-      }
-      if (title) title.textContent = p.title;
-      if (text) text.textContent = p.text;
-    }
-
-    if (notice) {
-      showPromo(promoIndex);
-      setInterval(() => {
-        promoIndex = (promoIndex + 1) % promos.length;
-        showPromo(promoIndex);
-      }, 10000);
-    }
-
-    if (closeBtn && notice) {
-      closeBtn.addEventListener('click', function() {
-        notice.style.display = 'none';
-        localStorage.setItem('securityNoticeClosed', 'true');
-        resetInactivityTimer();
-      });
-    }
-  }
 
   function updateMainBalanceDisplay() {
     const mainValue = document.getElementById('main-balance-value');
