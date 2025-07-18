@@ -2137,6 +2137,43 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
       border-bottom: none;
     }
 
+    /* Raffle Overlay */
+    .raffle-options {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .raffle-option {
+      border: 1px solid var(--neutral-300);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .raffle-option.selected {
+      box-shadow: 0 0 0 2px var(--primary);
+    }
+
+    .raffle-option input {
+      display: none;
+    }
+
+    .raffle-video {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .raffle-option span {
+      display: block;
+      padding: 0.5rem;
+      font-size: 0.85rem;
+      text-align: center;
+      background: var(--neutral-100);
+    }
+
     /* Recharge Cancel Overlay */
     .recharge-cancel-overlay {
       position: fixed;
@@ -6605,6 +6642,45 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
       <div class="points-history">
         <div class="points-history-title">Historial reciente</div>
         <ul class="points-history-list" id="points-history"></ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Raffle Overlay -->
+  <div class="modal-overlay" id="promo-raffle-overlay" style="display:none;">
+    <div class="modal" style="max-width:500px;">
+      <div class="modal-title">Sorteo del Mes</div>
+      <div class="modal-subtitle" id="raffle-subtitle"></div>
+      <div class="raffle-options" id="raffle-selection">
+        <label class="raffle-option">
+          <input type="radio" name="raffle-phone" value="fold">
+          <video class="raffle-video" src="https://images.samsung.com/es/smartphones/galaxy-z-fold7/buy/03_Gallery/01_Animated_KV/Q7_Animated_KV_PC.mp4" autoplay loop muted playsinline></video>
+          <span>Samsung Galaxy Fold 7 – 1TB / 16GB RAM / Azul intenso</span>
+        </label>
+        <label class="raffle-option">
+          <input type="radio" name="raffle-phone" value="flip">
+          <video class="raffle-video" src="https://images.samsung.com/es/smartphones/galaxy-z-flip7/buy/03_Gallery/01_Animated_KV/B7_Animated_KV_PC.mp4" autoplay loop muted playsinline></video>
+          <span>Samsung Galaxy Flip 7 – 512GB / 12GB RAM / Azul intenso</span>
+        </label>
+        <button class="btn btn-primary" id="participate-btn" style="margin-top:1rem;" disabled>Participar</button>
+      </div>
+      <div id="raffle-info" style="display:none;text-align:center;">
+        <div style="margin-bottom:0.5rem;">Participas por: <strong id="raffle-selected"></strong></div>
+        <div style="margin-bottom:0.5rem;">Ticket <span id="raffle-ticket"></span></div>
+        <div>Sorteo en <span id="raffle-countdown"></span> días</div>
+        <button class="btn btn-primary" id="raffle-close" style="margin-top:1rem;">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Raffle Success Overlay -->
+  <div class="success-container" id="raffle-success-overlay" style="display:none;">
+    <div class="success-card">
+      <div class="success-checkmark"><i class="fas fa-check"></i></div>
+      <div class="success-title">¡Listo! Ya estás participando.</div>
+      <div class="success-message">Número de ticket <span id="raffle-success-ticket"></span><br>Te notificaremos si resultas ganador.</div>
+      <div class="success-actions">
+        <button class="btn btn-primary" id="raffle-success-close"><i class="fas fa-check"></i> Entendido</button>
       </div>
     </div>
   </div>
@@ -12881,8 +12957,12 @@ function setupLoginBlockOverlay() {
 
       if (promoNavBtn) {
         promoNavBtn.addEventListener('click', function() {
-          const modal = document.getElementById('coming-soon-modal');
-          if (modal) modal.style.display = 'flex';
+          if (window.openRaffleOverlay) {
+            window.openRaffleOverlay();
+          } else {
+            const overlay = document.getElementById('promo-raffle-overlay');
+            if (overlay) overlay.style.display = 'flex';
+          }
           resetInactivityTimer();
         });
       }
@@ -18520,6 +18600,7 @@ function checkTierProgressOverlay() {
       obs.observe(overlay,{attributes:true,attributeFilter:["style"]});
     });
   </script>
+  <script src="recargasorteo.js"></script>
   <script src="recargapoints.js"></script>
   <script src="language.js"></script>
   <script src="preload.js"></script>
