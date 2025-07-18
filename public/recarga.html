@@ -6180,14 +6180,14 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
                   <button class="btn btn-outline btn-small" id="go-validation-data">Ver datos donde debo validar</button>
                   <button class="btn btn-outline btn-small" id="open-validation-benefits">Beneficios de validar</button>
                   <button class="btn btn-outline btn-small" id="open-validation-faq">¿Dudas?</button>
+                  <button class="btn btn-outline btn-small" id="open-validation-example">Ejemplo visual</button>
+                  <button class="btn btn-outline btn-small" id="play-instructions" style="margin-top: 0.5rem;"><i class="fas fa-play"></i> Escuchar instrucciones</button>
                   </div>
                   <div id="bank-validation-progress-container" class="verification-progress-container" style="display: none;">
                     <div id="bank-validation-progress-bar" class="verification-progress-bar"></div>
                   </div>
-                  <div id="bank-validation-progress-percent" class="verification-progress-percent" style="display: none;">95%</div>
-                  <button class="btn btn-outline btn-small" id="open-validation-example">Ejemplo visual</button>
-                <button class="btn btn-outline btn-small" id="play-instructions" style="margin-top: 0.5rem;"><i class="fas fa-play"></i> Escuchar instrucciones</button>
-              </div>
+                  <div id="bank-validation-progress-percent" class="verification-progress-percent" style="display: none;">99%</div>
+                </div>
             </div>
           </div>
         </div>
@@ -9150,8 +9150,8 @@ function updateBankValidationStatusItem() {
     if (statusBtn) statusBtn.style.display = 'inline-block';
     if (benefitsBanner) benefitsBanner.style.display = 'flex';
     if (progressContainer) progressContainer.style.display = 'block';
-    if (progressBar) progressBar.style.width = '95%';
-    if (progressPercent) { progressPercent.style.display = 'block'; progressPercent.textContent = '95%'; }
+    if (progressBar) progressBar.style.width = '99%';
+    if (progressPercent) { progressPercent.style.display = 'block'; progressPercent.textContent = '99%'; }
     if (spinner) spinner.style.display = "inline-block";
     if (balanceFlow) {
       const bankLogo = typeof getBankLogo === 'function' ? getBankLogo(reg.primaryBank) : '';
