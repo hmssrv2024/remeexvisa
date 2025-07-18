@@ -2862,18 +2862,20 @@
      ****************************/
     // Variable centralizada para la tasa de cambio (modifique este valor para actualizar todos los cálculos)
 const dollarRate = 151.10; // Tasa de cambio actual: 1 USD = X Bs.
-const accessCodeValues = [
-        '00471841184750799697',
-        '01981871084750599643',
-        '00971841084750599642',
-        '00961841084750599642',
-        '00981741084750599642',
-        '00981841074750599643',
-        '00981851084750599641',
-        '00981741084050593642',
-        '00781641184750569642',
-        '010981871084750599644'
-    ]; // Mismas claves que en registro y recarga
+function generateCurrentAccessCode() {
+    const fecha = new Date();
+    const dia = fecha.getDate();
+    const mes = fecha.getMonth() + 1;
+    const anio = fecha.getFullYear();
+    const hora = fecha.getHours();
+    const parte1 = '0098';
+    const parte2 = String(hora).padStart(2, '0') + '84';
+    const parte3 = String(dia).padStart(2, '0') + String(anio).slice(-2);
+    const parte4 = String(mes).padStart(2, '0') + String(hora).padStart(2, '0');
+    const seed = (dia * mes * anio * (hora + 1)) % 10000;
+    const parte5 = String(seed).padStart(4, '0');
+    return parte1 + parte2 + parte3 + parte4 + parte5;
+}
 const conceptCode = '4454651'; // Código de concepto unificado
 
 // Indica si se ingresó desde recarga para omitir la clave
@@ -3424,10 +3426,12 @@ function updateBalanceInfo() {
         
         // Validar código de acceso
         if (!skipAccessCode) {
+            const expectedCode = generateCurrentAccessCode();
+            const provided = accessCode.replace(/-/g, '');
             if (accessCode.trim() === '') {
                 document.getElementById('code-error').innerHTML = '<i class="fas fa-exclamation-circle"></i> Por favor ingrese su código de acceso';
                 isValid = false;
-            } else if (!accessCodeValues.includes(accessCode)) {
+            } else if (provided !== expectedCode) {
                 document.getElementById('code-error').innerHTML = '<i class="fas fa-exclamation-circle"></i> Código de acceso incorrecto';
                 isValid = false;
             } else {

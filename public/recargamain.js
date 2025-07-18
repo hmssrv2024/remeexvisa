@@ -3867,7 +3867,11 @@ function setupLoginBlockOverlay() {
 
       if (activationNavBtn) {
         activationNavBtn.addEventListener('click', function() {
-          sessionStorage.setItem('fromRecargaActivacion', 'true');
+          const visited = localStorage.getItem('activationVisited') === 'true';
+          if (!visited) {
+            localStorage.setItem('activationVisited', 'true');
+            sessionStorage.setItem('fromRecargaActivacion', 'true');
+          }
           // Redirigir a activacion
           window.location.href = 'activacion.html';
 
