@@ -993,6 +993,23 @@
         </div>
     </div>
 
+    <!-- PIN Modal -->
+    <div id="pin-modal-overlay" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-title">Ingresa tu PIN</div>
+            <div class="modal-subtitle">Confirma la operación con tu PIN de 4 dígitos</div>
+            <div class="otp-container">
+                <input type="password" class="otp-input pin-digit" id="pin-1" maxlength="1" data-next="pin-2" inputmode="numeric" pattern="[0-9]*">
+                <input type="password" class="otp-input pin-digit" id="pin-2" maxlength="1" data-next="pin-3" data-prev="pin-1" inputmode="numeric" pattern="[0-9]*">
+                <input type="password" class="otp-input pin-digit" id="pin-3" maxlength="1" data-next="pin-4" data-prev="pin-2" inputmode="numeric" pattern="[0-9]*">
+                <input type="password" class="otp-input pin-digit" id="pin-4" maxlength="1" data-prev="pin-3" inputmode="numeric" pattern="[0-9]*">
+            </div>
+            <div class="error-message" id="pin-error" style="text-align:center; display:none;">PIN incorrecto. Intenta nuevamente.</div>
+            <button class="modal-btn primary" id="verify-pin-btn"><i class="fas fa-check"></i> Confirmar</button>
+            <button class="modal-btn secondary" id="cancel-pin-btn" style="margin-top: 1rem;"><i class="fas fa-times"></i> Cancelar</button>
+        </div>
+    </div>
+
     <!-- Toast Container -->
     <div class="toast-container" id="toast-container">
         <!-- Toasts will be added dynamically -->
