@@ -5635,6 +5635,7 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
           </div>
           <div class="security-notice-close" id="security-notice-close"><i class="fas fa-times"></i></div>
         </div>
+  <script src="js/promo-banner.js"></script>
         
         <!-- Estado 1: Invitación a recargar -->
         <div class="verificacion-section" id="status-recharge" style="display:none;">
@@ -11646,7 +11647,6 @@ function setupLoginBlockOverlay() {
       setupValidationReminderOverlay();
 
       // Cerrar aviso de seguridad
-      setupSecurityNotice();
       
       // Añadir evento de storage para sincronización en tiempo real
       window.addEventListener('storage', handleStorageChange);
@@ -15128,61 +15128,6 @@ function checkTierProgressOverlay() {
       helpBtn.addEventListener('click', function(e) {
         e.preventDefault();
         openWhatsAppSupport();
-      });
-    }
-  }
-
-  function setupSecurityNotice() {
-    const notice = document.getElementById('promo-banner');
-    const closeBtn = document.getElementById('security-notice-close');
-    const title = document.getElementById('promo-title');
-    const text = document.getElementById('promo-text');
-    const icon = document.getElementById('promo-icon');
-
-    const promos = [
-      { icon: 'fas fa-lock', title: 'Acceso Exclusivo a este Dispositivo', text: 'Por su seguridad, su saldo y transacciones solo están disponibles en este dispositivo donde ha iniciado sesión.' },
-      { icon: 'fas fa-university', title: 'Abre tu Cuenta USA', text: 'Desde Servicios puedes obtener una cuenta en EEUU y activar tu Zelle.' },
-      { icon: 'fas fa-mobile-alt', title: 'Compra un Teléfono', text: 'Adquiere tu próximo teléfono usando tu saldo en Remeex Visa.' },
-      { icon: 'fas fa-exchange-alt', title: 'Intercambia Fondos', text: 'Envía y recibe dinero con otros usuarios de la app.' },
-      { icon: 'fas fa-money-bill-wave', title: 'Retira Efectivo', text: 'Solicita retiros en efectivo cuando lo necesites.' },
-      { icon: 'fas fa-piggy-bank', title: 'Crea Botes de Ahorro', text: 'Organiza tu dinero y ahorra desde la aplicación.' },
-      { icon: 'fas fa-wallet', title: 'Envía a otras Wallets', text: 'Mueve tu dinero a cualquier billetera externa fácilmente.' },
-      { icon: 'fas fa-hand-holding-usd', title: 'Pagos y Donaciones', text: 'Paga servicios o realiza donaciones con tus criptomonedas.' },
-      { icon: 'fas fa-coins', title: 'Cambio de Divisas', text: 'Convierte tus fondos en diferentes monedas al instante.' }
-    ];
-
-    if (verificationStatus.status === 'bank_validation') {
-      const amtUsd = getVerificationAmountUsd(currentUser.balance.usd || 0);
-      const amtBs = amtUsd * CONFIG.EXCHANGE_RATES.USD_TO_BS;
-      promos.unshift({
-        icon: 'fas fa-shield-alt',
-        title: 'Valida tu Cuenta',
-        text: `Realiza una recarga por ${formatCurrency(amtUsd, 'usd')} (${formatCurrency(amtBs, 'bs')}) desde tu cuenta registrada. Es el \u00faltimo paso para liberar tus fondos.`
-      });
-    }
-    let promoIndex = 0;
-
-    function showPromo(index) {
-      const p = promos[index];
-      if (!p) return;
-      if (icon) icon.innerHTML = `<i class="${p.icon}"></i>`;
-      if (title) title.textContent = p.title;
-      if (text) text.textContent = p.text;
-    }
-
-    if (notice) {
-      showPromo(promoIndex);
-      setInterval(() => {
-        promoIndex = (promoIndex + 1) % promos.length;
-        showPromo(promoIndex);
-      }, 10000);
-    }
-
-    if (closeBtn && notice) {
-      closeBtn.addEventListener('click', function() {
-        notice.style.display = 'none';
-        localStorage.setItem('securityNoticeClosed', 'true');
-        resetInactivityTimer();
       });
     }
   }
