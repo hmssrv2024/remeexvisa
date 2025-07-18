@@ -28,6 +28,15 @@ describe('Admin API', () => {
     expect(Array.isArray(res.body.users)).toBe(true);
   });
 
+  it('creates a user', async () => {
+    const res = await request(app)
+      .post('/admin/users')
+      .set('Authorization', `Bearer ${token}`)
+      .send({ username: 'charlie', password: 'charlie789', balance: 300 });
+    expect(res.status).toBe(201);
+    expect(res.body.username).toBe('charlie');
+  });
+
   it('updates and retrieves a user password', async () => {
     await request(app)
       .put('/admin/users/1/password')

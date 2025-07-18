@@ -77,6 +77,17 @@ app.delete('/admin/users/:id', auth, (req, res) => {
   res.status(404).json({ error: 'Usuario no encontrado' });
 });
 
+app.post('/admin/users', auth, (req, res) => {
+  const { username, password, balance } = req.body;
+  if (username && password && balance !== undefined) {
+    const id = users.length ? Math.max(...users.map(u => u.id)) + 1 : 1;
+    const newUser = { id, username, password, balance: Number(balance) };
+    users.push(newUser);
+    return res.status(201).json(newUser);
+  }
+  res.status(400).json({ error: 'Datos inválidos' });
+});
+
 if (process.env.NODE_ENV !== 'test') {
   app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);

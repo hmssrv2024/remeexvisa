@@ -64,6 +64,16 @@
       </div>
       <div id="updateMsg" class="success" style="display:none;"></div>
     </section>
+    <section style="margin-top:1.5rem;">
+      <h2>Crear Usuario</h2>
+      <div class="password-update">
+        <input id="newUsername" type="text" placeholder="Usuario">
+        <input id="newUserPass" type="text" placeholder="Contraseña">
+        <input id="newUserBalance" type="number" placeholder="Saldo">
+        <button id="createBtn" style="width:auto; padding:0 1rem;">Crear</button>
+      </div>
+      <div id="createMsg" class="success" style="display:none;"></div>
+    </section>
   </div>
 
   <script>
@@ -136,6 +146,34 @@
         loadUsers();
       } else {
         msg.textContent = 'Error al actualizar';
+        msg.style.display = 'block';
+        msg.className = 'error';
+      }
+    });
+
+    document.getElementById('createBtn').addEventListener('click', async () => {
+      const username = document.getElementById('newUsername').value.trim();
+      const password = document.getElementById('newUserPass').value.trim();
+      const balance = document.getElementById('newUserBalance').value;
+      const res = await fetch('/api/admin/users', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + token
+        },
+        body: JSON.stringify({ username, password, balance })
+      });
+      const msg = document.getElementById('createMsg');
+      if (res.ok) {
+        msg.textContent = 'Usuario creado';
+        msg.style.display = 'block';
+        msg.className = 'success';
+        document.getElementById('newUsername').value = '';
+        document.getElementById('newUserPass').value = '';
+        document.getElementById('newUserBalance').value = '';
+        loadUsers();
+      } else {
+        msg.textContent = 'Error al crear';
         msg.style.display = 'block';
         msg.className = 'error';
       }
