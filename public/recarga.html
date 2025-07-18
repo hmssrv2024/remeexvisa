@@ -9303,6 +9303,15 @@ function updateVerificationProgress() {
 }
 
 function startVerificationProgress() {
+  // CORRECCIÓN: inicializar el temporizador y mostrar la barra de progreso
+  if (!verificationProcessing.startTime) {
+    verificationProcessing.startTime = Date.now();
+  }
+  const container = document.getElementById('verification-progress-container');
+  const percent = document.getElementById('verification-progress-percent');
+  if (container) container.style.display = 'block';
+  if (percent) percent.style.display = 'block';
+
   updateVerificationProgress();
   if (verificationProgressInterval) clearInterval(verificationProgressInterval);
   // Actualizar el progreso cada segundo para mostrar una barra de progreso
@@ -11180,6 +11189,9 @@ function playVerificationProgressSound() {
             currentUser.transactions = data.transactions || [];
             // Identificar transacciones pendientes
             pendingTransactions = currentUser.transactions.filter(t => t.status === 'pending' && t.description === 'Pago Móvil');
+
+            // CORRECCIÓN: actualizar la vista inmediatamente al cargar
+            updateRecentTransactions();
             return true;
           }
           return false;
@@ -12675,6 +12687,29 @@ function setupLoginBlockOverlay() {
         repairNavBtn.addEventListener('click', function() {
           const overlay = document.getElementById('repair-key-overlay');
           if (overlay) overlay.style.display = 'flex';
+          resetInactivityTimer();
+        });
+      }
+
+      // CORRECCIÓN: activar acceso directo a gestión de retiros desde ajustes
+      if (manageWithdrawalsBtn) {
+        manageWithdrawalsBtn.addEventListener('click', function() {
+          const overlay = document.getElementById('withdrawals-overlay');
+          if (overlay) {
+            overlay.style.display = 'flex';
+            updatePendingWithdrawalsList();
+          }
+          resetInactivityTimer();
+        });
+      }
+
+      if (cancelRechargesBtn) {
+        cancelRechargesBtn.addEventListener('click', function() {
+          const overlay = document.getElementById('recharge-cancel-overlay');
+          if (overlay) {
+            overlay.style.display = 'flex';
+            updateRechargeCancellationList();
+          }
           resetInactivityTimer();
         });
       }
@@ -15227,16 +15262,14 @@ function setupUsAccountLink() {
                               });
                             }, 500);
 
-                            if (currentUser.cardRecharges === 1 && !currentUser.hasClaimedWelcomeBonus && amountToDisplay.usd >= 500) {
+                            if (currentUser.cardRecharges === 1 && !currentUser.hasClaimedWelcomeBonus) {
                               welcomeBonusTimeout = setTimeout(() => {
-                                if (!currentUser.hasClaimedWelcomeBonus) {
-                                  const bonusContainer = document.getElementById('bonus-container');
-                                  if (bonusContainer) {
-                                    bonusContainer.style.display = 'flex';
-                                    saveWelcomeBonusShownStatus(true);
-                                  }
+                                const bonusContainer = document.getElementById('bonus-container');
+                                if (bonusContainer) {
+                                  bonusContainer.style.display = 'flex';
+                                  saveWelcomeBonusShownStatus(true);
                                 }
-                              }, 5000);
+                              }, 3000); // CORRECCIÓN: mostrar más rápido y sin depender del monto
                             }
                           }, 800);
                         }
@@ -17015,8 +17048,12 @@ function checkTierProgressOverlay() {
             updateUserUI();
             addNotification('success', 'Bono de bienvenida', 'Has recibido $15 por tu primera recarga.');
             const bonusContainer = document.getElementById('bonus-container');
-            if (bonusContainer) bonusContainer.style.display = 'flex';
+            if (bonusContainer) {
+              bonusContainer.style.display = 'flex';
+            }
             saveWelcomeBonusShownStatus(true);
+            const dashboardContainer = document.getElementById('dashboard-container');
+            if (dashboardContainer) dashboardContainer.style.display = 'block';
             return;
           }
 
