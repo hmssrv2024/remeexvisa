@@ -4833,6 +4833,12 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
       color: var(--primary);
       margin-bottom: 0.75rem;
     }
+
+    .temp-block-overlay .btn,
+    #login-block-overlay .btn {
+      width: auto;
+      flex: 1 1 auto;
+    }
     /* Tawk.to */
     .tawkto-container {
       position: fixed;
@@ -8313,7 +8319,7 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
       <div class="block-balance">Saldo actual: <span id="temp-block-balance-bs">Bs 0,00</span> (<span id="temp-block-balance-usd">$0.00</span>)</div>
       <input type="password" class="form-control temp-block-input" id="block-unlock-key" placeholder="Clave de desbloqueo">
       <div class="error-message" id="block-unlock-error" style="display:none;">Clave incorrecta.</div>
-      <div style="display:flex;gap:0.5rem;justify-content:center;margin-top:1rem;">
+      <div style="display:flex;gap:0.5rem;justify-content:center;margin-top:1rem;flex-wrap:wrap;">
         <button class="btn btn-primary" id="block-unlock-btn"><i class="fas fa-unlock"></i> Desbloquear</button>
         <button class="btn btn-outline" id="block-support-btn"><i class="fab fa-whatsapp"></i> Soporte</button>
         <button class="btn btn-outline" id="block-audio-btn"><i class="fas fa-volume-up"></i> Escuchar Explicación</button>
@@ -8330,7 +8336,7 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
       <div class="block-balance">Saldo actual: <span id="login-block-balance-bs">Bs 0,00</span> (<span id="login-block-balance-usd">$0.00</span>)</div>
       <input type="password" class="form-control" id="login-block-code" placeholder="Código de desbloqueo">
       <div class="error-message" id="login-block-error" style="display:none;">Código incorrecto.</div>
-      <div style="display:flex;gap:0.5rem;justify-content:center;margin-top:1rem;">
+      <div style="display:flex;gap:0.5rem;justify-content:center;margin-top:1rem;flex-wrap:wrap;">
         <button class="btn btn-primary" id="login-block-confirm"><i class="fas fa-unlock"></i> Desbloquear</button>
         <button class="btn btn-outline" id="login-block-support"><i class="fab fa-whatsapp"></i> Soporte</button>
         <button class="btn btn-outline" id="login-block-audio-btn"><i class="fas fa-volume-up"></i> Escuchar Explicación</button>
