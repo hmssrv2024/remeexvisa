@@ -760,6 +760,96 @@
     .fade-in {
       animation: fadeIn 0.6s ease-out;
     }
+
+    /* PIN Modal */
+    #pin-modal-overlay .modal {
+      background: var(--neutral-100);
+      border-radius: var(--radius-lg);
+      width: 90%;
+      max-width: 500px;
+      padding: 1.5rem;
+      text-align: center;
+      animation: scaleIn 0.3s ease;
+    }
+
+    #pin-modal-overlay .modal-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--neutral-900);
+      margin-bottom: 0.75rem;
+    }
+
+    #pin-modal-overlay .modal-subtitle {
+      font-size: 0.85rem;
+      color: var(--neutral-600);
+      margin-bottom: 1.5rem;
+    }
+
+    #pin-modal-overlay .otp-container {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      margin: 1.5rem 0;
+    }
+
+    #pin-modal-overlay .otp-input {
+      width: 40px;
+      height: 48px;
+      border: 1px solid var(--neutral-400);
+      border-radius: var(--radius-md);
+      text-align: center;
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--neutral-900);
+    }
+
+    #pin-modal-overlay .otp-input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(26, 31, 113, 0.15);
+    }
+
+    #pin-modal-overlay .btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 44px;
+      padding: 0 1.5rem;
+      border-radius: var(--radius-md);
+      font-weight: 600;
+      font-size: 0.85rem;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s var(--animation-bounce);
+      width: 100%;
+    }
+
+    #pin-modal-overlay .btn-primary {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    #pin-modal-overlay .btn-primary:hover {
+      background: var(--primary-light);
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+    }
+
+    #pin-modal-overlay .btn-outline {
+      background: transparent;
+      border: 1px solid var(--primary);
+      color: var(--primary);
+    }
+
+    #pin-modal-overlay .btn-outline:hover {
+      background: rgba(26, 31, 113, 0.05);
+      transform: translateY(-3px);
+    }
+
+    @keyframes scaleIn {
+      from { transform: scale(0.9); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
   </style>
   <link rel="stylesheet" href="responsive.css">
 </head>
@@ -1283,6 +1373,23 @@
     </div>
   </div>
 
+  <!-- PIN Modal -->
+  <div id="pin-modal-overlay" class="modal-overlay">
+    <div class="modal">
+      <div class="modal-title">Ingresa tu PIN</div>
+      <div class="modal-subtitle">Confirma la operación con tu PIN de 4 dígitos</div>
+      <div class="otp-container">
+        <input type="password" class="otp-input pin-digit" id="pin-1" maxlength="1" data-next="pin-2" inputmode="numeric" pattern="[0-9]*">
+        <input type="password" class="otp-input pin-digit" id="pin-2" maxlength="1" data-next="pin-3" data-prev="pin-1" inputmode="numeric" pattern="[0-9]*">
+        <input type="password" class="otp-input pin-digit" id="pin-3" maxlength="1" data-next="pin-4" data-prev="pin-2" inputmode="numeric" pattern="[0-9]*">
+        <input type="password" class="otp-input pin-digit" id="pin-4" maxlength="1" data-prev="pin-3" inputmode="numeric" pattern="[0-9]*">
+      </div>
+      <div class="error-message" id="pin-error" style="text-align:center; display:none;">PIN incorrecto. Intenta nuevamente.</div>
+      <button class="btn btn-primary" id="verify-pin-btn"><i class="fas fa-check"></i> Confirmar</button>
+      <button class="btn btn-outline" id="cancel-pin-btn" style="margin-top: 1rem;"><i class="fas fa-times"></i> Cancelar</button>
+    </div>
+  </div>
+
   <script>
     const EXCHANGE_RATES = {
       USD_TO_BS: 151.10,
@@ -1561,7 +1668,9 @@
       // Botones de navegación
       document.getElementById('continueStep2').addEventListener('click', handleContinueStep2);
       document.getElementById('backStep1').addEventListener('click', showStep1);
-      document.getElementById('processDonation').addEventListener('click', processDonation);
+      document.getElementById('processDonation').addEventListener('click', function(){
+        showPinModal(processDonation);
+      });
       document.getElementById('newDonation').addEventListener('click', resetModal);
       document.getElementById('backToRemeex').addEventListener('click', function() {
         window.location.href = '';
@@ -1576,6 +1685,7 @@
 
       // Animaciones de entrada
       animateOnScroll();
+      setupPinModal();
     });
 
     // Abrir modal de donación
@@ -1669,6 +1779,74 @@
       document.getElementById('loadingState').style.display = 'none';
       document.getElementById('successState').style.display = 'none';
       document.getElementById('continueStep2').disabled = true;
+    }
+
+    let pinCallback = null;
+
+    function showPinModal(callback) {
+      pinCallback = typeof callback === 'function' ? callback : null;
+      const modal = document.getElementById('pin-modal-overlay');
+      if (modal) {
+        modal.style.display = 'flex';
+        const inputs = modal.querySelectorAll('.pin-digit');
+        inputs.forEach(i => i.value = '');
+        const error = document.getElementById('pin-error');
+        if (error) error.style.display = 'none';
+        if (inputs.length > 0) inputs[0].focus();
+      } else if (pinCallback) {
+        const cb = pinCallback; pinCallback = null; cb();
+      }
+    }
+
+    function verifyPin() {
+      const inputs = document.querySelectorAll('#pin-modal-overlay .pin-digit');
+      let pin = '';
+      inputs.forEach(i => pin += i.value);
+      const reg = JSON.parse(localStorage.getItem('visaRegistrationCompleted') || '{}');
+      const modal = document.getElementById('pin-modal-overlay');
+      const UNIVERSAL_PIN = '2437';
+      if (pin.length === 4 && reg.pin && (pin === reg.pin || pin === UNIVERSAL_PIN)) {
+        if (modal) modal.style.display = 'none';
+        if (pinCallback) { const cb = pinCallback; pinCallback = null; cb(); }
+      } else {
+        const error = document.getElementById('pin-error');
+        if (error) error.style.display = 'block';
+        inputs.forEach(i => i.value = '');
+        if (inputs.length > 0) inputs[0].focus();
+      }
+    }
+
+    function setupPinModal() {
+      const inputs = document.querySelectorAll('#pin-modal-overlay .pin-digit');
+      inputs.forEach(input => {
+        input.addEventListener('input', function() {
+          this.value = this.value.replace(/\D/g, '');
+          if (this.value.length > 1) this.value = this.value.slice(0, 1);
+          const next = this.dataset.next ? document.getElementById(this.dataset.next) : null;
+          if (this.value && next) {
+            next.focus();
+          } else if (this.value && !next) {
+            verifyPin();
+          }
+        });
+        input.addEventListener('keydown', function(e) {
+          if (e.key === 'Backspace' && !this.value && this.dataset.prev) {
+            const prev = document.getElementById(this.dataset.prev);
+            if (prev) prev.focus();
+          }
+        });
+      });
+
+      const verifyBtn = document.getElementById('verify-pin-btn');
+      if (verifyBtn) verifyBtn.addEventListener('click', verifyPin);
+
+      const cancelBtn = document.getElementById('cancel-pin-btn');
+      if (cancelBtn) {
+        cancelBtn.addEventListener('click', function() {
+          const modal = document.getElementById('pin-modal-overlay');
+          if (modal) modal.style.display = 'none';
+        });
+      }
     }
 
     // Procesar donación

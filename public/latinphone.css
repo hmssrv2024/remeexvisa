@@ -2439,6 +2439,96 @@ body {
     z-index: 3000;
 }
 
+/* PIN Modal */
+#pin-modal-overlay .modal {
+    background: white;
+    border-radius: var(--radius-xl);
+    width: 90%;
+    max-width: 500px;
+    padding: var(--space-6);
+    text-align: center;
+    animation: scaleIn 0.3s ease;
+}
+
+#pin-modal-overlay .modal-title {
+    font-size: var(--text-lg);
+    font-weight: 700;
+    color: var(--gray-900);
+    margin-bottom: var(--space-3);
+}
+
+#pin-modal-overlay .modal-subtitle {
+    font-size: var(--text-sm);
+    color: var(--gray-600);
+    margin-bottom: var(--space-6);
+}
+
+#pin-modal-overlay .otp-container {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-2);
+    margin: var(--space-6) 0;
+}
+
+#pin-modal-overlay .otp-input {
+    width: 40px;
+    height: 48px;
+    border: 1px solid var(--gray-300);
+    border-radius: var(--radius-lg);
+    text-align: center;
+    font-size: var(--text-lg);
+    font-weight: 600;
+    color: var(--gray-900);
+}
+
+#pin-modal-overlay .otp-input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(26,31,113,0.15);
+}
+
+#pin-modal-overlay .btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 44px;
+    padding: 0 var(--space-6);
+    border-radius: var(--radius-lg);
+    font-weight: 600;
+    font-size: var(--text-sm);
+    border: none;
+    cursor: pointer;
+    transition: all var(--transition-base);
+    width: 100%;
+}
+
+#pin-modal-overlay .btn-primary {
+    background: var(--primary);
+    color: #fff;
+}
+
+#pin-modal-overlay .btn-primary:hover {
+    background: var(--primary-dark);
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+}
+
+#pin-modal-overlay .btn-outline {
+    background: transparent;
+    border: 1px solid var(--primary);
+    color: var(--primary);
+}
+
+#pin-modal-overlay .btn-outline:hover {
+    background: rgba(26,31,113,0.05);
+    transform: translateY(-3px);
+}
+
+@keyframes scaleIn {
+    from { transform: scale(0.9); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
 .purchase-success-card {
     background: white;
     padding: var(--space-8);
