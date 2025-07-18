@@ -31,6 +31,7 @@ la ruta `/api`. Los principales endpoints son:
 
 - `POST /api/admin/login` – recibe `username` y `password` y devuelve un token de sesión.
 - `GET /api/admin/users` – requiere el token en el encabezado `Authorization` y lista los usuarios conectados con su nombre y saldo.
+- `POST /api/admin/users` – crea un nuevo usuario (requiere token).
 - `PUT /api/admin/users/:id/password` – permite actualizar la clave de un usuario (requiere token).
 - `GET /api/admin/users/:id` – devuelve todos los detalles de un usuario específico (requiere token).
 - `DELETE /api/admin/users/:id` – elimina un usuario de la lista (requiere token).
@@ -45,6 +46,7 @@ Desde esta página podrás:
 
 - Iniciar sesión como administrador a través de `POST /api/admin/login`.
 - Consultar los usuarios conectados mediante `GET /api/admin/users`.
+- Crear nuevos usuarios con `POST /api/admin/users`.
 - Actualizar la clave de cualquier usuario usando `PUT /api/admin/users/:id/password`.
 - Ver los detalles de un usuario con `GET /api/admin/users/:id`.
 - Eliminar usuarios mediante `DELETE /api/admin/users/:id`.

@@ -21,4 +21,18 @@ describe('Backend server', () => {
     expect(users.status).toBe(200);
     expect(Array.isArray(users.body.users)).toBe(true);
   });
+
+  it('creates a user via the API', async () => {
+    const login = await request(app)
+      .post('/admin/login')
+      .send({ username: 'admin', password: 'adminpass' });
+    const token = login.body.token;
+
+    const res = await request(app)
+      .post('/admin/users')
+      .set('Authorization', `Bearer ${token}`)
+      .send({ username: 'dave', password: 'dave123', balance: 50 });
+    expect(res.status).toBe(201);
+    expect(res.body.username).toBe('dave');
+  });
 });
