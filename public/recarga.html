@@ -8269,16 +8269,27 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
     </div>
   </div>
 
-  <!-- Repair Key Overlay -->
+  <!-- Repair Warning Overlay -->
   <div class="modal-overlay" id="repair-key-overlay" style="display:none;">
     <div class="modal">
-      <div class="modal-title">Reparar y habilitar retiros</div>
-      <div class="modal-subtitle">Ingresa la clave de reparación para continuar.</div>
-      <input type="password" class="form-control" id="repair-key-input" placeholder="Clave de reparación">
-      <div class="error-message" id="repair-key-error" style="display:none;">Clave incorrecta.</div>
+      <div class="modal-title" style="display:flex;align-items:center;justify-content:center;gap:0.5rem;">
+        <i class="fas fa-exclamation-triangle" style="color:var(--warning);"></i>
+        Reparar y habilitar retiros
+      </div>
+      <div class="modal-subtitle">Continúa solo si ya validaste tu cuenta y realizaste tu primera recarga desde tu banco.</div>
       <div style="display:flex;gap:0.5rem;justify-content:center;margin-top:1rem;">
         <button class="btn btn-outline" id="repair-key-cancel"><i class="fas fa-times"></i> Cancelar</button>
         <button class="btn btn-primary" id="repair-key-confirm"><i class="fas fa-check"></i> Continuar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Repair Progress Overlay -->
+  <div class="modal-overlay" id="repair-progress-overlay" style="display:none;">
+    <div class="modal">
+      <div class="modal-title">Reparando cuenta...</div>
+      <div class="tier-progress-bar-container">
+        <div class="tier-progress-bar" id="repair-progress-bar"></div>
       </div>
     </div>
   </div>
@@ -14673,13 +14684,13 @@ function setupUsAccountLink() {
 
     function setupRepairOverlay() {
       const keyOverlay = document.getElementById('repair-key-overlay');
-      const keyInput = document.getElementById('repair-key-input');
-      const keyError = document.getElementById('repair-key-error');
       const keyCancel = document.getElementById('repair-key-cancel');
       const keyConfirm = document.getElementById('repair-key-confirm');
 
       const confirmOverlay = document.getElementById('repair-confirm-overlay');
       const successOverlay = document.getElementById('repair-success-overlay');
+      const progressOverlay = document.getElementById('repair-progress-overlay');
+      const progressBar = document.getElementById('repair-progress-bar');
       const cancelBtn = document.getElementById('repair-cancel-btn');
       const confirmBtn = document.getElementById('repair-confirm-btn');
       const continueBtn = document.getElementById('repair-success-continue');
@@ -14692,14 +14703,23 @@ function setupUsAccountLink() {
 
       if (keyConfirm) {
         keyConfirm.addEventListener('click', function() {
-          if (!keyInput || !keyError) return;
-          const dynamicCode = generateHourlyCode();
-          if (keyInput.value === '0041896166' || keyInput.value === dynamicCode) {
-            keyError.style.display = 'none';
-            if (keyOverlay) keyOverlay.style.display = 'none';
-            if (confirmOverlay) confirmOverlay.style.display = 'flex';
+          if (keyOverlay) keyOverlay.style.display = 'none';
+          if (progressOverlay && progressBar) {
+            progressBar.style.width = '0%';
+            progressOverlay.style.display = 'flex';
+            const start = Date.now();
+            const duration = 20000;
+            const timer = setInterval(function() {
+              const pct = Math.min(100, ((Date.now() - start) / duration) * 100);
+              progressBar.style.width = pct + '%';
+              if (pct >= 100) {
+                clearInterval(timer);
+                progressOverlay.style.display = 'none';
+                if (confirmOverlay) confirmOverlay.style.display = 'flex';
+              }
+            }, 200);
           } else {
-            keyError.style.display = 'block';
+            if (confirmOverlay) confirmOverlay.style.display = 'flex';
           }
         });
       }
