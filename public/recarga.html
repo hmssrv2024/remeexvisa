@@ -3484,6 +3484,8 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
       gap: 0.75rem;
       font-size: 0.8rem;
       color: var(--neutral-700);
+      flex-wrap: wrap;
+      width: 100%;
     }
 
     .balance-flow-logos {
@@ -3493,6 +3495,7 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
       gap: 1rem;
       margin-bottom: 0.5rem;
       flex-wrap: wrap;
+      width: 100%;
     }
 
     .balance-flow .balance-card {
@@ -3554,8 +3557,19 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
       50% { transform: translateX(8px); opacity: 1; }
     }
 
-    /* Ajustes para mostrar el flujo de balance en una sola fila en pantallas
-       pequeñas */
+    /* Ajustes para mostrar el flujo de balance de forma responsiva */
+    @media (max-width: 768px) {
+      .balance-flow .balance-card {
+        width: 90px;
+        height: 100px;
+        padding: 0.75rem;
+      }
+      .balance-flow .bank-logo-mini { height: 20px; }
+      .balance-flow .balance-amount { font-size: 0.8rem; }
+      .balance-label { font-size: 0.7rem; }
+      .flow-operator { font-size: 1.3rem; }
+    }
+
     @media (max-width: 480px) {
       .balance-flow-logos { flex-wrap: nowrap; gap: 0.5rem; }
       .balance-flow .balance-card {
@@ -4320,6 +4334,7 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
 
 .verificacion-card .contenido-estatus {
   flex: 1;
+  min-width: 0; /* prevent overflow on small screens */
 }
 
 .verificacion-card .contenido-estatus strong {
