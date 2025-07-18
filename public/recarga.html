@@ -8893,8 +8893,9 @@ document.addEventListener('DOMContentLoaded', function() {
       verificationStatus.status = 'processing';
       saveVerificationStatus();
 
-      // Mostrar banner de procesamiento
+      // Mostrar banner de procesamiento y comenzar el progreso con sonido
       showVerificationProcessingBanner();
+      startVerificationProgress();
       updateStatusCards();
       
       // Configurar temporizador para cambiar a validación bancaria después de 10 minutos
