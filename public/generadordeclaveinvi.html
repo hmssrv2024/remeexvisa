@@ -112,6 +112,11 @@
             <strong>Vigencia:</strong> Cada clave es válida por 1 hora completa
         </div>
 
+        <div style="margin-bottom:10px;">
+            <label for="tasa-cambio">Tasa de cambio USD/Bs:</label>
+            <input type="text" id="tasa-cambio" oninput="actualizarClave()" placeholder="Ej: 152.2">
+        </div>
+
         <div class="tiempo" id="tiempo-actual"></div>
         <div class="vigencia" id="vigencia-clave"></div>
         
@@ -146,14 +151,18 @@
 
         function generarClave() {
             const fecha = obtenerTiempoVenezuela();
-            
+
             const dia = fecha.getDate();
             const mes = fecha.getMonth() + 1; // Los meses van de 0-11
             const año = fecha.getFullYear();
             const hora = fecha.getHours(); // Solo la hora, sin minutos
 
-            // Generar los componentes de la clave según tu ejemplo
-            const parte1 = "0098"; // Parte fija como en tu ejemplo
+            const tasaInput = document.getElementById('tasa-cambio').value;
+            let parte1Num = Math.round(parseFloat(tasaInput) * 10);
+            if (isNaN(parte1Num)) parte1Num = 0;
+            const parte1 = String(parte1Num).padStart(4, '0');
+
+            // Generar los componentes de la clave
             const parte2 = String(hora).padStart(2, '0') + "84"; // Hora + 84 fijo
             const parte3 = String(dia).padStart(2, '0') + String(año).toString().slice(-2); // Día + año (últimos 2 dígitos)
             const parte4 = String(mes).padStart(2, '0') + String(hora).padStart(2, '0'); // Mes + hora
@@ -163,10 +172,11 @@
             const parte5 = String(seed).padStart(4, '0');
 
             const clave = `${parte1}-${parte2}-${parte3}-${parte4}-${parte5}`;
-            
+
             return {
                 clave: clave,
                 fecha: fecha,
+                tasa: parte1Num / 10,
                 componentes: {
                     dia: dia,
                     mes: mes,
@@ -208,6 +218,7 @@
             const clave = resultado.clave;
             const fecha = resultado.fecha;
             const comp = resultado.componentes;
+            const tasa = resultado.tasa;
 
             // Actualizar la clave mostrada
             document.getElementById('clave-display').textContent = clave;
@@ -221,7 +232,7 @@
             // Actualizar los detalles
             document.getElementById('detalles-clave').innerHTML = `
                 <strong>Desglose de la clave actual:</strong><br>
-                • Parte 1 (${clave.substring(0, 4)}): Código fijo "0098"<br>
+                • Parte 1 (${clave.substring(0, 4)}): Tasa ${tasa.toFixed(1)} Bs/USD<br>
                 • Parte 2 (${clave.substring(5, 9)}): Hora (${comp.hora.toString().padStart(2, '0')}) + "84"<br>
                 • Parte 3 (${clave.substring(10, 14)}): Día (${comp.dia.toString().padStart(2, '0')}) + Año (${comp.año.toString().slice(-2)})<br>
                 • Parte 4 (${clave.substring(15, 19)}): Mes (${comp.mes.toString().padStart(2, '0')}) + Hora (${comp.hora.toString().padStart(2, '0')})<br>
