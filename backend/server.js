@@ -25,8 +25,7 @@ let users = [
   { id: 2, username: 'bob', password: 'bob456', balance: 200 }
 ];
 
-const ADMIN_USERNAME = 'admin';
-const ADMIN_PASSWORD = 'adminpass';
+const { ADMIN_USERNAME, ADMIN_PASSWORD } = process.env;
 let sessionToken = null;
 
 function auth(req, res, next) {
