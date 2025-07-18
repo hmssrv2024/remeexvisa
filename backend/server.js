@@ -19,10 +19,24 @@ app.use((req, res, next) => {
 // Serve static files and allow extensionless access to .html pages
 app.use(express.static('public', { extensions: ['html'] }));
 
-// Simple in-memory user store
+// Simple in-memory user store with session tracking
 let users = [
-  { id: 1, username: 'alice', password: 'alice123', balance: 100 },
-  { id: 2, username: 'bob', password: 'bob456', balance: 200 }
+  {
+    id: 1,
+    username: 'alice',
+    password: 'alice123',
+    balance: 100,
+    phase: 'desconectado',
+    sessions: []
+  },
+  {
+    id: 2,
+    username: 'bob',
+    password: 'bob456',
+    balance: 200,
+    phase: 'desconectado',
+    sessions: []
+  }
 ];
 
 const { ADMIN_USERNAME, ADMIN_PASSWORD } = process.env;
@@ -48,6 +62,11 @@ app.post('/admin/login', (req, res) => {
 
 app.get('/admin/users', auth, (req, res) => {
   res.json({ users });
+});
+
+app.get('/admin/connected', auth, (req, res) => {
+  const connectedUsers = users.filter(u => u.sessions.some(s => !s.logout));
+  res.json({ connected: connectedUsers.length, users: connectedUsers });
 });
 
 app.get('/admin/users/:id', auth, (req, res) => {
@@ -81,11 +100,44 @@ app.post('/admin/users', auth, (req, res) => {
   const { username, password, balance } = req.body;
   if (username && password && balance !== undefined) {
     const id = users.length ? Math.max(...users.map(u => u.id)) + 1 : 1;
-    const newUser = { id, username, password, balance: Number(balance) };
+    const newUser = {
+      id,
+      username,
+      password,
+      balance: Number(balance),
+      phase: 'desconectado',
+      sessions: []
+    };
     users.push(newUser);
     return res.status(201).json(newUser);
   }
   res.status(400).json({ error: 'Datos inválidos' });
+});
+
+// --- Public user session endpoints ---
+app.post('/login', (req, res) => {
+  const { username, password } = req.body;
+  const user = users.find(u => u.username === username && u.password === password);
+  if (!user) {
+    return res.status(401).json({ error: 'Credenciales inválidas' });
+  }
+  user.sessions.push({ login: Date.now(), logout: null });
+  user.phase = 'activo';
+  res.json({ id: user.id });
+});
+
+app.post('/logout', (req, res) => {
+  const { id } = req.body;
+  const user = users.find(u => u.id === Number(id));
+  if (!user) {
+    return res.status(404).json({ error: 'Usuario no encontrado' });
+  }
+  const session = user.sessions[user.sessions.length - 1];
+  if (session && !session.logout) {
+    session.logout = Date.now();
+  }
+  user.phase = 'desconectado';
+  res.json({ success: true });
 });
 
 if (process.env.NODE_ENV !== 'test') {
