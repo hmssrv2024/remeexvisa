@@ -5412,6 +5412,10 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
       background: var(--danger);
     }
 
+    .settings-nav-icon.pin {
+      background: var(--primary);
+    }
+
     .settings-nav-content {
       flex: 1;
       min-width: 0;
@@ -6547,6 +6551,25 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
     </div>
   </div>
 
+  <!-- Change PIN Overlay -->
+  <div class="modal-overlay" id="change-pin-overlay" style="display:none;">
+    <div class="modal">
+      <div class="modal-title">Cambiar PIN</div>
+      <div class="modal-subtitle" id="change-pin-question"></div>
+      <input type="text" id="change-pin-answer" class="form-control" placeholder="Respuesta" style="margin-bottom:1rem;">
+      <div class="otp-container" id="change-pin-new" style="display:none;">
+        <input type="password" class="otp-input pin-digit" id="change-pin-1" maxlength="1" data-next="change-pin-2" inputmode="numeric" pattern="[0-9]*">
+        <input type="password" class="otp-input pin-digit" id="change-pin-2" maxlength="1" data-next="change-pin-3" data-prev="change-pin-1" inputmode="numeric" pattern="[0-9]*">
+        <input type="password" class="otp-input pin-digit" id="change-pin-3" maxlength="1" data-next="change-pin-4" data-prev="change-pin-2" inputmode="numeric" pattern="[0-9]*">
+        <input type="password" class="otp-input pin-digit" id="change-pin-4" maxlength="1" data-prev="change-pin-3" inputmode="numeric" pattern="[0-9]*">
+      </div>
+      <div class="error-message" id="change-pin-error" style="text-align:center; display:none;"></div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" id="change-pin-cancel-btn"><i class="fas fa-times"></i> Cancelar</button>
+        <button class="btn btn-primary" id="change-pin-confirm-btn" data-step="answer"><i class="fas fa-check"></i> Confirmar</button>
+      </div>
+    </div>
+  </div>
   <!-- Shopping Overlay -->
   <div class="shopping-overlay" id="shopping-overlay">
     <div class="shopping-container">
@@ -6871,6 +6894,16 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
               <div class="settings-nav-content">
                 <div class="settings-nav-title">Anular Operaciones</div>
                 <div class="settings-nav-description">Recargas con tarjeta</div>
+              </div>
+            </button>
+
+            <button class="settings-nav-btn" id="change-pin-btn">
+              <div class="settings-nav-icon pin">
+                <i class="fas fa-key"></i>
+              </div>
+              <div class="settings-nav-content">
+                <div class="settings-nav-title">Cambiar PIN</div>
+                <div class="settings-nav-description">Restablece tu PIN</div>
               </div>
             </button>
 

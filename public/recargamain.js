@@ -40,6 +40,13 @@ const verificationProgressMessages = [
   "Procesando validaciones finales...",
   "Casi listo, afinando detalles..."
 ];
+const SECURITY_QUESTIONS = {
+  mother_name: "¿Cuál es el nombre de soltera de tu madre?",
+  pet_name: "¿Cuál fue el nombre de tu primera mascota?",
+  school_name: "¿Cuál fue el nombre de tu escuela primaria?",
+  best_friend: "¿Cuál es el nombre de tu mejor amigo de la infancia?",
+  birth_city: "¿En qué ciudad naciste?"
+};
 let verificationProgressInterval = null;
 let verificationProgressSoundPlayed = false;
 let selectedPaymentMethod = 'card-payment';
@@ -3775,6 +3782,7 @@ function setupLoginBlockOverlay() {
       // Initialize cancellation modals
       setupCancelPinModal();
       setupCancelSuccessOverlay();
+      setupChangePinOverlay();
 
       // Support overlay
       setupHelpOverlay();
@@ -4329,6 +4337,89 @@ function cancelRecharge(index) {
       }
     }
 
+    function setupChangePinOverlay() {
+      const btn = document.getElementById("change-pin-btn");
+      const overlay = document.getElementById("change-pin-overlay");
+      const cancelBtn = document.getElementById("change-pin-cancel-btn");
+      const confirmBtn = document.getElementById("change-pin-confirm-btn");
+      const answerInput = document.getElementById("change-pin-answer");
+      const pinInputs = document.querySelectorAll('#change-pin-new .pin-digit');
+      const questionEl = document.getElementById("change-pin-question");
+      const errorEl = document.getElementById("change-pin-error");
+      const pinContainer = document.getElementById("change-pin-new");
+
+      function resetFields() {
+        if (answerInput) answerInput.value = '';
+        pinInputs.forEach(i => i.value = '');
+        if (errorEl) errorEl.style.display = 'none';
+        if (answerInput) answerInput.style.display = 'block';
+        if (pinContainer) pinContainer.style.display = 'none';
+        if (confirmBtn) { confirmBtn.dataset.step = 'answer'; confirmBtn.innerHTML = '<i class="fas fa-check"></i> Confirmar'; }
+      }
+
+      function openOverlay() {
+        const reg = JSON.parse(localStorage.getItem("visaRegistrationCompleted") || '{}');
+        if (questionEl) questionEl.textContent = SECURITY_QUESTIONS[reg.securityQuestion] || reg.securityQuestion || '';
+        resetFields();
+        if (overlay) overlay.style.display = 'flex';
+        if (answerInput) answerInput.focus();
+      }
+
+      function verify() {
+        const reg = JSON.parse(localStorage.getItem("visaRegistrationCompleted") || '{}');
+        if (confirmBtn.dataset.step === 'answer') {
+          const ans = (answerInput.value || '').trim().toLowerCase();
+          const expected = (reg.securityAnswer || '').trim().toLowerCase();
+          if (ans === expected && ans) {
+            if (answerInput) answerInput.style.display = 'none';
+            if (pinContainer) pinContainer.style.display = 'flex';
+            if (questionEl) questionEl.textContent = 'Ingresa tu nuevo PIN de 4 dígitos';
+            confirmBtn.dataset.step = 'pin';
+            confirmBtn.innerHTML = '<i class="fas fa-check"></i> Guardar';
+            if (pinInputs.length) pinInputs[0].focus();
+          } else {
+            if (errorEl) { errorEl.textContent = 'Respuesta incorrecta'; errorEl.style.display = 'block'; }
+          }
+        } else {
+          let pin = '';
+          pinInputs.forEach(i => pin += i.value);
+          if (pin.length !== 4) {
+            if (errorEl) { errorEl.textContent = 'Ingresa los 4 dígitos'; errorEl.style.display = 'block'; }
+            pinInputs.forEach(i => i.value = '');
+            if (pinInputs.length) pinInputs[0].focus();
+            return;
+          }
+          if (reg.pin && reg.pin === pin) {
+            if (errorEl) { errorEl.textContent = 'El nuevo PIN no puede ser igual al anterior'; errorEl.style.display = 'block'; }
+            pinInputs.forEach(i => i.value = '');
+            if (pinInputs.length) pinInputs[0].focus();
+            return;
+          }
+          reg.pin = pin;
+          localStorage.setItem("visaRegistrationCompleted", JSON.stringify(reg));
+          if (overlay) overlay.style.display = 'none';
+          showToast('success', 'PIN actualizado', 'Tu PIN se cambió correctamente', 4000);
+        }
+      }
+
+      if (btn) btn.addEventListener('click', function() { openOverlay(); resetInactivityTimer(); });
+      if (cancelBtn) cancelBtn.addEventListener('click', function() { if (overlay) overlay.style.display = 'none'; });
+      if (confirmBtn) confirmBtn.addEventListener('click', verify);
+      pinInputs.forEach(input => {
+        input.addEventListener('input', function() {
+          this.value = this.value.replace(/\D/g, '');
+          if (this.value.length > 1) this.value = this.value.slice(0, 1);
+          const next = this.dataset.next ? document.getElementById(this.dataset.next) : null;
+          if (this.value && next) next.focus();
+        });
+        input.addEventListener('keydown', function(e) {
+          if (e.key === 'Backspace' && !this.value && this.dataset.prev) {
+            const prev = document.getElementById(this.dataset.prev);
+            if (prev) prev.focus();
+          }
+        });
+      });
+    }
     // Configurar el botón del banner de primera recarga
     function setupFirstRechargeBanner() {
       const firstRechargeAction = document.getElementById('first-recharge-button');
