@@ -317,6 +317,8 @@ class LatinPhoneStore {
                     { id: 'samsungs25ultra', name: 'Samsung S25 Ultra 12GB/512GB', price: 1340, specs: ['12GB RAM', '512GB', 'Snapdragon 8 Gen 3', '200MP'], hasVideo: true },
                     { id: 'samsungzflip6', name: 'Galaxy Z Flip 6 12GB/256GB', price: 965, specs: ['12GB RAM', '256GB', 'Plegable', 'Snapdragon 8 Gen 3'], hasVideo: true },
                     { id: 'samsungzfold6', name: 'Galaxy Z Fold 6 12GB/512GB', price: 1490, specs: ['12GB RAM', '512GB', 'Plegable', 'Snapdragon 8 Gen 3'], hasVideo: true },
+                    { id: 'samsungzflip7', name: 'Galaxy Z Flip 7 12GB/256GB', price: 1200, specs: ['12GB RAM', '256GB', 'Plegable', 'Snapdragon 8 Gen 4'], hasVideo: true },
+                    { id: 'samsungzfold7', name: 'Galaxy Z Fold 7 16GB/1TB', price: 2300, specs: ['16GB RAM', '1TB', 'Plegable', 'Snapdragon 8 Gen 4'], hasVideo: true },
                     { id: 'samsunga55', name: 'Galaxy A55 5G 8GB/256GB', price: 365, specs: ['8GB RAM', '256GB', '5G', 'Exynos 1480'] },
                     { id: 'samsunga35', name: 'Galaxy A35 5G 6GB/128GB', price: 285, specs: ['6GB RAM', '128GB', '5G', 'Exynos 1380'] }
                 ],
@@ -2121,8 +2123,13 @@ class LatinPhoneStore {
     }
 
     getProductVideoUrl(productId) {
-        // Default video URL for all products (can be customized per product)
-        return 'https://images.samsung.com/is/content/samsung/assets/es/14-03-2025/G90XF_KV_PC_Notext.mp4';
+        const videos = {
+            samsungzfold7: 'https://images.samsung.com/es/smartphones/galaxy-z-fold7/buy/03_Gallery/01_Animated_KV/Q7_Animated_KV_PC.mp4',
+            samsungzflip7: 'https://images.samsung.com/es/smartphones/galaxy-z-flip7/buy/03_Gallery/01_Animated_KV/B7_Animated_KV_PC.mp4'
+        };
+        // Default video URL for products sin video específico
+        const defaultVideo = 'https://images.samsung.com/is/content/samsung/assets/es/14-03-2025/G90XF_KV_PC_Notext.mp4';
+        return videos[productId] || defaultVideo;
     }
 
     generateShippingDates() {
