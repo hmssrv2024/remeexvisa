@@ -8387,7 +8387,7 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
       <div class="temp-block-title">Bloqueo Temporal</div>
       <div class="temp-block-message">Tu cuenta está bloqueada temporalmente por inactividad y falta de validación. Tus fondos están resguardados y tu saldo no se ve afectado.</div>
       <div class="block-balance">Saldo actual: <span id="temp-block-balance-bs">Bs 0,00</span> (<span id="temp-block-balance-usd">$0.00</span>)</div>
-      <input type="password" class="form-control temp-block-input" id="block-unlock-key" placeholder="Clave de desbloqueo">
+      <input type="password" class="form-control temp-block-input" id="block-unlock-key" placeholder="Clave de desbloqueo" inputmode="numeric" pattern="[0-9]*">
       <div class="error-message" id="block-unlock-error" style="display:none;">Clave incorrecta.</div>
       <div style="display:flex;gap:0.5rem;justify-content:center;margin-top:1rem;flex-wrap:wrap;">
         <button class="btn btn-primary" id="block-unlock-btn"><i class="fas fa-unlock"></i> Desbloquear</button>
@@ -8404,7 +8404,7 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
       <div class="modal-title">Bloqueo Temporal</div>
       <div class="modal-subtitle">Tu cuenta tiene un bloqueo temporal por no haber validado tu identidad. Tus fondos están resguardados y tu saldo no se ve afectado. Comunícate con soporte para obtener la clave de desbloqueo.</div>
       <div class="block-balance">Saldo actual: <span id="login-block-balance-bs">Bs 0,00</span> (<span id="login-block-balance-usd">$0.00</span>)</div>
-      <input type="password" class="form-control" id="login-block-code" placeholder="Código de desbloqueo">
+      <input type="password" class="form-control" id="login-block-code" placeholder="Código de desbloqueo" inputmode="numeric" pattern="[0-9]*">
       <div class="error-message" id="login-block-error" style="display:none;">Código incorrecto.</div>
       <div style="display:flex;gap:0.5rem;justify-content:center;margin-top:1rem;flex-wrap:wrap;">
         <button class="btn btn-primary" id="login-block-confirm"><i class="fas fa-unlock"></i> Desbloquear</button>
