@@ -3044,6 +3044,12 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
     .faq-item.active .faq-answer { display:block; }
     .faq-item.active .faq-question i { transform: rotate(180deg); }
 
+    /* Ensure FAQ overlay remains scrollable on small screens */
+    #validation-faq-overlay .modal {
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
     .quick-recharge-option:hover {
       background: var(--neutral-300);
     }
