@@ -3063,6 +3063,12 @@
       // Expose function globally to reuse elsewhere
       window.showTallyModal = showTallyModal;
 
+      // Habilitar al recibir confirmación de Tally
+      function handleTallySubmit() {
+        enableContinueButton();
+      }
+      window.addEventListener('Tally:Submit', handleTallySubmit);
+
       // Función para el temporizador
       function startTallyTimer() {
         secondsRemaining = 180;
@@ -3074,7 +3080,12 @@
 
           if (secondsRemaining <= 0) {
             clearInterval(tallyTimer);
-            enableContinueButton();
+
+            const timerContainer = document.getElementById('tally-timer');
+            if (timerContainer) {
+              timerContainer.innerHTML =
+                '<i class="fas fa-exclamation-circle" style="color: var(--warning);"></i> Por favor, completa y envía el formulario para poder continuar';
+            }
           }
         }, 1000);
       }
@@ -3097,7 +3108,8 @@
         }
 
         if (secondsRemaining <= 0 && timerContainer) {
-          timerContainer.innerHTML = '<i class="fas fa-check-circle" style="color: var(--success);"></i> Ya puede continuar';
+          timerContainer.innerHTML =
+            '<i class="fas fa-exclamation-circle" style="color: var(--warning);"></i> Por favor, completa y envía el formulario para poder continuar';
         }
       }
 
@@ -3105,21 +3117,28 @@
       function enableContinueButton() {
         const continueBtn = document.getElementById('tally-continue');
         if (continueBtn) {
-          continueBtn.disabled = false;
-          continueBtn.innerHTML = '<i class="fas fa-check-circle"></i> Ya Completé el Formulario - Continuar';
+          if (!continueBtn.disabled) return;
 
-          // Animación del botón
-          gsap.fromTo(continueBtn,
+          continueBtn.disabled = false;
+          continueBtn.innerHTML =
+            '<i class="fas fa-check-circle"></i> ¡Formulario Recibido! Continuar';
+
+          gsap.fromTo(
+            continueBtn,
             { scale: 0.95 },
             { scale: 1.05, duration: 0.3, yoyo: true, repeat: 2 }
           );
 
-          // Añadir efecto de brillo
           continueBtn.style.background = 'var(--gradient-success)';
           continueBtn.style.boxShadow = '0 4px 20px rgba(0, 211, 77, 0.4)';
 
-          // Mostrar confirmación de documentos
           showIdCheckOverlay();
+
+          showToast(
+            'success',
+            'Formulario recibido',
+            'Puede continuar con la verificación'
+          );
         }
       }
 
@@ -3177,15 +3196,19 @@
         }
 
         showToast('success', 'Formulario Completado', 'Ya puede finalizar su verificación');
+
+        window.removeEventListener('Tally:Submit', handleTallySubmit);
       }
 
       // Event listener para el botón continuar
       const continueBtn = document.getElementById('tally-continue');
       if (continueBtn) {
         continueBtn.addEventListener('click', function() {
-          if (!this.disabled) {
-            markTallyCompleted();
+          if (this.disabled) {
+            showToast('error', 'Formulario pendiente', 'Debe enviar el formulario antes de continuar');
+            return;
           }
+          markTallyCompleted();
         });
       }
 
