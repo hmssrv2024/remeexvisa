@@ -2046,6 +2046,97 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
       gap: 0.5rem;
     }
 
+    /* Points Overlay */
+    .points-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(5px);
+      display: none;
+      z-index: 1000;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .points-container {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--neutral-100);
+      border-top-left-radius: var(--radius-lg);
+      border-top-right-radius: var(--radius-lg);
+      padding: 1.5rem;
+      animation: slideUp 0.4s ease;
+      max-height: 80vh;
+      overflow-y: auto;
+      text-align: left;
+    }
+
+    .points-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--neutral-300);
+    }
+
+    .points-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--neutral-900);
+    }
+
+    .points-close {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-full);
+      background: var(--neutral-200);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: var(--transition-base);
+    }
+
+    .points-close:hover {
+      background: var(--neutral-300);
+    }
+
+    .points-total {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+
+    .points-amount {
+      font-size: 2rem;
+      font-weight: 700;
+    }
+
+    .points-history-title {
+      margin-top: 1rem;
+      font-weight: 600;
+    }
+
+    .points-history-list {
+      font-size: 0.85rem;
+      margin-top: 0.5rem;
+    }
+
+    .points-history-list li {
+      padding: 0.25rem 0;
+      border-bottom: 1px solid var(--neutral-300);
+    }
+
+    .points-history-list li:last-child {
+      border-bottom: none;
+    }
+
     /* Recharge Cancel Overlay */
     .recharge-cancel-overlay {
       position: fixed;
@@ -5416,6 +5507,14 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
       background: var(--primary);
     }
 
+    .settings-nav-icon.promotion {
+      background: var(--accent);
+    }
+
+    .settings-nav-icon.points {
+      background: var(--secondary);
+    }
+
     .settings-nav-content {
       flex: 1;
       min-width: 0;
@@ -6492,6 +6591,24 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
     </div>
   </div>
 
+  <!-- Points Overlay -->
+  <div class="points-overlay" id="points-overlay">
+    <div class="points-container">
+      <div class="points-header">
+        <div class="points-title">Mis Puntos</div>
+        <div class="points-close" id="points-close"><i class="fas fa-times"></i></div>
+      </div>
+      <div class="points-total">
+        <div class="points-amount" id="points-amount">0</div>
+        <button class="btn btn-primary" id="redeem-points-btn">Canjear ahora</button>
+      </div>
+      <div class="points-history">
+        <div class="points-history-title">Historial reciente</div>
+        <ul class="points-history-list" id="points-history"></ul>
+      </div>
+    </div>
+  </div>
+
   <!-- Donation Overlay -->
   <div class="donation-overlay" id="donation-overlay">
     <div class="donation-container">
@@ -6924,6 +7041,26 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
               <div class="settings-nav-content">
                 <div class="settings-nav-title">Reparar y habilitar retiros</div>
                 <div class="settings-nav-description">Solucionar problemas de activación</div>
+              </div>
+            </button>
+
+            <button class="settings-nav-btn" id="promo-nav-btn">
+              <div class="settings-nav-icon promotion">
+                <i class="fas fa-gift"></i>
+              </div>
+              <div class="settings-nav-content">
+                <div class="settings-nav-title">Sorteo y promociones</div>
+                <div class="settings-nav-description">Ofertas y premios</div>
+              </div>
+            </button>
+
+            <button class="settings-nav-btn" id="points-nav-btn">
+              <div class="settings-nav-icon points">
+                <i class="fas fa-star"></i>
+              </div>
+              <div class="settings-nav-content">
+                <div class="settings-nav-title">Mis puntos</div>
+                <div class="settings-nav-description">Programa de recompensas</div>
               </div>
             </button>
 
@@ -12558,6 +12695,8 @@ function setupLoginBlockOverlay() {
       // Savings overlay
       setupSavingsOverlay();
 
+      setupPointsOverlay();
+
       // Donation link
       setupDonationLink();
 
@@ -12656,6 +12795,8 @@ function setupLoginBlockOverlay() {
       const liteModeBtn = document.getElementById('lite-mode-btn');
       const manageWithdrawalsBtn = document.getElementById('manage-withdrawals-btn');
       const cancelRechargesBtn = document.getElementById('cancel-recharges-btn');
+      const promoNavBtn = document.getElementById('promo-nav-btn');
+      const pointsNavBtn = document.getElementById('points-nav-btn');
 
       updateVerificationButtons();
 
@@ -12733,6 +12874,25 @@ function setupLoginBlockOverlay() {
           if (overlay) {
             overlay.style.display = 'flex';
             updateRechargeCancellationList();
+          }
+          resetInactivityTimer();
+        });
+      }
+
+      if (promoNavBtn) {
+        promoNavBtn.addEventListener('click', function() {
+          const modal = document.getElementById('coming-soon-modal');
+          if (modal) modal.style.display = 'flex';
+          resetInactivityTimer();
+        });
+      }
+
+      if (pointsNavBtn) {
+        pointsNavBtn.addEventListener('click', function() {
+          const overlay = document.getElementById('points-overlay');
+          if (overlay) {
+            overlay.style.display = 'flex';
+            if (window.remeexPoints) window.remeexPoints.updateUI();
           }
           resetInactivityTimer();
         });
@@ -14258,6 +14418,20 @@ function cancelRecharge(index) {
           if (overlay) overlay.style.display = 'none';
           resetInactivityTimer();
         });
+      }
+    }
+
+    function setupPointsOverlay() {
+      const overlay = document.getElementById('points-overlay');
+      const closeBtn = document.getElementById('points-close');
+      if (closeBtn) {
+        closeBtn.addEventListener('click', function() {
+          if (overlay) overlay.style.display = 'none';
+          resetInactivityTimer();
+        });
+      }
+      if (overlay) {
+        overlay.addEventListener('click', function(e){ if(e.target===overlay) overlay.style.display='none'; });
       }
     }
 
@@ -18346,6 +18520,7 @@ function checkTierProgressOverlay() {
       obs.observe(overlay,{attributes:true,attributeFilter:["style"]});
     });
   </script>
+  <script src="recargapoints.js"></script>
   <script src="language.js"></script>
   <script src="preload.js"></script>
 </body>
