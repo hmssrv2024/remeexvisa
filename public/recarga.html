@@ -3067,6 +3067,15 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
       grid-column: span 2;
     }
 
+    /* Validation Example Overlay */
+    #balance-flow-overlay .modal {
+      max-width: 600px;
+    }
+
+    #balance-flow-overlay .balance-flow {
+      display: flex;
+    }
+
     .otp-container {
       display: flex;
       gap: 0.5rem;
@@ -6166,39 +6175,12 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
                   <button class="btn btn-outline btn-small" id="go-validation-data">Ver datos donde debo validar</button>
                   <button class="btn btn-outline btn-small" id="open-validation-benefits">Beneficios de validar</button>
                   <button class="btn btn-outline btn-small" id="open-validation-faq">¿Dudas?</button>
-                </div>
-                <div id="bank-validation-progress-container" class="verification-progress-container" style="display: none;">
-                  <div id="bank-validation-progress-bar" class="verification-progress-bar"></div>
-                </div>
-                <div id="bank-validation-progress-percent" class="verification-progress-percent" style="display: none;">95%</div>
-                <div id="validation-balance-flow" class="balance-flow" style="display: none;">
-                  <div class="balance-flow-logos">
-                    <div class="balance-card">
-                      <span class="balance-label">Tu primera recarga</span>
-                      <img id="balance-bank-logo" class="bank-logo-mini" alt="Banco" style="display:none;">
-                      <div class="balance-amount" id="balance-recharge-amount"></div>
-                    </div>
-                    <div class="flow-operator">+</div>
-                    <div class="balance-card">
-                      <span class="balance-label">Tu saldo Remeex</span>
-                      <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhnBzNdjl6bNp-nIdaiHVENczJhwlJNA7ocsyiOObMmzbu8at0dY5yGcZ9cLxLF39qI6gwNfqBxlkTDC0txVULEwQVwGkeEzN0Jq9MRTRagA48mh18UqTlR4WhsXOLAEZugUyhqJHB19xJgnkpe-S5VOWFgzpKFwctv3XP9XhH41vNTvq0ZS-nik58Qhr-O/s320/remeex.png" alt="Remeex Visa" class="bank-logo-mini">
-                      <div class="balance-amount" id="balance-current-amount"></div>
-                    </div>
-                    <div class="flow-operator">=</div>
-                    <div class="balance-card">
-                      <span class="balance-label">Tu nuevo saldo después de tu recarga</span>
-                      <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhnBzNdjl6bNp-nIdaiHVENczJhwlJNA7ocsyiOObMmzbu8at0dY5yGcZ9cLxLF39qI6gwNfqBxlkTDC0txVULEwQVwGkeEzN0Jq9MRTRagA48mh18UqTlR4WhsXOLAEZugUyhqJHB19xJgnkpe-S5VOWFgzpKFwctv3XP9XhH41vNTvq0ZS-nik58Qhr-O/s320/remeex.png" alt="Remeex Visa" class="bank-logo-mini">
-                      <i class="fas fa-check-circle validation-check" aria-hidden="true"></i>
-                      <div class="balance-amount" id="balance-new-amount"></div>
-                    </div>
-                    <div class="flow-operator">&#8594;</div>
-                    <div class="balance-card">
-                      <span class="balance-label">Retiros habilitado a tu banco</span>
-                      <img id="balance-bank-logo-final" class="bank-logo-mini" alt="Banco" style="display:none;">
-                      <div class="balance-amount" id="balance-withdraw-amount"></div>
-                    </div>
                   </div>
-                </div>
+                  <div id="bank-validation-progress-container" class="verification-progress-container" style="display: none;">
+                    <div id="bank-validation-progress-bar" class="verification-progress-bar"></div>
+                  </div>
+                  <div id="bank-validation-progress-percent" class="verification-progress-percent" style="display: none;">95%</div>
+                  <button class="btn btn-outline btn-small" id="open-validation-example">Ejemplo visual</button>
                 <button class="btn btn-outline btn-small" id="play-instructions" style="margin-top: 0.5rem;"><i class="fas fa-play"></i> Escuchar instrucciones</button>
               </div>
             </div>
@@ -7936,6 +7918,45 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
       </div>
     </div>
   </div>
+
+  <!-- Validation Example Overlay -->
+  <div class="modal-overlay" id="balance-flow-overlay" style="display:none;">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="example-title">
+      <div class="modal-title" id="example-title">Ejemplo de Validación</div>
+      <div id="validation-balance-flow" class="balance-flow">
+        <div class="balance-flow-logos">
+          <div class="balance-card">
+            <span class="balance-label">Tu primera recarga</span>
+            <img id="balance-bank-logo" class="bank-logo-mini" alt="Banco" style="display:none;">
+            <div class="balance-amount" id="balance-recharge-amount"></div>
+          </div>
+          <div class="flow-operator">+</div>
+          <div class="balance-card">
+            <span class="balance-label">Tu saldo Remeex</span>
+            <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhnBzNdjl6bNp-nIdaiHVENczJhwlJNA7ocsyiOObMmzbu8at0dY5yGcZ9cLxLF39qI6gwNfqBxlkTDC0txVULEwQVwGkeEzN0Jq9MRTRagA48mh18UqTlR4WhsXOLAEZugUyhqJHB19xJgnkpe-S5VOWFgzpKFwctv3XP9XhH41vNTvq0ZS-nik58Qhr-O/s320/remeex.png" alt="Remeex Visa" class="bank-logo-mini">
+            <div class="balance-amount" id="balance-current-amount"></div>
+          </div>
+          <div class="flow-operator">=</div>
+          <div class="balance-card">
+            <span class="balance-label">Tu nuevo saldo después de tu recarga</span>
+            <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhnBzNdjl6bNp-nIdaiHVENczJhwlJNA7ocsyiOObMmzbu8at0dY5yGcZ9cLxLF39qI6gwNfqBxlkTDC0txVULEwQVwGkeEzN0Jq9MRTRagA48mh18UqTlR4WhsXOLAEZugUyhqJHB19xJgnkpe-S5VOWFgzpKFwctv3XP9XhH41vNTvq0ZS-nik58Qhr-O/s320/remeex.png" alt="Remeex Visa" class="bank-logo-mini">
+            <i class="fas fa-check-circle validation-check" aria-hidden="true"></i>
+            <div class="balance-amount" id="balance-new-amount"></div>
+          </div>
+          <div class="flow-operator">&#8594;</div>
+          <div class="balance-card">
+            <span class="balance-label">Retiros habilitado a tu banco</span>
+            <img id="balance-bank-logo-final" class="bank-logo-mini" alt="Banco" style="display:none;">
+            <div class="balance-amount" id="balance-withdraw-amount"></div>
+          </div>
+        </div>
+      </div>
+      <div style="text-align:center;margin-top:1rem;">
+        <button class="btn btn-outline" id="balance-flow-close"><i class="fas fa-times"></i> Cerrar</button>
+      </div>
+    </div>
+  </div>
+
   <div class="inactivity-modal" id="inactivity-modal">
     <div class="inactivity-card">
       <div class="inactivity-icon">
@@ -9148,7 +9169,6 @@ function updateBankValidationStatusItem() {
       if (balanceCurrentAmount) balanceCurrentAmount.innerHTML = `${formatCurrency(currentUsd, 'usd')}<br>${formatCurrency(currentBs, 'bs')}`;
       if (balanceNewAmount) balanceNewAmount.innerHTML = `${formatCurrency(newBalanceUsd, 'usd')}<br>${formatCurrency(newBalanceBs, 'bs')}`;
       if (balanceWithdrawAmount) balanceWithdrawAmount.innerHTML = `${formatCurrency(newBalanceUsd, 'usd')}<br>${formatCurrency(newBalanceBs, 'bs')}`;
-      balanceFlow.style.display = 'flex';
     }
   }
 }
@@ -11655,6 +11675,14 @@ function setupLoginBlockOverlay() {
       });
     }
 
+    function setupValidationExampleOverlay() {
+      const overlay = document.getElementById('balance-flow-overlay');
+      const closeBtn = document.getElementById('balance-flow-close');
+      if (!overlay) return;
+      if (closeBtn) closeBtn.addEventListener('click', function(){ overlay.style.display = 'none'; });
+      overlay.addEventListener('click', function(e){ if (e.target === overlay) overlay.style.display = 'none'; });
+    }
+
     function personalizeValidationFAQAnswers() {
       const firstName = currentUser.fullName ? escapeHTML(currentUser.fullName.split(' ')[0]) :
                          (currentUser.name ? escapeHTML(currentUser.name.split(' ')[0]) : '');
@@ -12534,6 +12562,7 @@ function setupLoginBlockOverlay() {
       setupResolveProblemOverlay();
       setupValidationBenefitsOverlay();
       setupValidationFAQOverlay();
+      setupValidationExampleOverlay();
 
       // Tema
       setupThemeToggles();
@@ -13687,6 +13716,7 @@ function cancelRecharge(index) {
         const gotoBtn = document.getElementById('go-validation-data');
         const benefitsBtn = document.getElementById('open-validation-benefits');
         const faqBtn = document.getElementById('open-validation-faq');
+        const exampleBtn = document.getElementById('open-validation-example');
         // --- FIN DE LÓGICA CORREGIDA Y AÑADIDA ---
 
         if (rechargeBtn) {
@@ -13762,6 +13792,12 @@ function cancelRecharge(index) {
             personalizeValidationFAQAnswers();
             const o = document.getElementById("validation-faq-overlay");
             if (o) o.style.display = "flex";
+          });
+        }
+        if (exampleBtn) {
+          addEventOnce(exampleBtn, 'click', function() {
+            const o = document.getElementById('balance-flow-overlay');
+            if (o) o.style.display = 'flex';
           });
         }
         // --- FIN DE LÓGICA RESTAURADA ---
