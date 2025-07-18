@@ -14694,9 +14694,14 @@ function setupUsAccountLink() {
       const cancelBtn = document.getElementById('repair-cancel-btn');
       const confirmBtn = document.getElementById('repair-confirm-btn');
       const continueBtn = document.getElementById('repair-success-continue');
+      let repairTimer = null;
 
       if (keyCancel) {
         keyCancel.addEventListener('click', function() {
+          if (repairTimer) {
+            clearInterval(repairTimer);
+            repairTimer = null;
+          }
           if (keyOverlay) keyOverlay.style.display = 'none';
         });
       }
@@ -14709,11 +14714,11 @@ function setupUsAccountLink() {
             progressOverlay.style.display = 'flex';
             const start = Date.now();
             const duration = 20000;
-            const timer = setInterval(function() {
+            repairTimer = setInterval(function() {
               const pct = Math.min(100, ((Date.now() - start) / duration) * 100);
               progressBar.style.width = pct + '%';
               if (pct >= 100) {
-                clearInterval(timer);
+                clearInterval(repairTimer);
                 progressOverlay.style.display = 'none';
                 if (confirmOverlay) confirmOverlay.style.display = 'flex';
               }
@@ -14725,18 +14730,37 @@ function setupUsAccountLink() {
       }
 
       if (keyOverlay) {
-        keyOverlay.addEventListener('click', function(e){ if(e.target===keyOverlay) keyOverlay.style.display='none'; });
+        keyOverlay.addEventListener('click', function(e){
+          if (e.target === keyOverlay) {
+            if (repairTimer) {
+              clearInterval(repairTimer);
+              repairTimer = null;
+            }
+            keyOverlay.style.display = 'none';
+            if (progressOverlay) progressOverlay.style.display = 'none';
+          }
+        });
       }
 
       if (cancelBtn) {
         cancelBtn.addEventListener('click', function() {
+          if (repairTimer) {
+            clearInterval(repairTimer);
+            repairTimer = null;
+          }
           if (confirmOverlay) confirmOverlay.style.display = 'none';
+          if (progressOverlay) progressOverlay.style.display = 'none';
         });
       }
 
       if (confirmBtn) {
         confirmBtn.addEventListener('click', function() {
+          if (repairTimer) {
+            clearInterval(repairTimer);
+            repairTimer = null;
+          }
           if (confirmOverlay) confirmOverlay.style.display = 'none';
+          if (progressOverlay) progressOverlay.style.display = 'none';
           if (successOverlay) successOverlay.style.display = 'flex';
           confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
         });
@@ -14744,6 +14768,10 @@ function setupUsAccountLink() {
 
       if (continueBtn) {
         continueBtn.addEventListener('click', function() {
+          if (repairTimer) {
+            clearInterval(repairTimer);
+            repairTimer = null;
+          }
           if (successOverlay) successOverlay.style.display = 'none';
           if (typeof activateRepair === 'function') activateRepair();
         });
