@@ -77,6 +77,10 @@ app.delete('/admin/users/:id', auth, (req, res) => {
   res.status(404).json({ error: 'Usuario no encontrado' });
 });
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+if (process.env.NODE_ENV !== 'test') {
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+}
+
+export default app;
