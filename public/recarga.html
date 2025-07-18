@@ -3554,6 +3554,21 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
       50% { transform: translateX(8px); opacity: 1; }
     }
 
+    /* Ajustes para mostrar el flujo de balance en una sola fila en pantallas
+       pequeñas */
+    @media (max-width: 480px) {
+      .balance-flow-logos { flex-wrap: nowrap; gap: 0.5rem; }
+      .balance-flow .balance-card {
+        width: 60px;
+        height: 90px;
+        padding: 0.5rem;
+      }
+      .balance-flow .bank-logo-mini { height: 18px; }
+      .balance-flow .balance-amount { font-size: 0.75rem; }
+      .balance-label { font-size: 0.65rem; }
+      .flow-operator { font-size: 1.2rem; }
+    }
+
 
     /* Receipt Upload */
     .receipt-upload {
