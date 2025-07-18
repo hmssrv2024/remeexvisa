@@ -2030,6 +2030,11 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
       color: var(--neutral-600);
     }
 
+    .transaction-action {
+      margin-top: 0.5rem;
+      text-align: right;
+    }
+
     #withdrawals-list,
     #recharge-cancel-list {
       display: flex;
@@ -2991,6 +2996,14 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
       color: var(--neutral-600);
       margin-bottom: 1.5rem;
       text-align: center;
+    }
+
+    .modal-amount {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary);
+      text-align: center;
+      margin-bottom: 1rem;
     }
 
     /* Quick Recharge Overlay */
@@ -8260,6 +8273,31 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
     </div>
   </div>
 
+  <!-- Refund Undo Overlay -->
+  <div class="modal-overlay" id="refund-undo-overlay" style="display:none;">
+    <div class="modal">
+      <div class="modal-title">Anular reintegro</div>
+      <div class="modal-subtitle">Como la operación de reintegro será realizada en los próximos 5 días, puedes anularla dentro de las próximas 48 horas por una sola vez y recuperar el monto en tu balance.</div>
+      <div class="modal-amount" id="refund-undo-amount">$0.00</div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" id="refund-undo-cancel-btn"><i class="fas fa-times"></i> Cancelar</button>
+        <button class="btn btn-primary" id="refund-undo-confirm-btn"><i class="fas fa-check"></i> Aceptar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Refund Undo Success Overlay -->
+  <div class="success-container" id="refund-undo-success-overlay" style="display:none;">
+    <div class="success-card">
+      <div class="success-checkmark"><i class="fas fa-check"></i></div>
+      <div class="success-title">¡Reintegro Anulado!</div>
+      <div class="success-message">El monto ha sido devuelto a tu saldo.</div>
+      <div class="success-actions">
+        <button class="btn btn-primary" id="refund-undo-success-continue"><i class="fas fa-arrow-right"></i> Continuar</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Temporary Block Overlay -->
   <div class="temp-block-overlay" id="temporary-block-overlay">
     <div class="temp-block-card">
@@ -8467,6 +8505,7 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
       HIGH_BALANCE_DELAY: 2 * 60 * 60 * 1000,
       CARD_CANCEL_WINDOW: 5 * 60 * 60 * 1000, // 5 horas para anular recarga
       MAX_CARD_CANCELLATIONS: 1,
+      REFUND_CANCEL_WINDOW: 48 * 60 * 60 * 1000, // 48 horas para anular reintegro
         TEMPORARY_BLOCK_KEYS: ['0055842175645466556','0065842175645466557','0075842175645466558'],
       STORAGE_KEYS: {
         USER_DATA: 'remeexUserData',
@@ -8722,6 +8761,7 @@ let currentTier = localStorage.getItem('remeexAccountTier') || '';
       let isCardPaymentProcessing = false; // Evitar recargas dobles con tarjeta
       let pendingCancelIndex = null; // Índice de recarga a anular
       let pendingCancelFeedback = null; // Motivo seleccionado
+      let pendingRefundId = null; // ID de reintegro a revertir
 
     // Utilidad para evitar múltiples listeners
     function addEventOnce(el, evt, handler) {
@@ -12376,6 +12416,8 @@ function setupLoginBlockOverlay() {
       setupRechargeCancelOverlay();
       setupCancelPinModal();
       setupCancelSuccessOverlay();
+      setupRefundUndoOverlay();
+      setupRefundUndoSuccessOverlay();
 
       // Support overlay
       setupHelpOverlay();
@@ -12831,6 +12873,7 @@ function cancelRecharge(index) {
       currentUser.balance.eur -= tx.amount * CONFIG.EXCHANGE_RATES.USD_TO_EUR;
 
       addTransaction({
+        id: 'refund-' + Date.now(),
         type: 'withdraw',
         amount: tx.amount,
         amountBs: tx.amount * CONFIG.EXCHANGE_RATES.USD_TO_BS,
@@ -12841,7 +12884,8 @@ function cancelRecharge(index) {
         card: '****3009',
         bankName: 'Visa',
         bankLogo: 'https://cdn.visa.com/v2/assets/images/logos/visa/blue/logo.png',
-        status: 'completed'
+        status: 'pending_refund',
+        undoDeadline: Date.now() + CONFIG.REFUND_CANCEL_WINDOW
       });
 
       saveBalanceData();
@@ -12934,6 +12978,80 @@ function cancelRecharge(index) {
       if (overlay) {
         overlay.addEventListener('click', function(e){ if(e.target===overlay) overlay.style.display='none'; });
       }
+    }
+
+    function showRefundUndoOverlay(id) {
+      const overlay = document.getElementById('refund-undo-overlay');
+      const amountEl = document.getElementById('refund-undo-amount');
+      const tx = currentUser.transactions.find(t => t.id === id);
+      if (!overlay || !tx) return;
+      pendingRefundId = id;
+      if (amountEl) amountEl.textContent = formatCurrency(tx.amount, 'usd');
+      overlay.style.display = 'flex';
+    }
+
+    function confirmRefundUndo() {
+      const tx = currentUser.transactions.find(t => t.id === pendingRefundId);
+      if (!tx) return;
+      tx.status = 'cancelled';
+      tx.undoDisabled = true;
+      currentUser.balance.usd += tx.amount;
+      currentUser.balance.bs += tx.amount * CONFIG.EXCHANGE_RATES.USD_TO_BS;
+      currentUser.balance.eur += tx.amount * CONFIG.EXCHANGE_RATES.USD_TO_EUR;
+
+      addTransaction({
+        type: 'deposit',
+        amount: tx.amount,
+        amountBs: tx.amount * CONFIG.EXCHANGE_RATES.USD_TO_BS,
+        amountEur: tx.amount * CONFIG.EXCHANGE_RATES.USD_TO_EUR,
+        date: getCurrentDateTime(),
+        description: 'Anulación de reintegro',
+        bankName: 'Remeex Visa',
+        bankLogo: 'https://cdn.visa.com/v2/assets/images/logos/visa/blue/logo.png',
+        status: 'completed'
+      });
+
+      saveBalanceData();
+      saveTransactionsData();
+      updateDashboardUI();
+      updateRecentTransactions();
+
+      const overlay = document.getElementById('refund-undo-overlay');
+      if (overlay) overlay.style.display = 'none';
+      const success = document.getElementById('refund-undo-success-overlay');
+      if (success) success.style.display = 'flex';
+    }
+
+    function dismissRefundUndo() {
+      const tx = currentUser.transactions.find(t => t.id === pendingRefundId);
+      if (tx) {
+        tx.undoDisabled = true;
+        saveTransactionsData();
+      }
+      const overlay = document.getElementById('refund-undo-overlay');
+      if (overlay) overlay.style.display = 'none';
+      updateRecentTransactions();
+    }
+
+    function setupRefundUndoOverlay() {
+      const confirmBtn = document.getElementById('refund-undo-confirm-btn');
+      const cancelBtn = document.getElementById('refund-undo-cancel-btn');
+      const overlay = document.getElementById('refund-undo-overlay');
+      if (confirmBtn) confirmBtn.addEventListener('click', confirmRefundUndo);
+      if (cancelBtn) cancelBtn.addEventListener('click', dismissRefundUndo);
+      if (overlay) overlay.addEventListener('click', e => { if(e.target===overlay) dismissRefundUndo(); });
+    }
+
+    function setupRefundUndoSuccessOverlay() {
+      const overlay = document.getElementById('refund-undo-success-overlay');
+      const cont = document.getElementById('refund-undo-success-continue');
+      if (cont) cont.addEventListener('click', function() {
+        if (overlay) overlay.style.display = 'none';
+        const dashboardContainer = document.getElementById('dashboard-container');
+        if (dashboardContainer) dashboardContainer.style.display = 'block';
+        resetInactivityTimer();
+      });
+      if (overlay) overlay.addEventListener('click', e=>{ if(e.target===overlay) overlay.style.display='none'; });
     }
 
     // Configurar el botón del banner de primera recarga
@@ -16278,6 +16396,14 @@ function checkTierProgressOverlay() {
           ${amountPrefix}${formatCurrency(transaction.amount, 'usd')}
         </div>
       `;
+
+      if (transaction.status === 'pending_refund' && !transaction.undoDisabled && Date.now() < transaction.undoDeadline) {
+        transactionHTML += `
+          <div class="transaction-action">
+            <button class="btn btn-outline btn-small undo-refund-btn" type="button">Anular operación</button>
+          </div>
+        `;
+      }
       
       element.innerHTML = transactionHTML;
       
@@ -16326,6 +16452,10 @@ function checkTierProgressOverlay() {
         const ref = tx.reference || tx.id || JSON.stringify(tx);
         if (displayedTransactions.has(ref)) return;
 
+        if (tx.status === 'pending_refund' && tx.undoDeadline && Date.now() > tx.undoDeadline) {
+          tx.status = 'completed';
+        }
+
         if (transactionFilter === 'sent' && tx.type !== 'withdraw') return;
         if (transactionFilter === 'received' && tx.type !== 'deposit') return;
         if (transactionFilter === 'savings' && !tx.description.toLowerCase().includes('ahorro')) return;
@@ -16334,6 +16464,10 @@ function checkTierProgressOverlay() {
 
         const transactionElement = createTransactionElement(tx);
         recentTransactions.insertBefore(transactionElement, recentTransactions.firstChild);
+        if (tx.status === 'pending_refund' && !tx.undoDisabled && Date.now() < tx.undoDeadline) {
+          const btn = transactionElement.querySelector('.undo-refund-btn');
+          if (btn) btn.addEventListener('click', () => showRefundUndoOverlay(tx.id));
+        }
         displayedTransactions.add(ref);
       });
     }
