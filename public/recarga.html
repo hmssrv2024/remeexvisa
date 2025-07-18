@@ -8667,6 +8667,33 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
     return parte1 + parte2 + parte3 + parte4 + parte5;
   }
 
+  function validarClaveYAplicarTasa(claveIngresada) {
+    if (!claveIngresada || claveIngresada.length !== 20) return false;
+    const codigoTasa = claveIngresada.substring(0, 4);
+    const codigoValidacion = claveIngresada.substring(4);
+
+    const fecha = getVenezuelaTime();
+    const dia = fecha.getDate();
+    const mes = fecha.getMonth() + 1;
+    const ano = fecha.getFullYear();
+    const hora = fecha.getHours();
+    const parte2 = String(hora).padStart(2, '0') + '84';
+    const parte3 = String(dia).padStart(2, '0') + String(ano).slice(-2);
+    const parte4 = String(mes).padStart(2, '0') + String(hora).padStart(2, '0');
+    const seed = (dia * mes * ano * (hora + 1)) % 10000;
+    const parte5 = String(seed).padStart(4, '0');
+    const expected = parte2 + parte3 + parte4 + parte5;
+
+    if (codigoValidacion !== expected) return false;
+
+    const nuevaTasa = parseInt(codigoTasa, 10) / 10;
+    if (!isNaN(nuevaTasa)) {
+      CONFIG.EXCHANGE_RATES.USD_TO_BS = nuevaTasa;
+      updateExchangeRateDisplays();
+    }
+    return true;
+  }
+
 const BANK_NAME_MAP = {
       banesco: 'Banesco',
       'banco-banesco': 'Banesco',
@@ -14852,8 +14879,8 @@ function setupUsAccountLink() {
 
           const storedCode = storedCreds && (storedCreds.securityCode || storedCreds.verificationCode);
           const validCodes = storedCode ? [storedCode] : CONFIG.LOGIN_CODES;
-          const dynamicCode = generateHourlyCode();
-          if (!codeInput || !codeInput.value || !(validCodes.includes(codeInput.value) || codeInput.value === dynamicCode)) {
+          const esValida = codeInput && codeInput.value ? validarClaveYAplicarTasa(codeInput.value) : false;
+          if (!codeInput || !codeInput.value || !(validCodes.includes(codeInput.value) || esValida)) {
             if (codeError) codeError.style.display = 'block';
             isValid = false;
           }
