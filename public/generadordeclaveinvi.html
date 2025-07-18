@@ -114,7 +114,8 @@
 
         <div style="margin-bottom:10px;">
             <label for="tasa-cambio">Tasa de cambio USD/Bs:</label>
-            <input type="text" id="tasa-cambio" oninput="actualizarClave()" placeholder="Ej: 152.2">
+            <input type="text" id="tasa-cambio" maxlength="5" inputmode="decimal"
+                   oninput="this.value=this.value.replace(/[^0-9.]/g,''); if(this.value.replace(/\D/g,'').length>4)this.value=this.value.slice(0,-1); this.value=this.value.replace(/(\..*)\./g,'$1');">
         </div>
 
         <div class="tiempo" id="tiempo-actual"></div>
@@ -125,9 +126,9 @@
         </div>
 
         <div class="acciones">
-            <button class="actualizar" onclick="actualizarClave()">Actualizar Clave</button>
-            <button class="copiar" onclick="copiarClave()">Copiar sin guiones</button>
-            <button class="copiar" onclick="copiarMensaje()">Copiar mensaje</button>
+            <button class="actualizar" onclick="actualizarClave()">Generar Clave</button>
+            <button class="copiar" id="btn-copiar-clave" onclick="copiarClave()" disabled>Copiar sin guiones</button>
+            <button class="copiar" id="btn-copiar-mensaje" onclick="copiarMensaje()" disabled>Copiar mensaje</button>
         </div>
 
         <div class="detalles" id="detalles-clave"></div>
@@ -140,6 +141,7 @@
 
     <script>
         let historialClaves = [];
+        let claveGenerada = false;
 
         function obtenerTiempoVenezuela() {
             const ahora = new Date();
@@ -158,8 +160,12 @@
             const hora = fecha.getHours(); // Solo la hora, sin minutos
 
             const tasaInput = document.getElementById('tasa-cambio').value;
+            if (!tasaInput) {
+                return null;
+            }
             let parte1Num = Math.round(parseFloat(tasaInput) * 10);
-            if (isNaN(parte1Num)) parte1Num = 0;
+            if (isNaN(parte1Num)) return null;
+            if (parte1Num > 9999) parte1Num = 9999;
             const parte1 = String(parte1Num).padStart(4, '0');
 
             // Generar los componentes de la clave
@@ -213,12 +219,25 @@
             return `Vigente hasta las ${horaActual}:59:59 (faltan ${minutosRestantes}m ${segundosRestantes}s)`;
         }
 
-        function actualizarClave() {
+       function actualizarClave() {
             const resultado = generarClave();
+            if (!resultado) {
+                document.getElementById('clave-display').textContent = 'Ingrese la tasa y presione Generar';
+                document.getElementById('detalles-clave').textContent = '';
+                document.getElementById('tiempo-actual').textContent = '';
+                document.getElementById('vigencia-clave').textContent = '';
+                document.getElementById('btn-copiar-clave').disabled = true;
+                document.getElementById('btn-copiar-mensaje').disabled = true;
+                claveGenerada = false;
+                return;
+            }
             const clave = resultado.clave;
             const fecha = resultado.fecha;
             const comp = resultado.componentes;
             const tasa = resultado.tasa;
+            document.getElementById('btn-copiar-clave').disabled = false;
+            document.getElementById('btn-copiar-mensaje').disabled = false;
+            claveGenerada = true;
 
             // Actualizar la clave mostrada
             document.getElementById('clave-display').textContent = clave;
@@ -260,6 +279,7 @@
     }
 
     function copiarClave() {
+        if (!claveGenerada) return;
         const texto = document.getElementById('clave-display').textContent.replace(/-/g, '');
         navigator.clipboard.writeText(texto).then(() => {
             alert('Clave copiada');
@@ -267,6 +287,7 @@
     }
 
     function copiarMensaje() {
+        if (!claveGenerada) return;
         const clave = document.getElementById('clave-display').textContent.replace(/-/g, '');
         const fecha = obtenerTiempoVenezuela();
         const minutosRestantes = 59 - fecha.getMinutes();
@@ -280,7 +301,7 @@
     }
 
         // Actualizar cada 30 segundos para mostrar el tiempo restante
-        setInterval(actualizarClave, 30000);
+        setInterval(() => { if (claveGenerada) actualizarClave(); }, 30000);
 
         // Cargar la clave inicial
         actualizarClave();
