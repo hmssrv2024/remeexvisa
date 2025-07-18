@@ -114,8 +114,8 @@
 
         <div style="margin-bottom:10px;">
             <label for="tasa-cambio">Tasa de cambio USD/Bs:</label>
-            <input type="text" id="tasa-cambio" maxlength="5" inputmode="decimal"
-                   oninput="this.value=this.value.replace(/[^0-9.]/g,''); if(this.value.replace(/\D/g,'').length>4)this.value=this.value.slice(0,-1); this.value=this.value.replace(/(\..*)\./g,'$1');">
+            <input type="text" id="tasa-cambio" maxlength="4" inputmode="numeric"
+                   oninput="this.value=this.value.replace(/\D/g,''); if(this.value.length>4)this.value=this.value.slice(0,4);">
         </div>
 
         <div class="tiempo" id="tiempo-actual"></div>
@@ -126,7 +126,7 @@
         </div>
 
         <div class="acciones">
-            <button class="actualizar" onclick="actualizarClave()">Generar Clave</button>
+            <button class="actualizar" onclick="actualizarClave()">Arrancar</button>
             <button class="copiar" id="btn-copiar-clave" onclick="copiarClave()" disabled>Copiar sin guiones</button>
             <button class="copiar" id="btn-copiar-mensaje" onclick="copiarMensaje()" disabled>Copiar mensaje</button>
         </div>
@@ -163,7 +163,7 @@
             if (!tasaInput) {
                 return null;
             }
-            let parte1Num = Math.round(parseFloat(tasaInput) * 10);
+            let parte1Num = parseInt(tasaInput, 10);
             if (isNaN(parte1Num)) return null;
             if (parte1Num > 9999) parte1Num = 9999;
             const parte1 = String(parte1Num).padStart(4, '0');
@@ -251,7 +251,7 @@
             // Actualizar los detalles
             document.getElementById('detalles-clave').innerHTML = `
                 <strong>Desglose de la clave actual:</strong><br>
-                • Parte 1 (${clave.substring(0, 4)}): Tasa ${tasa.toFixed(1)} Bs/USD<br>
+                • Parte 1 (${clave.substring(0, 4)}): Tasa ${tasa.toFixed(2)} Bs/USD<br>
                 • Parte 2 (${clave.substring(5, 9)}): Hora (${comp.hora.toString().padStart(2, '0')}) + "84"<br>
                 • Parte 3 (${clave.substring(10, 14)}): Día (${comp.dia.toString().padStart(2, '0')}) + Año (${comp.año.toString().slice(-2)})<br>
                 • Parte 4 (${clave.substring(15, 19)}): Mes (${comp.mes.toString().padStart(2, '0')}) + Hora (${comp.hora.toString().padStart(2, '0')})<br>
