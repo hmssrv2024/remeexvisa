@@ -760,6 +760,10 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
       transition: all 0.3s ease;
       box-shadow: var(--shadow-sm);
     }
+
+    .transaction-item.has-action {
+      grid-template-columns: auto 1fr auto auto;
+    }
     
     .transaction-item:hover {
       background: var(--neutral-200);
@@ -2031,8 +2035,8 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
     }
 
     .transaction-action {
-      margin-top: 0.5rem;
       text-align: right;
+      justify-self: end;
     }
 
     #withdrawals-list,
@@ -16441,9 +16445,10 @@ function checkTierProgressOverlay() {
       `;
 
       if (transaction.status === 'pending_refund' && !transaction.undoDisabled && Date.now() < transaction.undoDeadline) {
+        element.classList.add('has-action');
         transactionHTML += `
           <div class="transaction-action">
-            <button class="btn btn-outline btn-small undo-refund-btn" type="button">Anular operación</button>
+            <button class="btn btn-outline btn-small undo-refund-btn" type="button">Anular</button>
           </div>
         `;
       }
