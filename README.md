@@ -16,7 +16,13 @@ Este repositorio contiene una aplicación sencilla de ejemplo. Ahora incluye un 
    Ahora también expone las páginas estáticas del directorio `public`.
    Si accedes a una ruta con terminación `.html` serás redirigido
    automáticamente a la versión sin extensión, por ejemplo
-   `/recarga.html` redirige a `/recarga`.
+
+### Variables de entorno
+
+Antes de iniciar el servidor debes definir las siguientes variables:
+
+- `ADMIN_USERNAME` – nombre de usuario permitido para acceder al panel de administración.
+- `ADMIN_PASSWORD` – contraseña correspondiente a ese usuario.
 
 ### Endpoints principales
 
