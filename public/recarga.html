@@ -4437,6 +4437,11 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
   opacity: 0.9;
 }
 
+#pending-validation-info {
+  text-align: justify;
+  line-height: 1.2;
+}
+
 .validation-more { display: none; }
 .show-more-link {
   color: var(--primary);
@@ -5453,7 +5458,7 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
     }
 
     /* Estilos para botones deshabilitados */
-    .btn-primary:disabled, 
+    .btn-primary:disabled,
     .saved-card-pay-btn:disabled {
       background: var(--neutral-500);
       cursor: not-allowed;
@@ -5461,9 +5466,22 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
       box-shadow: none;
     }
 
-    .btn-primary:disabled:hover, 
+    .btn-outline:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .btn-primary:disabled:hover,
     .saved-card-pay-btn:disabled:hover {
       background: var(--neutral-500);
+      transform: none;
+      box-shadow: none;
+    }
+
+    .btn-outline:disabled:hover {
+      background: transparent;
       transform: none;
       box-shadow: none;
     }
@@ -6358,7 +6376,7 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
                   <button class="btn btn-outline btn-small" id="go-validation-data">Ver datos donde debo validar</button>
                   <button class="btn btn-outline btn-small" id="open-validation-benefits">Beneficios de validar</button>
                   <button class="btn btn-outline btn-small" id="open-validation-faq">¿Dudas?</button>
-                  <button class="btn btn-outline btn-small" id="open-validation-example">Ejemplo visual</button>
+                  <button class="btn btn-outline btn-small" id="open-validation-example" disabled>Ejemplo visual</button>
                   <button class="btn btn-outline btn-small" id="play-instructions" style="margin-top: 0.5rem;"><i class="fas fa-play"></i> Escuchar instrucciones</button>
                   </div>
                   <div id="bank-validation-progress-container" class="verification-progress-container" style="display: none;">
