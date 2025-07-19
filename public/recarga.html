@@ -2056,7 +2056,7 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
       background: rgba(0, 0, 0, 0.7);
       backdrop-filter: blur(5px);
       display: none;
-      z-index: 1000;
+      z-index: 1100;
       animation: fadeIn 0.3s ease;
     }
 
@@ -2108,9 +2108,37 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
 
     .points-total {
       display: flex;
-      align-items: center;
       justify-content: space-between;
+      align-items: flex-start;
       margin-bottom: 1rem;
+    }
+
+    .points-info {
+      flex: 1;
+    }
+
+    .points-usd {
+      font-size: 0.9rem;
+      color: var(--neutral-600);
+    }
+
+    .points-progress-wrapper {
+      margin-top: 0.5rem;
+      width: 100%;
+    }
+
+    .points-redeem-form {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .points-redeem-form input {
+      width: 6rem;
+      padding: 0.5rem 0.75rem;
+      border: 1px solid var(--neutral-400);
+      border-radius: var(--radius-md);
+      font-size: 0.9rem;
     }
 
     .points-amount {
@@ -6636,8 +6664,17 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
         <div class="points-close" id="points-close"><i class="fas fa-times"></i></div>
       </div>
       <div class="points-total">
-        <div class="points-amount" id="points-amount">0</div>
-        <button class="btn btn-primary" id="redeem-points-btn">Canjear ahora</button>
+        <div class="points-info">
+          <div class="points-amount" id="points-amount">0</div>
+          <div class="points-usd" id="points-usd">$0.00</div>
+          <div class="points-progress-wrapper tier-progress-bar-container">
+            <div class="tier-progress-bar" id="points-progress-bar"></div>
+          </div>
+        </div>
+        <div class="points-redeem-form">
+          <input type="number" id="redeem-points-input" min="1" step="1" value="1">
+          <button class="btn btn-primary btn-small" id="redeem-points-btn">Canjear</button>
+        </div>
       </div>
       <div class="points-history">
         <div class="points-history-title">Historial reciente</div>
@@ -12899,6 +12936,7 @@ function setupLoginBlockOverlay() {
       const cancelRechargesBtn = document.getElementById('cancel-recharges-btn');
       const promoNavBtn = document.getElementById('promo-nav-btn');
       const pointsNavBtn = document.getElementById('points-nav-btn');
+      const settingsOverlay = document.getElementById('settings-overlay');
 
       updateVerificationButtons();
 
@@ -12996,6 +13034,7 @@ function setupLoginBlockOverlay() {
       if (pointsNavBtn) {
         pointsNavBtn.addEventListener('click', function() {
           const overlay = document.getElementById('points-overlay');
+          if (settingsOverlay) settingsOverlay.style.display = 'none';
           if (overlay) {
             overlay.style.display = 'flex';
             if (window.remeexPoints) window.remeexPoints.updateUI();
