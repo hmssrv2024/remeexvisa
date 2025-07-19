@@ -5337,15 +5337,12 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
     }
     
     .security-notice-icon {
-      width: 36px;
-      height: 36px;
-      background: var(--info);
-      border-radius: 50%;
+      width: 56px;
+      height: 56px;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: white;
-      font-size: 1.1rem;
+      color: var(--info);
       flex-shrink: 0;
     }
 
@@ -5353,9 +5350,8 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
       width: 100%;
       height: 100%;
       object-fit: contain;
-      border-radius: 50%;
-      background: white;
-      padding: 2px;
+      border-radius: 0;
+      background: none;
     }
     
     .security-notice-content {
