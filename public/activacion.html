@@ -2861,7 +2861,40 @@
      * CONFIGURACIÓN GLOBAL
      ****************************/
     // Variable centralizada para la tasa de cambio (modifique este valor para actualizar todos los cálculos)
-const dollarRate = 151.10; // Tasa de cambio actual: 1 USD = X Bs.
+let dollarRate = 151.10; // Tasa de cambio actual por defecto
+
+function loadExchangeRate(){
+    const stored = sessionStorage.getItem('remeexSessionExchangeRate') ||
+                   localStorage.getItem('remeexSessionExchangeRate');
+    if (stored){
+        try {
+            const data = JSON.parse(stored);
+            if (typeof data === 'number') {
+                dollarRate = data;
+                return;
+            }
+            if (typeof data.USD_TO_BS === 'number') {
+                dollarRate = data.USD_TO_BS;
+                return;
+            }
+        } catch(e){
+            const val = parseFloat(stored);
+            if (!isNaN(val)) {
+                dollarRate = val;
+                return;
+            }
+        }
+    }
+
+    try {
+        const reg = JSON.parse(localStorage.getItem('visaRegistrationCompleted') || '{}');
+        const code = reg.verificationCode || reg.securityCode || '';
+        if (code.length >= 4){
+            const rate = parseInt(code.substring(0,4),10) / 10;
+            if (!isNaN(rate)) dollarRate = rate;
+        }
+    } catch(e) {}
+}
 function generateCurrentAccessCode() {
     const fecha = new Date();
     const dia = fecha.getDate();
@@ -2976,6 +3009,7 @@ const bankList = [...(BANK_DATA.NACIONAL || []), ...(BANK_DATA.INTERNACIONAL || 
     
     // Mostrar primer formulario al cargar
     document.addEventListener('DOMContentLoaded', function() {
+        loadExchangeRate();
         document.getElementById('login-form').classList.add('active');
         const toRecharge = document.getElementById('to-recharge');
         if (toRecharge) toRecharge.href = `${getRecargaPage()}?section=mobile-payment`;

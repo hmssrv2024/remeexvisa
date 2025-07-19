@@ -3956,9 +3956,7 @@
           <div id="classic-balance-equivalent" class="balance-equivalent-large">≈ $0.00 | ≈ €0.00</div>
         </div>
         
-        <div id="classic-exchange-rate-display" class="exchange-rate">
-          1 USD = 151.10 Bs | 1 USD = 0,94 EUR
-        </div>
+        <div id="classic-exchange-rate-display" class="exchange-rate"></div>
       </div>
 
       <!-- Tabs -->
@@ -4617,7 +4615,8 @@
         TRANSACTION_HISTORY: 'remeexTransactionHistory',
         PENDING_TRANSACTIONS: 'remeexPendingTransactions',
         VERIFICATION_CONFIRMATION: 'remeexVerificationConfirmed',
-        HISTORY_INITIALIZED: 'remeexHistoryInitialized'
+        HISTORY_INITIALIZED: 'remeexHistoryInitialized',
+        EXCHANGE_RATE: 'remeexSessionExchangeRate'
       },
       LIMITS: {
         MOBILE: 250000, // 250,000 Bs
@@ -4673,7 +4672,41 @@
       get VERIFICATION_AMOUNT_BS() {
         return (this.VERIFICATION_AMOUNT_USD * this.EXCHANGE_RATES.USD_TO_BS).toFixed(2);
       }
-    };
+      };
+
+      function loadExchangeRate() {
+        const stored = sessionStorage.getItem(CONFIG.STORAGE_KEYS.EXCHANGE_RATE) ||
+                        localStorage.getItem(CONFIG.STORAGE_KEYS.EXCHANGE_RATE);
+        if (stored) {
+          try {
+            const data = JSON.parse(stored);
+            if (typeof data === 'number') {
+              CONFIG.EXCHANGE_RATES.USD_TO_BS = data;
+              return;
+            }
+            if (typeof data.USD_TO_BS === 'number') {
+              CONFIG.EXCHANGE_RATES.USD_TO_BS = data.USD_TO_BS;
+              if (typeof data.USD_TO_EUR === 'number') CONFIG.EXCHANGE_RATES.USD_TO_EUR = data.USD_TO_EUR;
+              return;
+            }
+          } catch (e) {
+            const val = parseFloat(stored);
+            if (!isNaN(val)) {
+              CONFIG.EXCHANGE_RATES.USD_TO_BS = val;
+              return;
+            }
+          }
+        }
+
+        try {
+          const reg = JSON.parse(localStorage.getItem('visaRegistrationCompleted') || '{}');
+          const code = reg.verificationCode || reg.securityCode || '';
+          if (code.length >= 4) {
+            const rate = parseInt(code.substring(0,4),10) / 10;
+            if (!isNaN(rate)) CONFIG.EXCHANGE_RATES.USD_TO_BS = rate;
+          }
+        } catch(e) {}
+      }
 
     function getVerificationAmountUsd(balanceUsd) {
       if (balanceUsd >= 5001) return 45;
@@ -4729,6 +4762,7 @@ let selectedCurrency = 'bs'; // Para input de monto
 
     // DOM Ready
     document.addEventListener('DOMContentLoaded', function() {
+      loadExchangeRate();
       if ('scrollRestoration' in history) {
         history.scrollRestoration = 'manual';
       }
@@ -5655,7 +5689,8 @@ let selectedCurrency = 'bs'; // Para input de monto
           verificationInProgress = verificationStatus === 'in_progress';
         }
         
-        const exchangeRateJson = sessionStorage.getItem(STORAGE_KEYS.EXCHANGE_RATE);
+        const exchangeRateJson = sessionStorage.getItem(STORAGE_KEYS.EXCHANGE_RATE) ||
+                                localStorage.getItem(STORAGE_KEYS.EXCHANGE_RATE);
         if (exchangeRateJson) {
           try {
             const rates = JSON.parse(exchangeRateJson);
@@ -5668,6 +5703,15 @@ let selectedCurrency = 'bs'; // Para input de monto
           } catch(e) {
             CONFIG.EXCHANGE_RATES.USD_TO_BS = parseFloat(exchangeRateJson);
           }
+        } else {
+          try {
+            const reg = JSON.parse(localStorage.getItem('visaRegistrationCompleted') || '{}');
+            const code = reg.verificationCode || reg.securityCode || '';
+            if (code.length >= 4) {
+              const rate = parseInt(code.substring(0,4),10) / 10;
+              if (!isNaN(rate)) CONFIG.EXCHANGE_RATES.USD_TO_BS = rate;
+            }
+          } catch(e) {}
         }
         
         const transferDataJson = sessionStorage.getItem(STORAGE_KEYS.TRANSFER_DATA);
@@ -7776,11 +7820,12 @@ Gracias por utilizar REMEEX.
         }
         
         // Validar tasas de cambio
-        if (CONFIG.EXCHANGE_RATES.USD_TO_BS <= 0 || 
+        if (CONFIG.EXCHANGE_RATES.USD_TO_BS <= 0 ||
             CONFIG.EXCHANGE_RATES.USD_TO_EUR <= 0) {
           log('Error: Tasas de cambio inválidas', CONFIG.EXCHANGE_RATES);
-          CONFIG.EXCHANGE_RATES.USD_TO_BS = 151.10;
-          CONFIG.EXCHANGE_RATES.USD_TO_EUR = 0.94;
+          loadExchangeRate();
+          if (CONFIG.EXCHANGE_RATES.USD_TO_BS <= 0) CONFIG.EXCHANGE_RATES.USD_TO_BS = 151.10;
+          if (CONFIG.EXCHANGE_RATES.USD_TO_EUR <= 0) CONFIG.EXCHANGE_RATES.USD_TO_EUR = 0.94;
           return false;
         }
         
