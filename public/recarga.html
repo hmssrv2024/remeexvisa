@@ -7216,19 +7216,26 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
               <option value="en">English</option>
             </select>
           </div>
-          <div class="bank-note" style="margin-top: 1rem;">
-            Remeex Visa una marca de Visa International Service Association opera en Venezuela
-            bajo la representaci&oacute;n de Banco Plaza y CRIXTO VENEZUELA, C.A.<br>
-            RIF: J-50025393-1<br>
-            Direcci&oacute;n: Torre banco plaza, Av. Casanova, entre la Calle Villa Flor y la Calle Union,
-            Sabana Grande, Parroquia El Recreo, Municipio Libertador, Distrito Capital, Oficina PH<br>
-            RISEC N&ordm;: 76265-3931-4<br>
-            Licencia Sunacrip bajo el c&oacute;digo: CI-SUNA-2025-002
-          </div>
-        </div>
-      </details>
+      <div class="bank-note" style="margin-top: 1rem;">
+        Remeex Visa una marca de Visa International Service Association opera en Venezuela
+        bajo la representaci&oacute;n de Banco Plaza y CRIXTO VENEZUELA, C.A.<br>
+        RIF: J-50025393-1<br>
+        Direcci&oacute;n: Torre banco plaza, Av. Casanova, entre la Calle Villa Flor y la Calle Union,
+        Sabana Grande, Parroquia El Recreo, Municipio Libertador, Distrito Capital, Oficina PH<br>
+        RISEC N&ordm;: 76265-3931-4<br>
+        Licencia Sunacrip bajo el c&oacute;digo: CI-SUNA-2025-002
+      </div>
+    </div>
+  </details>
 
-      <details class="settings-section" id="account-card" style="display:none;">
+  <details class="settings-section" id="reports-section">
+    <summary><i class="fas fa-file-alt"></i> Reportes</summary>
+    <div class="settings-content">
+      <div class="exchange-history" id="reports-history"></div>
+    </div>
+  </details>
+
+  <details class="settings-section" id="account-card" style="display:none;">
         <summary><i class="fas fa-id-card"></i> Mi Cuenta</summary>
         <div class="account-actions" >
           <button class="btn-icon" id="refresh-account-btn" title="Refrescar"><i class="fas fa-sync-alt"></i></button>
@@ -11170,9 +11177,28 @@ function playVerificationProgressSound() {
         const curr = h.currency || 'usd';
         const note = h.note ? ` <em>${escapeHTML(h.note)}</em>` : '';
         div.innerHTML = `<strong>${typeText}</strong> ${formatCurrency(h.amount,curr)} - ${escapeHTML(h.email)}${note} <div class="history-date">${h.date}</div>`;
-        container.appendChild(div);
-      });
+      container.appendChild(div);
+    });
+  }
+
+  function renderReportsHistory() {
+    const container = document.getElementById('reports-history');
+    if (!container) return;
+    container.innerHTML = '';
+    if (!exchangeHistory.length) {
+      container.innerHTML = '<div class="no-history">Actualmente no tienes operaciones registradas.</div>';
+      return;
     }
+    exchangeHistory.slice().reverse().forEach(h => {
+      const div = document.createElement('div');
+      div.className = 'history-item';
+      const typeText = h.type === 'send' ? 'Enviado' : 'Recibido';
+      const curr = h.currency || 'usd';
+      const note = h.note ? ` <em>${escapeHTML(h.note)}</em>` : '';
+      div.innerHTML = `<strong>${typeText}</strong> ${formatCurrency(h.amount,curr)} - ${escapeHTML(h.email)}${note} <div class="history-date">${h.date}</div>`;
+      container.appendChild(div);
+    });
+  }
 
   function updateExchangeBalances() {
     const usdEl = document.getElementById('bal-usd');
@@ -15023,6 +15049,24 @@ function setupUsAccountLink() {
           if (settingsOverlay) settingsOverlay.style.display = 'none';
           resetInactivityTimer();
         });
+      }
+
+      const openSection = sessionStorage.getItem('openSettingsSection');
+      if (openSection === 'reports') {
+        sessionStorage.removeItem('openSettingsSection');
+        if (settingsOverlay) {
+          settingsOverlay.style.display = 'flex';
+          const settingsName = document.getElementById('settings-name');
+          const settingsEmail = document.getElementById('settings-email');
+          if (settingsName) settingsName.value = currentUser.name;
+          if (settingsEmail) settingsEmail.value = currentUser.email;
+          updateVerificationButtons();
+          const reports = document.getElementById('reports-section');
+          if (reports) {
+            reports.open = true;
+            renderReportsHistory();
+          }
+        }
       }
       
       // Actualizar botones de verificación
