@@ -1946,11 +1946,11 @@
 
       if (goToSettings) {
         goToSettings.addEventListener('click', () => {
-          // Aquí puedes redirigir a la página de ajustes
           showToast('info', 'Redirigiendo', 'Te llevamos a la sección de ajustes...');
           setTimeout(() => {
-            // window.location.href = 'ajustes.html#seguridad';
-            twofaModal.style.display = 'none';
+            sessionStorage.setItem('fromRecarga', 'true');
+            sessionStorage.setItem('openSettingsSection', 'reports');
+            window.location.href = getRecargaPage();
           }, 1500);
         });
       }
