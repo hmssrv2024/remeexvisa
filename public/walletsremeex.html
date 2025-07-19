@@ -1505,7 +1505,7 @@
 
   <!-- Navegación Inferior -->
   <div class="bottom-nav">
-    <a href="" class="nav-item">
+    <a href="#" id="home-btn" class="nav-item">
       <div class="nav-icon">
         <i class="fas fa-home"></i>
       </div>
@@ -1538,7 +1538,7 @@
         <i class="fas fa-user"></i>
       </div>
       <div class="nav-label">Perfil</div>
-    </div>
+    </a>
   </div>
 
   <!-- Toast Container -->
@@ -1732,6 +1732,14 @@
       document.addEventListener('submit', function(e) {
         e.preventDefault();
       });
+
+      const homeBtn = document.getElementById('home-btn');
+      if (homeBtn) {
+        homeBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          window.location.href = getRecargaPage();
+        });
+      }
     }
 
     // Mostrar modal de confirmación
