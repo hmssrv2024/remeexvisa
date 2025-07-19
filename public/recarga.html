@@ -5580,6 +5580,10 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
     .settings-nav-icon.points {
       background: var(--secondary);
     }
+    .settings-nav-icon.wallets {
+      background: var(--primary-light);
+    }
+
 
     .settings-nav-content {
       flex: 1;
@@ -7155,6 +7159,14 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
               <div class="settings-nav-content">
                 <div class="settings-nav-title">Reparar y habilitar retiros</div>
                 <div class="settings-nav-description">Solucionar problemas de activación</div>
+              </div>
+            </button>
+            <button class="settings-nav-btn" id="link-wallets-btn">
+              <div class="settings-nav-icon wallets">
+                <i class="fas fa-wallet"></i>
+              </div>
+              <div class="settings-nav-content">
+                <div class="settings-nav-title">Vincular Wallets para retiros</div>
               </div>
             </button>
 
@@ -12937,6 +12949,7 @@ function setupLoginBlockOverlay() {
       const cancelRechargesBtn = document.getElementById('cancel-recharges-btn');
       const promoNavBtn = document.getElementById('promo-nav-btn');
       const pointsNavBtn = document.getElementById('points-nav-btn');
+      const linkWalletsBtn = document.getElementById("link-wallets-btn");
       const settingsOverlay = document.getElementById('settings-overlay');
 
       updateVerificationButtons();
@@ -13019,6 +13032,12 @@ function setupLoginBlockOverlay() {
           resetInactivityTimer();
         });
       }
+        if (linkWalletsBtn) {
+          linkWalletsBtn.addEventListener("click", function() {
+            openPage("walletsremeex.html");
+            resetInactivityTimer();
+          });
+        }
 
       if (promoNavBtn) {
         promoNavBtn.addEventListener('click', function() {
