@@ -30,13 +30,14 @@ const BANK_DATA = {
     { id: 'bank-america', name: 'Bank of America', logo: 'https://1000logos.net/wp-content/uploads/2016/10/Bank-of-America-Logo.png' },
     { id: 'chase-bank', name: 'Chase Bank', logo: 'https://download.logo.wine/logo/Chase_Bank/Chase_Bank-Logo.wine.png' },
     { id: 'bancolombia', name: 'Bancolombia', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Logo_Bancolombia.svg/2000px-Logo_Bancolombia.svg.png' },
-    { id: 'western-union', name: 'Western Union', logo: 'https://logos-world.net/wp-content/uploads/2023/03/Western-Union-Logo.png' }
+    { id: 'western-union', name: 'Western Union', logo: 'https://1000logos.net/wp-content/uploads/2020/07/Western-Union-Logo-500x281.png' }
   ],
   FINTECH: [
     { id: 'zinli', name: 'Zinli', logo: 'https://images.seeklogo.com/logo-png/41/1/zinli-logo-png_seeklogo-411354.png' },
     { id: 'paypal', name: 'PayPal', logo: 'https://upload.wikimedia.org/wikipedia/commons/a/a4/Paypal_2014_logo.png' },
     { id: 'binance', name: 'Binance', logo: 'https://www.logo.wine/a/logo/Binance/Binance-Logo.wine.svg' },
     { id: 'airtm', name: 'AirTM', logo: 'https://brandlogovector.com/wp-content/uploads/2023/08/Airtm-Logo-PNG.png' },
+    { id: 'xoom', name: 'Xoom', logo: 'https://www.paypalobjects.com/xoom/static/img/logo/xpp-logo-es.svg' },
     { id: 'zoom', name: 'Zoom', logo: 'https://zoom.red/wp-content/uploads/2021/01/Logo-Zoom-Registrado.png' },
     { id: 'zelle', name: 'Zelle', logo: 'https://download.logo.wine/logo/Zelle_(payment_service)/Zelle_(payment_service)-Logo.wine.png' },
     { id: 'venmo', name: 'Venmo', logo: 'https://logos-world.net/wp-content/uploads/2021/12/Venmo-Logo.png' },
