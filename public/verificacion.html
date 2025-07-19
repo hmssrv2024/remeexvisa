@@ -3069,6 +3069,20 @@
       }
       window.addEventListener('Tally:Submit', handleTallySubmit);
 
+      // Detectar eventos enviados desde el iframe de Tally
+      window.addEventListener('message', function(e) {
+        if (!e.origin.includes('tally.so')) return;
+
+        const data = e.data || {};
+        const eventName = typeof data === 'string'
+          ? data
+          : (data.eventName || data.type || data.event);
+
+        if (eventName && eventName.toLowerCase().includes('submit')) {
+          handleTallySubmit();
+        }
+      });
+
       // Función para el temporizador
       function startTallyTimer() {
         secondsRemaining = 180;
