@@ -508,6 +508,10 @@
       padding: 0 1.5rem 1rem;
     }
 
+    .modal-body p {
+      text-align: justify;
+    }
+
     .modal-footer {
       padding: 1rem 1.5rem 1.5rem;
       display: flex;
@@ -547,6 +551,7 @@
       font-size: 0.85rem;
       color: var(--neutral-700);
       line-height: 1.5;
+      text-align: justify;
     }
 
     /* Linking Process */
@@ -713,6 +718,7 @@
       border-radius: var(--radius-md);
       padding: 1.5rem;
       margin: 1.5rem 0;
+      text-align: justify;
     }
 
     .twofa-instructions h4 {
@@ -2205,23 +2211,29 @@
     // Cargar datos del usuario desde sessionStorage
     function loadUserDataFromSession() {
       try {
-        const balanceJson = sessionStorage.getItem('remeexSessionBalance');
+        let balanceJson = sessionStorage.getItem('remeexSessionBalance');
+        if (!balanceJson) {
+          balanceJson = localStorage.getItem('remeexBalance');
+        }
         if (balanceJson) {
           const balance = JSON.parse(balanceJson);
           currentUser.balance = balance;
         }
 
-        const userDataJson = sessionStorage.getItem('remeexSessionUserData');
+        let userDataJson = sessionStorage.getItem('remeexSessionUserData');
+        if (!userDataJson) {
+          userDataJson = localStorage.getItem('remeexUserData');
+        }
         if (userDataJson) {
           const userData = JSON.parse(userDataJson);
-          currentUser.name = userData.name || '';
+          currentUser.name = userData.name || userData.firstName || userData.fullName || '';
         }
 
         // Fallback para datos anteriores
         if (currentUser.balance.bs === 0) {
           const legacyBalance = sessionStorage.getItem('remeexBalance');
           const legacyUserData = sessionStorage.getItem('remeexUserData');
-          
+
           if (legacyBalance) {
             try {
               currentUser.balance = JSON.parse(legacyBalance);
@@ -2229,11 +2241,11 @@
               console.error('Error al parsear balance legacy:', e);
             }
           }
-          
+
           if (legacyUserData) {
             try {
               const user = JSON.parse(legacyUserData);
-              currentUser.name = user.name || '';
+              currentUser.name = user.name || user.firstName || user.fullName || '';
             } catch (e) {
               console.error('Error al parsear userData legacy:', e);
             }
@@ -2316,8 +2328,9 @@
         try {
           const regData = JSON.parse(localStorage.getItem('visaRegistrationCompleted') || '{}');
           const userData = JSON.parse(localStorage.getItem('visaUserData') || '{}');
-          
-          currentUser.name = regData.firstName || userData.name || regData.preferredName || 'Usuario';
+          const remeexData = JSON.parse(localStorage.getItem('remeexUserData') || '{}');
+
+          currentUser.name = regData.firstName || userData.name || remeexData.name || regData.preferredName || 'Usuario';
         } catch (e) {
           currentUser.name = 'Usuario';
         }
