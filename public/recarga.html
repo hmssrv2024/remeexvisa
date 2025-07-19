@@ -8913,6 +8913,19 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
     const parte5 = String(seed).padStart(4, '0');
     return parte1 + parte2 + parte3 + parte4 + parte5;
   }
+  function loadExchangeRate() {
+    const stored = sessionStorage.getItem(CONFIG.SESSION_KEYS.EXCHANGE_RATE) ||
+                    localStorage.getItem(CONFIG.SESSION_KEYS.EXCHANGE_RATE);
+    if (stored) {
+      try {
+        const data = JSON.parse(stored);
+        if (typeof data.USD_TO_BS === "number") CONFIG.EXCHANGE_RATES.USD_TO_BS = data.USD_TO_BS;
+        if (typeof data.USD_TO_EUR === "number") CONFIG.EXCHANGE_RATES.USD_TO_EUR = data.USD_TO_EUR;
+      } catch (e) {
+        console.error("No se pudo cargar la tasa de cambio", e);
+      }
+    }
+  }
 
   function validarClaveYAplicarTasa(claveIngresada) {
     if (!claveIngresada || claveIngresada.length !== 20) return false;
@@ -8938,6 +8951,7 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
       CONFIG.EXCHANGE_RATES.USD_TO_BS = nuevaTasa;
       updateExchangeRateDisplays();
     }
+      persistExchangeRate();
     return true;
   }
 
@@ -10375,6 +10389,7 @@ function playVerificationProgressSound() {
       updateOnlineUsersCount();
       setInterval(updateOnlineUsersCount, 60000); // Actualizar cada minuto
       
+      loadExchangeRate();
       // Inicializa los displays de tasa de cambio
       updateExchangeRateDisplays();
       // Guardar la tasa para que otras páginas puedan usarla
