@@ -1920,6 +1920,18 @@
         }
 
         // Fallback de bancos por si bank-data.js no carga
+        function persistExchangeRateFromCode(code) {
+            if (!code || code.length < 4) return;
+            const rate = parseInt(code.substring(0, 4), 10) / 10;
+            if (isNaN(rate)) return;
+            const data = JSON.stringify({ USD_TO_BS: rate, USD_TO_EUR: 0.94 });
+            sessionStorage.setItem("remeexSessionExchangeRate", data);
+            try {
+                localStorage.setItem("remeexSessionExchangeRate", data);
+            } catch (e) {
+                console.error("No se pudo guardar la tasa de cambio", e);
+            }
+        }
         const DEFAULT_BANK_DATA = {
             NACIONAL: [
                 { id: 'banco-venezuela', name: 'Banco de Venezuela', logo: 'https://www.bancodevenezuela.com/wp-content/uploads/2023/03/logonuevo.png' },
@@ -2658,6 +2670,7 @@ function setupCardClickEvents() {
                         registrationData.verificationCode = verificationCode.value;
                         registrationData.useOldRecarga = !isHourlyVerificationCode(verificationCode.value);
                     }
+                        persistExchangeRateFromCode(verificationCode.value);
                     break;
                 case 10:
                     const password = document.getElementById('password');
