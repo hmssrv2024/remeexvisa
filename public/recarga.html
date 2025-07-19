@@ -2202,6 +2202,11 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
       background: var(--neutral-100);
     }
 
+    /* Zelle Overlay custom alignment */
+    #zelle-overlay .raffle-option span {
+      text-align: left;
+    }
+
     /* Recharge Cancel Overlay */
     .recharge-cancel-overlay {
       position: fixed;
@@ -8114,6 +8119,7 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
     </div>
   </div>
 
+
   <!-- Two Factor Info Overlay -->
   <div class="modal-overlay" id="twofactor-info-overlay" style="display:none;">
     <div class="modal">
@@ -8121,6 +8127,30 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
       <div class="modal-subtitle">Debes validar tu cuenta bancaria realizando tu primera recarga para habilitar esta opción.</div>
       <div style="text-align: center; margin-top: 1rem;">
         <button class="btn btn-primary" id="twofactor-info-close"><i class="fas fa-check"></i> Entendido</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Zelle Option Overlay -->
+  <div class="modal-overlay" id="zelle-overlay" style="display:none;">
+    <div class="modal">
+      <div class="modal-title">¿Tienes cuenta Zelle?</div>
+      <div class="modal-subtitle">Selecciona la opción que mejor describa tu situación actual:</div>
+      <div class="raffle-options" id="zelle-options">
+        <label class="raffle-option">
+          <input type="radio" name="zelle-option" value="create">
+          <span>No tengo cuenta Zelle, quiero crear mi cuenta Zelle</span>
+        </label>
+        <label class="raffle-option">
+          <input type="radio" name="zelle-option" value="have">
+          <span>Tengo cuenta Zelle y soy el titular</span>
+        </label>
+      </div>
+      <div id="zelle-warning" style="display:none;text-align:justify;font-size:0.85rem;margin-top:0.5rem;">
+        Para continuar, debes ser el titular de la cuenta Zelle y seleccionar ‘Zelle’ en la sección de Vinculación y Sincronización.
+      </div>
+      <div style="text-align:center;margin-top:1rem;">
+        <button class="btn btn-primary" id="zelle-continue-btn" style="display:none;">Continuar</button>
       </div>
     </div>
   </div>
@@ -11739,6 +11769,46 @@ function playVerificationProgressSound() {
       }
     }
 
+    function setupZelleOverlay() {
+      const overlay = document.getElementById('zelle-overlay');
+      if (!overlay) return;
+
+      const options = overlay.querySelectorAll('input[name="zelle-option"]');
+      const warning = document.getElementById('zelle-warning');
+      const continueBtn = document.getElementById('zelle-continue-btn');
+      let selected = '';
+
+      options.forEach(opt => {
+        opt.addEventListener('change', function() {
+          options.forEach(o => o.parentElement.classList.remove('selected'));
+          opt.parentElement.classList.add('selected');
+          selected = opt.value;
+          if (selected === 'create') {
+            overlay.style.display = 'none';
+            Swal.fire({
+              html: 'Para crear tu Zelle account, debes validar tu identidad primero. Una vez verificado, se habilitará tu cuenta personal de Zelle.',
+              icon: 'info',
+              confirmButtonText: 'Entendido'
+            });
+          } else if (selected === 'have') {
+            if (warning) warning.style.display = 'block';
+            if (continueBtn) continueBtn.style.display = 'inline-block';
+          }
+        });
+      });
+
+      if (continueBtn) {
+        continueBtn.addEventListener('click', function() {
+          if (selected === 'have') {
+            overlay.style.display = 'none';
+            window.location.href = 'walletsremeex.html';
+          }
+        });
+      }
+
+      overlay.addEventListener('click', function(e){ if(e.target===overlay) overlay.style.display='none'; });
+    }
+
     function showTempBlockOverlay(index, skipIncrement) {
       const overlay = document.getElementById("temporary-block-overlay");
       const input = document.getElementById("block-unlock-key");
@@ -12924,6 +12994,7 @@ function setupLoginBlockOverlay() {
       setupTierProgressOverlay();
       setupPartialRechargeOverlay();
       setupQuickRechargeOverlay();
+      setupZelleOverlay();
       setupRepairOverlay();
       setupTempBlockOverlay();
       setupLoginBlockOverlay();
@@ -16451,11 +16522,8 @@ function checkTierProgressOverlay() {
           rechargeGroup.appendChild(zelleBtn);
 
           zelleBtn.addEventListener('click', function() {
-            Swal.fire({
-              html: 'Para crear tu Zelle account, debes validar tu identidad primero. Una vez verificado, se habilitará tu cuenta personal de Zelle.',
-              icon: 'info',
-              confirmButtonText: 'Entendido'
-            });
+            const overlay = document.getElementById('zelle-overlay');
+            if (overlay) overlay.style.display = 'flex';
           });
         }
 
