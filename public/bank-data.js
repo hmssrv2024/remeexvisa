@@ -17,7 +17,7 @@ const BANK_DATA = {
     { id: 'banco-tesoro', name: 'Banco del Tesoro', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Logo_Banco_del_Tesoro.jpg/320px-Logo_Banco_del_Tesoro.jpg' },
     { id: 'banco-bancrecer', name: 'Bancrecer', logo: 'https://images.seeklogo.com/logo-png/36/1/bancrecer-logo-png_seeklogo-364928.png' },
     { id: 'banco-activo', name: 'Banco Activo', logo: 'https://www.bancoactivo.com/logo.svg' },
-    { id: 'banco-bancamiga', name: 'Bancamiga', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Bancamiga.png/320px-Bancamiga.png' },
+    { id: 'banco-bancamiga', name: 'Bancamiga', logo: 'https://vectorseek.com/wp-content/uploads/2023/09/Bancamiga-Logo-Vector.svg-.png' },
     { id: 'banco-bicentenario', name: 'Banco Bicentenario', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/BancoDigitaldelosTrabajadores.png/320px-BancoDigitaldelosTrabajadores.png' },
     { id: 'banco-bnc', name: 'Banco Nacional de Crédito', logo: 'https://www.bncenlinea.com/images/default-source/misc/BNCLogo_rebrand.png' },
     { id: 'banco-bcv', name: 'Banco Central de Venezuela', logo: 'https://www.bcv.org.ve/sites/default/files/default_images/logo_bcv-04_2.png' },
