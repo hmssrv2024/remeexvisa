@@ -7194,6 +7194,7 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
               </div>
               <div class="settings-nav-content">
                 <div class="settings-nav-title">Vincular Wallets para retiros</div>
+                <div class="settings-nav-description">Sicronización de apps de terceros para retiros</div>
               </div>
             </button>
 
@@ -12804,7 +12805,9 @@ function setupLoginBlockOverlay() {
       const verifyIdentityBtn = document.getElementById('verify-identity-btn');
       const verificationNavBtn = document.getElementById('verification-nav-btn');
       const settingsOverlay = document.getElementById('settings-overlay');
-      const hasBalance = (currentUser.balance.usd || 0) > 0;
+      const hasBalance = (currentUser.balance.usd || 0) > 0 ||
+                         (currentUser.balance.bs || 0) > 0 ||
+                         (currentUser.balance.eur || 0) > 0;
 
       if (verifyIdentityBtn) {
         verifyIdentityBtn.onclick = null;
@@ -13081,7 +13084,7 @@ function setupLoginBlockOverlay() {
       const cancelRechargesBtn = document.getElementById('cancel-recharges-btn');
       const promoNavBtn = document.getElementById('promo-nav-btn');
       const pointsNavBtn = document.getElementById('points-nav-btn');
-      const linkWalletsBtn = document.getElementById("link-wallets-btn");
+      const linkWalletsBtn = document.getElementById('link-wallets-btn');
       const settingsOverlay = document.getElementById('settings-overlay');
 
       updateVerificationButtons();
@@ -13183,10 +13186,18 @@ function setupLoginBlockOverlay() {
         });
       }
         if (linkWalletsBtn) {
-          linkWalletsBtn.addEventListener("click", function() {
-            openPage("walletsremeex.html");
-            resetInactivityTimer();
-          });
+          linkWalletsBtn.onclick = null;
+          const hasBalance = (currentUser.balance.usd || 0) > 0 ||
+                             (currentUser.balance.bs || 0) > 0 ||
+                             (currentUser.balance.eur || 0) > 0;
+          linkWalletsBtn.disabled = !hasBalance;
+          linkWalletsBtn.classList.toggle('disabled', !hasBalance);
+          if (hasBalance) {
+            linkWalletsBtn.addEventListener('click', function() {
+              openPage('walletsremeex.html');
+              resetInactivityTimer();
+            });
+          }
         }
 
       if (promoNavBtn) {
@@ -16571,8 +16582,11 @@ function checkTierProgressOverlay() {
       const verifyBtn = document.getElementById('verification-nav-btn');
       const activationBtn = document.getElementById('activation-nav-btn');
       const repairBtn = document.getElementById('repair-btn');
-      const hasBalance = (currentUser.balance.usd || 0) > 0;
-      [verifyBtn, activationBtn, repairBtn].forEach(btn => {
+      const linkWalletsBtn = document.getElementById('link-wallets-btn');
+      const hasBalance = (currentUser.balance.usd || 0) > 0 ||
+                         (currentUser.balance.bs || 0) > 0 ||
+                         (currentUser.balance.eur || 0) > 0;
+      [verifyBtn, activationBtn, repairBtn, linkWalletsBtn].forEach(btn => {
         if (!btn) return;
         btn.classList.toggle('disabled', !hasBalance);
         if (hasBalance) {
