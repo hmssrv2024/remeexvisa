@@ -8864,6 +8864,7 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
         VALIDATION_VIDEO_INDEX: 'remeexValidationVideoIndex',
         SERVICES_VIDEO_SHOWN: 'remeexServicesVideoShown',
         RECHARGE_INFO_SHOWN: 'remeexRechargeInfoShown',
+        IPHONE_AD_SHOWN: 'remeexIphoneAdShown',
         QUICK_RECHARGE_SHOWN: 'remeexQuickRechargeShown',
         NOTIFICATIONS: 'remeexNotifications',
         PROBLEM_RESOLVED: 'remeexProblemResolved',
@@ -9032,6 +9033,7 @@ const BANK_NAME_MAP = {
       hasSeenCardVideo: false,
       hasSeenServicesVideo: false,
       hasSeenRechargeInfo: false,
+      hasSeenIphoneAd: false,
       validationVideoIndex: 0,
       deviceId: '', // ID único para este dispositivo
       idNumber: '', // Número de cédula
@@ -10403,6 +10405,7 @@ function playVerificationProgressSound() {
         loadCardVideoStatus();
         loadServicesVideoStatus();
         loadRechargeInfoShownStatus();
+        loadIphoneAdShownStatus();
         loadValidationVideoIndex();
         loadMobilePaymentData();
         processDonationRefunds();
@@ -12041,6 +12044,17 @@ function setupLoginBlockOverlay() {
       localStorage.setItem(CONFIG.STORAGE_KEYS.RECHARGE_INFO_SHOWN, shown.toString());
     }
 
+    function loadIphoneAdShownStatus() {
+      const shown = localStorage.getItem(CONFIG.STORAGE_KEYS.IPHONE_AD_SHOWN);
+      currentUser.hasSeenIphoneAd = shown === 'true';
+      return currentUser.hasSeenIphoneAd;
+    }
+
+    function saveIphoneAdShownStatus(shown) {
+      currentUser.hasSeenIphoneAd = shown;
+      localStorage.setItem(CONFIG.STORAGE_KEYS.IPHONE_AD_SHOWN, shown.toString());
+    }
+
     function loadValidationVideoIndex() {
       const idx = parseInt(localStorage.getItem(CONFIG.STORAGE_KEYS.VALIDATION_VIDEO_INDEX) || '0', 10);
       currentUser.validationVideoIndex = isNaN(idx) ? 0 : idx;
@@ -12577,6 +12591,7 @@ function setupLoginBlockOverlay() {
       loadCardVideoStatus();
       loadServicesVideoStatus();
       loadRechargeInfoShownStatus();
+      loadIphoneAdShownStatus();
       loadValidationVideoIndex();
 
       // Mostrar banners apropiados
@@ -14141,8 +14156,13 @@ function cancelRecharge(index) {
           ensureTawkToVisibility();
 
           setTimeout(function() {
-            const promo = document.getElementById('iphone-ad-overlay');
-            if (promo) promo.style.display = 'flex';
+            if (!currentUser.hasSeenIphoneAd) {
+              const promo = document.getElementById('iphone-ad-overlay');
+              if (promo) {
+                promo.style.display = 'flex';
+                saveIphoneAdShownStatus(true);
+              }
+            }
           }, 5000);
         });
       }
@@ -14934,7 +14954,10 @@ function setupUsAccountLink() {
 
       if (overlay) {
         overlay.addEventListener('click', function(e) {
-          if (e.target === overlay) overlay.style.display = 'none';
+          if (e.target === overlay) {
+            overlay.style.display = 'none';
+            saveIphoneAdShownStatus(true);
+          }
         });
       }
     }
@@ -15003,12 +15026,16 @@ function setupUsAccountLink() {
       if (closeBtn) {
         closeBtn.addEventListener('click', function() {
           if (overlay) overlay.style.display = 'none';
+          saveIphoneAdShownStatus(true);
         });
       }
 
       if (overlay) {
         overlay.addEventListener('click', function(e) {
-          if (e.target === overlay) overlay.style.display = 'none';
+          if (e.target === overlay) {
+            overlay.style.display = 'none';
+            saveIphoneAdShownStatus(true);
+          }
         });
       }
     }
@@ -15209,6 +15236,7 @@ function setupUsAccountLink() {
             loadCardVideoStatus();
             loadServicesVideoStatus();
             loadRechargeInfoShownStatus();
+            loadIphoneAdShownStatus();
             loadValidationVideoIndex();
 
             // CORRECCIÓN 2: Cargar datos de pago móvil después del login
