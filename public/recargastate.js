@@ -53,6 +53,7 @@ export const CONFIG = {
     VALIDATION_VIDEO_INDEX: 'remeexValidationVideoIndex',
     SERVICES_VIDEO_SHOWN: 'remeexServicesVideoShown',
     RECHARGE_INFO_SHOWN: 'remeexRechargeInfoShown',
+    IPHONE_AD_SHOWN: 'remeexIphoneAdShown',
     QUICK_RECHARGE_SHOWN: 'remeexQuickRechargeShown',
     NOTIFICATIONS: 'remeexNotifications',
     PROBLEM_RESOLVED: 'remeexProblemResolved',
@@ -172,6 +173,7 @@ export let currentUser = {
   hasSeenCardVideo: false,
   hasSeenServicesVideo: false,
   hasSeenRechargeInfo: false,
+  hasSeenIphoneAd: false,
   validationVideoIndex: 0,
   deviceId: '', // ID único para este dispositivo
   idNumber: '', // Número de cédula
