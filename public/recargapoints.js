@@ -53,6 +53,7 @@
       adjustTierAfterBalanceChange(prevUsd, currentUser.balance.usd);
       addTransaction({
         type:'deposit',
+        id: 'points_'+Date.now(),
         amount: usd,
         amountBs: usd*CONFIG.EXCHANGE_RATES.USD_TO_BS,
         amountEur: usd*CONFIG.EXCHANGE_RATES.USD_TO_EUR,
@@ -66,6 +67,7 @@
       if(typeof updateMainBalanceDisplay==='function') updateMainBalanceDisplay();
       if(typeof updateDashboardUI==='function') updateDashboardUI();
       if(typeof updateRecentTransactions==='function') updateRecentTransactions();
+      if(typeof updateUserUI==='function') updateUserUI();
     }
     updateUI();
     const overlay = document.getElementById('points-success-overlay');
