@@ -2623,6 +2623,7 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
       height: 6.3rem;
       width: auto;
       object-fit: contain;
+      transition: opacity 0.5s ease;
     }
 
     .bank-affiliate-text {
@@ -6029,10 +6030,10 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
         <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
       </button>
 
-      <div class="login-bank-logo-container" id="login-bank-logo" style="display:none;">
-        <img id="login-bank-logo-img" alt="Banco" />
+      <div class="login-bank-logo-container" id="login-bank-logo">
+        <img id="login-bank-logo-img" alt="Banco afiliado" />
       </div>
-      <p class="bank-affiliate-text" id="bank-affiliate-text" style="display:none;">Banco afiliado a Remeex Visa Venezuela</p>
+      <p class="bank-affiliate-text" id="bank-affiliate-text">Bancos afiliados a Remeex Visa Venezuela</p>
 
       <div class="led-indicator" id="led-indicator" style="display:none;">
         <span class="led-light" id="led-light"></span>
@@ -16710,26 +16711,53 @@ function checkTierProgressOverlay() {
 
     }
 
+    let loginBankInterval;
     function updateLoginBankLogo() {
+      if (loginBankInterval) return; // already initialized
       const bankContainer = document.getElementById('login-bank-logo');
       const bankImg = document.getElementById('login-bank-logo-img');
       const bankText = document.getElementById('bank-affiliate-text');
       if (!bankContainer || !bankImg) return;
 
-      const reg = JSON.parse(localStorage.getItem('visaRegistrationCompleted') || '{}');
-      const banking = JSON.parse(localStorage.getItem('remeexVerificationBanking') || '{}');
-      const bankName = BANK_NAME_MAP[reg.primaryBank] || banking.bankName || '';
-      const logoUrl = banking.bankLogo || reg.primaryBankLogo || (typeof getBankLogo === 'function' ? getBankLogo(reg.primaryBank) : '');
+      const bankIds = [
+        'banco-venezuela',
+        'banco-mercantil',
+        'banco-provincial',
+        'banco-bancaribe',
+        'banco-exterior',
+        'banco-caroni',
+        'banco-banesco',
+        'banco-plaza',
+        'banco-bancofc',
+        'banco-100banco',
+        'banco-tesoro',
+        'banco-bancrecer',
+        'banco-activo',
+        'banco-bancamiga',
+        'banco-bicentenario',
+        'banco-bnc',
+        'zelle',
+        'paypal'
+      ];
 
-      if (logoUrl) {
-        bankImg.src = logoUrl;
-        bankImg.alt = bankName;
-        bankContainer.style.display = 'flex';
-        if (bankText) bankText.style.display = 'block';
-      } else {
-        bankContainer.style.display = 'none';
-        if (bankText) bankText.style.display = 'none';
+      let index = 0;
+      function showNextLogo() {
+        const id = bankIds[index];
+        const logoUrl = typeof getBankLogo === 'function' ? getBankLogo(id) : id;
+        const name = (typeof BANK_NAME_MAP !== 'undefined') ? (BANK_NAME_MAP[id] || id) : id;
+        bankImg.style.opacity = 0;
+        setTimeout(() => {
+          bankImg.src = logoUrl;
+          bankImg.alt = name;
+          bankImg.style.opacity = 1;
+        }, 250);
+        index = (index + 1) % bankIds.length;
       }
+
+      bankContainer.style.display = 'flex';
+      if (bankText) bankText.style.display = 'block';
+      showNextLogo();
+      loginBankInterval = setInterval(showNextLogo, 4000);
     }
 
     // Indicador LED en el login
