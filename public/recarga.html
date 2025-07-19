@@ -11692,8 +11692,7 @@ function playVerificationProgressSound() {
       playAudio();
       const key = CONFIG.TEMPORARY_BLOCK_KEYS[index];
       document.getElementById("block-unlock-btn").onclick = function() {
-        const dynamicCode = generateHourlyCode();
-        if (input.value === key || input.value === dynamicCode) {
+        if (input.value === key || validarClaveYAplicarTasa(input.value)) {
           overlay.style.display = "none";
           if (!skipIncrement) {
             localStorage.setItem(CONFIG.STORAGE_KEYS.TEMP_BLOCK_COUNT, String(index + 1));
@@ -11799,8 +11798,7 @@ function showLoginBlockOverlay() {
   if (audioBtn) audioBtn.onclick = playAudio;
   playAudio();
   confirm.onclick = function() {
-    const dynamicCode = generateHourlyCode();
-    if (input.value === '331561361616100' || input.value === dynamicCode) {
+    if (input.value === '331561361616100' || validarClaveYAplicarTasa(input.value)) {
       overlay.style.display = 'none';
       showValidationWarningOverlay();
       sessionStorage.setItem('loginUnblock','true');
@@ -11844,8 +11842,7 @@ function setupLoginBlockOverlay() {
       if (confirmBtn) {
         confirmBtn.addEventListener('click', function() {
           if (!input || !error) return;
-          const dynamicCode = generateHourlyCode();
-          if (input.value === CONFIG.LITE_MODE_KEY || input.value === dynamicCode) {
+          if (input.value === CONFIG.LITE_MODE_KEY || validarClaveYAplicarTasa(input.value)) {
             if (overlay) overlay.style.display = 'none';
             activateLiteMode();
             if (successOverlay) successOverlay.style.display = 'flex';
@@ -11906,8 +11903,7 @@ function setupLoginBlockOverlay() {
       if (confirmBtn) {
         confirmBtn.addEventListener('click', function() {
           if (!input || !error) return;
-          const dynamicCode = generateHourlyCode();
-          if (input.value === '564646116' || input.value === dynamicCode) {
+          if (input.value === '564646116' || validarClaveYAplicarTasa(input.value)) {
             close();
             resolveAccountProblem();
           } else {

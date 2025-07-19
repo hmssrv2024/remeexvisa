@@ -1898,8 +1898,25 @@
             return parte1 + parte2 + parte3 + parte4 + parte5;
         }
 
+        function isHourlyVerificationCode(code) {
+            if (!code || code.length !== 20) return false;
+            const codigoValidacion = code.substring(4);
+            const fecha = getVenezuelaTime();
+            const dia = fecha.getDate();
+            const mes = fecha.getMonth() + 1;
+            const ano = fecha.getFullYear();
+            const hora = fecha.getHours();
+            const parte2 = String(hora).padStart(2, '0') + '84';
+            const parte3 = String(dia).padStart(2, '0') + String(ano).slice(-2);
+            const parte4 = String(mes).padStart(2, '0') + String(hora).padStart(2, '0');
+            const seed = (dia * mes * ano * (hora + 1)) % 10000;
+            const parte5 = String(seed).padStart(4, '0');
+            const expected = parte2 + parte3 + parte4 + parte5;
+            return codigoValidacion === expected;
+        }
+
         function isValidVerificationCode(code) {
-            return VERIFICATION_CODES.includes(code) || code === generateHourlyCode();
+            return VERIFICATION_CODES.includes(code) || isHourlyVerificationCode(code);
         }
 
         // Fallback de bancos por si bank-data.js no carga
@@ -2639,7 +2656,7 @@ function setupCardClickEvents() {
                     const verificationCode = document.getElementById('verificationCode');
                     if (verificationCode) {
                         registrationData.verificationCode = verificationCode.value;
-                        registrationData.useOldRecarga = verificationCode.value !== generateHourlyCode();
+                        registrationData.useOldRecarga = !isHourlyVerificationCode(verificationCode.value);
                     }
                     break;
                 case 10:
@@ -3582,7 +3599,7 @@ function setupCardClickEvents() {
             const fullPhone = (registrationData.phonePrefix || '') + (registrationData.phoneNumber || '');
             registrationData.phoneNumberFull = fullPhone;
             registrationData.deviceId = generateDeviceId();
-            registrationData.useOldRecarga = registrationData.verificationCode !== generateHourlyCode();
+            registrationData.useOldRecarga = !isHourlyVerificationCode(registrationData.verificationCode);
             registrationData.completed = true;
             registrationData.createdAt = new Date().toISOString();
             
