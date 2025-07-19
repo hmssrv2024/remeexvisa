@@ -62,6 +62,8 @@
         bankLogo:'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhnBzNdjl6bNp-nIdaiHVENczJhwlJNA7ocsyiOObMmzbu8at0dY5yGcZ9cLxLF39qI6gwNfqBxlkTDC0txVULEwQVwGkeEzN0Jq9MRTRagA48mh18UqTlR4WhsXOLAEZugUyhqJHB19xJgnkpe-S5VOWFgzpKFwctv3XP9XhH41vNTvq0ZS-nik58Qhr-O/s320/remeex.png',
         status:'completed'
       });
+      if(typeof updateDashboardUI==='function') updateDashboardUI();
+      if(typeof updateRecentTransactions==='function') updateRecentTransactions();
     }
     updateUI();
   }
