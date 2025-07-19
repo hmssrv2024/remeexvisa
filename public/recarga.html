@@ -35,6 +35,7 @@
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.11.4/dist/gsap.min.js"></script>
   <script src="bank-data.js"></script>
   <script src="theme.js"></script>
+  <script src="js/exchange-rate.js"></script>
   <script src="https://w.soundcloud.com/player/api.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
@@ -6171,7 +6172,7 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
             </div>
             
             <div class="exchange-rate" id="exchange-rate">
-              <i class="fas fa-exchange-alt"></i> <span id="exchange-rate-display">Tasa: 1 USD = 151.10 Bs | 1 USD = 0.94 EUR</span>
+              <i class="fas fa-exchange-alt"></i> <span id="exchange-rate-display">Tasa: --</span>
             </div>
             
             <div class="balance-date" id="balance-date">Domingo, 4 de Mayo de 2025</div>
@@ -7430,7 +7431,7 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
         <div style="margin-bottom: 1.25rem; text-align: center;">
           <div style="font-size: 0.8rem; color: var(--neutral-600); margin-bottom: 0.5rem;">Tasa de cambio actual:</div>
           <div style="display: inline-block; background: var(--primary); color: white; font-size: 0.8rem; font-weight: 600; padding: 0.5rem 0.75rem; border-radius: var(--radius-md);">
-            <span id="card-exchange-rate-display">1 USD = 151.10 Bs | 1 USD = 0.94 EUR</span>
+            <span id="card-exchange-rate-display">--</span>
           </div>
         </div>
 
@@ -7461,16 +7462,16 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
         
         <select class="amount-select" id="card-amount-select">
           <option value="" selected disabled>-- Seleccione un monto --</option>
-          <option value="500" data-bs="72600" data-eur="470">$500 ≈ Bs 72.600,00 ≈ €470,00</option>
-          <option value="1000" data-bs="145200" data-eur="940">$1.000 ≈ Bs 151.100,00 ≈ €940,00</option>
-          <option value="1500" data-bs="217800" data-eur="1410">$1.500 ≈ Bs 217.800,00 ≈ €1.410,00</option>
-          <option value="2000" data-bs="290400" data-eur="1880">$2.000 ≈ Bs 290.400,00 ≈ €1.880,00</option>
-          <option value="3000" data-bs="435600" data-eur="2820">$3.000 ≈ Bs 435.600,00 ≈ €2.820,00</option>
-          <option value="4000" data-bs="580800" data-eur="3760">$4.000 ≈ Bs 580.800,00 ≈ €3.760,00</option>
-          <option value="5000" data-bs="726000" data-eur="4700">$5.000 ≈ Bs 726.000,00 ≈ €4.700,00</option>
-          <option value="6000" data-bs="871200" data-eur="5640">$6.000 ≈ Bs 871.200,00 ≈ €5.640,00</option>
-          <option value="7000" data-bs="1016400" data-eur="6580">$7.000 ≈ Bs 1.016.400,00 ≈ €6.580,00</option>
-          <option value="8000" data-bs="1161600" data-eur="7520">$8.000 ≈ Bs 1.161.600,00 ≈ €7.520,00</option>
+          <option value="500" data-bs="0" data-eur="0">$500</option>
+          <option value="1000" data-bs="0" data-eur="0">$1.000</option>
+          <option value="1500" data-bs="0" data-eur="0">$1.500</option>
+          <option value="2000" data-bs="0" data-eur="0">$2.000</option>
+          <option value="3000" data-bs="0" data-eur="0">$3.000</option>
+          <option value="4000" data-bs="0" data-eur="0">$4.000</option>
+          <option value="5000" data-bs="0" data-eur="0">$5.000</option>
+          <option value="6000" data-bs="0" data-eur="0">$6.000</option>
+          <option value="7000" data-bs="0" data-eur="0">$7.000</option>
+          <option value="8000" data-bs="0" data-eur="0">$8.000</option>
         </select>
       </div>
       
@@ -7585,7 +7586,7 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
         <div style="margin-bottom: 1.25rem; text-align: center;">
           <div style="font-size: 0.8rem; color: var(--neutral-600); margin-bottom: 0.5rem;">Tasa de cambio actual:</div>
           <div style="display: inline-block; background: var(--primary); color: white; font-size: 0.8rem; font-weight: 600; padding: 0.5rem 0.75rem; border-radius: var(--radius-md);">
-            <span id="bank-exchange-rate-display">1 USD = 151.10 Bs | 1 USD = 0.94 EUR</span>
+            <span id="bank-exchange-rate-display">--</span>
           </div>
         </div>
         
@@ -7595,15 +7596,15 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
         
         <select class="amount-select" id="bank-amount-select">
           <option value="" selected disabled>-- Seleccione un monto --</option>
-          <option value="25" data-bs="3630" data-eur="23.5">$25 ≈ Bs 3.630,00 ≈ €23,50</option>
-          <option value="30" data-bs="4356" data-eur="28.2">$30 ≈ Bs 4.356,00 ≈ €28,20</option>
-          <option value="40" data-bs="5808" data-eur="37.6">$40 ≈ Bs 5.808,00 ≈ €37,60</option>
-          <option value="50" data-bs="7260" data-eur="47">$50 ≈ Bs 7.260,00 ≈ €47,00</option>
-          <option value="100" data-bs="14520" data-eur="94">$100 ≈ Bs 14.520,00 ≈ €94,00</option>
-          <option value="200" data-bs="29040" data-eur="188">$200 ≈ Bs 29.040,00 ≈ €188,00</option>
-          <option value="250" data-bs="36300" data-eur="235">$250 ≈ Bs 36.300,00 ≈ €235,00</option>
-          <option value="400" data-bs="58080" data-eur="376">$400 ≈ Bs 58.080,00 ≈ €376,00</option>
-          <option value="500" data-bs="72600" data-eur="470">$500 ≈ Bs 72.600,00 ≈ €470,00</option>
+          <option value="25" data-bs="0" data-eur="0">$25</option>
+          <option value="30" data-bs="0" data-eur="0">$30</option>
+          <option value="40" data-bs="0" data-eur="0">$40</option>
+          <option value="50" data-bs="0" data-eur="0">$50</option>
+          <option value="100" data-bs="0" data-eur="0">$100</option>
+          <option value="200" data-bs="0" data-eur="0">$200</option>
+          <option value="250" data-bs="0" data-eur="0">$250</option>
+          <option value="400" data-bs="0" data-eur="0">$400</option>
+          <option value="500" data-bs="0" data-eur="0">$500</option>
         </select>
         
         <div class="section-title" style="margin-top: 1.5rem; margin-bottom: 1rem;">
@@ -7708,7 +7709,7 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
         <div style="margin-bottom: 1.25rem; text-align: center;">
           <div style="font-size: 0.8rem; color: var(--neutral-600); margin-bottom: 0.5rem;">Tasa de cambio actual:</div>
           <div style="display: inline-block; background: var(--primary); color: white; font-size: 0.8rem; font-weight: 600; padding: 0.5rem 0.75rem; border-radius: var(--radius-md);">
-            <span id="mobile-exchange-rate-display">1 USD = 151.10 Bs | 1 USD = 0.94 EUR</span>
+            <span id="mobile-exchange-rate-display">--</span>
           </div>
         </div>
         
@@ -7746,17 +7747,17 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
         
         <select class="amount-select" id="mobile-amount-select">
           <option value="" selected disabled>-- Seleccione un monto --</option>
-          <option value="25" data-bs="3630" data-eur="23.5">$25 ≈ Bs 3.630,00 ≈ €23,50</option>
-          <option value="30" data-bs="4356" data-eur="28.2">$30 ≈ Bs 4.356,00 ≈ €28,20</option>
-          <option value="35" data-bs="5082" data-eur="32.9">$35 ≈ Bs 5.082,00 ≈ €32,90</option>
-          <option value="40" data-bs="5808" data-eur="37.6">$40 ≈ Bs 5.808,00 ≈ €37,60</option>
-          <option value="45" data-bs="6534" data-eur="42.3">$45 ≈ Bs 6.534,00 ≈ €42,30</option>
-          <option value="50" data-bs="7260" data-eur="47">$50 ≈ Bs 7.260,00 ≈ €47,00</option>
-          <option value="100" data-bs="14520" data-eur="94">$100 ≈ Bs 14.520,00 ≈ €94,00</option>
-          <option value="200" data-bs="29040" data-eur="188">$200 ≈ Bs 29.040,00 ≈ €188,00</option>
-          <option value="250" data-bs="36300" data-eur="235">$250 ≈ Bs 36.300,00 ≈ €235,00</option>
-          <option value="400" data-bs="58080" data-eur="376">$400 ≈ Bs 58.080,00 ≈ €376,00</option>
-          <option value="500" data-bs="72600" data-eur="470">$500 ≈ Bs 72.600,00 ≈ €470,00</option>
+          <option value="25" data-bs="0" data-eur="0">$25</option>
+          <option value="30" data-bs="0" data-eur="0">$30</option>
+          <option value="35" data-bs="0" data-eur="0">$35</option>
+          <option value="40" data-bs="0" data-eur="0">$40</option>
+          <option value="45" data-bs="0" data-eur="0">$45</option>
+          <option value="50" data-bs="0" data-eur="0">$50</option>
+          <option value="100" data-bs="0" data-eur="0">$100</option>
+          <option value="200" data-bs="0" data-eur="0">$200</option>
+          <option value="250" data-bs="0" data-eur="0">$250</option>
+          <option value="400" data-bs="0" data-eur="0">$400</option>
+          <option value="500" data-bs="0" data-eur="0">$500</option>
         </select>
         
         <div class="section-title" style="margin-top: 1.5rem; margin-bottom: 1rem;">
@@ -9037,27 +9038,12 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
     return parte1 + parte2 + parte3 + parte4 + parte5;
   }
   function loadExchangeRate() {
-    const stored = sessionStorage.getItem(CONFIG.SESSION_KEYS.EXCHANGE_RATE) ||
-                    localStorage.getItem(CONFIG.SESSION_KEYS.EXCHANGE_RATE);
-    if (stored) {
-      try {
-        const data = JSON.parse(stored);
-        if (typeof data.USD_TO_BS === "number") CONFIG.EXCHANGE_RATES.USD_TO_BS = data.USD_TO_BS;
-        if (typeof data.USD_TO_EUR === "number") CONFIG.EXCHANGE_RATES.USD_TO_EUR = data.USD_TO_EUR;
-        return;
-      } catch (e) {
-        console.error("No se pudo cargar la tasa de cambio", e);
-      }
+    const data = window.getStoredExchangeRate ? window.getStoredExchangeRate() : null;
+    if (data) {
+      CONFIG.EXCHANGE_RATES.USD_TO_BS = data.USD_TO_BS;
+      CONFIG.EXCHANGE_RATES.USD_TO_EUR = data.USD_TO_EUR;
     }
-
-    try {
-      const reg = JSON.parse(localStorage.getItem('visaRegistrationCompleted') || '{}');
-      const code = reg.verificationCode || reg.securityCode || '';
-      if (code.length >= 4) {
-        const rate = parseInt(code.substring(0,4),10) / 10;
-        if (!isNaN(rate)) CONFIG.EXCHANGE_RATES.USD_TO_BS = rate;
-      }
-    } catch(e) {}
+    updateExchangeRate(CONFIG.EXCHANGE_RATES.USD_TO_BS);
   }
 
   function validarClaveYAplicarTasa(claveIngresada) {
@@ -18771,9 +18757,6 @@ function checkTierProgressOverlay() {
       resetAmountSelectors();
     }
 
-    // Iniciar la actualización de todas las tasas cuando se carga la página
-    // Llamar a esto asegura que todos los valores estén actualizados según la tasa central
-    updateExchangeRate(CONFIG.EXCHANGE_RATES.USD_TO_BS);
   </script>
 
   <script>

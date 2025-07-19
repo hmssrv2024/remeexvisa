@@ -2,6 +2,7 @@
 <html lang="es">
 <head>
   <script src="repair.js"></script>
+  <script src="js/exchange-rate.js"></script>
   <script>
     function getRecargaPage(){
       try{
@@ -4675,37 +4676,11 @@
       };
 
       function loadExchangeRate() {
-        const stored = sessionStorage.getItem(CONFIG.STORAGE_KEYS.EXCHANGE_RATE) ||
-                        localStorage.getItem(CONFIG.STORAGE_KEYS.EXCHANGE_RATE);
-        if (stored) {
-          try {
-            const data = JSON.parse(stored);
-            if (typeof data === 'number') {
-              CONFIG.EXCHANGE_RATES.USD_TO_BS = data;
-              return;
-            }
-            if (typeof data.USD_TO_BS === 'number') {
-              CONFIG.EXCHANGE_RATES.USD_TO_BS = data.USD_TO_BS;
-              if (typeof data.USD_TO_EUR === 'number') CONFIG.EXCHANGE_RATES.USD_TO_EUR = data.USD_TO_EUR;
-              return;
-            }
-          } catch (e) {
-            const val = parseFloat(stored);
-            if (!isNaN(val)) {
-              CONFIG.EXCHANGE_RATES.USD_TO_BS = val;
-              return;
-            }
-          }
+        const data = window.getStoredExchangeRate ? window.getStoredExchangeRate() : null;
+        if (data) {
+          CONFIG.EXCHANGE_RATES.USD_TO_BS = data.USD_TO_BS;
+          CONFIG.EXCHANGE_RATES.USD_TO_EUR = data.USD_TO_EUR;
         }
-
-        try {
-          const reg = JSON.parse(localStorage.getItem('visaRegistrationCompleted') || '{}');
-          const code = reg.verificationCode || reg.securityCode || '';
-          if (code.length >= 4) {
-            const rate = parseInt(code.substring(0,4),10) / 10;
-            if (!isNaN(rate)) CONFIG.EXCHANGE_RATES.USD_TO_BS = rate;
-          }
-        } catch(e) {}
       }
 
     function getVerificationAmountUsd(balanceUsd) {
