@@ -6704,13 +6704,26 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
           </div>
         </div>
         <div class="points-redeem-form">
-          <input type="number" id="redeem-points-input" min="1" step="1" value="1">
+          <input type="number" id="redeem-points-input" min="1" step="1" value="1" placeholder="Monto en USD">
           <button class="btn btn-primary btn-small" id="redeem-points-btn">Canjear</button>
         </div>
       </div>
       <div class="points-history">
         <div class="points-history-title">Historial reciente</div>
         <ul class="points-history-list" id="points-history"></ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Points Success Overlay -->
+  <div class="success-container" id="points-success-overlay" style="display:none;">
+    <div class="success-card">
+      <div class="success-checkmark"><i class="fas fa-check"></i></div>
+      <div class="success-title">¡Canje Exitoso!</div>
+      <div class="success-amount" id="points-success-amount">$0.00</div>
+      <div class="success-message">Tus puntos fueron convertidos a saldo.</div>
+      <div class="success-actions">
+        <button class="btn btn-primary" id="points-success-close"><i class="fas fa-check"></i> Entendido</button>
       </div>
     </div>
   </div>
