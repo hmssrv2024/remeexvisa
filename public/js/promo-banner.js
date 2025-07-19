@@ -30,7 +30,13 @@ document.addEventListener('DOMContentLoaded', function () {
     { img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQvMUC67h27GOPpKlwN9lUe00q2r2vYZErY-w&s', title: 'Electrodom\u00e9sticos en Damasco', text: 'Renueva tu casa con productos Damasco.' },
     { img: 'https://clxicons.com/wp-content/uploads/2023/09/Revista-CLX-ICONS-1.png', title: 'Hogar Moderno con CLX Icons', text: 'Dise\u00f1o y mobiliario de vanguardia para tu hogar.' },
     { img: 'https://static.wixstatic.com/media/4b4152_90de5fac769c488f856bfc3770e89a9d~mv2.jpg/v1/fill/w_150,h_150,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/Image-empty-state.jpg', title: 'Alta Gama con SoyTechno', text: 'Obt\u00e9n smartphones de alta gama en SoyTechno.' },
-    { img: 'https://static.wixstatic.com/media/15a47a_d0099a8264554b30b715d7c338f8e34e~mv2.png/v1/fill/w_150,h_150,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/Image-empty-state.png', title: 'M\u00e1s Tecnolog\u00eda con Canguro', text: 'Explora una gran variedad de productos tecnol\u00f3gicos con Canguro.' }
+    { img: 'https://static.wixstatic.com/media/15a47a_d0099a8264554b30b715d7c338f8e34e~mv2.png/v1/fill/w_150,h_150,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/Image-empty-state.png', title: 'M\u00e1s Tecnolog\u00eda con Canguro', text: 'Explora una gran variedad de productos tecnol\u00f3gicos con Canguro.' },
+    { img: 'https://www.logo.wine/a/logo/Binance/Binance-Logo.wine.svg', title: 'Retira tus fondos a Binance', text: 'Transfiere f\u00e1cilmente tus fondos a tu cuenta Binance.' },
+    { img: 'https://1000logos.net/wp-content/uploads/2020/07/Western-Union-Logo-500x281.png', title: 'Env\u00eda con Western Union', text: 'Env\u00eda dinero r\u00e1pido con Western Union.' },
+    { img: 'https://images.seeklogo.com/logo-png/41/1/zinli-logo-png_seeklogo-411354.png', title: 'Recibe con Zinli', text: 'Transfiere saldo directamente a tu cuenta Zinli.' },
+    { img: 'https://images.seeklogo.com/logo-png/38/1/airtm-logo-png_seeklogo-389814.png', title: 'Usa Airtm', text: 'Maneja tus fondos de forma segura con Airtm.' },
+    { img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/MoneyGram_Logo.svg/512px-MoneyGram_Logo.svg.png', title: 'Env\u00eda con MoneyGram', text: 'Realiza remesas a trav\u00e9s de MoneyGram.' },
+    { img: 'https://zoom.red/wp-content/uploads/2021/01/Logo-Zoom-Registrado.png', title: 'Env\u00edos con Zoom', text: 'Env\u00eda dinero a Venezuela mediante Zoom.' }
   ];
 
   if (typeof verificationStatus !== 'undefined' && verificationStatus.status === 'bank_validation') {

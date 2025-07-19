@@ -5324,12 +5324,13 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
     
     /* Notificación de seguridad */
     .security-notice-banner {
-      background: rgba(0, 149, 255, 0.1);
+      background: #fff;
       border-left: 3px solid var(--info);
       border-radius: var(--radius-md);
       padding: 0.9rem;
       display: flex;
       align-items: center;
+      justify-content: center;
       gap: 0.8rem;
       margin: 1.25rem 0;
       box-shadow: var(--shadow-sm);
@@ -5338,13 +5339,17 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
     }
     
     .security-notice-icon {
-      width: 56px;
-      height: 56px;
+      width: 72px;
+      height: 72px;
       display: flex;
       align-items: center;
       justify-content: center;
       color: var(--info);
       flex-shrink: 0;
+    }
+
+    .security-notice-icon i {
+      font-size: 2rem;
     }
 
     .security-notice-icon img {
@@ -5358,6 +5363,7 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
     .security-notice-content {
       flex: 1;
       min-width: 0;
+      text-align: center;
     }
     
     .security-notice-title {
