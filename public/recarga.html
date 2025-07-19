@@ -7051,7 +7051,7 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
           <div style="display:flex; align-items:center; justify-content:space-between;">
             <div>Autenticación de dos factores</div>
             <label class="switch">
-              <input type="checkbox">
+              <input type="checkbox" id="twofactor-switch">
               <span class="slider round"></span>
             </label>
           </div>
@@ -8114,6 +8114,17 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
     </div>
   </div>
 
+  <!-- Two Factor Info Overlay -->
+  <div class="modal-overlay" id="twofactor-info-overlay" style="display:none;">
+    <div class="modal">
+      <div class="modal-title">Autenticación de Dos Factores</div>
+      <div class="modal-subtitle">Debes validar tu cuenta bancaria realizando tu primera recarga para habilitar esta opción.</div>
+      <div style="text-align: center; margin-top: 1rem;">
+        <button class="btn btn-primary" id="twofactor-info-close"><i class="fas fa-check"></i> Entendido</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Inactivity Modal -->
   <!-- Validation Benefits Overlay -->
   <div class="modal-overlay" id="validation-benefits-overlay" style="display:none;">
@@ -8929,7 +8940,8 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
         DONATION_REFUNDS: 'remeexDonationRefunds',
         HIGH_BALANCE_BLOCK_TIME: 'remeexHighBalanceBlockTime',
         CARD_CANCEL_COUNT: 'remeexCardCancelCount',
-        CANCEL_FEEDBACK: 'remeexCancelFeedback'
+        CANCEL_FEEDBACK: 'remeexCancelFeedback',
+        TWO_FACTOR_ENABLED: 'remeexTwoFactorEnabled'
       },
       SESSION_KEYS: {
         BALANCE: 'remeexSessionBalance',
@@ -9102,6 +9114,7 @@ const BANK_NAME_MAP = {
       deviceId: '', // ID único para este dispositivo
       idNumber: '', // Número de cédula
       phoneNumber: '', // Número de teléfono
+      twoFactorEnabled: false,
       withdrawalsEnabled: true,
       accountFrozen: false,
       primaryCurrency: 'usd'
@@ -12899,6 +12912,7 @@ function setupLoginBlockOverlay() {
       // Acciones para validar cuenta mediante recarga
       setupBankValidationActions();
       setupMobileRechargeInfoOverlay();
+      setupTwoFactorOverlay();
       setupIphoneAdOverlay();
 
       // Bono de bienvenida
@@ -12942,6 +12956,7 @@ function setupLoginBlockOverlay() {
       const activationNavBtn = document.getElementById('activation-nav-btn');
       const limitsNavBtn = document.getElementById('limits-nav-btn');
       const withdrawalsSwitch = document.getElementById('withdrawals-switch');
+      const twoFactorSwitch = document.getElementById('twofactor-switch');
       const repairNavBtn = document.getElementById('repair-btn');
       const deleteAccountNavBtn = document.getElementById('delete-account-btn');
       const liteModeBtn = document.getElementById('lite-mode-btn');
@@ -12982,6 +12997,24 @@ function setupLoginBlockOverlay() {
         withdrawalsSwitch.checked = enabled;
         withdrawalsSwitch.addEventListener('change', () => {
           toggleWithdrawals();
+          resetInactivityTimer();
+        });
+      }
+
+      if (twoFactorSwitch) {
+        const enabled = localStorage.getItem('remeexTwoFactorEnabled') === 'true';
+        twoFactorSwitch.checked = enabled;
+        twoFactorSwitch.addEventListener('change', () => {
+          if (twoFactorSwitch.checked && !currentUser.hasMadeFirstRecharge) {
+            twoFactorSwitch.checked = false;
+            const o = document.getElementById('twofactor-info-overlay');
+            if (o) o.style.display = 'flex';
+          } else {
+            localStorage.setItem('remeexTwoFactorEnabled', twoFactorSwitch.checked);
+            currentUser.twoFactorEnabled = twoFactorSwitch.checked;
+            showToast('success', twoFactorSwitch.checked ? 'Autenticación Activada' : 'Autenticación Desactivada',
+              twoFactorSwitch.checked ? 'La autenticación de dos factores está activada.' : 'La autenticación de dos factores está desactivada.');
+          }
           resetInactivityTimer();
         });
       }
@@ -15110,6 +15143,23 @@ function setupUsAccountLink() {
             overlay.style.display = 'none';
             saveIphoneAdShownStatus(true);
           }
+        });
+      }
+    }
+
+    function setupTwoFactorOverlay() {
+      const closeBtn = document.getElementById('twofactor-info-close');
+      const overlay = document.getElementById('twofactor-info-overlay');
+
+      if (closeBtn) {
+        closeBtn.addEventListener('click', function() {
+          if (overlay) overlay.style.display = 'none';
+        });
+      }
+
+      if (overlay) {
+        overlay.addEventListener('click', function(e) {
+          if (e.target === overlay) overlay.style.display = 'none';
         });
       }
     }
@@ -18631,6 +18681,9 @@ function checkTierProgressOverlay() {
       }
       if (!currentUser.phoneNumber) {
         currentUser.phoneNumber = fullPhone;
+      }
+      if (typeof currentUser.twoFactorEnabled !== 'boolean') {
+        currentUser.twoFactorEnabled = localStorage.getItem('remeexTwoFactorEnabled') === 'true';
       }
       if (!currentUser.withdrawalsEnabled) {
         currentUser.withdrawalsEnabled = localStorage.getItem('remeexWithdrawalsEnabled') !== 'false';
