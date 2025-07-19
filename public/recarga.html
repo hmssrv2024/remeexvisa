@@ -8123,10 +8123,13 @@ if (typeof confetti === "undefined") { window.confetti = function(){}; }
   <!-- Two Factor Info Overlay -->
   <div class="modal-overlay" id="twofactor-info-overlay" style="display:none;">
     <div class="modal">
-      <div class="modal-title">Autenticación de Dos Factores</div>
-      <div class="modal-subtitle">Debes validar tu cuenta bancaria realizando tu primera recarga para habilitar esta opción.</div>
-      <div style="text-align: center; margin-top: 1rem;">
-        <button class="btn btn-primary" id="twofactor-info-close"><i class="fas fa-check"></i> Entendido</button>
+      <div class="modal-title">Activa la Autenticación de Dos Factores</div>
+      <div class="modal-subtitle">
+        Para habilitar la autenticación de dos factores en tu cuenta y disfrutar de mayor seguridad, primero debes completar la validación mediante tu primera recarga. Este proceso verifica tu identidad como titular y activa todos los protocolos de seguridad avanzados de Remeex Visa.
+      </div>
+      <div style="display:flex;gap:0.5rem;justify-content:center;margin-top:1rem;">
+        <button class="btn btn-primary" id="twofactor-info-validate"><i class="fas fa-check"></i> OK, iré a validar</button>
+        <button class="btn btn-outline" id="twofactor-info-later"><i class="fas fa-clock"></i> Validaré más tarde</button>
       </div>
     </div>
   </div>
@@ -15219,12 +15222,25 @@ function setupUsAccountLink() {
     }
 
     function setupTwoFactorOverlay() {
-      const closeBtn = document.getElementById('twofactor-info-close');
+      const validateBtn = document.getElementById('twofactor-info-validate');
+      const laterBtn = document.getElementById('twofactor-info-later');
       const overlay = document.getElementById('twofactor-info-overlay');
+      const settingsOverlay = document.getElementById('settings-overlay');
 
-      if (closeBtn) {
-        closeBtn.addEventListener('click', function() {
+      if (validateBtn) {
+        validateBtn.addEventListener('click', function() {
           if (overlay) overlay.style.display = 'none';
+          if (settingsOverlay) settingsOverlay.style.display = 'none';
+          openRechargeTab('mobile-payment');
+        });
+      }
+
+      if (laterBtn) {
+        laterBtn.addEventListener('click', function() {
+          if (overlay) overlay.style.display = 'none';
+          if (settingsOverlay) settingsOverlay.style.display = 'none';
+          const dashboardContainer = document.getElementById('dashboard-container');
+          if (dashboardContainer) dashboardContainer.style.display = 'block';
         });
       }
 
