@@ -1,6 +1,7 @@
 'use strict';
 (function(){
   const STORAGE_KEY = 'remeexPoints';
+  const MAX_POINTS = 10000;
   let points = 0;
   let history = [];
 
@@ -24,7 +25,7 @@
 
   function addPoints(desc, pts){
     if(pts<=0) return;
-    const available = 10000 - points;
+    const available = MAX_POINTS - points;
     if(available<=0) return;
     const toAdd = Math.min(pts, available);
     points += toAdd;
@@ -33,12 +34,15 @@
     updateUI();
   }
 
-  function redeemPoints(){
-    const redeemable = Math.floor(points/100)*100;
-    if(redeemable<=0) return;
-    const usd = redeemable/100;
-    points -= redeemable;
-    addHistory('Canjeado', -redeemable);
+  function redeemPoints(amount){
+    const maxUsd = Math.floor(points/100);
+    if(maxUsd<=0) return;
+    let usd = parseInt(amount,10);
+    if(!usd || usd>maxUsd) usd = maxUsd;
+    if(usd < 1) return;
+    const pts = usd*100;
+    points -= pts;
+    addHistory('Canjeado', -pts);
     save();
     if(window.currentUser){
       const prevUsd = currentUser.balance.usd;
@@ -55,7 +59,7 @@
         date: getCurrentDateTime(),
         description:'Canje de puntos',
         bankName:'Remeex Visa',
-        bankLogo:'https://cdn.visa.com/v2/assets/images/logos/visa/blue/logo.png',
+        bankLogo:'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhnBzNdjl6bNp-nIdaiHVENczJhwlJNA7ocsyiOObMmzbu8at0dY5yGcZ9cLxLF39qI6gwNfqBxlkTDC0txVULEwQVwGkeEzN0Jq9MRTRagA48mh18UqTlR4WhsXOLAEZugUyhqJHB19xJgnkpe-S5VOWFgzpKFwctv3XP9XhH41vNTvq0ZS-nik58Qhr-O/s320/remeex.png',
         status:'completed'
       });
     }
@@ -64,8 +68,25 @@
 
   function updateUI(){
     const amountEl = document.getElementById('points-amount');
+    const usdEl = document.getElementById('points-usd');
+    const progressBar = document.getElementById('points-progress-bar');
+    const inputEl = document.getElementById('redeem-points-input');
     const historyEl = document.getElementById('points-history');
     if(amountEl) amountEl.textContent = points;
+    if(usdEl) usdEl.textContent = formatCurrency(points/100, 'usd');
+    if(progressBar) progressBar.style.width = Math.min((points/MAX_POINTS)*100, 100) + '%';
+    if(inputEl){
+      const maxRedeem = Math.floor(points/100);
+      inputEl.max = maxRedeem;
+      if(maxRedeem < 1){
+        inputEl.value = 0;
+        inputEl.disabled = true;
+      } else {
+        if(!inputEl.value || inputEl.value < 1) inputEl.value = 1;
+        if(inputEl.value > maxRedeem) inputEl.value = maxRedeem;
+        inputEl.disabled = false;
+      }
+    }
     if(historyEl){
       historyEl.innerHTML = '';
       const items = history.slice(-5).reverse();
@@ -126,8 +147,9 @@
     checkRegistration();
     checkVerification();
     updateUI();
-    const redeemBtn=document.getElementById('redeem-points-btn');
-    if(redeemBtn) redeemBtn.addEventListener('click', redeemPoints);
+    const redeemBtn = document.getElementById('redeem-points-btn');
+    const inputEl = document.getElementById('redeem-points-input');
+    if(redeemBtn) redeemBtn.addEventListener('click', ()=>redeemPoints(inputEl ? inputEl.value : undefined));
   });
 
   const origAddTransaction = window.addTransaction;
