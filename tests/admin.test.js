@@ -1,5 +1,11 @@
 import request from 'supertest';
-import app from '../api/admin.js';
+
+// Ensure the admin credentials are set for the test environment
+process.env.ADMIN_USERNAME = 'admin';
+process.env.ADMIN_PASSWORD = 'adminpass';
+
+// Dynamically import the app after setting env vars
+const app = (await import('../api/admin.js')).default;
 
 describe('Admin API', () => {
   let token;
