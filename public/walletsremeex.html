@@ -391,11 +391,12 @@
     }
 
     .platform-logo {
-      width: 80px;
-      height: 60px;
+      width: 100px;
+      height: 75px;
       object-fit: contain;
       margin-bottom: 1rem;
       transition: var(--transition-base);
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
     }
 
     .platform-name {
@@ -515,11 +516,12 @@
 
     /* Platform Logo in Modal */
     .modal-platform-logo {
-      width: 100px;
-      height: 75px;
+      width: 120px;
+      height: 90px;
       object-fit: contain;
       margin: 0 auto 1rem;
       display: block;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
     }
 
     /* Warning Content */
@@ -1505,26 +1507,26 @@
 
   <!-- Navegación Inferior -->
   <div class="bottom-nav">
-    <a href="#" id="home-btn" class="nav-item">
-      <div class="nav-icon">
-        <i class="fas fa-home"></i>
-      </div>
-      <div class="nav-label">Inicio</div>
-    </a>
-
-    <a href="transferencia" class="nav-item">
-      <div class="nav-icon">
-        <i class="fas fa-paper-plane"></i>
-      </div>
-      <div class="nav-label">Transferir</div>
-    </a>
-
     <div class="nav-item active">
       <div class="nav-icon">
         <i class="fas fa-link"></i>
       </div>
       <div class="nav-label">Vincular</div>
     </div>
+
+    <a href="transferencia.html" id="transfer-btn" class="nav-item">
+      <div class="nav-icon">
+        <i class="fas fa-paper-plane"></i>
+      </div>
+      <div class="nav-label">Transferir</div>
+    </a>
+
+    <a href="#" id="home-btn" class="nav-item">
+      <div class="nav-icon">
+        <i class="fas fa-home"></i>
+      </div>
+      <div class="nav-label">Inicio</div>
+    </a>
 
     <a href="#" class="nav-item">
       <div class="nav-icon">
@@ -1533,11 +1535,11 @@
       <div class="nav-label">Reportes</div>
     </a>
 
-    <a href="#" class="nav-item">
+    <a href="#" id="settings-btn" class="nav-item">
       <div class="nav-icon">
-        <i class="fas fa-user"></i>
+        <i class="fas fa-cog"></i>
       </div>
-      <div class="nav-label">Perfil</div>
+      <div class="nav-label">Ajustes</div>
     </a>
   </div>
 
@@ -1737,6 +1739,25 @@
       if (homeBtn) {
         homeBtn.addEventListener('click', function(e) {
           e.preventDefault();
+          window.location.href = getRecargaPage();
+        });
+      }
+
+      const transferBtn = document.getElementById('transfer-btn');
+      if (transferBtn) {
+        transferBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          sessionStorage.setItem('fromRecarga', 'true');
+          window.location.href = 'transferencia.html';
+        });
+      }
+
+      const settingsBtn = document.getElementById('settings-btn');
+      if (settingsBtn) {
+        settingsBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          sessionStorage.setItem('fromRecarga', 'true');
+          sessionStorage.setItem('openSettingsSection', 'reports');
           window.location.href = getRecargaPage();
         });
       }
