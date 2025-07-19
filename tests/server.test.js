@@ -1,5 +1,11 @@
 import request from 'supertest';
-import app from '../backend/server.js';
+
+// Configure admin credentials for the test environment before the server is imported
+process.env.ADMIN_USERNAME = 'admin';
+process.env.ADMIN_PASSWORD = 'adminpass';
+
+// Dynamically import the server after setting env vars
+const app = (await import('../backend/server.js')).default;
 
 describe('Backend server', () => {
   it('redirects html pages to extensionless routes', async () => {
