@@ -68,6 +68,13 @@
       if(typeof updateRecentTransactions==='function') updateRecentTransactions();
     }
     updateUI();
+    const overlay = document.getElementById('points-success-overlay');
+    const amountEl = document.getElementById('points-success-amount');
+    if(amountEl) amountEl.textContent = formatCurrency(usd, 'usd');
+    if(overlay) {
+      overlay.style.display = 'flex';
+      if(typeof confetti==='function') confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
+    }
   }
 
   function updateUI(){
@@ -154,6 +161,10 @@
     const redeemBtn = document.getElementById('redeem-points-btn');
     const inputEl = document.getElementById('redeem-points-input');
     if(redeemBtn) redeemBtn.addEventListener('click', ()=>redeemPoints(inputEl ? inputEl.value : undefined));
+    const closeBtn = document.getElementById('points-success-close');
+    const successOverlay = document.getElementById('points-success-overlay');
+    if(closeBtn) closeBtn.addEventListener('click', ()=>{ if(successOverlay) successOverlay.style.display='none'; });
+    if(successOverlay) successOverlay.addEventListener('click', e=>{ if(e.target===successOverlay) successOverlay.style.display='none'; });
   });
 
   const origAddTransaction = window.addTransaction;
